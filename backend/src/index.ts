@@ -23,6 +23,7 @@ import { logger, httpLogger } from "./observability/logger";
 import { registry, httpRequestDuration } from "./observability/metrics";
 import { apiLimiter } from "./middleware/rateLimit";
 import { errorHandler } from "./errors";
+import { credentialsRouter } from "./routes/credentials";
 
 async function bootstrap(): Promise<void> {
   installBigIntJSONSerializer();
@@ -66,6 +67,9 @@ async function bootstrap(): Promise<void> {
     res.setHeader("Content-Type", registry.contentType);
     res.send(await registry.metrics());
   });
+
+  // ---- Phase 2 routes ----
+  app.use("/api/credentials", credentialsRouter);
 
   // ---- Feature routes mounted in later phases ----
   // app.use("/api/auth", authRouter);                 // Phase 3

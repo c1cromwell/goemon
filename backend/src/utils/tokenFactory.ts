@@ -1,5 +1,5 @@
 /**
- * Phase 1 — Token factory (RS256).
+ * Phase 1 — Token factory (RS256), updated in Phase 2 for key persistence.
  *
  * Mints the two short-lived token types used by the agent-access flow:
  *   - exchange token (RFC 8693 style) for SmartChat operations
@@ -9,35 +9,17 @@
  * with the public key (exposed via JWKS) without holding a shared secret. This is
  * distinct from session JWTs (HS256, middleware/auth.ts).
  *
- * The keypair is generated in-memory at boot for the prototype. For production,
- * load a persisted key (see didService key handling) and rotate.
+ * Phase 2: keypair is persisted in did_keys via didService (survives restarts).
+ * Phase 2: verifyToken uses all active keys so rotation doesn't break in-flight tokens.
  */
 
-import { generateKeyPair, SignJWT, jwtVerify, exportJWK, type JWK, type KeyLike } from "jose";
+import { SignJWT, jwtVerify, createLocalJWKSet, type JWK } from "jose";
+import { initDid, getActiveKey, getAllActiveJwks } from "../services/didService";
 
 const ALG = "RS256";
-const KID = "did:web:bankai.com#key-1";
-
-let privateKey: KeyLike | null = null;
-let publicKey: KeyLike | null = null;
-let publicJwk: JWK | null = null;
 
 export async function initTokenFactory(): Promise<void> {
-  if (privateKey && publicKey) return;
-  const { privateKey: priv, publicKey: pub } = await generateKeyPair(ALG, {
-    modulusLength: 2048,
-    extractable: true,
-  });
-  privateKey = priv;
-  publicKey = pub;
-  publicJwk = await exportJWK(pub);
-}
-
-function requireKeys(): { priv: KeyLike; pub: KeyLike } {
-  if (!privateKey || !publicKey) {
-    throw new Error("tokenFactory not initialized; call initTokenFactory() at boot");
-  }
-  return { priv: privateKey, pub: publicKey };
+  await initDid();
 }
 
 export interface ExchangeTokenInput {
@@ -52,7 +34,7 @@ export interface ExchangeTokenInput {
 }
 
 export async function mintExchangeToken(input: ExchangeTokenInput): Promise<string> {
-  const { priv } = requireKeys();
+  const { kid, privateKey } = getActiveKey();
   const now = Math.floor(Date.now() / 1000);
   return new SignJWT({
     act: { sub: input.agentId, name: input.agentName, type: input.agentType },
@@ -60,11 +42,11 @@ export async function mintExchangeToken(input: ExchangeTokenInput): Promise<stri
     op: input.operation,
     params: input.params,
   })
-    .setProtectedHeader({ alg: ALG, kid: KID, typ: "JWT" })
+    .setProtectedHeader({ alg: ALG, kid, typ: "JWT" })
     .setSubject(input.userId)
     .setIssuedAt(now)
     .setExpirationTime(now + input.ttlSecs)
-    .sign(priv);
+    .sign(privateKey);
 }
 
 export async function mintScopedToken(
@@ -74,15 +56,15 @@ export async function mintScopedToken(
   scope: string[],
   ttlSecs: number
 ): Promise<string> {
-  const { priv } = requireKeys();
+  const { kid, privateKey } = getActiveKey();
   const now = Math.floor(Date.now() / 1000);
   return new SignJWT({ act: { sub: clientDid }, scope })
-    .setProtectedHeader({ alg: ALG, kid: KID, typ: "JWT" })
+    .setProtectedHeader({ alg: ALG, kid, typ: "JWT" })
     .setSubject(walletDid)
     .setJti(jti)
     .setIssuedAt(now)
     .setExpirationTime(now + ttlSecs)
-    .sign(priv);
+    .sign(privateKey);
 }
 
 export interface VerifiedToken {
@@ -98,14 +80,14 @@ export interface VerifiedToken {
   };
 }
 
+/** Verifies against all active keys (supports rotation — old tokens stay valid). */
 export async function verifyToken(token: string): Promise<VerifiedToken> {
-  const { pub } = requireKeys();
-  const { payload } = await jwtVerify(token, pub, { algorithms: [ALG] });
+  const jwks = createLocalJWKSet(getAllActiveJwks());
+  const { payload } = await jwtVerify(token, jwks, { algorithms: [ALG] });
   return { payload: payload as VerifiedToken["payload"] };
 }
 
-/** JWKS for the MCP endpoint / external verifiers. */
-export function getJWKS(): { keys: JWK[] } {
-  if (!publicJwk) throw new Error("tokenFactory not initialized");
-  return { keys: [{ ...publicJwk, kid: KID, use: "sig", alg: ALG }] };
+/** JWKS for the MCP endpoint / external verifiers. Returns all active keys. */
+export function getJWKS(): { keys: (JWK & { kid: string; use: string; alg: string })[] } {
+  return getAllActiveJwks();
 }

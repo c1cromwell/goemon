@@ -1,0 +1,13 @@
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    environment: "node",
+    env: {
+      NODE_ENV: "test",
+      JWT_SECRET: "test_secret_at_least_long_enough_for_tests",
+      BASE_URL: "http://localhost:3001",
+      CREDENTIAL_BASE_URL: "http://localhost:3001",
+    },
+  },
+});
