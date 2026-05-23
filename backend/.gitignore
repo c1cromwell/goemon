@@ -1,0 +1,11 @@
+node_modules/
+dist/
+data/
+*.log
+.env
+.DS_Store
+coverage/
+# Generated key material (never commit)
+bankai_keys.json
+bankai_private_key.json
+bankai_public_key.json

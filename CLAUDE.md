@@ -1,96 +1,87 @@
-# CLAUDE.md
+# CLAUDE.md — BankAI
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code (claude.ai/code) when working in this repository. Read this fully before making changes.
 
-## Project Overview
+## What this is
 
-Bankai is a CLI-first agentic banking application. Users enroll with KYC/ID verification, then interact with a Claude-powered agent (via Anthropic SDK tool use) that can check balances, transfer funds, pay bills, and manage their profile — with a full append-only audit log and short-lived scoped transaction tokens.
+BankAI is a tokenization-first neobank being rebuilt from a prototype toward the architecture in the PRD: Hedera settlement, a native (non-custodial) wallet, a double-entry ledger, decentralized-identity-gated agent access (W3C Verifiable Credentials + OID4VP), and an MCP server that lets external AI agents operate on a user's behalf under tightly scoped, user-granted permissions.
 
-## Stack
+The build proceeds **phase by phase**. The full plan is in `docs/REBUILD-PLAN-v2.md`. The product requirements are in `docs/prd/` (start at `docs/prd/README.md`).
 
-- **Python** with `pyproject.toml` (uv or pip)
-- **Typer** — CLI framework
-- **Rich** — terminal output
-- **SQLAlchemy + SQLite** — ORM and persistence
-- **Alembic** — database migrations
-- **Anthropic SDK** — Claude with tool use and prompt caching on the system prompt
-- **PyJWT** — short-lived scoped tokens
-- **bcrypt** — password hashing
+## Monorepo layout
 
-## Commands
+| Path | What | Status |
+|---|---|---|
+| `backend/` | Node + Express + TypeScript API | Phase 0 + 1 implemented |
+| `frontend/` | React + Vite customer portal | not started |
+| `bankai-agent/` | External agent web app (OID4VP + MCP) | not started |
+| `BankAIWallet/` | iOS SwiftUI wallet (Secure Enclave keys, VC holder) | not started |
+| `docs/REBUILD-PLAN-v2.md` | The implementation plan, one block per phase | reference |
+| `docs/prd/` | Product requirements (13 linked modules) | reference |
+
+## Build status
+
+- [x] **Phase 0** — Conventions: money (integer minor units), errors, config, idempotency
+- [x] **Phase 1** — Backend foundation: dual Postgres/SQLite DB, full schema + migrations, append-only triggers, session auth, rate limiting/lockout, RS256 token factory, audit service, logging, metrics
+- [ ] **Phase 2** — DID & Verifiable Credentials (key rotation, real BitstringStatusList)
+- [ ] **Phase 3** — Auth (WebAuthn passkeys), tiered identity ladder, internal agents
+- [ ] **Phase 4** — Double-entry ledger (the single source of truth for balances)
+- [ ] **Phase 5** — Hedera integration (on-chain USDC, paymaster, on-device signing)
+- [ ] **Phase 6** — SmartChat (RFC 8693 token exchange)
+- [ ] **Phase 7** — MCP server & external agents (VP signature verification — security-critical)
+- [ ] **Phase 8** — React frontend
+- [ ] **Phase 9** — iOS wallet
+- [ ] **Phase 10** — External agent app
+- [ ] **Phase 11** — Hardening: RBAC, rate limiting, observability, tests
+- [ ] **Phase 12** — Integration & first-run setup
+- [ ] **Phase 13** — Final polish & security-invariant tests
+
+## Commands (run inside `backend/`)
 
 ```bash
-# Install dependencies
-pip install -e ".[dev]"
-
-# Run the CLI
-python -m bankai
-
-# Run all tests
-pytest
-
-# Run a single test
-pytest tests/path/to/test_file.py::test_name -v
-
-# Apply database migrations
-alembic upgrade head
-
-# Create a new migration
-alembic revision --autogenerate -m "description"
-
-# Lint and format
-ruff check .
-ruff format .
+npm install            # install dependencies
+npm run dev            # start dev server on :3001 (runs migrations automatically in dev)
+npm run migrate        # apply DB migrations explicitly
+npm run typecheck      # tsc --noEmit (run after every change)
+npm test               # vitest — runs the foundation/security invariants
+npm run build          # compile to dist/ (copies SQL migrations)
+npm start              # run compiled dist/
 ```
 
-## Architecture
+Health check once running: `curl localhost:3001/api/health`
 
-```
-bankai/
-  cli/           — Typer commands (enroll, login, logout, agent)
-  agent/
-    tools.py     — Claude tool schemas (JSON schema definitions)
-    executor.py  — Scope check, step-up enforcement, transaction token dispatch
-  core/
-    tokens.py    — JWT encode/decode for all token types
-  db/
-    models.py    — All SQLAlchemy ORM models
-    migrations/  — Alembic migration files
-  services/
-    audit_service.py  — Append-only audit writes
-    kyc_service.py    — Mock identity provider (Phase 1), Persona API stub (Phase 3)
-```
+## NON-NEGOTIABLE conventions
 
-### Token Design
+These are enforced; do not relax them. Full detail in `backend/CONVENTIONS.md`.
 
-| Token | TTL | Scope |
-|---|---|---|
-| Session | 15 min | scoped by enrollment status |
-| Transaction | 90 sec | single-use, cryptographically bound to amount/account/idempotency key |
-| Step-up | 5 min | single-use, required for transfers >$500, issued after password re-entry |
-| Refresh | 7 days | hashed in DB, stored raw in `~/.bankai/credentials` (chmod 600) |
+- **Money is integer minor units as `bigint`.** Never float/number for money, anywhere (DB, TS, Swift). Use the `Money` type in `backend/src/db/money.ts`. USD → cents; USDC → micro-units (6 dp).
+- **Balances are derived from the double-entry ledger** (once Phase 4 lands). Do not mutate balance columns directly.
+- **`audit_logs`, `ledger_entries`, `ledger_journals`, `mcp_audit_logs` are append-only** (DB triggers block UPDATE/DELETE).
+- **Money-mutating endpoints require an `Idempotency-Key`** and the `idempotency()` middleware.
+- **Verifiable Presentations must have their signature verified** against the wallet `did:key` before any access is granted (Phase 7). No exceptions.
+- **Errors** use `AppError` + a stable `ErrorCode`; clients branch on `error.code`.
+- **Config** is read only through `backend/src/config.ts`; production fails fast on insecure config.
 
-### Agent Tools
+## How to work through phases
 
-`get_balance`, `initiate_transfer`, `schedule_bill_pay`, `list_transactions`, `update_profile`, `list_payees`, `list_external_accounts`, `request_step_up`, `get_agent_activity`
+1. Open `docs/REBUILD-PLAN-v2.md`.
+2. Find the next unchecked phase. Each phase is a self-contained instruction block.
+3. Implement it. Keep to the conventions above and the file layout the plan describes.
+4. Run `npm run typecheck && npm test` before considering the phase done.
+5. Update the Build status checklist in this file.
 
-## Security Constraints
+Recommended order note: the plan lists Phase 2 next, but **Phase 4 (double-entry ledger) can be done before Phase 2/3** if you want all monetary code built on correct primitives first. Either is valid.
 
-These are non-negotiable — do not relax them:
+## Locked architecture decisions
 
-- All monetary amounts stored as **integer cents** (never float)
-- SSN: store **last4 + bcrypt hash only**, never plaintext at rest
-- Transaction token `jti` stored after first use — **single-use enforced**
-- `AuditEvent` table is **append-only**: SQLite triggers block UPDATE and DELETE
-- Agent **never receives unmasked account numbers**
-- Transfer confirmation prompts generated from the transaction token payload, not from Claude's text output
-- Rate limit: **5 auth failures → 30-min lockout**; **3 enrollment attempts/hour/IP**
+- Blockchain: **Hedera** (single chain for v1).
+- Wallet: **native build** — keys in Secure Enclave / Android Keystore; server never holds a user's private key. (Vendor key-custody like Fireblocks Dynamic is a v2 review point.)
+- Token standards: ERC-3643 (HSCS) for securities; HTS native for collectibles and stablecoin ops.
+- Backend: **Go is the long-term target per the PRD**, but this prototype rebuild is **TypeScript/Node** for velocity. Treat the TS backend as the prototype; a Go reimplementation of money-critical services is a later decision.
+- Orchestration target: Temporal (money) + Conductor OSS (agents) — not yet introduced; the prototype calls the Anthropic SDK directly for now.
+- Auth: passkey-first (WebAuthn); password auth only behind `ALLOW_PASSWORD_AUTH`, rejected in production.
+- DB: SQLite for local dev (zero-config), Postgres for production (set `DATABASE_URL`).
 
-## Build Phases
+## What is intentionally NOT in this repo yet
 
-1. Foundation — pyproject, DB models, Alembic, CLI skeleton
-2. Enrollment & Auth — KYC mock, JWT, login/logout, credentials file
-3. Agent Core — REPL, read-only tools, prompt caching, audit
-4. Mutating Operations — transfer, bill pay, profile, step-up, transaction tokens
-5. Hardening — scheduler, token rotation, rate limiting, Persona stub
-6. Polish — session resume, Rich output, admin audit export
+The tokenized RWA/collectibles marketplace, Temporal/Conductor, partner-bank fiat rails, and production custody hardening (HSM paymaster, multi-sig treasury) are out of scope for the current phases — see the end of `docs/REBUILD-PLAN-v2.md`.
