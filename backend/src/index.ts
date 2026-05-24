@@ -27,6 +27,8 @@ import { credentialsRouter } from "./routes/credentials";
 import { authRouter } from "./routes/auth";
 import { identityRouter } from "./routes/identity";
 import { agentsRouter } from "./routes/agents";
+import { accountsRouter } from "./routes/accounts";
+import { bootstrapSystemAccounts } from "./services/ledgerService";
 
 async function bootstrap(): Promise<void> {
   installBigIntJSONSerializer();
@@ -38,6 +40,7 @@ async function bootstrap(): Promise<void> {
   }
 
   await initTokenFactory();
+  await bootstrapSystemAccounts();
 
   const app = express();
   app.use(httpLogger);
@@ -79,9 +82,11 @@ async function bootstrap(): Promise<void> {
   app.use("/api/identity", identityRouter);
   app.use("/api/agents", agentsRouter);
 
+  // ---- Phase 4 routes ----
+  app.use("/api/accounts", accountsRouter);
+
   // ---- Feature routes mounted in later phases ----
-  // app.use("/api/accounts", requireTier(2), accountsRouter);
-  // app.use("/api/ledger", ledgerRouter);              // Phase 4
+  // app.use("/api/ledger", ledgerRouter);              // Phase 4 (direct ledger admin)
   // app.use("/api/hedera", hederaRouter);              // Phase 5
   // app.use("/api/smartchat", requireTier(2), smartchatRouter); // Phase 6
   // app.use("/mcp", mcpRouter);                        // Phase 7
