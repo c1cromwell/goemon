@@ -24,6 +24,9 @@ import { registry, httpRequestDuration } from "./observability/metrics";
 import { apiLimiter } from "./middleware/rateLimit";
 import { errorHandler } from "./errors";
 import { credentialsRouter } from "./routes/credentials";
+import { authRouter } from "./routes/auth";
+import { identityRouter } from "./routes/identity";
+import { agentsRouter } from "./routes/agents";
 
 async function bootstrap(): Promise<void> {
   installBigIntJSONSerializer();
@@ -71,9 +74,12 @@ async function bootstrap(): Promise<void> {
   // ---- Phase 2 routes ----
   app.use("/api/credentials", credentialsRouter);
 
+  // ---- Phase 3 routes ----
+  app.use("/api/auth", authRouter);
+  app.use("/api/identity", identityRouter);
+  app.use("/api/agents", agentsRouter);
+
   // ---- Feature routes mounted in later phases ----
-  // app.use("/api/auth", authRouter);                 // Phase 3
-  // app.use("/api/identity", identityRouter);          // Phase 3
   // app.use("/api/accounts", requireTier(2), accountsRouter);
   // app.use("/api/ledger", ledgerRouter);              // Phase 4
   // app.use("/api/hedera", hederaRouter);              // Phase 5
