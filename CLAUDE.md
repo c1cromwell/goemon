@@ -27,6 +27,7 @@ The build proceeds **phase by phase**. The full plan is in `docs/REBUILD-PLAN-v2
 - [x] **Phase 3** — Auth (WebAuthn passkeys), tiered identity ladder, internal agents
 - [x] **Phase 4** — Double-entry ledger (the single source of truth for balances)
 - [x] **Phase 5** — Hedera integration (on-chain USDC, paymaster, ledger mirroring)
+- [x] **Phase 5A** — Agentic account opening: risk-adaptive onboarding (signal scoring → dynamic sub-agents), simulated identities, RBAC-gated admin console (backend API + minimal React UI). Pulls the Phase 11 RBAC core forward.
 - [ ] **Phase 6** — SmartChat (RFC 8693 token exchange)
 - [ ] **Phase 7** — MCP server & external agents (VP signature verification — security-critical)
 - [ ] **Phase 8** — React frontend

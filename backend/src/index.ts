@@ -31,6 +31,8 @@ import { accountsRouter } from "./routes/accounts";
 import { bootstrapSystemAccounts } from "./services/ledgerService";
 import { initHedera } from "./services/hederaService";
 import { hederaRouter } from "./routes/hedera";
+import { onboardingRouter } from "./routes/onboarding";
+import { adminRouter } from "./routes/admin";
 
 async function bootstrap(): Promise<void> {
   installBigIntJSONSerializer();
@@ -104,6 +106,10 @@ async function bootstrap(): Promise<void> {
 
   // ---- Phase 5 routes ----
   app.use("/api/hedera", hederaRouter);
+
+  // ---- Phase 5A routes (agentic account opening + admin console) ----
+  app.use("/api/onboarding", onboardingRouter);
+  app.use("/api/admin", adminRouter);
 
   // ---- Feature routes mounted in later phases ----
   // app.use("/api/ledger", ledgerRouter);              // Phase 4 (direct ledger admin)

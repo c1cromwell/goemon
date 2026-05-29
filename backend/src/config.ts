@@ -52,6 +52,20 @@ const schema = z.object({
   PERSONA_API_KEY: z.string().optional(),
   TRM_API_KEY: z.string().optional(),
 
+  // Phase 5A — Agentic account opening (risk-adaptive onboarding).
+  // The orchestrator that fuses signals into a confidence + required steps:
+  //   "simulated" — deterministic rule-based fusion (offline, default, used in tests)
+  //   "anthropic" — the @anthropic-ai/sdk scorer (advisory; guardrails still gate grants)
+  ONBOARDING_ORCHESTRATOR: z.enum(["simulated", "anthropic"]).default("simulated"),
+  ANTHROPIC_MODEL: z.string().default("claude-haiku-4-5-20251001"),
+  // Confidence (0..1) at/above which onboarding auto-approves without step-up.
+  ONBOARDING_CONFIDENCE_THRESHOLD: z.coerce.number().min(0).max(1).default(0.8),
+  // Floor below which onboarding is rejected even after sub-agent step-up.
+  ONBOARDING_REVIEW_FLOOR: z.coerce.number().min(0).max(1).default(0.5),
+  // Secret for signing admin-console JWTs. Distinct from JWT_SECRET (user sessions);
+  // falls back to JWT_SECRET in dev. Must be set and distinct in production.
+  ADMIN_JWT_SECRET: z.string().optional(),
+
   HEDERA_ENABLED: boolish,
   HEDERA_NETWORK: z.enum(["testnet", "mainnet", "previewnet"]).default("testnet"),
   HEDERA_OPERATOR_ID: z.string().optional(),
@@ -101,6 +115,12 @@ function load(): Config {
     }
     if (c.HEDERA_ENABLED && (!c.HEDERA_OPERATOR_ID || !c.HEDERA_OPERATOR_KEY)) {
       fatal.push("HEDERA_ENABLED=true requires HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY.");
+    }
+    if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
+      fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
+    }
+    if (!c.ADMIN_JWT_SECRET || c.ADMIN_JWT_SECRET === c.JWT_SECRET) {
+      fatal.push("ADMIN_JWT_SECRET must be set and distinct from JWT_SECRET in production.");
     }
   }
   if (fatal.length > 0) {

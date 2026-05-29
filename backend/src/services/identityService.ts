@@ -112,37 +112,100 @@ export async function initiateKyc(
   return { kyc_reference: kycRef };
 }
 
-export async function completeSimulatedKyc(userId: string): Promise<IdentityProfile> {
+/**
+ * Simulated sanctions / PEP screen. A real deployment swaps this for the
+ * SANCTIONS_PROVIDER adapter (TRM, etc.). Returns whether the name is clear.
+ */
+const SANCTIONS_DENYLIST = new Set(["ofac test", "blocked person", "sanctioned entity"]);
+export function screenSanctions(fullName: string): { clear: boolean } {
+  return { clear: !SANCTIONS_DENYLIST.has(fullName.trim().toLowerCase()) };
+}
+
+export interface KycDecisionInput {
+  tier: number;
+  riskTier: string;
+  sanctionsClear: boolean;
+  /** Risk score in [0,1] (higher = worse), stored on the kyc_records row. */
+  riskScore: number;
+  /** Onboarding session that drove this grant (Phase 5A); null for the legacy path. */
+  sessionId?: string | null;
+  provider?: string;
+}
+
+/**
+ * Shared tier-grant core (the single source of truth for KYC completion). Updates
+ * identity_profiles + kyc_records and issues the Verifiable Credential. Used by the
+ * legacy simulated KYC path and by the Phase 5A risk orchestrator. The actual
+ * decision to call this is made by deterministic policy, never directly by the LLM.
+ */
+export async function completeKycDecision(userId: string, input: KycDecisionInput): Promise<IdentityProfile> {
   const db = getDb();
   const profile = await getProfile(userId);
   if (!profile) throw new AppError(ErrorCode.NOT_FOUND, "Identity profile not found");
-  if (!profile.kyc_reference) throw new AppError(ErrorCode.VALIDATION, "No KYC in progress");
   if (profile.tier >= 2) throw new AppError(ErrorCode.CONFLICT, "KYC already completed");
 
   const now = new Date().toISOString();
-  const allowedOps = TIER_OPS[2]!;
+  const tier = input.tier;
+  const allowedOps = TIER_OPS[tier] ?? TIER_OPS[2]!;
+  const status = tier >= 2 ? "kyc_passed" : "tier1_verified";
+  const sanctionsResult = input.sanctionsClear ? "clear" : "blocked";
 
   await db.transaction(async (tx) => {
     await tx.execute(
       `UPDATE identity_profiles
-       SET tier = 2, identity_status = 'kyc_passed', sanctions_clear = 1,
-           risk_tier = 'low', completed_at = ?, updated_at = ?
+       SET tier = ?, identity_status = ?, sanctions_clear = ?, risk_tier = ?,
+           completed_at = ?, updated_at = ?, onboarding_session_id = COALESCE(?, onboarding_session_id)
        WHERE user_id = ?`,
-      [now, now, userId]
+      [tier, status, input.sanctionsClear ? 1 : 0, input.riskTier, now, now, input.sessionId ?? null, userId]
     );
-    await tx.execute(
-      `UPDATE kyc_records
-       SET status = 'passed', sanctions_result = 'clear', pep_result = 'clear',
-           risk_tier = 'low', risk_score = 0.1
-       WHERE provider_ref = ?`,
-      [profile.kyc_reference]
-    );
+
+    if (profile.kyc_reference) {
+      await tx.execute(
+        `UPDATE kyc_records
+         SET status = 'passed', sanctions_result = ?, pep_result = ?, risk_tier = ?, risk_score = ?
+         WHERE provider_ref = ?`,
+        [sanctionsResult, sanctionsResult, input.riskTier, input.riskScore, profile.kyc_reference]
+      );
+    } else {
+      const kycId = uuidv4();
+      const ref = `${input.provider ?? "simulated"}-${kycId.slice(0, 8)}`;
+      await tx.execute(
+        `INSERT INTO kyc_records (id, user_id, profile_id, provider, provider_ref, status,
+           sanctions_result, pep_result, risk_tier, risk_score, notes)
+         VALUES (?, ?, ?, ?, ?, 'passed', ?, ?, ?, ?, ?)`,
+        [
+          kycId,
+          userId,
+          profile.id,
+          input.provider ?? "simulated",
+          ref,
+          sanctionsResult,
+          sanctionsResult,
+          input.riskTier,
+          input.riskScore,
+          JSON.stringify({ sessionId: input.sessionId ?? null }),
+        ]
+      );
+      await tx.execute("UPDATE identity_profiles SET kyc_reference = ? WHERE user_id = ?", [ref, userId]);
+    }
   });
 
   // Issue VC (has its own transaction)
-  await issueCredential(userId, 2, allowedOps);
-  await logAudit({ userId, action: "identity.kyc.complete", resource: userId, details: { tier: 2 } });
+  await issueCredential(userId, tier, allowedOps);
+  await logAudit({
+    userId,
+    action: "identity.kyc.complete",
+    resource: userId,
+    details: { tier, riskTier: input.riskTier, sessionId: input.sessionId ?? null },
+  });
   return (await getProfile(userId))!;
+}
+
+export async function completeSimulatedKyc(userId: string): Promise<IdentityProfile> {
+  const profile = await getProfile(userId);
+  if (!profile) throw new AppError(ErrorCode.NOT_FOUND, "Identity profile not found");
+  if (!profile.kyc_reference) throw new AppError(ErrorCode.VALIDATION, "No KYC in progress");
+  return completeKycDecision(userId, { tier: 2, riskTier: "low", sanctionsClear: true, riskScore: 0.1 });
 }
 
 export async function getKycStatus(

@@ -430,6 +430,69 @@ self-custodial on Hedera.
 
 ---
 
+## Phase 5A — Agentic Account Opening (Risk-Adaptive Identity) (NEW)
+
+**Status: implemented.** Slots between Phase 5 and Phase 6 (no renumbering). Adds an AI-driven,
+risk-adaptive onboarding flow on top of the Phase 3 identity ladder, plus an RBAC-gated admin console.
+Pulls the Phase 11 RBAC core forward (see the note in Phase 11).
+
+**Prompt for Claude Code:**
+
+```
+Build a risk-adaptive account-opening flow that scores onboarding signals to decide what verification
+is needed, dynamically spawns specialized sub-agents when confidence is low, supports simulated demo
+identities, and exposes all identities in an admin console. Conventions as everywhere: AppError/
+ErrorCode, config-only env, append-only audit via logAudit, dual SQLite/Postgres with ? placeholders.
+Scores are REAL in [0,1] (NOT money).
+
+Config (config.ts): ONBOARDING_ORCHESTRATOR ("simulated"|"anthropic", default simulated),
+ANTHROPIC_MODEL, ONBOARDING_CONFIDENCE_THRESHOLD (0.8), ONBOARDING_REVIEW_FLOOR (0.5),
+ADMIN_JWT_SECRET. Prod gates: anthropic orchestrator requires ANTHROPIC_API_KEY; ADMIN_JWT_SECRET
+must be set and distinct from JWT_SECRET in prod.
+
+Migration 004_agentic_onboarding.sql: onboarding_sessions and onboarding_agent_runs (MUTABLE state
+machines — NOT append-only; the immutable trail is audit_logs); ALTER users ADD is_simulated;
+ALTER identity_profiles ADD onboarding_session_id; onboarding_sessions also stores device_fingerprint.
+Reuse the existing kyc_records and document_verifications tables for sub-agent outputs.
+
+Orchestrator model (utils/orchestratorModel.ts): assessRisk(SignalSummary) → { pii_confidence,
+required_steps[], recommended_risk_tier, rationale }. "anthropic" uses @anthropic-ai/sdk structured
+tool-use (submit_risk_assessment); "simulated" is deterministic weighted fusion. The summary is
+PII-FREE (scores + categorical flags only) — never raw email/IP/document. Anthropic failures fall back
+to simulated.
+
+Services:
+- signalService.assessSignals — the ONLY place that sees raw email/IP/fingerprint; emits PII-free
+  scores + flags + device-reuse detection.
+- riskOrchestratorService — startOnboarding → assess → finalizeDecision; submitDocument/submitPossession
+  re-aggregate and re-decide; finalizeDecision is the PURE, deterministic policy and the ONLY authorizer
+  of a tier grant (the model is advisory: a single very-weak signal, a failed verification, or a
+  sanctions hit blocks straight-through approval regardless of model confidence).
+- onboardingAgents — runDocumentValidationAgent (reuses document_verifications + sim doc-number
+  outcomes 1/2/3=fail), runPossessionCheckAgent ("000000"=fail). Each records an onboarding_agent_runs
+  row + audit.
+- identityService.completeKycDecision — shared tier-grant core (updates identity_profiles + kyc_records,
+  issues the VC via issueCredential); completeSimulatedKyc now delegates to it.
+- adminService — seed/login, listIdentities, getIdentityDetail, listReviewQueue, decideReview
+  (compliance/admin), createSimulatedIdentities (sim/profiles.ts; flagged is_simulated=1).
+
+RBAC (middleware/rbac.ts): requireAdmin + requireRole over the existing admins table; admin JWT signed
+with ADMIN_JWT_SECRET and a kind:"admin" claim so it is not interchangeable with a user session token.
+
+Routes: /api/onboarding (start, document, possession, status — behind requireAuth);
+/api/admin (seed, login, identities, identities/:userId, onboarding/sessions, sessions/:id/decision,
+simulations). Mount both in index.ts.
+
+Frontend (frontend/): minimal Vite+React scaffold (AdminLogin, AdminConsole) — Phase 8 expands it.
+
+Tests (test/phase5a.test.ts): guardrail beats model confidence; sanctions hard-reject; clean signals
+auto-approve with no sub-agents; bot-like timing spawns possession then approves; tampered doc → review;
+PII summary has no raw email/IP; simulated identities hit each decision and don't touch real users; RBAC
+rejects missing/user tokens and enforces requireRole.
+```
+
+---
+
 ## Phase 6 — SmartChat (RFC 8693 Token Exchange) (CHANGED)
 
 **Prompt for Claude Code:**
@@ -561,6 +624,10 @@ is unchanged. CLIENT_DID = 'did:simulator:agent-app'.
 Add production-hardening cross-cuts.
 
 RBAC (/backend/src/middleware/rbac.ts):
+- NOTE: the RBAC core (rbac.ts with requireAdmin/requireRole over the admins table, admin JWT with a
+  kind:"admin" claim, /api/admin/seed + /api/admin/login) already landed in Phase 5A. This phase EXTENDS
+  it: apply requireRole to the remaining admin surfaces (credential revoke, client suspend, agent
+  terminate from Phase 7), and remove any other "open in dev" admin bypasses.
 - roles: 'user', 'support', 'compliance', 'admin'. Store role on an admins table (seeded admin = 'admin').
 - requireRole(...roles) middleware for admin routes. Remove all "open in dev" admin bypasses.
 - Sensitive admin actions (revoke credential, suspend client, terminate agent) require role 'compliance' or 'admin'
