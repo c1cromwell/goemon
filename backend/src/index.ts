@@ -34,6 +34,9 @@ import { hederaRouter } from "./routes/hedera";
 import { onboardingRouter } from "./routes/onboarding";
 import { adminRouter } from "./routes/admin";
 import { smartchatRouter } from "./routes/smartchat";
+import { presentRouter } from "./routes/present";
+import { mcpRouter } from "./routes/mcp";
+import { myAgentsRouter } from "./routes/myAgents";
 import { requireAuth } from "./middleware/auth";
 import { requireTier } from "./middleware/requireTier";
 
@@ -118,10 +121,12 @@ async function bootstrap(): Promise<void> {
   // SmartChat drives money operations, so gate it at Tier 2 (transfers unlock there).
   app.use("/api/smartchat", requireAuth, requireTier(2), smartchatRouter);
 
-  // ---- Feature routes mounted in later phases ----
-  // app.use("/api/ledger", ledgerRouter);              // Phase 4 (direct ledger admin)
-  // app.use("/mcp", mcpRouter);                        // Phase 7
-  // ... etc.
+  // ---- Phase 7 routes (external agents: presentation gate + MCP server) ----
+  // present/mcp are called by external agents/wallets (auth = VP signature + scoped
+  // token), not user sessions. my-agents is the user's grant-management surface.
+  app.use("/api/present", presentRouter);
+  app.use("/mcp", mcpRouter);
+  app.use("/api/my-agents", myAgentsRouter);
 
   // Error handler LAST
   app.use(errorHandler);

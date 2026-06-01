@@ -44,6 +44,7 @@ export interface CredentialRow {
   revoke_reason: string | null;
   issued_at: string;
   expires_at: string | null;
+  wallet_did: string | null;
 }
 
 /**
@@ -171,6 +172,26 @@ export async function getCredential(userId: string): Promise<CredentialRow | nul
     "SELECT * FROM credentials WHERE user_id = ?",
     [userId]
   );
+}
+
+/** Fetch a credential by its subject DID (did:web:bankai.com:users:<id>). */
+export async function getCredentialBySubject(didSubject: string): Promise<CredentialRow | null> {
+  return getDb().queryOne<CredentialRow>(
+    "SELECT * FROM credentials WHERE did_subject = ?",
+    [didSubject]
+  );
+}
+
+/**
+ * Bind a wallet's did:key to the authenticated user's credential. This is the
+ * holder-binding anchor for Phase 7: verifyPresentation later requires the VP
+ * signer (vp.iss) to equal this value. Re-binding overwrites (wallet recovery).
+ */
+export async function bindWalletDid(userId: string, walletDid: string): Promise<void> {
+  const row = await getCredential(userId);
+  if (!row) throw new AppError(ErrorCode.NOT_FOUND, "No credential to bind a wallet to");
+  await getDb().execute("UPDATE credentials SET wallet_did = ? WHERE user_id = ?", [walletDid, userId]);
+  await logAudit({ userId, action: "credential.bind_wallet", resource: row.id, details: { walletDid } });
 }
 
 // ---------------------------------------------------------------------------

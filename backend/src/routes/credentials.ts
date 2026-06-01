@@ -16,13 +16,50 @@ import { z } from "zod";
 import { requireAuth, type AuthRequest } from "../middleware/auth";
 import * as vcService from "../services/vcService";
 import * as statusListService from "../services/statusListService";
-import { getActiveKey, issuerDid } from "../services/didService";
+import { getActiveKey, issuerDid, userDid } from "../services/didService";
 import { getProfile } from "../services/identityService";
 import { SignJWT } from "jose";
 import { config } from "../config";
 import { AppError, ErrorCode } from "../errors";
 
 export const credentialsRouter = Router();
+
+// POST /api/credentials/token
+// Phase 7: a SIGNED, short-lived (5 min) pre-authorized access token (jose JWT),
+// replacing v1's base64url(JSON). The authenticated user's session pre-authorizes
+// the wallet to fetch/refresh its credential. (The full OID4VCI pre-authorized_code
+// dance arrives with the Phase 10 wallet.)
+credentialsRouter.post("/token", requireAuth, async (req: AuthRequest, res, next) => {
+  try {
+    const { kid, privateKey } = getActiveKey();
+    const now = Math.floor(Date.now() / 1000);
+    const ttl = 300;
+    const accessToken = await new SignJWT({ purpose: "oid4vci", scope: ["credential:receive"] })
+      .setProtectedHeader({ alg: "RS256", kid, typ: "JWT" })
+      .setIssuer(issuerDid)
+      .setSubject(userDid(req.userId!))
+      .setAudience(`${config.BASE_URL}/api/credentials`)
+      .setIssuedAt(now)
+      .setExpirationTime(now + ttl)
+      .sign(privateKey);
+    res.json({ access_token: accessToken, token_type: "Bearer", expires_in: ttl });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// POST /api/credentials/bind-wallet  — bind the wallet's did:key for holder binding (Phase 7).
+credentialsRouter.post("/bind-wallet", requireAuth, async (req: AuthRequest, res, next) => {
+  try {
+    const { walletDid } = z
+      .object({ walletDid: z.string().min(1).startsWith("did:key:", "walletDid must be a did:key") })
+      .parse(req.body);
+    await vcService.bindWalletDid(req.userId!, walletDid);
+    res.json({ bound: true, walletDid });
+  } catch (e) {
+    next(e);
+  }
+});
 
 // POST /api/credentials/issue
 // Tier and allowedOps are derived from the user's actual identity profile —

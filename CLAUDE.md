@@ -29,7 +29,7 @@ The build proceeds **phase by phase**. The full plan is in `docs/BANKAI-PLAN.md`
 - [x] **Phase 5** — Hedera integration (on-chain USDC, paymaster, ledger mirroring)
 - [x] **Phase 5A** — Agentic account opening: risk-adaptive onboarding (signal scoring → dynamic sub-agents), simulated identities, RBAC-gated admin console (backend API + minimal React UI). Pulls the Phase 12 RBAC core forward.
 - [x] **Phase 6** — SmartChat (RFC 8693 token exchange): NL intent classification (simulated/anthropic), 90s RS256 operation tokens, MFA gate above $500, transfers via ledgerService keyed idempotently on the token id
-- [ ] **Phase 7** — MCP server & external agents (VP signature verification — security-critical)
+- [x] **Phase 7** — MCP server & external agents: `did:key` P-256 resolver, VP signature verification (ES256) before any access, single-use nonce + VP-hash replay prevention, holder binding (wallet `did:key` bound to the VC), no-bypass user grant check, 4-factor scope intersection (VC ∩ client ∩ requested ∩ grant), 90s scoped token, MCP tool execution (transfers in minor units ≤ client/grant ceiling, idempotent on token jti + call id), append-only `mcp_audit_logs`
 - [ ] **Phase 8** — Tokenized RWA & Marketplace: create/buy/sell/transfer tokenized assets. **Collectibles-first for real launch** (HTS-native, mostly non-securities); single-building real-estate (ERC-3643) is a testnet **demo only**. **Design only; pulled forward to demo the wedge product sooner** — see `docs/BANKAI-PLAN.md` Phase 8 (incl. the "Legal posture & demo asset" note).
 - [ ] **Phase 9** — React frontend (adds Invest/Collect marketplace tabs)
 - [ ] **Phase 10** — iOS wallet

@@ -14,9 +14,11 @@
 
 import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
+import { z } from "zod";
 import { AppError, ErrorCode } from "../errors";
 import { requireAdmin, requireRole, signAdminSession, type AdminRequest } from "../middleware/rbac";
 import * as adminService from "../services/adminService";
+import * as mcpClientRegistry from "../services/mcpClientRegistry";
 
 export const adminRouter = Router();
 
@@ -97,3 +99,79 @@ adminRouter.post("/simulations", requireAdmin, async (req: AdminRequest, res: Re
     next(e);
   }
 });
+
+// ---- Phase 7: MCP client registry (external agent apps) -------------------
+
+adminRouter.get("/mcp-clients", requireAdmin, async (_req: AdminRequest, res: Response, next: NextFunction) => {
+  try {
+    const clients = await mcpClientRegistry.listClients();
+    res.json({
+      clients: clients.map((c) => ({
+        clientDid: c.clientDid,
+        displayName: c.displayName,
+        description: c.description,
+        allowedFunctions: c.allowedFunctions,
+        maxTransferMinor: c.maxTransferMinor.toString(),
+        currency: c.currency,
+        active: c.active,
+      })),
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+adminRouter.post(
+  "/mcp-clients",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const body = z
+        .object({
+          clientDid: z.string().min(1),
+          displayName: z.string().min(1).max(120),
+          description: z.string().max(500).optional(),
+          allowedFunctions: z.array(z.string()).min(1),
+          maxTransferMinor: z.union([z.string(), z.number()]),
+          currency: z.enum(["USD", "USDC"]).default("USD"),
+          requireUserApproval: z.boolean().optional(),
+        })
+        .parse(req.body);
+      let max: bigint;
+      try {
+        max = BigInt(body.maxTransferMinor);
+      } catch {
+        throw new AppError(ErrorCode.VALIDATION, "maxTransferMinor must be an integer (minor units)");
+      }
+      const client = await mcpClientRegistry.registerClient({
+        clientDid: body.clientDid,
+        displayName: body.displayName,
+        description: body.description,
+        allowedFunctions: body.allowedFunctions,
+        maxTransferMinor: max,
+        currency: body.currency,
+        requireUserApproval: body.requireUserApproval,
+        registeredBy: req.adminId,
+      });
+      res.status(201).json({ clientDid: client.clientDid, active: client.active });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+adminRouter.post(
+  "/mcp-clients/:clientDid/suspend",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const { reason = "admin_suspended" } = z.object({ reason: z.string().max(200).optional() }).parse(req.body);
+      await mcpClientRegistry.suspendClient(req.params.clientDid!, reason);
+      res.json({ suspended: true });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
