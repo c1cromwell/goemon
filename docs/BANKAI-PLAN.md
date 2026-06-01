@@ -25,7 +25,7 @@
 - [x] **Phase 5** — Hedera integration (on-chain USDC, paymaster, ledger mirroring)
 - [x] **Phase 5A** — Agentic account opening (risk-adaptive onboarding, simulated identities, RBAC admin console)
 - [x] **Phase 6** — SmartChat (RFC 8693 token exchange): operation tokens, MFA above $500, transfers via the ledger
-- [ ] **Phase 7** — MCP server & external agents (VP signature verification — security-critical)
+- [x] **Phase 7** — MCP server & external agents: VP signature verification (ES256 over `did:key`), single-use nonce + replay prevention, holder binding, no-bypass grant check, 4-factor scope intersection, 90s scoped token, MCP tool execution + append-only audit
 - [ ] **Phase 8** — Tokenized RWA & Marketplace (create / buy / sell / transfer) — **designed only; pulled forward to demo the wedge product sooner**
 - [ ] **Phase 9** — React frontend (customer portal; adds Invest/Collect marketplace tabs)
 - [ ] **Phase 10** — iOS wallet (Secure Enclave keys, VC holder, Hedera signing, asset display)
