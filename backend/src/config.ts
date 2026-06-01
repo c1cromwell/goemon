@@ -58,6 +58,12 @@ const schema = z.object({
   //   "anthropic" — the @anthropic-ai/sdk scorer (advisory; guardrails still gate grants)
   ONBOARDING_ORCHESTRATOR: z.enum(["simulated", "anthropic"]).default("simulated"),
   ANTHROPIC_MODEL: z.string().default("claude-haiku-4-5-20251001"),
+  // Phase 6 — SmartChat intent classifier:
+  //   "simulated" — deterministic keyword/amount parser (offline, default, used in tests)
+  //   "anthropic" — the @anthropic-ai/sdk classifier via structured tool-use
+  // Either way the classifier is advisory: every money operation still flows through
+  // an operation token, the MFA gate, and ledgerService.transfer.
+  SMARTCHAT_ORCHESTRATOR: z.enum(["simulated", "anthropic"]).default("simulated"),
   // Confidence (0..1) at/above which onboarding auto-approves without step-up.
   ONBOARDING_CONFIDENCE_THRESHOLD: z.coerce.number().min(0).max(1).default(0.8),
   // Floor below which onboarding is rejected even after sub-agent step-up.
@@ -118,6 +124,9 @@ function load(): Config {
     }
     if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
       fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
+    }
+    if (c.SMARTCHAT_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
+      fatal.push("SMARTCHAT_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
     }
     if (!c.ADMIN_JWT_SECRET || c.ADMIN_JWT_SECRET === c.JWT_SECRET) {
       fatal.push("ADMIN_JWT_SECRET must be set and distinct from JWT_SECRET in production.");

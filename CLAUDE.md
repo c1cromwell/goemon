@@ -6,7 +6,7 @@ Guidance for Claude Code (claude.ai/code) when working in this repository. Read 
 
 BankAI is a tokenization-first neobank being rebuilt from a prototype toward the architecture in the PRD: Hedera settlement, a native (non-custodial) wallet, a double-entry ledger, decentralized-identity-gated agent access (W3C Verifiable Credentials + OID4VP), and an MCP server that lets external AI agents operate on a user's behalf under tightly scoped, user-granted permissions.
 
-The build proceeds **phase by phase**. The full plan is in `docs/REBUILD-PLAN-v2.md`. The product requirements are in `docs/prd/` (start at `docs/prd/README.md`).
+The build proceeds **phase by phase**. The full plan is in `docs/BANKAI-PLAN.md` (the single authoritative plan, all phases 0–15). The product requirements are in `docs/bankai_prdv1/` (start at `docs/bankai_prdv1/README.md`).
 
 ## Monorepo layout
 
@@ -16,8 +16,8 @@ The build proceeds **phase by phase**. The full plan is in `docs/REBUILD-PLAN-v2
 | `frontend/` | React + Vite customer portal | not started |
 | `bankai-agent/` | External agent web app (OID4VP + MCP) | not started |
 | `BankAIWallet/` | iOS SwiftUI wallet (Secure Enclave keys, VC holder) | not started |
-| `docs/REBUILD-PLAN-v2.md` | The implementation plan, one block per phase | reference |
-| `docs/prd/` | Product requirements (13 linked modules) | reference |
+| `docs/BANKAI-PLAN.md` | **The single authoritative implementation plan** (all phases 0–15, one block per phase) | reference |
+| `docs/bankai_prdv1/` | Product requirements (13 linked modules) | reference |
 
 ## Build status
 
@@ -27,15 +27,18 @@ The build proceeds **phase by phase**. The full plan is in `docs/REBUILD-PLAN-v2
 - [x] **Phase 3** — Auth (WebAuthn passkeys), tiered identity ladder, internal agents
 - [x] **Phase 4** — Double-entry ledger (the single source of truth for balances)
 - [x] **Phase 5** — Hedera integration (on-chain USDC, paymaster, ledger mirroring)
-- [x] **Phase 5A** — Agentic account opening: risk-adaptive onboarding (signal scoring → dynamic sub-agents), simulated identities, RBAC-gated admin console (backend API + minimal React UI). Pulls the Phase 11 RBAC core forward.
-- [ ] **Phase 6** — SmartChat (RFC 8693 token exchange)
+- [x] **Phase 5A** — Agentic account opening: risk-adaptive onboarding (signal scoring → dynamic sub-agents), simulated identities, RBAC-gated admin console (backend API + minimal React UI). Pulls the Phase 12 RBAC core forward.
+- [x] **Phase 6** — SmartChat (RFC 8693 token exchange): NL intent classification (simulated/anthropic), 90s RS256 operation tokens, MFA gate above $500, transfers via ledgerService keyed idempotently on the token id
 - [ ] **Phase 7** — MCP server & external agents (VP signature verification — security-critical)
-- [ ] **Phase 8** — React frontend
-- [ ] **Phase 9** — iOS wallet
-- [ ] **Phase 10** — External agent app
-- [ ] **Phase 11** — Hardening: RBAC, rate limiting, observability, tests
-- [ ] **Phase 12** — Integration & first-run setup
-- [ ] **Phase 13** — Final polish & security-invariant tests
+- [ ] **Phase 8** — Tokenized RWA & Marketplace: create/buy/sell/transfer tokenized assets. **Collectibles-first for real launch** (HTS-native, mostly non-securities); single-building real-estate (ERC-3643) is a testnet **demo only**. **Design only; pulled forward to demo the wedge product sooner** — see `docs/BANKAI-PLAN.md` Phase 8 (incl. the "Legal posture & demo asset" note).
+- [ ] **Phase 9** — React frontend (adds Invest/Collect marketplace tabs)
+- [ ] **Phase 10** — iOS wallet
+- [ ] **Phase 11** — External agent app
+- [ ] **Phase 12** — Hardening: RBAC, rate limiting, observability, tests
+- [ ] **Phase 13** — Integration & first-run setup
+- [ ] **Phase 14** — Final polish & security-invariant tests
+- [ ] **Phase 15** — Internal Agent Operations: governance/security/compliance via agents + MCP skills. **Design only** — see `docs/BANKAI-PLAN.md` Phase 15.
+- [ ] **Phase 16** — Comprehensive end-to-end validation: journey × channel matrix, hybrid agent/MCP + deterministic backbone. Runbook in `docs/E2E-VALIDATION.md`; skills `e2e-validator` + `bankai-mcp-test-harness`; deterministic floor `backend/test/e2e.test.ts`.
 
 ## Commands (run inside `backend/`)
 
@@ -65,7 +68,7 @@ These are enforced; do not relax them. Full detail in `backend/CONVENTIONS.md`.
 
 ## How to work through phases
 
-1. Open `docs/REBUILD-PLAN-v2.md`.
+1. Open `docs/BANKAI-PLAN.md`.
 2. Find the next unchecked phase. Each phase is a self-contained instruction block.
 3. Implement it. Keep to the conventions above and the file layout the plan describes.
 4. Run `npm run typecheck && npm test` before considering the phase done.
@@ -85,4 +88,4 @@ Recommended order note: the plan lists Phase 2 next, but **Phase 4 (double-entry
 
 ## What is intentionally NOT in this repo yet
 
-The tokenized RWA/collectibles marketplace, Temporal/Conductor, partner-bank fiat rails, and production custody hardening (HSM paymaster, multi-sig treasury) are out of scope for the current phases — see the end of `docs/REBUILD-PLAN-v2.md`.
+The tokenized RWA/collectibles marketplace (now planned as Phase 15) and internal agent operations (Phase 14) are **designed but not built**. Temporal/Conductor, partner-bank fiat rails, and production custody hardening (HSM paymaster, multi-sig treasury) are out of scope for the current phases — see the end of `docs/BANKAI-PLAN.md`.

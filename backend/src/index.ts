@@ -33,6 +33,9 @@ import { initHedera } from "./services/hederaService";
 import { hederaRouter } from "./routes/hedera";
 import { onboardingRouter } from "./routes/onboarding";
 import { adminRouter } from "./routes/admin";
+import { smartchatRouter } from "./routes/smartchat";
+import { requireAuth } from "./middleware/auth";
+import { requireTier } from "./middleware/requireTier";
 
 async function bootstrap(): Promise<void> {
   installBigIntJSONSerializer();
@@ -111,9 +114,12 @@ async function bootstrap(): Promise<void> {
   app.use("/api/onboarding", onboardingRouter);
   app.use("/api/admin", adminRouter);
 
+  // ---- Phase 6 routes ----
+  // SmartChat drives money operations, so gate it at Tier 2 (transfers unlock there).
+  app.use("/api/smartchat", requireAuth, requireTier(2), smartchatRouter);
+
   // ---- Feature routes mounted in later phases ----
   // app.use("/api/ledger", ledgerRouter);              // Phase 4 (direct ledger admin)
-  // app.use("/api/smartchat", requireTier(2), smartchatRouter); // Phase 6
   // app.use("/mcp", mcpRouter);                        // Phase 7
   // ... etc.
 
