@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# Claude Code local machine state (skills are tracked; local settings are not)
+.claude/settings.local.json
