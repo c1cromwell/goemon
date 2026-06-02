@@ -37,6 +37,8 @@ import { smartchatRouter } from "./routes/smartchat";
 import { presentRouter } from "./routes/present";
 import { mcpRouter } from "./routes/mcp";
 import { myAgentsRouter } from "./routes/myAgents";
+import { marketplaceRouter } from "./routes/marketplace";
+import { marketplaceAdminRouter } from "./routes/marketplaceAdmin";
 import { requireAuth } from "./middleware/auth";
 import { requireTier } from "./middleware/requireTier";
 
@@ -127,6 +129,12 @@ async function bootstrap(): Promise<void> {
   app.use("/api/present", presentRouter);
   app.use("/mcp", mcpRouter);
   app.use("/api/my-agents", myAgentsRouter);
+
+  // ---- Phase 8 routes (tokenized RWA & marketplace) ----
+  // Customer surface (per-route auth + idempotency inside) and the RBAC-gated
+  // admin surface for issuance + listing lifecycle (mounted under /api/admin).
+  app.use("/api/marketplace", marketplaceRouter);
+  app.use("/api/admin", marketplaceAdminRouter);
 
   // Error handler LAST
   app.use(errorHandler);

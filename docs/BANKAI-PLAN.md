@@ -26,7 +26,7 @@
 - [x] **Phase 5A** — Agentic account opening (risk-adaptive onboarding, simulated identities, RBAC admin console)
 - [x] **Phase 6** — SmartChat (RFC 8693 token exchange): operation tokens, MFA above $500, transfers via the ledger
 - [x] **Phase 7** — MCP server & external agents: VP signature verification (ES256 over `did:key`), single-use nonce + replay prevention, holder binding, no-bypass grant check, 4-factor scope intersection, 90s scoped token, MCP tool execution + append-only audit
-- [ ] **Phase 8** — Tokenized RWA & Marketplace (create / buy / sell / transfer) — **designed only; pulled forward to demo the wedge product sooner**
+- [x] **Phase 8** — Tokenized RWA & Marketplace (backend): ledger-derived asset holdings, HTS + ERC-3643 issuance, in-app Compliance Module (tier/jurisdiction/holder-cap), escrow subscriptions, atomic secondary trades + fees, compliance-gated transfers, versioned listings + RBAC lifecycle, demo seed. Frontend tabs in Phase 9; production ERC-3643/ATS/HTS-create remain out of scope
 - [ ] **Phase 9** — React frontend (customer portal; adds Invest/Collect marketplace tabs)
 - [ ] **Phase 10** — iOS wallet (Secure Enclave keys, VC holder, Hedera signing, asset display)
 - [ ] **Phase 11** — External agent web app
@@ -580,9 +580,19 @@ Write /backend/test/presentation.test.ts:
 
 ---
 
-## Phase 8 — Tokenized RWA & Marketplace (DESIGN ONLY)
+## Phase 8 — Tokenized RWA & Marketplace (BACKEND BUILT)
 
-**Status: designed, not built.** Build the PRD's wedge product — a marketplace to **create, buy,
+**Status: backend built (frontend is Phase 9).** Implemented per the sub-phases below:
+migration `006_marketplace.sql`; assets as ledger-derived holdings (each asset is its own
+ledger currency code so trades balance per-currency AND per-asset); `tokenizationService`
+(HTS + ERC-3643 issuance/mint), `complianceService` (in-app Identity Registry + Compliance
+Module), `pricingService` (source/as-of/staleness), `marketplaceService` (quote, escrow
+subscribe/close/refund, atomic secondary buy/sell + fees, compliance-gated transfer),
+`listingService` (versioned insert-only lifecycle); customer routes `/api/marketplace/*`
+and RBAC admin routes; `backend/test/phase8.test.ts` (10 tests); demo seed
+`npm run seed:marketplace`. The original design notes are retained below for reference.
+
+Build the PRD's wedge product — a marketplace to **create, buy,
 sell, and transfer** tokenized real-world assets — scoped to be **prototype-buildable on the current
 stack** (TS/Node, SQLite/Postgres, Hedera testnet HTS, the double-entry ledger). Pulled forward to
 Phase 8 (ahead of the frontend) to demo the marketplace capability sooner; the backend + API depend
