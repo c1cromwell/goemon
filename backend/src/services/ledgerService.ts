@@ -200,8 +200,12 @@ export async function bootstrapSystemAccounts(): Promise<void> {
     { kind: "bank_settlement", currency: "USD" },
     { kind: "bank_settlement", currency: "USDC" },
     { kind: "fee", currency: "USD" },
+    { kind: "fee", currency: "USDC" },
     { kind: "external_clearing", currency: "USD" },
     { kind: "external_clearing", currency: "USDC" },
+    // Phase 8 — marketplace escrow (holds subscription cash until close/refund).
+    { kind: "escrow", currency: "USD" },
+    { kind: "escrow", currency: "USDC" },
   ];
 
   for (const { kind, currency } of required) {
@@ -216,6 +220,90 @@ export async function bootstrapSystemAccounts(): Promise<void> {
       );
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// Phase 8 — Tokenized assets on the ledger.
+//
+// Each asset is its own ledger "currency code" so the per-currency balance
+// invariant in assertBalanced doubles as a per-asset balance invariant. Asset
+// quantities are integer base units (bigint). Asset accounts never seed an
+// opening balance (supply enters only via an issuance/mint journal).
+// ---------------------------------------------------------------------------
+
+/** The ledger currency code for an asset's quantity entries. */
+export function assetLedgerCode(assetId: string): string {
+  return `ASSET:${assetId}`;
+}
+
+/** Get or create a user's holding account for an asset (no opening balance). */
+export async function getOrCreateUserAssetAccount(userId: string, assetId: string, db?: Db): Promise<string> {
+  const root = db ?? getDb();
+  const code = assetLedgerCode(assetId);
+  const existing = await root.queryOne<{ id: string }>(
+    "SELECT id FROM ledger_accounts WHERE user_id = ? AND kind = 'user_asset' AND currency = ?",
+    [userId, code]
+  );
+  if (existing) return existing.id;
+  const id = uuidv4();
+  await root.execute(
+    "INSERT INTO ledger_accounts (id, user_id, kind, currency, created_at) VALUES (?, ?, 'user_asset', ?, ?)",
+    [id, userId, code, new Date().toISOString()]
+  );
+  return id;
+}
+
+/** Get or create a per-asset SYSTEM account of a given kind (treasury/equity). */
+async function getOrCreateSystemAssetAccount(kind: string, assetId: string, db?: Db): Promise<string> {
+  const root = db ?? getDb();
+  const code = assetLedgerCode(assetId);
+  const existing = await root.queryOne<{ id: string }>(
+    "SELECT id FROM ledger_accounts WHERE user_id IS NULL AND kind = ? AND currency = ?",
+    [kind, code]
+  );
+  if (existing) return existing.id;
+  const id = uuidv4();
+  await root.execute(
+    "INSERT INTO ledger_accounts (id, user_id, kind, currency, created_at) VALUES (?, NULL, ?, ?, ?)",
+    [id, kind, code, new Date().toISOString()]
+  );
+  return id;
+}
+
+/** The system treasury account that holds an asset's un-distributed supply. */
+export async function getOrCreateAssetTreasury(assetId: string, db?: Db): Promise<string> {
+  return getOrCreateSystemAssetAccount("asset_treasury", assetId, db);
+}
+
+/** The system issued-capital account (counter-entry for minting). Holds the
+ *  negative of total supply so every mint journal balances per asset. */
+export async function getOrCreateAssetEquity(assetId: string, db?: Db): Promise<string> {
+  return getOrCreateSystemAssetAccount("asset_equity", assetId, db);
+}
+
+/** A user's holding (base units) of an asset, derived from the ledger. */
+export async function getAssetBalance(userId: string, assetId: string, db?: Db): Promise<bigint> {
+  const root = db ?? getDb();
+  const acct = await root.queryOne<{ id: string }>(
+    "SELECT id FROM ledger_accounts WHERE user_id = ? AND kind = 'user_asset' AND currency = ?",
+    [userId, assetLedgerCode(assetId)]
+  );
+  return acct ? getBalance(acct.id, root) : 0n;
+}
+
+/** Count of distinct users currently holding a positive balance of an asset. */
+export async function getAssetHolderCount(assetId: string, db?: Db): Promise<number> {
+  const root = db ?? getDb();
+  const rows = await root.query<{ user_id: string; balance: string | number | null }>(
+    `SELECT la.user_id AS user_id,
+            SUM(CASE WHEN le.direction = 'credit' THEN le.amount_minor ELSE -le.amount_minor END) AS balance
+       FROM ledger_accounts la
+       JOIN ledger_entries le ON le.ledger_account_id = la.id
+      WHERE la.kind = 'user_asset' AND la.currency = ?
+      GROUP BY la.user_id`,
+    [assetLedgerCode(assetId)]
+  );
+  return rows.filter((r) => BigInt(r.balance ?? 0) > 0n).length;
 }
 
 /** Cash and savings balances for a user, both derived from the ledger. */
