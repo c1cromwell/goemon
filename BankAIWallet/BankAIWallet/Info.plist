@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Wired into the target via the INFOPLIST_FILE build setting (Phase 14 invariant p:
+  no generated Info.plist). Registers the two deep-link schemes, declares the Face
+  ID usage string, allows cleartext localhost for dev, and carries the API base.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDisplayName</key>
+  <string>BankAI Wallet</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.bankai.wallet</string>
+
+  <key>NSFaceIDUsageDescription</key>
+  <string>BankAI Wallet uses Face ID to authorize signing your verifiable presentations and transactions.</string>
+
+  <key>BANKAI_API_BASE</key>
+  <string>http://localhost:3001</string>
+
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLName</key>
+      <string>com.bankai.wallet.consent</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>bankai-wallet</string>
+        <string>openid-credential-offer</string>
+      </array>
+    </dict>
+  </array>
+
+  <!-- Dev only: allow cleartext to the local backend. Remove for production. -->
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSExceptionDomains</key>
+    <dict>
+      <key>localhost</key>
+      <dict>
+        <key>NSExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
+      </dict>
+    </dict>
+  </dict>
+</dict>
+</plist>
