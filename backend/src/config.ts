@@ -91,6 +91,37 @@ export type Config = z.infer<typeof schema> & {
   dbDialect: "postgres" | "sqlite";
 };
 
+/**
+ * Production safety gates as a PURE function (no process.exit) so the invariants
+ * can be tested. Returns the list of fatal misconfigurations; empty in non-prod.
+ */
+export function productionFatals(c: z.infer<typeof schema>): string[] {
+  const fatal: string[] = [];
+  if (c.NODE_ENV !== "production") return fatal;
+  if (c.JWT_SECRET === KNOWN_DEV_JWT_SECRET) {
+    fatal.push("JWT_SECRET is set to the known dev default; set a strong random secret in production.");
+  }
+  if (c.JWT_SECRET.length < 32) {
+    fatal.push("JWT_SECRET must be at least 32 characters in production.");
+  }
+  if (c.ALLOW_PASSWORD_AUTH) {
+    fatal.push("ALLOW_PASSWORD_AUTH must be false in production (passkeys only).");
+  }
+  if (c.HEDERA_ENABLED && (!c.HEDERA_OPERATOR_ID || !c.HEDERA_OPERATOR_KEY)) {
+    fatal.push("HEDERA_ENABLED=true requires HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY.");
+  }
+  if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
+    fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
+  }
+  if (c.SMARTCHAT_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
+    fatal.push("SMARTCHAT_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
+  }
+  if (!c.ADMIN_JWT_SECRET || c.ADMIN_JWT_SECRET === c.JWT_SECRET) {
+    fatal.push("ADMIN_JWT_SECRET must be set and distinct from JWT_SECRET in production.");
+  }
+  return fatal;
+}
+
 function load(): Config {
   const parsed = schema.safeParse(process.env);
   if (!parsed.success) {
@@ -108,30 +139,7 @@ function load(): Config {
   const isTest = c.NODE_ENV === "test";
 
   // Production safety gates — fail fast.
-  const fatal: string[] = [];
-  if (isProd) {
-    if (c.JWT_SECRET === KNOWN_DEV_JWT_SECRET) {
-      fatal.push("JWT_SECRET is set to the known dev default; set a strong random secret in production.");
-    }
-    if (c.JWT_SECRET.length < 32) {
-      fatal.push("JWT_SECRET must be at least 32 characters in production.");
-    }
-    if (c.ALLOW_PASSWORD_AUTH) {
-      fatal.push("ALLOW_PASSWORD_AUTH must be false in production (passkeys only).");
-    }
-    if (c.HEDERA_ENABLED && (!c.HEDERA_OPERATOR_ID || !c.HEDERA_OPERATOR_KEY)) {
-      fatal.push("HEDERA_ENABLED=true requires HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY.");
-    }
-    if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
-      fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
-    }
-    if (c.SMARTCHAT_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
-      fatal.push("SMARTCHAT_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
-    }
-    if (!c.ADMIN_JWT_SECRET || c.ADMIN_JWT_SECRET === c.JWT_SECRET) {
-      fatal.push("ADMIN_JWT_SECRET must be set and distinct from JWT_SECRET in production.");
-    }
-  }
+  const fatal = productionFatals(c);
   if (fatal.length > 0) {
     // eslint-disable-next-line no-console
     console.error("[config] Refusing to start in production:");
