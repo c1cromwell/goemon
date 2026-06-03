@@ -13,9 +13,9 @@ The build proceeds **phase by phase**. The full plan is in `docs/BANKAI-PLAN.md`
 | Path | What | Status |
 |---|---|---|
 | `backend/` | Node + Express + TypeScript API | Phase 0 + 1 implemented |
-| `frontend/` | React + Vite customer portal | not started |
-| `bankai-agent/` | External agent web app (OID4VP + MCP) | not started |
-| `BankAIWallet/` | iOS SwiftUI wallet (Secure Enclave keys, VC holder) | not started |
+| `frontend/` | React + Vite customer portal | Phase 9 (Quiet Premium) implemented |
+| `bankai-agent/` | External agent web app (OID4VP + MCP) | Phase 11 implemented + verified |
+| `BankAIWallet/` | iOS SwiftUI wallet (Secure Enclave keys, VC holder) | Phase 10 source (unverified — needs Xcode) |
 | `docs/BANKAI-PLAN.md` | **The single authoritative implementation plan** (all phases 0–15, one block per phase) | reference |
 | `docs/bankai_prdv1/` | Product requirements (13 linked modules) | reference |
 
@@ -31,11 +31,11 @@ The build proceeds **phase by phase**. The full plan is in `docs/BANKAI-PLAN.md`
 - [x] **Phase 6** — SmartChat (RFC 8693 token exchange): NL intent classification (simulated/anthropic), 90s RS256 operation tokens, MFA gate above $500, transfers via ledgerService keyed idempotently on the token id
 - [x] **Phase 7** — MCP server & external agents: `did:key` P-256 resolver, VP signature verification (ES256) before any access, single-use nonce + VP-hash replay prevention, holder binding (wallet `did:key` bound to the VC), no-bypass user grant check, 4-factor scope intersection (VC ∩ client ∩ requested ∩ grant), 90s scoped token, MCP tool execution (transfers in minor units ≤ client/grant ceiling, idempotent on token jti + call id), append-only `mcp_audit_logs`
 - [x] **Phase 8** — Tokenized RWA & Marketplace (backend): assets as ledger-derived holdings (each asset its own ledger currency code), HTS + ERC-3643 issuance, in-app Compliance Module (tier/jurisdiction/holder-cap), primary issuance via escrow (subscribe→close/refund), secondary buy/sell as one atomic cash+asset+fee journal, compliance-gated transfers (`COMPLIANCE_BLOCKED`), pricing with source/as-of/staleness, versioned insert-only listings + RBAC admin lifecycle, demo seed (`npm run seed:marketplace`). **Frontend Invest/Collect tabs land in Phase 9.** Production items (deployed ERC-3643 + audit, real HTS create/mint, broker-dealer/ATS resale) remain out of scope — see `docs/BANKAI-PLAN.md` Phase 8 "Legal posture & demo asset".
-- [ ] **Phase 9** — React frontend (adds Invest/Collect marketplace tabs)
-- [ ] **Phase 10** — iOS wallet
-- [ ] **Phase 11** — External agent app
+- [x] **Phase 9** — React customer portal (Quiet Premium design system): monochrome surfaces + single jade accent, type-led hierarchy, dark default + light mode (`data-theme`); flat nav (Home · Invest · Collect · Agent) with a profile menu for secondary pages and a mobile bottom bar; passkey-first auth (`@simplewebauthn/browser`, password form only when `ALLOW_PASSWORD_AUTH`); quiet gamification (tier ladder dots + "N to go", streak dot, progress ring); money rendered only from integer minor units via shared `formatMoney`/`formatUnits`; Idempotency-Key auto-attached to money POSTs; Dashboard, Invest/Collect + AssetDetail (quote→confirm TradeSheet), Agent/SmartChat (90s token countdown + MFA gate), Onboarding tier ladder, Credentials, Internal agents, Connected agents (grants), Activity (composed from transactions + operation tokens), conditional on-chain Wallet (Receive QR + Send). Admin console preserved. The marketplace **frontend** (Invest/Collect tabs) now lands here.
+- [~] **Phase 10** — iOS wallet (`BankAIWallet/`): SwiftUI source written — **reviewed-but-unverified** (authored without macOS/Xcode, not compiled). Secure-Enclave P-256 VP-signing key (CryptoKit, Face ID gated), VC JWT in Keychain (not UserDefaults), `did:key` encoder matching the backend resolver, VP JWT signer, Ed25519 Hedera key, OID4VP consent + OID4VCI deep links, TabView (Setup·Credential·Wallet·Activity), Hedera provision/balance/Receive-QR/Send. Known gaps documented in `BankAIWallet/README.md` (Hedera build/sign/submit endpoints + OID4VP token relay pending; SE can't hold the Hedera key).
+- [x] **Phase 11** — External agent app (`bankai-agent/`, React+Vite :5174): embedded simulated wallet bridge (jose ES256 = Secure-Enclave stand-in) drives the real OID4VP path — one-time account linking (issue VC + bind wallet did:key + grant), then per-message `detectIntent` → `present/challenge` → wallet-signed VP → 90s scoped token → `mcp/call`, with a live token countdown + step trace. **Verified end-to-end against the backend**: scoped-token mint, `SCOPE_DENIED` gate, a transfer posting a balanced journal, and `REPLAY_DETECTED`. CLIENT_DID `did:simulator:agent-app`. (The v1 "poll token-status/pending_tokens" flow predates this synchronous backend — see the embedded-wallet note.)
 - [ ] **Phase 12** — Hardening: RBAC, rate limiting, observability, tests
-- [ ] **Phase 13** — Integration & first-run setup
+- [~] **Phase 13** — Integration & first-run setup: **backend wiring done** — `.env` complete; `npm run setup` (idempotent) runs migrations, seeds the RBAC admin (`admin@bankai.com`/`Admin1234!`), registers the simulator MCP client (`did:simulator:agent-app`, $500 ceiling — `allowedFunctions` are **scopes** `[balance:read, statement:read, profile:read, transfer:low]`, since presentationService intersects them as scopes; the plan's tool-name example was inconsistent), and seeds 5 demo users (`*@demo.com`/`Demo1234!`) at varying tiers/balances with doc-numbers 1/2/3 pre-assigned for rejection demos (`npm run seed:users`); `npm test` green (121 pass). Remaining steps depend on the native apps (iOS wallet passkey e2e, Phase 10/11).
 - [ ] **Phase 14** — Final polish & security-invariant tests
 - [ ] **Phase 15** — Internal Agent Operations: governance/security/compliance via agents + MCP skills. **Design only** — see `docs/BANKAI-PLAN.md` Phase 15.
 - [ ] **Phase 16** — Comprehensive end-to-end validation: journey × channel matrix, hybrid agent/MCP + deterministic backbone. Runbook in `docs/E2E-VALIDATION.md`; skills `e2e-validator` + `bankai-mcp-test-harness`; deterministic floor `backend/test/e2e.test.ts`.
@@ -46,6 +46,9 @@ The build proceeds **phase by phase**. The full plan is in `docs/BANKAI-PLAN.md`
 npm install            # install dependencies
 npm run dev            # start dev server on :3001 (runs migrations automatically in dev)
 npm run migrate        # apply DB migrations explicitly
+npm run setup          # first-run wiring: migrate + seed admin + register simulator MCP client + demo users (idempotent)
+npm run seed:users     # demo users only (alex/blair/casey/drew/erin @demo.com, password Demo1234!)
+npm run seed:marketplace  # demo Invest/Collect assets
 npm run typecheck      # tsc --noEmit (run after every change)
 npm test               # vitest — runs the foundation/security invariants
 npm run build          # compile to dist/ (copies SQL migrations)
