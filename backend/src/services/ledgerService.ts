@@ -20,6 +20,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { getDb, type Db } from "../db";
 import { AppError, ErrorCode } from "../errors";
+import { ledgerPostTotal } from "../observability/metrics";
 
 export interface LedgerEntryInput {
   ledgerAccountId: string;
@@ -80,22 +81,29 @@ export async function postJournal(
 
   const now = new Date().toISOString();
 
-  return root.transaction(async (tx) => {
-    const journalId = uuidv4();
-    await tx.execute(
-      `INSERT INTO ledger_journals (id, idempotency_key, description, external_ref, created_at)
-       VALUES (?, ?, ?, ?, ?)`,
-      [journalId, opts?.idempotencyKey ?? null, description, opts?.externalRef ?? null, now]
-    );
-    for (const e of entries) {
+  try {
+    const journalId = await root.transaction(async (tx) => {
+      const journalId = uuidv4();
       await tx.execute(
-        `INSERT INTO ledger_entries (id, journal_id, ledger_account_id, direction, amount_minor, currency, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [uuidv4(), journalId, e.ledgerAccountId, e.direction, e.amountMinor, e.currency, now]
+        `INSERT INTO ledger_journals (id, idempotency_key, description, external_ref, created_at)
+         VALUES (?, ?, ?, ?, ?)`,
+        [journalId, opts?.idempotencyKey ?? null, description, opts?.externalRef ?? null, now]
       );
-    }
+      for (const e of entries) {
+        await tx.execute(
+          `INSERT INTO ledger_entries (id, journal_id, ledger_account_id, direction, amount_minor, currency, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [uuidv4(), journalId, e.ledgerAccountId, e.direction, e.amountMinor, e.currency, now]
+        );
+      }
+      return journalId;
+    });
+    ledgerPostTotal.inc({ result: "posted" });
     return journalId;
-  });
+  } catch (e) {
+    ledgerPostTotal.inc({ result: "error" });
+    throw e;
+  }
 }
 
 /** Balance of a ledger account (credits minus debits). Always exact. */

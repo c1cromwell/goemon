@@ -30,6 +30,7 @@ import { config } from "../config";
 import { getDb } from "../db";
 import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
+import { hederaTxTotal } from "../observability/metrics";
 import { getOrCreateUserAccount, getSystemAccount, postJournal } from "./ledgerService";
 import { getUserById } from "./authService";
 
@@ -204,9 +205,16 @@ export async function transferUsdcOnChain(input: {
     .freezeWith(client)
     .sign(senderKey);
 
-  const txResponse = await signedTx.execute(client);
-  await txResponse.getReceipt(client);
-  const transactionId = txResponse.transactionId.toString();
+  let transactionId: string;
+  try {
+    const txResponse = await signedTx.execute(client);
+    await txResponse.getReceipt(client);
+    transactionId = txResponse.transactionId.toString();
+    hederaTxTotal.inc({ result: "success" });
+  } catch (e) {
+    hederaTxTotal.inc({ result: "error" });
+    throw e;
+  }
 
   // Mirror in double-entry ledger
   const senderLedgerId = await getOrCreateUserAccount(input.fromUserId, "user_cash", "USDC");

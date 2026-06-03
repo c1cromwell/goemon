@@ -21,6 +21,8 @@ import { AppError, ErrorCode } from "../errors";
 import { verifyToken } from "../utils/tokenFactory";
 import { getClientIp } from "../middleware/auth";
 import { recordMcpAudit } from "../services/presentationService";
+import { agentRateLimit } from "../middleware/rateLimit";
+import { mcpCallTotal } from "../observability/metrics";
 import { getClient } from "../services/mcpClientRegistry";
 import { getActiveGrant } from "../services/userAgentGrantService";
 import { transfer, getTransactionHistory } from "../services/transferService";
@@ -92,6 +94,8 @@ mcpRouter.post("/call", async (req, res, next) => {
       .parse(req.body);
     toolName = body.tool;
     ctx = await authScopedToken(req);
+    // Per-agent-DID rate limit (after auth — the DID is only known here).
+    agentRateLimit(ctx.clientDid);
     const ip = getClientIp(req);
 
     const tool = TOOL_BY_NAME.get(body.tool);
@@ -111,6 +115,7 @@ mcpRouter.post("/call", async (req, res, next) => {
         ipAddress: ip,
         durationMs: Date.now() - started,
       });
+      mcpCallTotal.inc({ tool: body.tool, result: "denied" });
       throw new AppError(ErrorCode.SCOPE_DENIED, `Tool ${body.tool} requires scope ${tool.requiredScope}`);
     }
 
@@ -127,6 +132,7 @@ mcpRouter.post("/call", async (req, res, next) => {
       ipAddress: ip,
       durationMs: Date.now() - started,
     });
+    mcpCallTotal.inc({ tool: body.tool, result: "success" });
     res.json({ ok: true, tool: body.tool, result });
   } catch (e) {
     // Record execution errors (scope-denied already recorded above).
@@ -142,6 +148,7 @@ mcpRouter.post("/call", async (req, res, next) => {
         ipAddress: getClientIp(req),
         durationMs: Date.now() - started,
       }).catch(() => undefined);
+      mcpCallTotal.inc({ tool: toolName || "unknown", result: "error" });
     }
     next(e);
   }

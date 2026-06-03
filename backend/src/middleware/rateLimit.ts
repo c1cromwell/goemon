@@ -89,3 +89,28 @@ export function apiLimiter(perMinute = config.API_RATE_LIMIT_PER_MIN) {
     next();
   };
 }
+
+// --- Per-agent-DID limiter (MCP endpoint, Phase 12) -----------------------
+// Keyed by the authenticated external-agent DID so one noisy/abusive agent can't
+// exhaust the shared apiLimiter for everyone. Called inside the MCP handler after
+// the scoped token is verified (the DID is not known until then). Throws so it
+// flows through the route's catch and the audit/metric path.
+const DEFAULT_MCP_AGENT_PER_MIN = 60;
+const agentBuckets = new Map<string, number[]>();
+
+export function agentRateLimit(agentDid: string, perMinute = DEFAULT_MCP_AGENT_PER_MIN): void {
+  const windowMs = 60_000;
+  const now = Date.now();
+  const hits = (agentBuckets.get(agentDid) ?? []).filter((t) => now - t < windowMs);
+  if (hits.length >= perMinute) {
+    agentBuckets.set(agentDid, hits);
+    throw new AppError(ErrorCode.RATE_LIMITED, "Agent rate limit exceeded; slow down.");
+  }
+  hits.push(now);
+  agentBuckets.set(agentDid, hits);
+}
+
+/** Test/maintenance hook: clear the per-agent windows. */
+export function resetAgentRateLimit(): void {
+  agentBuckets.clear();
+}

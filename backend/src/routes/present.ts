@@ -15,6 +15,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { issueNonce, verifyPresentation } from "../services/presentationService";
 import { getClientIp } from "../middleware/auth";
+import { vpVerifyTotal } from "../observability/metrics";
 
 export const presentRouter = Router();
 
@@ -34,6 +35,7 @@ presentRouter.post("/", async (req, res, next) => {
   try {
     const { vpJwt } = z.object({ vpJwt: z.string().min(1) }).parse(req.body);
     const result = await verifyPresentation({ vpJwt, ipAddress: getClientIp(req) });
+    vpVerifyTotal.inc({ result: "success" });
     res.json({
       access_token: result.accessToken,
       token_type: result.tokenType,
@@ -42,6 +44,7 @@ presentRouter.post("/", async (req, res, next) => {
       jti: result.jti,
     });
   } catch (e) {
+    vpVerifyTotal.inc({ result: "rejected" });
     next(e);
   }
 });
