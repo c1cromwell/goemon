@@ -355,8 +355,10 @@ export const userApi = {
   },
 
   webauthnRegisterStart: () => upost<Record<string, unknown>>("/auth/webauthn/register/start"),
+  // The backend returns the stored passkey on success and THROWS (non-2xx) on a
+  // failed verification — there is no `verified` flag in the success body.
   webauthnRegisterFinish: (response: unknown, deviceName?: string) =>
-    upost<{ verified: boolean }>("/auth/webauthn/register/finish", { response, deviceName }),
+    upost<{ passkeyId: string; credentialId: string }>("/auth/webauthn/register/finish", { response, deviceName }),
   webauthnAuthStart: (email: string) =>
     http<Record<string, unknown> & { challengeId: string }>("/auth/webauthn/authenticate/start", {
       method: "POST",

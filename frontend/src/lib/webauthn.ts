@@ -26,7 +26,9 @@ export async function enrollPasskey(deviceName?: string): Promise<void> {
   const options = (await userApi.webauthnRegisterStart()) as unknown as PublicKeyCredentialCreationOptionsJSON;
   const response = await startRegistration({ optionsJSON: options });
   const result = await userApi.webauthnRegisterFinish(response, deviceName ?? defaultDeviceName());
-  if (!result.verified) throw new Error("Passkey registration could not be verified");
+  // A failed verification throws (non-2xx) above; a resolved response with a
+  // stored passkey id is success.
+  if (!result.passkeyId) throw new Error("Passkey registration could not be verified");
 }
 
 /** Authenticate with a passkey; on success stores the session token. */

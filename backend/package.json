@@ -13,6 +13,7 @@
     "setup": "tsx src/scripts/first-run-setup.ts",
     "seed:users": "tsx src/scripts/seed-demo-users.ts",
     "seed:marketplace": "tsx src/scripts/seed-marketplace-demo.ts",
+    "reset:auth": "tsx src/scripts/reset-auth-failures.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
