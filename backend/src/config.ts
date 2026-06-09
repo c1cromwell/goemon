@@ -18,6 +18,12 @@ const boolish = z
   .optional()
   .transform((v) => v === "true" || v === "1");
 
+// Like boolish but absent → true (opt-out rather than opt-in).
+const boolishDefaultTrue = z
+  .string()
+  .optional()
+  .transform((v) => (v === undefined ? true : v === "true" || v === "1"));
+
 const schema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   PORT: z.coerce.number().int().positive().default(3001),
@@ -71,6 +77,18 @@ const schema = z.object({
   // Secret for signing admin-console JWTs. Distinct from JWT_SECRET (user sessions);
   // falls back to JWT_SECRET in dev. Must be set and distinct in production.
   ADMIN_JWT_SECRET: z.string().optional(),
+
+  // Stage 1 fraud seam (docs/business/FraudEngine-GapAnalysis.md §5).
+  //   FRAUD_ENGINE_ENABLED  — run the deterministic scorer + record a fraud_decision
+  //                           on every money-path event (the "listen + decide + audit"
+  //                           contract). Off = no scoring, no rows (escape hatch).
+  //   FRAUD_ENGINE_ENFORCE  — when true, a `block` action throws FRAUD_BLOCKED. When
+  //                           false the decision is still recorded but the transfer
+  //                           proceeds (shadow mode — score live traffic, take no action).
+  // The scorer is advisory; deterministic thresholds here are the only enforcement,
+  // mirroring assessRisk→finalizeDecision in onboarding.
+  FRAUD_ENGINE_ENABLED: boolishDefaultTrue,
+  FRAUD_ENGINE_ENFORCE: boolishDefaultTrue,
 
   HEDERA_ENABLED: boolish,
   HEDERA_NETWORK: z.enum(["testnet", "mainnet", "previewnet"]).default("testnet"),

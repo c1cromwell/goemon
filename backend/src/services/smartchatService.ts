@@ -355,6 +355,7 @@ export async function executeOperationToken(
           // Idempotency keyed on the operation-token id: a retried execute (or a
           // replayed request) collapses onto the same ledger journal.
           idempotencyKey: `optoken:${tokenId}`,
+          channel: "smartchat",
         });
         result = {
           journalId: transferResult.journalId,

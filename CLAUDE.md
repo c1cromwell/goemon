@@ -63,7 +63,7 @@ These are enforced; do not relax them. Full detail in `backend/CONVENTIONS.md`.
 
 - **Money is integer minor units as `bigint`.** Never float/number for money, anywhere (DB, TS, Swift). Use the `Money` type in `backend/src/db/money.ts`. USD → cents; USDC → micro-units (6 dp).
 - **Balances are derived from the double-entry ledger** (once Phase 4 lands). Do not mutate balance columns directly.
-- **`audit_logs`, `ledger_entries`, `ledger_journals`, `mcp_audit_logs` are append-only** (DB triggers block UPDATE/DELETE).
+- **`audit_logs`, `ledger_entries`, `ledger_journals`, `mcp_audit_logs`, `fraud_decisions` are append-only** (DB triggers block UPDATE/DELETE).
 - **Money-mutating endpoints require an `Idempotency-Key`** and the `idempotency()` middleware.
 - **Verifiable Presentations must have their signature verified** against the wallet `did:key` before any access is granted (Phase 7). No exceptions.
 - **Errors** use `AppError` + a stable `ErrorCode`; clients branch on `error.code`.

@@ -230,6 +230,7 @@ async function executeTransfer(
     currency: parsed.currency,
     description: `Agent transfer via ${ctx.clientDid}`,
     idempotencyKey: `mcp:${ctx.jti}:${callId}`,
+    channel: "mcp",
   });
   return { journalId: result.journalId, transactionId: result.transactionId, amountMinor: amountMinor.toString() };
 }

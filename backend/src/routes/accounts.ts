@@ -62,6 +62,7 @@ accountsRouter.post("/transfer", requireAuth, idempotency(), async (req: AuthReq
       currency: currency,
       description: description,
       idempotencyKey,
+      channel: "api",
     });
 
     res.status(201).json(result);

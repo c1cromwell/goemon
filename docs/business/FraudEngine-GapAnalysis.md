@@ -2,7 +2,9 @@
 
 **Subject:** Does the BankAI codebase conform to the target architecture in [`FraudEngine.md`](./FraudEngine.md)?
 **Date:** 2026-06-09
-**Verdict:** **No — and by design.** `FraudEngine.md` is a production-scale, event-driven *target* architecture. The current repo is the TypeScript/Node prototype. Essentially none of the FraudEngine components exist yet, and the prototype was never scoped to implement them. This document maps the gap precisely and proposes a phased path.
+**Verdict:** **No — and by design.** `FraudEngine.md` is a production-scale, event-driven *target* architecture. The current repo is the TypeScript/Node prototype. Essentially none of the FraudEngine *platform* exists yet, and the prototype was never scoped to implement it. This document maps the gap precisely and proposes a phased path.
+
+> **Update (2026-06-09): Stage 1 is now built.** The in-process fraud seam (§5 Stage 1) ships in `backend/src/services/fraudService.ts` + the append-only `fraud_decisions` table, screening the money path inside `transferService`. This **closes §4** (there is now a transaction-time fraud check). Stages 2–4 (Kafka/Flink/model-serving) remain v2 and unbuilt. The component table below still reflects the *platform* gap, which is unchanged.
 
 > Scope note: this is an analysis deliverable. No runtime code was changed. Findings reflect the repo at the commit this file was added.
 
@@ -31,8 +33,8 @@ This is consistent with the program's stated boundaries: `CLAUDE.md` lists Tempo
 | Shadow / canary / A‑B testing | Parallel jobs, hash-based traffic split, instant promote/rollback | ❌ Absent | No traffic-splitting or shadow-eval mechanism |
 | Training lakehouse + retraining | Databricks Delta / Iceberg + Airflow | ❌ Absent | No lakehouse; no training pipeline |
 | Decision → stream → action | Output Kafka topic consumed by orchestrator/products | ❌ Absent | No decision topic; no real-time action loop |
-| Transaction-time fraud scoring | (implied by the whole design) | ❌ **Absent** | `transferService.ts` / `smartchatService.ts` / `ledgerService.ts` have zero fraud/velocity/anomaly hooks |
-| Compliance & audit | Per-decision model version + SHAP → audit topic | 🟡 Partial analog | Append-only `audit_logs` / `mcp_audit_logs` exist, but log auth/ledger/MCP events — not fraud decisions, no model version, no explanation |
+| Transaction-time fraud scoring | (implied by the whole design) | 🟡 **Stage 1 built** | `fraudService.screenTransfer` screens the money path in `transferService`; deterministic `rules-v0` scorer (velocity/spike/new-payee/large-absolute) → allow/flag/challenge/block. Not yet a Transformer, not streaming |
+| Compliance & audit | Per-decision model version + SHAP → audit topic | 🟡 Partial analog | Append-only `audit_logs` / `mcp_audit_logs` (auth/ledger/MCP). Stage 1 adds append-only `fraud_decisions` with `model_version` + reasons (the "audit topic" shape) — reasons are rule codes, not yet SHAP |
 
 **Legend:** ✅ conforms · 🟡 partial / analog only · ❌ absent
 
@@ -74,12 +76,13 @@ Framed so each stage is independently shippable and each preserves the invariant
 ### Stage 0 — Status quo (today)
 Onboarding-only `signalService` + `riskOrchestratorService`; compliance gating on assets; append-only audit. No transaction fraud.
 
-### Stage 1 — In-process fraud seam *(prototype-scale, no new infra)*
-- Emit a normalized internal `risk_event` from the money path (`transferService`, `smartchatService` operation tokens, login/auth) — an in-process event abstraction that *later* maps to a Kafka topic 1:1.
-- A deterministic `fraudScoringService` (velocity, amount-vs-history, new-payee, device/session reuse) returning `score + reason + action ∈ {allow, challenge, flag, block}`.
-- Enforce via the existing advisory+deterministic split (score is advisory; deterministic thresholds + MFA/human gate decide). Reuse the `>$500 → MFA` gate already in SmartChat as the first "challenge" action.
-- Write each decision to a dedicated append-only `fraud_decisions` log with score, reason, and a `model_version` field (set to `rules-v0`) — the forward-compatible "audit topic" shape.
-- **Closes §4.** Establishes the event/score/decision/audit contract the platform will later inherit, with zero external dependencies.
+### Stage 1 — In-process fraud seam *(prototype-scale, no new infra)* — ✅ **BUILT (2026-06-09)**
+- ✅ Normalized `TransferRiskEvent` emitted from the money path inside `transferService.transfer` (channel-tagged: `api` / `smartchat` / `mcp`) — an in-process event abstraction that *later* maps to a Kafka topic 1:1.
+- ✅ Deterministic `fraudService.scoreTransferFeatures` (velocity, amount-vs-history spike, new-payee, large-absolute) returning `score + reasons + action ∈ {allow, flag, challenge, block}`. Pure and unit-tested.
+- ✅ Enforced via the advisory+deterministic split (score is advisory; the thresholds in `fraudService` are the only thing that blocks). `block` → `FRAUD_BLOCKED`; `FRAUD_ENGINE_ENFORCE=false` gives shadow mode. The existing `>$500 → MFA` SmartChat gate remains the live "challenge".
+- ✅ Each decision written to the append-only `fraud_decisions` table with score, reasons, and `model_version='rules-v0'` (+ mirrored to `audit_logs`) — the forward-compatible "audit topic" shape. A `fraud_decision_total{action}` prom counter is incremented.
+- ✅ Only **funded** transfers are screened (an unfunded attempt stays `INSUFFICIENT_FUNDS`); the in-transaction balance check remains authoritative for TOCTOU.
+- **Closes §4.** Tests: `backend/test/fraud.test.ts` (10) — pure scorer, allow/block/shadow on the money path, append-only enforcement, unfunded skip. Full suite 141 pass / 3 todo.
 
 ### Stage 2 — Stream backbone *(v2 — locked-architecture review required)*
 Introduce Kafka/Redpanda + Schema Registry; make `risk_event` a real topic with an Avro/Protobuf schema; move scoring into a dedicated consumer. Decisions published to an output topic; products/orchestrator consume it.

@@ -37,6 +37,9 @@ export enum ErrorCode {
   // Marketplace (tokenized assets)
   COMPLIANCE_BLOCKED = "COMPLIANCE_BLOCKED",
 
+  // Fraud / risk (Stage 1 fraud seam)
+  FRAUD_BLOCKED = "FRAUD_BLOCKED",
+
   // Generic
   NOT_FOUND = "NOT_FOUND",
   CONFLICT = "CONFLICT",
@@ -62,6 +65,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.NONCE_INVALID]: 400,
   [ErrorCode.REPLAY_DETECTED]: 409,
   [ErrorCode.COMPLIANCE_BLOCKED]: 403,
+  [ErrorCode.FRAUD_BLOCKED]: 403,
   [ErrorCode.NOT_FOUND]: 404,
   [ErrorCode.CONFLICT]: 409,
   [ErrorCode.INTERNAL]: 500,

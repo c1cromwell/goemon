@@ -27,8 +27,8 @@ These rules are enforced across the codebase. Read before contributing.
 
 - One async interface (`Db`, src/db/index.ts) over Postgres (prod) and SQLite (dev).
 - Write SQL with `?` placeholders; the Postgres adapter rewrites to `$n`.
-- `audit_logs`, `ledger_entries`, `ledger_journals`, `mcp_audit_logs` are **append-only** (DB triggers block
-  UPDATE/DELETE). Never attempt to mutate them.
+- `audit_logs`, `ledger_entries`, `ledger_journals`, `mcp_audit_logs`, `fraud_decisions` are **append-only** (DB
+  triggers block UPDATE/DELETE). Never attempt to mutate them.
 - Balances are derived from the double-entry ledger (Phase 4). Do not mutate balance columns directly once the
   ledger lands; `accounts.balance_minor` becomes a cached projection.
 

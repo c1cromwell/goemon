@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getDb } from "../db";
 import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
+import { screenTransfer } from "./fraudService";
 import {
   getOrCreateUserAccount,
   getBalance,
@@ -23,6 +24,8 @@ export interface TransferInput {
   currency: string;
   description?: string;
   idempotencyKey: string;
+  /** Origin channel for fraud screening: api | smartchat | mcp. Defaults to "api". */
+  channel?: string;
 }
 
 export interface TransferResult {
@@ -48,6 +51,31 @@ export async function transfer(input: TransferInput): Promise<TransferResult> {
   const toAccountId = await getOrCreateUserAccount(input.toUserId, "user_cash", input.currency);
 
   const ledgerKey = `transfer:${input.idempotencyKey}`;
+
+  // Stage 1 fraud seam. Screen only NEW, fundable transfers: a replay is already
+  // an authorized post, and an unfunded attempt must surface as INSUFFICIENT_FUNDS
+  // (not fraud). The in-transaction balance check below remains authoritative for
+  // TOCTOU; this pre-read only decides whether screening is worthwhile.
+  const existingForScreen = await db.queryOne<{ id: string }>(
+    "SELECT id FROM ledger_journals WHERE idempotency_key = ?",
+    [ledgerKey]
+  );
+  if (!existingForScreen) {
+    const preBalance = await getBalance(fromAccountId);
+    if (preBalance >= input.amountMinor) {
+      await screenTransfer({
+        eventType: "transfer.send",
+        channel: input.channel ?? "api",
+        userId: input.fromUserId,
+        counterpartyId: input.toUserId,
+        fromAccountId,
+        toAccountId,
+        amountMinor: input.amountMinor,
+        currency: input.currency,
+        idempotencyKey: input.idempotencyKey,
+      });
+    }
+  }
 
   return db.transaction(async (tx) => {
     // Idempotency check inside the transaction eliminates the TOCTOU race (C-4).

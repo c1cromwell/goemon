@@ -46,3 +46,10 @@ export const hederaTxTotal = new client.Counter({
   labelNames: ["result"],
   registers: [registry],
 });
+
+export const fraudDecisionTotal = new client.Counter({
+  name: "fraud_decision_total",
+  help: "Fraud-engine decisions on money-path events (Stage 1 seam)",
+  labelNames: ["event_type", "action"],
+  registers: [registry],
+});
