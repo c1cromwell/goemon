@@ -1225,4 +1225,10 @@ curl -X POST http://localhost:3001/api/admin/seed
   external_clearing account is the seam where they'll attach later.
 - **Production custody hardening (HSM-backed paymaster, multi-sig treasury)** — the Hedera operator key here is a
   testnet convenience. Production must move it to KMS/HSM with multi-party control (PRD Module 04).
+- **Real-time fraud platform (Kafka + Flink + Transformer serving + feature store + model registry + lakehouse)** —
+  the v2/production north-star in `docs/business/FraudEngine.md`, in the same category as Temporal/Conductor and the
+  Go reimplementation. **Stage 1 (an in-process fraud seam) is built** and screens the money path in `transferService`
+  via `fraudService` (deterministic `rules-v0` scorer → append-only `fraud_decisions`; closes the "no transaction-time
+  fraud check" gap). Stages 2–4 (the streaming/ML platform itself) remain out of scope and are a locked-architecture
+  decision — see `docs/business/FraudEngine-GapAnalysis.md` for the component gap + phased roadmap.
 

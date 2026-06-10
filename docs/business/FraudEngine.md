@@ -1,4 +1,13 @@
 # Technology Strategy
+
+> **Status: v2 / production north-star — not current-phase scope.** This describes the target real-time
+> fraud platform (Kafka + Flink + Transformer serving + feature store + model registry + lakehouse), in the
+> same category as Temporal/Conductor and the Go reimplementation. The prototype does **not** implement this
+> platform. What *is* built is **Stage 1**: an in-process fraud seam (`backend/src/services/fraudService.ts` +
+> the append-only `fraud_decisions` table) that screens the money path and shapes its event/score/decision/audit
+> contract to grow into the design below. See [`FraudEngine-GapAnalysis.md`](./FraudEngine-GapAnalysis.md) for the
+> conformance table, what Stage 1 closes, and the phased roadmap (Stages 2–4 remain a locked-architecture decision).
+
 **In this evolved architecture, the entire fintech/bank becomes a pure event-driven platform where *every* product (payments, lending, accounts, cards, investments, support, etc.) streams *all* its data in real time to a unified Kafka backbone. This creates a single source of truth for the full user lifecycle.**
 
 The fraud team gets full autonomy as a "listener-first" consumer: they subscribe to the stream(s), maintain their own processing jobs, and dynamically decide which Transformer model (or ensemble) to invoke for inference *or* trigger learning/retraining pipelines — for testing (shadow/canary) or production — without touching core product code. This decouples fraud completely while keeping sub-50–100ms end-to-end latency for decisions.
