@@ -147,6 +147,11 @@ Traditional unsecured consumer lending. Requires:
 
 ## Card (future)
 
+> **Network strategy note:** the v1/v2 card rides Visa/MC (below). Whether Argus could instead build a
+> *new* (non-Visa/MC/Amex) rail — and why the honest answer is "a stablecoin/agent-native rail with a Visa
+> bridge, not a frontal assault on card acceptance" — is analyzed in
+> [`docs/business/PAYMENT-NETWORK-STRATEGY.md`](../business/PAYMENT-NETWORK-STRATEGY.md).
+
 Debit card is v2. Architecturally:
 - Visa or Mastercard BIN sponsored by partner bank
 - Card issued physically and virtually
