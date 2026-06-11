@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { api, clearToken, getToken, type IdentitySummary, type ReviewItem } from "../api/client";
+import { api, clearToken, getToken, type IdentitySummary, type ReviewItem, type EscrowView } from "../api/client";
+import { formatMoney } from "../lib/money";
 
 export function AdminConsole() {
   const nav = useNavigate();
   const [identities, setIdentities] = useState<IdentitySummary[]>([]);
   const [queue, setQueue] = useState<ReviewItem[]>([]);
+  const [disputes, setDisputes] = useState<EscrowView[]>([]);
   const [detail, setDetail] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -26,7 +28,22 @@ export function AdminConsole() {
       if (msg.includes("UNAUTHENTICATED") || msg.includes("FORBIDDEN")) logout();
       else setError(msg);
     }
+    // Disputes load separately — a role gap here shouldn't block identity review.
+    try {
+      setDisputes(await api.escrowDisputes());
+    } catch {
+      /* not compliance/admin — skip */
+    }
   }, [logout]);
+
+  async function resolve(id: string, outcome: "release" | "refund") {
+    try {
+      await api.resolveEscrow(id, outcome);
+      await refresh();
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  }
 
   useEffect(() => {
     if (!getToken()) {
@@ -107,6 +124,37 @@ export function AdminConsole() {
                     <button className="danger" onClick={() => decide(r.session_id, false)}>
                       Reject
                     </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
+      {disputes.length > 0 && (
+        <section className="card">
+          <h2>Escrow disputes ({disputes.length})</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Payer</th>
+                <th>Payee</th>
+                <th>Reason</th>
+                <th>Resolve</th>
+              </tr>
+            </thead>
+            <tbody>
+              {disputes.map((d) => (
+                <tr key={d.id}>
+                  <td>{formatMoney(d.amountMinor, d.currency)}</td>
+                  <td>{d.payerEmail ?? d.payerId}</td>
+                  <td>{d.payeeEmail ?? d.payeeId}</td>
+                  <td>{d.disputeReason ?? "—"}</td>
+                  <td>
+                    <button onClick={() => resolve(d.id, "release")}>Release to payee</button>
+                    <button className="danger" onClick={() => resolve(d.id, "refund")}>Refund payer</button>
                   </td>
                 </tr>
               ))}

@@ -40,6 +40,8 @@ import { myAgentsRouter } from "./routes/myAgents";
 import { marketplaceRouter } from "./routes/marketplace";
 import { marketplaceAdminRouter } from "./routes/marketplaceAdmin";
 import { tradingRouter } from "./routes/trading";
+import { escrowRouter } from "./routes/escrow";
+import { escrowAdminRouter } from "./routes/escrowAdmin";
 import { requireAuth } from "./middleware/auth";
 import { requireTier } from "./middleware/requireTier";
 
@@ -146,6 +148,10 @@ async function bootstrap(): Promise<void> {
 
   // ---- Phase 17 Stage 1 — trading (isolated; service-gated by TRADING_ENABLED) ----
   app.use("/api/trading", tradingRouter);
+
+  // ---- Escrow & dispute layer (customer surface + RBAC mediator surface) ----
+  app.use("/api/escrow", escrowRouter);
+  app.use("/api/admin", escrowAdminRouter);
 
   // Error handler LAST
   app.use(errorHandler);

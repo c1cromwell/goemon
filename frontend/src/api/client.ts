@@ -311,6 +311,23 @@ export interface OrderResult {
   journalId: string | null;
 }
 
+// Escrow & dispute layer
+export type EscrowStatus = "held" | "disputed" | "released" | "refunded";
+export interface EscrowView {
+  id: string;
+  payerId: string;
+  payeeId: string;
+  payerEmail?: string;
+  payeeEmail?: string;
+  amountMinor: string;
+  currency: string;
+  status: EscrowStatus;
+  memo: string | null;
+  disputeReason: string | null;
+  resolution: "release" | "refund" | null;
+  createdAt: string;
+}
+
 // Trading (Phase 17 Stage 1 — isolated; 503 TRADING_DISABLED when off)
 export interface Instrument {
   symbol: string;
@@ -463,6 +480,14 @@ export const userApi = {
   order: (assetId: string, side: "buy" | "sell", qtyBase: string, key: string) =>
     umoney<OrderResult>("/marketplace/orders", { assetId, side, qtyBase }, key),
 
+  // --- escrow & dispute ---
+  escrows: () => uget<EscrowView[]>("/escrow"),
+  escrowHold: (body: { payeeEmail?: string; payeeId?: string; amountMinor: string; currency?: string; memo?: string }, key: string) =>
+    umoney<EscrowView>("/escrow", body, key),
+  escrowRelease: (id: string) => upost<EscrowView>(`/escrow/${id}/release`),
+  escrowRefund: (id: string) => upost<EscrowView>(`/escrow/${id}/refund`),
+  escrowDispute: (id: string, reason: string) => upost<EscrowView>(`/escrow/${id}/dispute`, { reason }),
+
   // --- trading (Phase 17 Stage 1) ---
   instruments: () => uget<Instrument[]>("/trading/instruments"),
   tradeOrders: (limit = 25) => uget<TradeOrder[]>(`/trading/orders?limit=${limit}`),
@@ -538,4 +563,9 @@ export const api = {
       "/admin/simulations",
       { method: "POST", body: JSON.stringify({ profiles }) }
     ),
+
+  // --- escrow dispute mediation (compliance/admin) ---
+  escrowDisputes: () => adminRequest<EscrowView[]>("/admin/escrow/disputes"),
+  resolveEscrow: (id: string, outcome: "release" | "refund") =>
+    adminRequest<EscrowView>(`/admin/escrow/${id}/resolve`, { method: "POST", body: JSON.stringify({ outcome }) }),
 };

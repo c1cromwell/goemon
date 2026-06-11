@@ -17,6 +17,7 @@ import { AgentPermissions } from "./pages/AgentPermissions";
 import { Activity } from "./pages/Activity";
 import { Wallet } from "./pages/Wallet";
 import { Trade } from "./pages/Trade";
+import { Escrow } from "./pages/Escrow";
 import { More } from "./pages/More";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminConsole } from "./pages/AdminConsole";
@@ -65,6 +66,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="/permissions" element={<AgentPermissions />} />
               <Route path="/activity" element={<Activity />} />
               <Route path="/trade" element={<Trade />} />
+              <Route path="/escrow" element={<Escrow />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/more" element={<More />} />
             </Route>

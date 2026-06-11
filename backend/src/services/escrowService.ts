@@ -32,6 +32,8 @@ export interface EscrowRow {
   id: string;
   payerId: string;
   payeeId: string;
+  payerEmail?: string;
+  payeeEmail?: string;
   amountMinor: string;
   currency: string;
   status: EscrowStatus;
@@ -45,6 +47,8 @@ interface RawEscrow {
   id: string;
   payer_id: string;
   payee_id: string;
+  payer_email?: string;
+  payee_email?: string;
   amount_minor: string | number;
   currency: string;
   status: EscrowStatus;
@@ -62,6 +66,8 @@ function mapEscrow(r: RawEscrow): EscrowRow {
     id: r.id,
     payerId: r.payer_id,
     payeeId: r.payee_id,
+    payerEmail: r.payer_email,
+    payeeEmail: r.payee_email,
     amountMinor: BigInt(r.amount_minor).toString(),
     currency: r.currency,
     status: r.status,
@@ -71,6 +77,10 @@ function mapEscrow(r: RawEscrow): EscrowRow {
     createdAt: r.created_at,
   };
 }
+
+// Read with counterparty emails joined (for the app/admin surfaces).
+const ESCROW_SELECT = `SELECT e.*, pp.email AS payer_email, pe.email AS payee_email
+  FROM escrow_payments e JOIN users pp ON pp.id = e.payer_id JOIN users pe ON pe.id = e.payee_id`;
 
 async function recordEvent(
   tx: Db,
@@ -219,7 +229,7 @@ export async function resolveDispute(escrowId: string, outcome: Resolution, acto
 }
 
 export async function getEscrow(escrowId: string): Promise<EscrowRow | null> {
-  const row = await getDb().queryOne<RawEscrow>("SELECT * FROM escrow_payments WHERE id = ?", [escrowId]);
+  const row = await getDb().queryOne<RawEscrow>(`${ESCROW_SELECT} WHERE e.id = ?`, [escrowId]);
   return row ? mapEscrow(row) : null;
 }
 
@@ -227,8 +237,18 @@ export async function getEscrow(escrowId: string): Promise<EscrowRow | null> {
 export async function listEscrows(userId: string, limit = 50): Promise<EscrowRow[]> {
   const capped = Math.min(Math.max(limit, 1), 200);
   const rows = await getDb().query<RawEscrow>(
-    "SELECT * FROM escrow_payments WHERE payer_id = ? OR payee_id = ? ORDER BY created_at DESC LIMIT ?",
+    `${ESCROW_SELECT} WHERE e.payer_id = ? OR e.payee_id = ? ORDER BY e.created_at DESC LIMIT ?`,
     [userId, userId, capped]
+  );
+  return rows.map(mapEscrow);
+}
+
+/** Open disputes — the mediator (compliance/admin) work queue. */
+export async function listDisputed(limit = 100): Promise<EscrowRow[]> {
+  const capped = Math.min(Math.max(limit, 1), 200);
+  const rows = await getDb().query<RawEscrow>(
+    `${ESCROW_SELECT} WHERE e.status = 'disputed' ORDER BY e.created_at ASC LIMIT ?`,
+    [capped]
   );
   return rows.map(mapEscrow);
 }
