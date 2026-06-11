@@ -22,6 +22,7 @@ import { getDb, type Db } from "../db";
 import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
 import { getOrCreateUserAccount, getSystemAccount, getBalance, postJournal } from "./ledgerService";
+import { isHederaEnabled, submitEscrowHoldOnChain, submitEscrowSettleOnChain } from "./hederaService";
 
 export type EscrowStatus = "held" | "disputed" | "released" | "refunded";
 export type Resolution = "release" | "refund";
@@ -117,20 +118,35 @@ export async function hold(input: {
   if (!payee) throw new AppError(ErrorCode.NOT_FOUND, "Payee not found");
 
   const id = uuidv4();
-  return db.transaction(async (tx) => {
-    const payerCash = await getOrCreateUserAccount(input.payerId, "user_cash", input.currency, tx);
-    const escrowId = await getSystemAccount("escrow", input.currency, tx);
+  // Resolve accounts + pre-check funds OUTSIDE the tx so the on-chain leg (a network
+  // call) never holds the DB lock. The in-tx re-check below is authoritative for TOCTOU.
+  const payerCash = await getOrCreateUserAccount(input.payerId, "user_cash", input.currency);
+  const escrowAcct = await getSystemAccount("escrow", input.currency);
+  if ((await getBalance(payerCash)) < input.amountMinor) {
+    throw new AppError(ErrorCode.INSUFFICIENT_FUNDS, "Insufficient funds to hold");
+  }
 
-    const bal = await getBalance(payerCash, tx);
-    if (bal < input.amountMinor) throw new AppError(ErrorCode.INSUFFICIENT_FUNDS, "Insufficient funds to hold");
+  // Native rail: USDC holds settle on Hedera (payer → operator/escrow-custodian).
+  // The ledger journal records the on-chain txId as its externalRef. Off / USD = ledger-only.
+  const externalRef =
+    input.currency === "USDC" && isHederaEnabled()
+      ? await submitEscrowHoldOnChain(input.payerId, input.amountMinor)
+      : undefined;
+
+  return db.transaction(async (tx) => {
+    const dup = await tx.queryOne<RawEscrow>("SELECT * FROM escrow_payments WHERE idempotency_key = ?", [input.idempotencyKey]);
+    if (dup) return mapEscrow(dup);
+    if ((await getBalance(payerCash, tx)) < input.amountMinor) {
+      throw new AppError(ErrorCode.INSUFFICIENT_FUNDS, "Insufficient funds to hold");
+    }
 
     const holdJournal = await postJournal(
       [
         { ledgerAccountId: payerCash, direction: "debit", amountMinor: input.amountMinor, currency: input.currency },
-        { ledgerAccountId: escrowId, direction: "credit", amountMinor: input.amountMinor, currency: input.currency },
+        { ledgerAccountId: escrowAcct, direction: "credit", amountMinor: input.amountMinor, currency: input.currency },
       ],
       `Escrow hold ${input.payerId}→${input.payeeId}`,
-      { idempotencyKey: `escrow:hold:${input.idempotencyKey}`, db: tx }
+      { idempotencyKey: `escrow:hold:${input.idempotencyKey}`, externalRef, db: tx }
     );
 
     const now = new Date().toISOString();
@@ -139,8 +155,8 @@ export async function hold(input: {
        VALUES (?, ?, ?, ?, ?, 'held', ?, ?, ?, ?, ?)`,
       [id, input.payerId, input.payeeId, input.amountMinor, input.currency, input.memo ?? null, holdJournal, input.idempotencyKey, now, now]
     );
-    await recordEvent(tx, id, "held", input.payerId, { amountMinor: input.amountMinor.toString(), currency: input.currency }, holdJournal);
-    await logAudit({ userId: input.payerId, action: "escrow.hold", resource: id, details: { payeeId: input.payeeId, amountMinor: input.amountMinor.toString(), currency: input.currency } });
+    await recordEvent(tx, id, "held", input.payerId, { amountMinor: input.amountMinor.toString(), currency: input.currency, onChainTx: externalRef ?? null }, holdJournal);
+    await logAudit({ userId: input.payerId, action: "escrow.hold", resource: id, details: { payeeId: input.payeeId, amountMinor: input.amountMinor.toString(), currency: input.currency, onChainTx: externalRef ?? null } });
 
     const row = await tx.queryOne<RawEscrow>("SELECT * FROM escrow_payments WHERE id = ?", [id]);
     return mapEscrow(row!);
@@ -158,20 +174,34 @@ async function settle(
   opts: { fromStatuses: EscrowStatus[]; actor: string; resolution?: boolean }
 ): Promise<EscrowRow> {
   const db = getDb();
+  const terminal: EscrowStatus = outcome === "release" ? "released" : "refunded";
+
+  // Pre-read the status OUTSIDE the tx to gate the on-chain leg (no DB lock held
+  // during the network call). The in-tx guard below is authoritative.
+  const pre = await db.queryOne<RawEscrow>("SELECT * FROM escrow_payments WHERE id = ?", [escrowId]);
+  if (!pre) throw new AppError(ErrorCode.NOT_FOUND, "Escrow not found");
+  if (pre.status === terminal) return mapEscrow(pre); // idempotent no-op
+  if (!opts.fromStatuses.includes(pre.status)) {
+    throw new AppError(ErrorCode.CONFLICT, `Cannot ${outcome} an escrow in status '${pre.status}'`);
+  }
+
+  const currency = pre.currency;
+  const amount = BigInt(pre.amount_minor);
+  const recipientId = outcome === "release" ? pre.payee_id : pre.payer_id;
+
+  // Native rail: USDC settles on Hedera (operator/escrow-custodian → recipient).
+  const externalRef =
+    currency === "USDC" && isHederaEnabled() ? await submitEscrowSettleOnChain(recipientId, amount) : undefined;
+
   return db.transaction(async (tx) => {
     const e = await tx.queryOne<RawEscrow>("SELECT * FROM escrow_payments WHERE id = ?", [escrowId]);
     if (!e) throw new AppError(ErrorCode.NOT_FOUND, "Escrow not found");
-
-    const terminal: EscrowStatus = outcome === "release" ? "released" : "refunded";
-    if (e.status === terminal) return mapEscrow(e); // idempotent no-op
+    if (e.status === terminal) return mapEscrow(e); // idempotent (race)
     if (!opts.fromStatuses.includes(e.status)) {
       throw new AppError(ErrorCode.CONFLICT, `Cannot ${outcome} an escrow in status '${e.status}'`);
     }
 
-    const currency = e.currency;
-    const amount = BigInt(e.amount_minor);
     const escrowAcct = await getSystemAccount("escrow", currency, tx);
-    const recipientId = outcome === "release" ? e.payee_id : e.payer_id;
     const recipientCash = await getOrCreateUserAccount(recipientId, "user_cash", currency, tx);
 
     const journalId = await postJournal(
@@ -180,15 +210,15 @@ async function settle(
         { ledgerAccountId: recipientCash, direction: "credit", amountMinor: amount, currency },
       ],
       `Escrow ${terminal} ${escrowId}`,
-      { idempotencyKey: `escrow:settle:${escrowId}`, db: tx }
+      { idempotencyKey: `escrow:settle:${escrowId}`, externalRef, db: tx }
     );
 
     await tx.execute(
       "UPDATE escrow_payments SET status = ?, settle_journal_id = ?, resolution = ?, updated_at = ? WHERE id = ?",
       [terminal, journalId, opts.resolution ? outcome : null, new Date().toISOString(), escrowId]
     );
-    await recordEvent(tx, escrowId, opts.resolution ? "dispute_resolved" : terminal, opts.actor, { outcome, amountMinor: amount.toString() }, journalId);
-    await logAudit({ userId: recipientId, action: `escrow.${opts.resolution ? "resolve" : terminal}`, resource: escrowId, details: { outcome } });
+    await recordEvent(tx, escrowId, opts.resolution ? "dispute_resolved" : terminal, opts.actor, { outcome, amountMinor: amount.toString(), onChainTx: externalRef ?? null }, journalId);
+    await logAudit({ userId: recipientId, action: `escrow.${opts.resolution ? "resolve" : terminal}`, resource: escrowId, details: { outcome, onChainTx: externalRef ?? null } });
 
     const row = await tx.queryOne<RawEscrow>("SELECT * FROM escrow_payments WHERE id = ?", [escrowId]);
     return mapEscrow(row!);

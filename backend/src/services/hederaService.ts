@@ -241,6 +241,68 @@ export async function transferUsdcOnChain(input: {
   return { transactionId, journalId };
 }
 
+// ---------------------------------------------------------------------------
+// Escrow on the USDC/Hedera rail (chain-only primitives — the caller owns the
+// ledger). The operator account doubles as the on-chain escrow custodian: a hold
+// moves USDC payer→operator; release/refund moves operator→recipient. These do
+// NOT post a ledger journal — escrowService records the txId as the journal's
+// externalRef. Gated by HEDERA_ENABLED via assertEnabled().
+// ---------------------------------------------------------------------------
+
+function usdcTokenId(): TokenId {
+  if (!config.HEDERA_USDC_TOKEN_ID) throw new AppError(ErrorCode.VALIDATION, "HEDERA_USDC_TOKEN_ID is not configured");
+  return TokenId.fromString(config.HEDERA_USDC_TOKEN_ID);
+}
+
+/** Hold: move USDC on-chain from the payer to the operator (escrow custodian). Payer-signed. */
+export async function submitEscrowHoldOnChain(payerUserId: string, amountMicro: bigint): Promise<string> {
+  const client = assertEnabled();
+  const tokenId = usdcTokenId();
+  const payer = await getUserHederaAccount(payerUserId);
+  if (!payer?.hedera_account_id || !payer.private_key_hex) {
+    throw new AppError(ErrorCode.NOT_FOUND, "Payer has no Hedera account — provision one first");
+  }
+  const payerKey = PrivateKey.fromStringDer(payer.private_key_hex);
+  const amount = Number(amountMicro);
+  const signed = await new TransferTransaction()
+    .addTokenTransfer(tokenId, AccountId.fromString(payer.hedera_account_id), -amount)
+    .addTokenTransfer(tokenId, AccountId.fromString(config.HEDERA_OPERATOR_ID!), amount)
+    .freezeWith(client)
+    .sign(payerKey);
+  try {
+    const resp = await signed.execute(client);
+    await resp.getReceipt(client);
+    hederaTxTotal.inc({ result: "success" });
+    return resp.transactionId.toString();
+  } catch (e) {
+    hederaTxTotal.inc({ result: "error" });
+    throw e;
+  }
+}
+
+/** Settle: move USDC on-chain from the operator (escrow custodian) to a recipient. Operator-signed. */
+export async function submitEscrowSettleOnChain(recipientUserId: string, amountMicro: bigint): Promise<string> {
+  const client = assertEnabled();
+  const tokenId = usdcTokenId();
+  const recipient = await getOrCreateUserHederaAccount(recipientUserId); // ensure they can receive USDC
+  const operatorKey = PrivateKey.fromStringDer(config.HEDERA_OPERATOR_KEY!);
+  const amount = Number(amountMicro);
+  const signed = await new TransferTransaction()
+    .addTokenTransfer(tokenId, AccountId.fromString(config.HEDERA_OPERATOR_ID!), -amount)
+    .addTokenTransfer(tokenId, AccountId.fromString(recipient.hedera_account_id!), amount)
+    .freezeWith(client)
+    .sign(operatorKey);
+  try {
+    const resp = await signed.execute(client);
+    await resp.getReceipt(client);
+    hederaTxTotal.inc({ result: "success" });
+    return resp.transactionId.toString();
+  } catch (e) {
+    hederaTxTotal.inc({ result: "error" });
+    throw e;
+  }
+}
+
 /** Look up a Argus Financial Partners user's Hedera account ID. Throws NOT_FOUND if they have none. */
 export async function requireUserHederaAccountId(userId: string): Promise<string> {
   const user = await getUserById(userId);

@@ -25,6 +25,7 @@ export function Escrow() {
   const [escrows, setEscrows] = useState<EscrowView[] | null>(null);
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("");
+  const [currency, setCurrency] = useState<"USD" | "USDC">("USD");
   const [memo, setMemo] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -47,9 +48,10 @@ export function Escrow() {
     }
     setBusy(true);
     try {
-      const minor = String(Math.round(dollars * 100));
-      await userApi.escrowHold({ payeeEmail: email, amountMinor: minor, currency: "USD", memo: memo || undefined }, newIdempotencyKey());
-      toast.show("Funds held in escrow");
+      // USD → cents; USDC → micro-units (6dp).
+      const minor = String(Math.round(dollars * (currency === "USDC" ? 1_000_000 : 100)));
+      await userApi.escrowHold({ payeeEmail: email, amountMinor: minor, currency, memo: memo || undefined }, newIdempotencyKey());
+      toast.show(`Funds held in escrow (${currency})`);
       setEmail("");
       setAmount("");
       setMemo("");
@@ -91,7 +93,11 @@ export function Escrow() {
       <div className="card stack sm">
         <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
           <input placeholder="Payee email" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="Payee email" />
-          <input type="number" min={0} step="0.01" placeholder="Amount (USD)" value={amount} onChange={(e) => setAmount(e.target.value)} aria-label="Amount" style={{ width: 130 }} />
+          <input type="number" min={0} step="0.01" placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} aria-label="Amount" style={{ width: 110 }} />
+          <select value={currency} onChange={(e) => setCurrency(e.target.value as "USD" | "USDC")} aria-label="Currency">
+            <option value="USD">USD</option>
+            <option value="USDC">USDC</option>
+          </select>
           <input placeholder="Memo (optional)" value={memo} onChange={(e) => setMemo(e.target.value)} aria-label="Memo" />
           <button onClick={send} disabled={busy}>{busy ? "Holding…" : "Hold in escrow"}</button>
         </div>
