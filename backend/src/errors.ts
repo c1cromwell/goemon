@@ -40,6 +40,9 @@ export enum ErrorCode {
   // Fraud / risk (Stage 1 fraud seam)
   FRAUD_BLOCKED = "FRAUD_BLOCKED",
 
+  // Trading (Phase 17 Stage 1 seam)
+  TRADING_DISABLED = "TRADING_DISABLED",
+
   // Generic
   NOT_FOUND = "NOT_FOUND",
   CONFLICT = "CONFLICT",
@@ -66,6 +69,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.REPLAY_DETECTED]: 409,
   [ErrorCode.COMPLIANCE_BLOCKED]: 403,
   [ErrorCode.FRAUD_BLOCKED]: 403,
+  [ErrorCode.TRADING_DISABLED]: 503,
   [ErrorCode.NOT_FOUND]: 404,
   [ErrorCode.CONFLICT]: 409,
   [ErrorCode.INTERNAL]: 500,

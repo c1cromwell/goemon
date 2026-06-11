@@ -55,6 +55,13 @@ async function bootstrap(): Promise<void> {
   await bootstrapSystemAccounts();
   await initHedera();
 
+  // Phase 17 Stage 1 — trading settlement worker (off unless TRADING_ENABLED).
+  if (config.TRADING_ENABLED) {
+    const { startSettlementLoop } = await import("./services/tradingService");
+    startSettlementLoop();
+    logger.warn("Trading seam ENABLED (simulated broker) — settlement loop started");
+  }
+
   const app = express();
   // Trust one hop of reverse-proxy so req.ip is the real client IP (not spoofable
   // via X-Forwarded-For when sitting behind a load balancer). Adjust the count

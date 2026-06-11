@@ -90,6 +90,11 @@ const schema = z.object({
   FRAUD_ENGINE_ENABLED: boolishDefaultTrue,
   FRAUD_ENGINE_ENFORCE: boolishDefaultTrue,
 
+  // Phase 17 Stage 1 — trading & brokerage seam. Off by default — a kill-switch that
+  // disables all trading without touching the bank (docs/PHASE-17-TRADING-BROKERAGE.md).
+  // The Stage-1 broker is SIMULATED only and must never run in production (see productionFatals).
+  TRADING_ENABLED: boolish,
+
   HEDERA_ENABLED: boolish,
   HEDERA_NETWORK: z.enum(["testnet", "mainnet", "previewnet"]).default("testnet"),
   HEDERA_OPERATOR_ID: z.string().optional(),
@@ -127,6 +132,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.HEDERA_ENABLED && (!c.HEDERA_OPERATOR_ID || !c.HEDERA_OPERATOR_KEY)) {
     fatal.push("HEDERA_ENABLED=true requires HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY.");
+  }
+  if (c.TRADING_ENABLED) {
+    fatal.push("TRADING_ENABLED must be false in production — the Phase-17 Stage-1 broker is simulated only.");
   }
   if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
     fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");

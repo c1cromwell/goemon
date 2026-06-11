@@ -201,6 +201,27 @@ export async function getSystemAccount(kind: string, currency: string, db?: Db):
   return row.id;
 }
 
+/**
+ * Get or create a system ledger account (user_id NULL) for the given kind/currency.
+ * Unlike getSystemAccount this creates on demand — used for dynamically-scoped
+ * counterparties like a trading broker-clearing account in a position currency
+ * (POS:<instrumentId>), which can't be pre-bootstrapped per instrument.
+ */
+export async function getOrCreateSystemAccount(kind: string, currency: string, db?: Db): Promise<string> {
+  const root = db ?? getDb();
+  const existing = await root.queryOne<{ id: string }>(
+    "SELECT id FROM ledger_accounts WHERE user_id IS NULL AND kind = ? AND currency = ?",
+    [kind, currency]
+  );
+  if (existing) return existing.id;
+  const id = uuidv4();
+  await root.execute(
+    "INSERT INTO ledger_accounts (id, user_id, kind, currency, created_at) VALUES (?, NULL, ?, ?, ?)",
+    [id, kind, currency, new Date().toISOString()]
+  );
+  return id;
+}
+
 /** Ensure all required system ledger accounts exist. Call once on server boot. */
 export async function bootstrapSystemAccounts(): Promise<void> {
   const db = getDb();

@@ -53,3 +53,18 @@ export const fraudDecisionTotal = new client.Counter({
   labelNames: ["event_type", "action"],
   registers: [registry],
 });
+
+// Phase 17 — trading (Class-B SLO surface; kept distinct from Class-A money metrics).
+export const tradingOrderTotal = new client.Counter({
+  name: "trading_order_total",
+  help: "Trading orders accepted on the hot path",
+  labelNames: ["side", "result"],
+  registers: [registry],
+});
+
+export const tradingSettlementTotal = new client.Counter({
+  name: "trading_settlement_total",
+  help: "Trading settlement outcomes (async worker)",
+  labelNames: ["result"],
+  registers: [registry],
+});

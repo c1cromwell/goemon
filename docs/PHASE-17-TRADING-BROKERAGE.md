@@ -192,9 +192,15 @@ substrate; the licensed supervision layer is the missing piece.
 
 ---
 
-## 9. Prototype Stage 1 (buildable now, simulated, fully isolated)
+## 9. Prototype Stage 1 — ✅ BUILT (simulated, fully isolated)
 
-Like the fraud Stage-1 seam, a **simulated** trading slice can be built now to prove the SLA-isolation
+> **Status: built.** `backend/src/services/tradingService.ts` + `tradingBroker.ts` + migration
+> `008_trading.sql` (`instruments`, `orders_trading`, append-only `fills`) + `TRADING_ENABLED` kill-switch
+> + `trading_order_total`/`trading_settlement_total` metrics. Tests: `backend/test/trading.test.ts` (8) —
+> incl. two **SLA-isolation** tests proving a stalled/failed broker cannot block or corrupt the money path.
+> Full suite 149 pass / 3 todo.
+
+Like the fraud Stage-1 seam, a **simulated** trading slice is built to prove the SLA-isolation
 architecture **without a broker**:
 - A **`tradingService`** behind a hard module boundary with **its own DB pool** and a `TRADING_ENABLED`
   kill-switch; a **simulated broker + simulated market-data** (deterministic, offline — mirroring the
