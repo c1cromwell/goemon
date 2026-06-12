@@ -33,6 +33,7 @@ import { logAudit } from "./auditService";
 import { hederaTxTotal } from "../observability/metrics";
 import { getOrCreateUserAccount, getSystemAccount, postJournal } from "./ledgerService";
 import { getUserById } from "./authService";
+import { assertSettlementUngated } from "./reconciliationService";
 
 export interface HederaAccountRow {
   id: string;
@@ -184,6 +185,8 @@ export async function transferUsdcOnChain(input: {
   if (!config.HEDERA_USDC_TOKEN_ID) {
     throw new AppError(ErrorCode.VALIDATION, "HEDERA_USDC_TOKEN_ID is not configured");
   }
+  // Phase 20: drift in the last reconciliation run gates all on-chain settlement.
+  await assertSettlementUngated();
 
   const senderAccount = await getUserHederaAccount(input.fromUserId);
   if (!senderAccount?.hedera_account_id || !senderAccount.private_key_hex) {
@@ -256,6 +259,7 @@ function usdcTokenId(): TokenId {
 
 /** Hold: move USDC on-chain from the payer to the operator (escrow custodian). Payer-signed. */
 export async function submitEscrowHoldOnChain(payerUserId: string, amountMicro: bigint): Promise<string> {
+  await assertSettlementUngated();
   const client = assertEnabled();
   const tokenId = usdcTokenId();
   const payer = await getUserHederaAccount(payerUserId);
@@ -282,6 +286,7 @@ export async function submitEscrowHoldOnChain(payerUserId: string, amountMicro: 
 
 /** Settle: move USDC on-chain from the operator (escrow custodian) to a recipient. Operator-signed. */
 export async function submitEscrowSettleOnChain(recipientUserId: string, amountMicro: bigint): Promise<string> {
+  await assertSettlementUngated();
   const client = assertEnabled();
   const tokenId = usdcTokenId();
   const recipient = await getOrCreateUserHederaAccount(recipientUserId); // ensure they can receive USDC

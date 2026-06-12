@@ -169,10 +169,13 @@ caution applies doubly to the words *credit* and *network*).
 
 - **Card brand / issuing** → extends **Phase 19 — Full-bank rails** in `docs/ARGUS-PLAN.md` (BaaS partner +
   MSB already the gate there); the Visa-bridge card is a Phase-19 deliverable.
-- **Native stablecoin settlement rail + agent-native payments** → a candidate **new Phase 21 — "Argus Pay"**
-  (Corp B/C), reusing: the ledger **`external_clearing`** seam, **Hedera USDC**, the **OID4VP/MCP/operation-
+- **Native stablecoin settlement rail + agent-native payments** → **Phase 21 — "Argus Pay"** (Corp B/C),
+  reusing: the ledger **`external_clearing`** seam, **Hedera USDC**, the **OID4VP/MCP/operation-
   token** authorization stack, the **Phase-8 escrow** pattern (for the dispute layer), and the
   **SLA-isolation discipline** from the Phase-17 trading seam (payments must not degrade money-critical SLOs).
+  **Stage-1 prototype now BUILT** (see `docs/ARGUS-PLAN.md` Phase 21): merchants + payment intents,
+  escrow-protected pay→capture/refund/dispute, the `pay_merchant` MCP scope for agent-to-merchant commerce,
+  zero rail fee, `ARGUS_PAY_ENABLED` kill-switch (prod-fatal until licensed).
 - **Credit** → **collateralized** lending is PRD v2 (rides the rail); **unsecured** is PRD v3 (lending
   license/partner + capital).
 

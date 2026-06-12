@@ -42,6 +42,9 @@ import { marketplaceAdminRouter } from "./routes/marketplaceAdmin";
 import { tradingRouter } from "./routes/trading";
 import { escrowRouter } from "./routes/escrow";
 import { escrowAdminRouter } from "./routes/escrowAdmin";
+import { payRouter } from "./routes/pay";
+import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
+import { initReconciliation, startReconciliationLoop, runReconciliation } from "./services/reconciliationService";
 import { requireAuth } from "./middleware/auth";
 import { requireTier } from "./middleware/requireTier";
 
@@ -63,6 +66,18 @@ async function bootstrap(): Promise<void> {
     const { startSettlementLoop } = await import("./services/tradingService");
     startSettlementLoop();
     logger.warn("Trading seam ENABLED (simulated broker) — settlement loop started");
+  }
+
+  // Phase 20 — daily ledger⇄chain reconciliation (Mirror Node provider; drift
+  // gates on-chain settlement). Only meaningful when Hedera is enabled.
+  initReconciliation();
+  if (config.HEDERA_ENABLED) {
+    startReconciliationLoop();
+    void runReconciliation().catch((e) => logger.error(e, "Initial reconciliation run failed"));
+  }
+
+  if (config.ARGUS_PAY_ENABLED) {
+    logger.warn("Argus Pay rail ENABLED (Phase 21 Stage 1 prototype — not licensed for production)");
   }
 
   const app = express();
@@ -152,6 +167,12 @@ async function bootstrap(): Promise<void> {
   // ---- Escrow & dispute layer (customer surface + RBAC mediator surface) ----
   app.use("/api/escrow", escrowRouter);
   app.use("/api/admin", escrowAdminRouter);
+
+  // ---- Phase 21 Stage 1 — Argus Pay (service-gated by ARGUS_PAY_ENABLED) ----
+  app.use("/api/pay", payRouter);
+
+  // ---- Phase 20 — ledger⇄chain reconciliation (RBAC admin surface) ----
+  app.use("/api/admin", reconciliationAdminRouter);
 
   // Error handler LAST
   app.use(errorHandler);

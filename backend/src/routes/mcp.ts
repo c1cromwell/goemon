@@ -26,6 +26,7 @@ import { mcpCallTotal } from "../observability/metrics";
 import { getClient } from "../services/mcpClientRegistry";
 import { getActiveGrant } from "../services/userAgentGrantService";
 import { transfer, getTransactionHistory } from "../services/transferService";
+import { getIntent, payIntent } from "../services/paymentService";
 import { getUserBalances } from "../services/ledgerService";
 import { getProfile } from "../services/identityService";
 
@@ -42,6 +43,7 @@ const TOOLS: ToolDef[] = [
   { name: "get_transactions", description: "List the user's recent transactions.", requiredScope: "statement:read" },
   { name: "get_profile", description: "Read the user's identity tier and status.", requiredScope: "profile:read" },
   { name: "transfer_funds", description: "Transfer funds to another Argus Financial Partners user.", requiredScope: "transfer:low" },
+  { name: "pay_merchant", description: "Pay a merchant's payment intent on the Argus Pay rail (escrow-protected).", requiredScope: "pay:merchant" },
 ];
 const TOOL_BY_NAME = new Map(TOOLS.map((t) => [t.name, t]));
 
@@ -178,6 +180,8 @@ async function executeTool(
     }
     case "transfer_funds":
       return executeTransfer(ctx, args, callId);
+    case "pay_merchant":
+      return executePayMerchant(ctx, args);
     default:
       throw new AppError(ErrorCode.NOT_IMPLEMENTED, `Tool ${tool.name} not implemented`);
   }
@@ -233,4 +237,38 @@ async function executeTransfer(
     channel: "mcp",
   });
   return { journalId: result.journalId, transactionId: result.transactionId, amountMinor: amountMinor.toString() };
+}
+
+/**
+ * Phase 21 — agent-native payments: pay a merchant's payment intent under the
+ * user's grant. Same ceiling discipline as transfer_funds (client AND grant
+ * per-transfer limits); the payment itself is escrow-protected and idempotent
+ * per intent inside paymentService.
+ */
+async function executePayMerchant(ctx: ScopedContext, args: Record<string, unknown>): Promise<unknown> {
+  const parsed = z.object({ intentId: z.string().min(1) }).parse(args);
+
+  const intent = await getIntent(parsed.intentId);
+  if (!intent) throw new AppError(ErrorCode.NOT_FOUND, "Payment intent not found");
+  const amountMinor = BigInt(intent.amountMinor);
+
+  const client = await getClient(ctx.clientDid);
+  const grant = await getActiveGrant(ctx.userId, ctx.clientDid);
+  if (!client || !client.active) throw new AppError(ErrorCode.FORBIDDEN, "Client not active");
+  if (!grant) throw new AppError(ErrorCode.GRANT_MISSING, "Grant no longer active");
+  if (amountMinor > client.maxTransferMinor) {
+    throw new AppError(ErrorCode.SCOPE_DENIED, "Amount exceeds client per-transfer limit");
+  }
+  if (amountMinor > grant.maxTransferMinor) {
+    throw new AppError(ErrorCode.SCOPE_DENIED, "Amount exceeds your grant per-transfer limit");
+  }
+
+  const paid = await payIntent({
+    intentId: intent.id,
+    payerUserId: ctx.userId,
+    authorizedVia: "agent",
+    agentDid: ctx.clientDid,
+    tokenJti: ctx.jti,
+  });
+  return { intentId: paid.id, status: paid.status, escrowId: paid.escrowId, amountMinor: paid.amountMinor };
 }

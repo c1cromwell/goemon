@@ -40,7 +40,8 @@
 - [~] **Phase 17** — Trading & brokerage (equities, options, crypto spot; market data; order routing) → **Corp C** (broker-dealer/clearing partner). **Design: `docs/PHASE-17-TRADING-BROKERAGE.md`** — SLA-isolation architecture (trading bulkheaded; settles into the ledger async + idempotently; shed-able to protect money-critical SLOs). **Stage-1 simulated seam BUILT** (`tradingService`/`tradingBroker`, migration 008, `TRADING_ENABLED` kill-switch; `trading.test.ts` 8 incl. SLA-isolation under broker stall/failure). Real broker/market-data/ATS remain Corp C.
 - [ ] **Phase 18** — Tokenization production (real-estate + securities for real money; audited ERC-3643, real HTS, transfer agent, **ATS** resale) → **Corp B/C**
 - [ ] **Phase 19** — Full-bank rails (fiat on/off-ramp, FBO accounts, ACH/wire, cards, statements, partner-bank deposits) → **Corp B** (BaaS partner + FinCEN MSB)
-- [ ] **Phase 20** — Production hardening & scale (KMS/HSM custody, ledger⇄chain reconciliation, fraud Stages 2–4, Temporal/Conductor orchestration, data warehouse) → **Corp B/C**
+- [~] **Phase 20** — Production hardening & scale (KMS/HSM custody, ledger⇄chain reconciliation, fraud Stages 2–4, Temporal/Conductor orchestration, data warehouse) → **Corp B/C**. **Reconciliation BUILT** (closes Phase-14 invariant *n*): `reconciliationService` compares the ledger USDC projection vs on-chain balances (Hedera Mirror Node provider, injectable for tests) per-user plus an escrow-custodian coverage check; drift → append-only `reconciliation_runs`/`reconciliation_findings` (migration 011) and **gates on-chain settlement** (`RECONCILIATION_HOLD` in `hederaService`); daily loop + RBAC admin surface (`/api/admin/reconciliation`); `reconciliation.test.ts` (6). KMS/HSM custody, fraud Stages 2–4, orchestration remain.
+- [~] **Phase 21** — "Argus Pay": native stablecoin-settled, agent-native payment rail (`docs/business/PAYMENT-NETWORK-STRATEGY.md` §4/§8) → **Corp B/C** (money transmission + stablecoin regime). **Stage-1 prototype BUILT**: merchants + payment intents (migration 010), every payment **escrow-protected** (hold→capture/refund/dispute via the escrow layer — the chargeback substitute; USDC settles on Hedera through the same primitives), zero rail fee (no interchange), `pay_merchant` MCP tool under scope `pay:merchant` with client+grant ceilings (agent-to-merchant commerce), `ARGUS_PAY_ENABLED` kill-switch (off by default, prod-fatal; held funds always resolvable when shed), `/api/pay` surface, `payments.test.ts` (7). Real merchant acquiring/licensing remains Corp B/C.
 
 ---
 
@@ -1250,6 +1251,10 @@ The non-feature work that must land before real money flows at scale — the ite
   is the deep custody option).
 - **Reconciliation:** the **ledger⇄chain daily reconciliation** job (Phase-14 invariant *n* / Phase-15.3)
   — compare ledger projection vs Hedera Mirror Node and partner-bank balances; flag drift, gate settlement.
+  **BUILT (chain leg):** `reconciliationService` (Mirror Node provider, injectable), per-user USDC + escrow-
+  custodian coverage checks, append-only `reconciliation_runs`/`reconciliation_findings`, drift gates all
+  on-chain settlement via `RECONCILIATION_HOLD`, daily loop + `/api/admin/reconciliation` (RBAC),
+  `reconciliation.test.ts`. The partner-bank leg lands with Phase 19.
 - **Fraud Stages 2–4:** graduate the Stage-1 in-process seam to the streaming platform in
   `docs/business/FraudEngine.md` (Kafka/Redpanda backbone → Flink enrichment → feature store → Transformer
   serving + model registry → shadow/canary) — a locked-architecture decision per `FraudEngine-GapAnalysis.md`.

@@ -43,6 +43,12 @@ export enum ErrorCode {
   // Trading (Phase 17 Stage 1 seam)
   TRADING_DISABLED = "TRADING_DISABLED",
 
+  // Argus Pay (Phase 21 Stage 1 rail)
+  PAY_DISABLED = "PAY_DISABLED",
+
+  // Reconciliation (Phase 20 — ledger⇄chain drift gates on-chain settlement)
+  RECONCILIATION_HOLD = "RECONCILIATION_HOLD",
+
   // Generic
   NOT_FOUND = "NOT_FOUND",
   CONFLICT = "CONFLICT",
@@ -70,6 +76,8 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.COMPLIANCE_BLOCKED]: 403,
   [ErrorCode.FRAUD_BLOCKED]: 403,
   [ErrorCode.TRADING_DISABLED]: 503,
+  [ErrorCode.PAY_DISABLED]: 503,
+  [ErrorCode.RECONCILIATION_HOLD]: 503,
   [ErrorCode.NOT_FOUND]: 404,
   [ErrorCode.CONFLICT]: 409,
   [ErrorCode.INTERNAL]: 500,

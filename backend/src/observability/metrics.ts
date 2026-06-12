@@ -68,3 +68,25 @@ export const tradingSettlementTotal = new client.Counter({
   labelNames: ["result"],
   registers: [registry],
 });
+
+// Phase 21 — Argus Pay (native stablecoin rail; escrow-protected merchant payments).
+export const payEventTotal = new client.Counter({
+  name: "pay_event_total",
+  help: "Argus Pay payment-intent lifecycle events",
+  labelNames: ["event"],
+  registers: [registry],
+});
+
+// Phase 20 — ledger⇄chain reconciliation (invariant n).
+export const reconciliationRunTotal = new client.Counter({
+  name: "reconciliation_run_total",
+  help: "Ledger vs on-chain reconciliation runs",
+  labelNames: ["result"],
+  registers: [registry],
+});
+
+export const reconciliationDriftAccounts = new client.Gauge({
+  name: "reconciliation_drift_accounts",
+  help: "Accounts with ledger vs on-chain drift in the latest reconciliation run",
+  registers: [registry],
+});
