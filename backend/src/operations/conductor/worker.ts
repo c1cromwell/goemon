@@ -14,7 +14,7 @@ import { logger } from "../../observability/logger";
 import { runOperationActivity, resolveReviewActivity } from "../activities";
 import { conductorRequest, registerOperationsDefs } from "./client";
 import { RUN_OPERATION_TASK, RESOLVE_REVIEW_TASK } from "./defs";
-import "../skills/kycReviewSkill"; // side effect: registerWorkflow(kyc-review)
+import "../skills"; // side effect: register all operations workflows
 
 interface PolledTask {
   taskId?: string;

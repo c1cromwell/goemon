@@ -12,7 +12,7 @@
 import { config } from "../../config";
 import { logger } from "../../observability/logger";
 import * as activities from "./activities";
-import "../skills/kycReviewSkill"; // side effect: registerWorkflow(kyc-review)
+import "../skills"; // side effect: register all operations workflows
 
 export async function startOperationsWorker(): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-var-requires

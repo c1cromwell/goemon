@@ -131,6 +131,12 @@ const schema = z.object({
   KMS_PROVIDER: z.enum(["local", "aws", "gcp"]).default("local"),
   KMS_MASTER_KEY: z.string().optional(), // base64, ≥32 bytes — only used by the local provider
 
+  // Phase 20 — how a user's Hedera transaction is signed (custody level):
+  //   keyvault — unwrap + sign in-process (encryption-at-rest; default)
+  //   hsm      — sign via an HSM; the private key never enters the process
+  //   ondevice — non-custodial: the server holds no key; signing is on the user's device
+  HEDERA_SIGNER: z.enum(["keyvault", "hsm", "ondevice"]).default("keyvault"),
+
   // Phase 15 — internal agent operations (back office). Master kill-switch (on by
   // default; agents only recommend/draft — a deterministic RBAC gate executes).
   // OPERATIONS_ORCHESTRATOR mirrors ONBOARDING_ORCHESTRATOR; the review floor below
