@@ -39,6 +39,8 @@ export interface GateDecision {
   reason: string;
   /** Roles allowed to resolve this at the human gate (when escalated / executing). */
   requiresRole?: AdminRole[];
+  /** Phase 15.3 — regulatory SLA: hours until the human gate must be resolved. */
+  dueInHours?: number;
 }
 
 export interface AgentReviewRow {
@@ -55,6 +57,7 @@ export interface AgentReviewRow {
   decision_reason: string | null;
   created_at: string;
   decided_at: string | null;
+  due_at: string | null;
 }
 
 /**
@@ -192,13 +195,16 @@ export async function executeInProcess<Ctx, Rec>(
       outcome: "queued", confidence,
     });
     const reviewId = uuidv4();
+    const dueAt = decision.dueInHours
+      ? new Date(Date.now() + decision.dueInHours * 3_600_000).toISOString()
+      : null;
     await getDb().execute(
       `INSERT INTO agent_reviews
-         (id, run_id, workflow_run, skill, subject_user_id, status, requires_role, recommendation, reason, created_at)
-       VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?)`,
+         (id, run_id, workflow_run, skill, subject_user_id, status, requires_role, recommendation, reason, created_at, due_at)
+       VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)`,
       [
         reviewId, runId, workflowRun, def.skill, subjectUserId ?? null,
-        defaultRoles(decision).join(","), JSON.stringify(rec ?? {}), decision.reason, new Date().toISOString(),
+        defaultRoles(decision).join(","), JSON.stringify(rec ?? {}), decision.reason, new Date().toISOString(), dueAt,
       ]
     );
     agentRunTotal.inc({ skill: def.skill, outcome: "queued" });
@@ -246,6 +252,14 @@ export async function listReviews(status: AgentReviewRow["status"] = "pending"):
   return getDb().query<AgentReviewRow>(
     "SELECT * FROM agent_reviews WHERE status = ? ORDER BY created_at ASC",
     [status]
+  );
+}
+
+/** Phase 15.3 — pending reviews whose regulatory deadline has passed (SLA breach). */
+export async function listOverdueReviews(): Promise<AgentReviewRow[]> {
+  return getDb().query<AgentReviewRow>(
+    "SELECT * FROM agent_reviews WHERE status = 'pending' AND due_at IS NOT NULL AND due_at < ? ORDER BY due_at ASC",
+    [new Date().toISOString()]
   );
 }
 

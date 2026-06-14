@@ -17,6 +17,9 @@
     "encrypt-keys": "tsx src/scripts/encrypt-keys.ts",
     "wrap-secret": "tsx src/scripts/wrap-secret.ts",
     "temporal:worker": "tsx src/operations/temporal/worker.ts",
+    "temporal:live-check": "tsx src/scripts/temporal-live-check.ts",
+    "conductor:worker": "tsx src/operations/conductor/worker.ts",
+    "conductor:live-check": "tsx src/scripts/conductor-live-check.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
@@ -40,9 +43,9 @@
     "zod": "^3.23.8"
   },
   "optionalDependencies": {
-    "@temporalio/client": "^1.11.0",
-    "@temporalio/worker": "^1.11.0",
-    "@temporalio/workflow": "^1.11.0"
+    "@temporalio/client": "^1.18.1",
+    "@temporalio/worker": "^1.18.1",
+    "@temporalio/workflow": "^1.18.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

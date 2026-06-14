@@ -131,6 +131,12 @@ const schema = z.object({
   KMS_PROVIDER: z.enum(["local", "aws", "gcp"]).default("local"),
   KMS_MASTER_KEY: z.string().optional(), // base64, ≥32 bytes — only used by the local provider
 
+  // Phase 20 — how a user's Hedera transaction is signed (custody level):
+  //   keyvault — unwrap + sign in-process (encryption-at-rest; default)
+  //   hsm      — sign via an HSM; the private key never enters the process
+  //   ondevice — non-custodial: the server holds no key; signing is on the user's device
+  HEDERA_SIGNER: z.enum(["keyvault", "hsm", "ondevice"]).default("keyvault"),
+
   // Phase 15 — internal agent operations (back office). Master kill-switch (on by
   // default; agents only recommend/draft — a deterministic RBAC gate executes).
   // OPERATIONS_ORCHESTRATOR mirrors ONBOARDING_ORCHESTRATOR; the review floor below
@@ -146,6 +152,12 @@ const schema = z.object({
   TEMPORAL_ADDRESS: z.string().default("localhost:7233"),
   TEMPORAL_NAMESPACE: z.string().default("default"),
   TEMPORAL_TASK_QUEUE: z.string().default("argus-operations"),
+
+  // Phase 15.4 — Conductor OSS as the PRIMARY agent-workflow substrate (design §7:
+  // Conductor for agents, Temporal for money). Takes precedence over Temporal for the
+  // operations runner when enabled; degrades to in-process if the SDK/server is down.
+  CONDUCTOR_ENABLED: boolish,
+  CONDUCTOR_URL: z.string().default("http://localhost:8080/api"),
 
   METRICS_TOKEN: z.string().optional(),
 

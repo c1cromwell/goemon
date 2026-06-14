@@ -34,16 +34,21 @@ vi.mock("@hashgraph/sdk", () => ({
     };
   }),
   AccountBalanceQuery: vi.fn(),
-  TransferTransaction: vi.fn().mockImplementation(() => ({
-    addTokenTransfer: vi.fn().mockReturnThis(),
-    freezeWith: vi.fn().mockReturnThis(),
-    sign: vi.fn().mockResolvedValue({
+  TransferTransaction: vi.fn().mockImplementation(() => {
+    // Mirror the real SDK: sign/signWith return the same tx (this), which has execute().
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tx: any = {
+      addTokenTransfer: vi.fn(() => tx),
+      freezeWith: vi.fn(() => tx),
+      sign: vi.fn(async () => tx),
+      signWith: vi.fn(async () => tx),
       execute: vi.fn().mockResolvedValue({
         getReceipt: vi.fn().mockResolvedValue({ status: "SUCCESS" }),
         transactionId: { toString: () => MOCK_TX_ID },
       }),
-    }),
-  })),
+    };
+    return tx;
+  }),
 }));
 
 const TMP_DB = `./data/test-escrow-hedera-${Date.now()}.db`;

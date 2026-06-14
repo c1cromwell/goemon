@@ -999,13 +999,14 @@ Fix anything failing. Final git commit summarizing the v2 build.
 
 ---
 
-## Phase 15 — Internal Agent Operations (15.0 + 15.1 + 15.4 seam BUILT)
+## Phase 15 — Internal Agent Operations (15.0–15.4 BUILT)
 
-**Status: 15.0 (runner) + 15.1 (KYC Review skill) + 15.4 (Temporal engine seam) BUILT; 15.2–15.3 remain.**
-The runner executes behind a swappable `WorkflowEngine` (in-process default; optional Temporal adapter
-under `src/operations/temporal/`, lazy-loaded `@temporalio/*`, `TEMPORAL_ENABLED`, degrades to in-process;
-`npm run temporal:worker`). Money/state stays in the existing idempotency-keyed services inside activities —
-Temporal orchestrates, never a second ledger. A live server run + Conductor (agent durable exec) remain. See
+**Status: 15.0 (runner) + 15.1 (KYC) + 15.2 (Support/SRE/Marketing/Marketplace-DD) + 15.3 (compliance
+reporting w/ deadline SLAs) + 15.4 (orchestration) all BUILT; only the optional onboarding re-expression is
+deferred.** The runner executes behind a swappable `WorkflowEngine` (in-process default); **Conductor OSS is
+the primary agent substrate** and **Temporal** is also wired — both **live-verified** end-to-end (`npm run
+conductor:live-check` / `temporal:live-check`) and degrade to in-process if unavailable. Money/state stays in
+the idempotency-keyed services inside activities — the orchestrator never becomes a second ledger. See
 `docs/PHASE-15-INTERNAL-AGENT-OPS.md` and the Phase 15 entry in `CLAUDE.md` for the built surface
 (`src/operations/*`, migration 014, `/api/admin/agent-ops`, `operations.test.ts`). The text below is
 the original design. This phase runs the bank's *back office* — support, KYC review,

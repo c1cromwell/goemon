@@ -1,0 +1,17 @@
+# Phase 15.4 — local Temporal dev server for the operations runner.
+#
+#   docker compose -f docker-compose.temporal.yml up -d
+#   npm run temporal:worker        # in one terminal (registers workflows+activities)
+#   TEMPORAL_ENABLED=true npm run dev   # API now orchestrates ops through Temporal
+#   npm run temporal:live-check    # one-shot e2e proof (KYC review -> Tier 2)
+#
+# UI: http://localhost:8233   gRPC: localhost:7233
+# In-memory dev server (no external DB); state is not durable across restarts.
+services:
+  temporal:
+    image: temporalio/temporal:latest
+    container_name: argus-temporal
+    command: server start-dev --ip 0.0.0.0 --namespace default
+    ports:
+      - "7233:7233"   # gRPC (TEMPORAL_ADDRESS)
+      - "8233:8233"   # Web UI

@@ -72,8 +72,12 @@ describe("Temporal engine degrades to in-process when unavailable", () => {
     const { createUser } = await import("../src/services/authService");
     const { getProfile } = await import("../src/services/identityService");
     const { kycReviewWorkflow } = await import("../src/operations/skills/kycReviewSkill");
+    const { config } = await import("../src/config");
 
-    // No Temporal SDK/server in CI → connectClient throws → falls back to in-process.
+    // Force the Temporal connection to fail fast (unreachable address) so the fallback
+    // path is exercised deterministically whether or not a server is running locally.
+    const origAddr = config.TEMPORAL_ADDRESS;
+    (config as { TEMPORAL_ADDRESS: string }).TEMPORAL_ADDRESS = "127.0.0.1:1";
     setEngine(createTemporalEngine());
     try {
       const user = await createUser(`temporal-${Date.now()}@test.com`, "Clean Applicant");
@@ -88,8 +92,9 @@ describe("Temporal engine degrades to in-process when unavailable", () => {
       expect((await getProfile(user.id))?.tier).toBe(2);
     } finally {
       setEngine(null);
+      (config as { TEMPORAL_ADDRESS: string }).TEMPORAL_ADDRESS = origAddr;
     }
-  });
+  }, 20000); // two bounded fallback connects to an unreachable address
 });
 
 describe("Temporal activities delegate to the in-process logic", () => {

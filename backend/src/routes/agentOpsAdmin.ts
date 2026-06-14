@@ -14,8 +14,9 @@ import { Router } from "express";
 import type { Response, NextFunction } from "express";
 import { requireAdmin, requireRole, type AdminRequest } from "../middleware/rbac";
 import { AppError, ErrorCode } from "../errors";
-import { runOperation, listReviews, getRunTrail, resolveReview, type AgentReviewRow, type WorkflowDef } from "../operations/operationsWorkflow";
+import { runOperation, listReviews, listOverdueReviews, getRunTrail, resolveReview, getWorkflow, type AgentReviewRow, type WorkflowDef } from "../operations/operationsWorkflow";
 import { kycReviewWorkflow } from "../operations/skills/kycReviewSkill";
+import "../operations/skills"; // register all skills (kyc, compliance, …)
 
 export const agentOpsAdminRouter = Router();
 
@@ -36,6 +37,23 @@ agentOpsAdminRouter.post(
   }
 );
 
+// Generic trigger for any registered workflow (KYC, sanctions-rescreen, compliance-filing, …).
+agentOpsAdminRouter.post(
+  "/agent-ops/run",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const { skill, input } = (req.body ?? {}) as { skill?: string; input?: unknown };
+      if (!skill) throw new AppError(ErrorCode.VALIDATION, "skill required");
+      const def = getWorkflow(skill);
+      if (!def) throw new AppError(ErrorCode.NOT_FOUND, `No registered workflow for skill ${skill}`);
+      res.json(await runOperation(def, input ?? {}));
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
 agentOpsAdminRouter.get(
   "/agent-ops/reviews",
   requireAdmin,
@@ -43,6 +61,20 @@ agentOpsAdminRouter.get(
     try {
       const status = (req.query.status as AgentReviewRow["status"]) || "pending";
       res.json({ reviews: await listReviews(status) });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// Phase 15.3 — reviews past their regulatory deadline (SLA breach).
+agentOpsAdminRouter.get(
+  "/agent-ops/reviews/overdue",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (_req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      res.json({ overdue: await listOverdueReviews() });
     } catch (e) {
       next(e);
     }
