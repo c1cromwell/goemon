@@ -147,6 +147,12 @@ const schema = z.object({
   TEMPORAL_NAMESPACE: z.string().default("default"),
   TEMPORAL_TASK_QUEUE: z.string().default("argus-operations"),
 
+  // Phase 15.4 — Conductor OSS as the PRIMARY agent-workflow substrate (design §7:
+  // Conductor for agents, Temporal for money). Takes precedence over Temporal for the
+  // operations runner when enabled; degrades to in-process if the SDK/server is down.
+  CONDUCTOR_ENABLED: boolish,
+  CONDUCTOR_URL: z.string().default("http://localhost:8080/api"),
+
   METRICS_TOKEN: z.string().optional(),
 
   AUTH_MAX_FAILURES: z.coerce.number().int().positive().default(5),

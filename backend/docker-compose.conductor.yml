@@ -1,0 +1,21 @@
+# Phase 15.4 — local Conductor OSS server (PRIMARY agent-workflow substrate).
+#
+#   docker compose -f docker-compose.conductor.yml up -d   # wait ~1 min (bundles Elasticsearch)
+#   npm run conductor:worker            # in one terminal (polls run_operation/resolve_review)
+#   CONDUCTOR_ENABLED=true npm run dev  # API now orchestrates ops through Conductor
+#   npm run conductor:live-check        # one-shot e2e proof (KYC review -> Tier 2)
+#
+# API: http://localhost:8080/api   UI: http://localhost:5001
+# Standalone image bundles server + UI + Redis + Elasticsearch (in-memory; not durable).
+services:
+  conductor:
+    image: conductoross/conductor-standalone:3.15.0
+    container_name: argus-conductor
+    ports:
+      - "8080:8080"   # REST API (CONDUCTOR_URL = http://localhost:8080/api)
+      - "5001:5000"   # Web UI
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 30

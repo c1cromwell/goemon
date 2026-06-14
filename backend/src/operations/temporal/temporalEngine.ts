@@ -17,7 +17,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { config } from "../../config";
 import { logger } from "../../observability/logger";
-import { setEngine, type WorkflowEngine } from "../engine";
+import { type WorkflowEngine } from "../engine";
 import { inProcessEngine, type WorkflowDef, type AdminActor, type RunResult } from "../operationsWorkflow";
 
 const RUN_WORKFLOW = "runOperationWorkflow";
@@ -27,7 +27,12 @@ const RESOLVE_WORKFLOW = "resolveReviewWorkflow";
 async function connectClient(): Promise<{ client: unknown; close: () => Promise<void> }> {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const temporal = require("@temporalio/client");
-  const connection = await temporal.Connection.connect({ address: config.TEMPORAL_ADDRESS });
+  // Bounded connect so an unreachable/misconfigured server fails fast into the
+  // in-process fallback rather than blocking the caller.
+  const connection = await temporal.Connection.connect({
+    address: config.TEMPORAL_ADDRESS,
+    connectTimeout: "2s",
+  });
   const client = new temporal.Client({ connection, namespace: config.TEMPORAL_NAMESPACE });
   return { client, close: () => connection.close() };
 }
@@ -69,13 +74,3 @@ export function createTemporalEngine(): WorkflowEngine {
   };
 }
 
-/** Boot wiring: select the Temporal engine when enabled. Default leaves in-process. */
-export function selectOperationsEngine(): void {
-  if (config.TEMPORAL_ENABLED) {
-    setEngine(createTemporalEngine());
-    logger.warn(
-      { address: config.TEMPORAL_ADDRESS, taskQueue: config.TEMPORAL_TASK_QUEUE },
-      "Operations engine: Temporal ENABLED (falls back to in-process if unavailable). Run `npm run temporal:worker`."
-    );
-  }
-}

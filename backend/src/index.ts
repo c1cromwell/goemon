@@ -46,7 +46,7 @@ import { escrowAdminRouter } from "./routes/escrowAdmin";
 import { payRouter } from "./routes/pay";
 import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
-import { selectOperationsEngine } from "./operations/temporal/temporalEngine";
+import { selectOperationsEngine } from "./operations/selectEngine";
 import { internalRemediationRouter } from "./routes/internalRemediation";
 import { initReconciliation, startReconciliationLoop, runReconciliation } from "./services/reconciliationService";
 import { requireAuth } from "./middleware/auth";
