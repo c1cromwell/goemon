@@ -19,6 +19,6 @@
     "useUnknownInCatchVariables": true
   },
   "include": ["src/**/*.ts"],
-  "_comment_exclude": "temporal/workflow.ts runs in Temporal's deterministic sandbox and is bundled by the Temporal tooling against @temporalio/workflow (an optional dep) — not compiled by this tsc.",
-  "exclude": ["node_modules", "dist", "test", "src/operations/temporal/workflow.ts"]
+  "_comment_exclude": "*/workflow.ts files run in Temporal's deterministic sandbox and are bundled by the Temporal tooling against @temporalio/workflow (an optional dep) — not compiled by this tsc.",
+  "exclude": ["node_modules", "dist", "test", "src/operations/temporal/workflow.ts", "src/money/moneyWorkflow.ts"]
 }

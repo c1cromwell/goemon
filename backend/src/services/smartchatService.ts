@@ -28,7 +28,8 @@ import { mintExchangeToken, verifyToken } from "../utils/tokenFactory";
 import { classifyIntent, type ClassifiedIntent, type SmartChatOperation } from "../utils/smartchatModel";
 import { getUserByEmail } from "./authService";
 import { getUserBalances } from "./ledgerService";
-import { transfer, getTransactionHistory } from "./transferService";
+import { getTransactionHistory } from "./transferService";
+import { executeTransfer } from "../money/moneyEngine";
 
 /** Transfers strictly above this (integer minor units = $500.00) require MFA. */
 export const MFA_THRESHOLD_MINOR = 50_000n;
@@ -346,7 +347,7 @@ export async function executeOperationToken(
         const toUserId = String(metadata.toUserId);
         const amountMinor = BigInt(String(metadata.amountMinor));
         const currency = metadata.currency === "USDC" ? "USDC" : "USD";
-        const transferResult = await transfer({
+        const transferResult = await executeTransfer({
           fromUserId: userId,
           toUserId,
           amountMinor,

@@ -13,7 +13,8 @@ import { requireAuth, type AuthRequest } from "../middleware/auth";
 import { idempotency } from "../middleware/idempotency";
 import { AppError, ErrorCode } from "../errors";
 import { getUserBalances } from "../services/ledgerService";
-import { transfer, getTransactionHistory } from "../services/transferService";
+import { getTransactionHistory } from "../services/transferService";
+import { executeTransfer } from "../money/moneyEngine";
 
 const MAX_TRANSFER_MINOR = 10_000_000n; // $100,000 per transaction ceiling
 
@@ -55,7 +56,7 @@ accountsRouter.post("/transfer", requireAuth, idempotency(), async (req: AuthReq
     const { toUserId, currency, description } = body;
 
     const idempotencyKey = req.header("Idempotency-Key")!;
-    const result = await transfer({
+    const result = await executeTransfer({
       fromUserId: req.userId!,
       toUserId: toUserId,
       amountMinor: amount,

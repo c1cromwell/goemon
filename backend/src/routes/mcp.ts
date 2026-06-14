@@ -25,7 +25,8 @@ import { agentRateLimit } from "../middleware/rateLimit";
 import { mcpCallTotal } from "../observability/metrics";
 import { getClient } from "../services/mcpClientRegistry";
 import { getActiveGrant } from "../services/userAgentGrantService";
-import { transfer, getTransactionHistory } from "../services/transferService";
+import { getTransactionHistory } from "../services/transferService";
+import { executeTransfer as orchestrateTransfer } from "../money/moneyEngine";
 import { getIntent, payIntent } from "../services/paymentService";
 import { getUserBalances } from "../services/ledgerService";
 import { getProfile } from "../services/identityService";
@@ -227,7 +228,7 @@ async function executeTransfer(
   );
   if (!recipient) throw new AppError(ErrorCode.NOT_FOUND, "Recipient not found");
 
-  const result = await transfer({
+  const result = await orchestrateTransfer({
     fromUserId: ctx.userId,
     toUserId: recipient.id,
     amountMinor,
