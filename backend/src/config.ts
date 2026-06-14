@@ -131,6 +131,22 @@ const schema = z.object({
   KMS_PROVIDER: z.enum(["local", "aws", "gcp"]).default("local"),
   KMS_MASTER_KEY: z.string().optional(), // base64, ≥32 bytes — only used by the local provider
 
+  // Phase 15 — internal agent operations (back office). Master kill-switch (on by
+  // default; agents only recommend/draft — a deterministic RBAC gate executes).
+  // OPERATIONS_ORCHESTRATOR mirrors ONBOARDING_ORCHESTRATOR; the review floor below
+  // which an auto-decision escalates to a human mirrors ONBOARDING_REVIEW_FLOOR.
+  OPERATIONS_ENABLED: boolishDefaultTrue,
+  OPERATIONS_ORCHESTRATOR: z.enum(["simulated", "anthropic"]).default("simulated"),
+  OPERATIONS_REVIEW_FLOOR: z.coerce.number().min(0).max(1).default(0.3),
+
+  // Phase 15.4 — optional Temporal durable-execution substrate for the operations
+  // runner. Off by default → in-process engine. When on, the runner orchestrates
+  // through Temporal; if the SDK/server is unavailable it degrades to in-process.
+  TEMPORAL_ENABLED: boolish,
+  TEMPORAL_ADDRESS: z.string().default("localhost:7233"),
+  TEMPORAL_NAMESPACE: z.string().default("default"),
+  TEMPORAL_TASK_QUEUE: z.string().default("argus-operations"),
+
   METRICS_TOKEN: z.string().optional(),
 
   AUTH_MAX_FAILURES: z.coerce.number().int().positive().default(5),
@@ -163,6 +179,11 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   if (c.HEDERA_ENABLED && (!c.HEDERA_OPERATOR_ID || !c.HEDERA_OPERATOR_KEY)) {
     fatal.push("HEDERA_ENABLED=true requires HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY.");
   }
+  // The paymaster/operator key must not be raw plaintext in production — wrap it via
+  // the key vault (gcm.v1.) so it is encrypted at rest like per-user keys.
+  if (c.HEDERA_ENABLED && c.HEDERA_OPERATOR_KEY && !c.HEDERA_OPERATOR_KEY.startsWith("gcm.v1.")) {
+    fatal.push("HEDERA_OPERATOR_KEY must be KMS-wrapped (gcm.v1.) in production, not raw plaintext.");
+  }
   // Custody: the local AES stand-in is a server-held master key — encryption at
   // rest, not HSM/on-device custody. Production must wrap keys with a real KMS.
   if (c.KMS_PROVIDER === "local") {
@@ -179,6 +200,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.SMARTCHAT_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
     fatal.push("SMARTCHAT_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
+  }
+  if (c.OPERATIONS_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
+    fatal.push("OPERATIONS_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
   }
   if (!c.ADMIN_JWT_SECRET || c.ADMIN_JWT_SECRET === c.JWT_SECRET) {
     fatal.push("ADMIN_JWT_SECRET must be set and distinct from JWT_SECRET in production.");

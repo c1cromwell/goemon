@@ -52,6 +52,9 @@ export enum ErrorCode {
   // Reconciliation (Phase 20 — ledger⇄chain drift gates on-chain settlement)
   RECONCILIATION_HOLD = "RECONCILIATION_HOLD",
 
+  // Internal agent operations (Phase 15 — back-office runner kill-switch)
+  AGENT_DISABLED = "AGENT_DISABLED",
+
   // Generic
   NOT_FOUND = "NOT_FOUND",
   CONFLICT = "CONFLICT",
@@ -81,6 +84,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.ACCOUNT_FROZEN]: 403,
   [ErrorCode.TRADING_DISABLED]: 503,
   [ErrorCode.PAY_DISABLED]: 503,
+  [ErrorCode.AGENT_DISABLED]: 503,
   [ErrorCode.RECONCILIATION_HOLD]: 503,
   [ErrorCode.NOT_FOUND]: 404,
   [ErrorCode.CONFLICT]: 409,

@@ -34,7 +34,10 @@ import { hederaTxTotal } from "../observability/metrics";
 import { getOrCreateUserAccount, getSystemAccount, postJournal } from "./ledgerService";
 import { getUserById } from "./authService";
 import { assertSettlementUngated } from "./reconciliationService";
-import { getKeyVault } from "./keyVaultService";
+import { getKeyVault, isWrapped } from "./keyVaultService";
+
+/** AAD binding the paymaster/operator key to its purpose in the key vault. */
+const OPERATOR_KEY_AAD = "hedera:operator";
 
 export interface HederaAccountRow {
   id: string;
@@ -82,9 +85,27 @@ function hasSignerKey(account: HederaAccountRow | null): boolean {
 }
 
 let hederaClient: Client | null = null;
+let operatorKey: PrivateKey | null = null;
 
 export function isHederaEnabled(): boolean {
   return config.HEDERA_ENABLED;
+}
+
+/**
+ * Phase 20 — resolve the paymaster/operator key. HEDERA_OPERATOR_KEY may be either a
+ * raw DER string (dev) or a vault-wrapped blob (gcm.v1., the production posture — see
+ * config.productionFatals). Unwrapped once at boot and cached.
+ */
+export async function resolveOperatorKey(): Promise<PrivateKey> {
+  const raw = config.HEDERA_OPERATOR_KEY;
+  if (!raw) throw new AppError(ErrorCode.VALIDATION, "HEDERA_OPERATOR_KEY is not configured");
+  const der = isWrapped(raw) ? await getKeyVault().unwrap(raw, { aad: OPERATOR_KEY_AAD }) : raw;
+  return PrivateKey.fromStringDer(der);
+}
+
+function getOperatorKey(): PrivateKey {
+  if (!operatorKey) throw new AppError(ErrorCode.NOT_IMPLEMENTED, "Hedera operator key not initialized");
+  return operatorKey;
 }
 
 function assertEnabled(): Client {
@@ -99,7 +120,7 @@ export async function initHedera(): Promise<void> {
   if (!config.HEDERA_ENABLED) return;
 
   const operatorId = AccountId.fromString(config.HEDERA_OPERATOR_ID!);
-  const operatorKey = PrivateKey.fromStringDer(config.HEDERA_OPERATOR_KEY!);
+  operatorKey = await resolveOperatorKey();
 
   switch (config.HEDERA_NETWORK) {
     case "mainnet":
@@ -325,13 +346,12 @@ export async function submitEscrowSettleOnChain(recipientUserId: string, amountM
   const client = assertEnabled();
   const tokenId = usdcTokenId();
   const recipient = await getOrCreateUserHederaAccount(recipientUserId); // ensure they can receive USDC
-  const operatorKey = PrivateKey.fromStringDer(config.HEDERA_OPERATOR_KEY!);
   const amount = Number(amountMicro);
   const signed = await new TransferTransaction()
     .addTokenTransfer(tokenId, AccountId.fromString(config.HEDERA_OPERATOR_ID!), -amount)
     .addTokenTransfer(tokenId, AccountId.fromString(recipient.hedera_account_id!), amount)
     .freezeWith(client)
-    .sign(operatorKey);
+    .sign(getOperatorKey());
   try {
     const resp = await signed.execute(client);
     await resp.getReceipt(client);

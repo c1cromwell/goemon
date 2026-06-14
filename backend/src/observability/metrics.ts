@@ -105,3 +105,18 @@ export const reconciliationDriftAccounts = new client.Gauge({
   help: "Accounts with ledger vs on-chain drift in the latest reconciliation run",
   registers: [registry],
 });
+
+// Phase 15 — internal agent operations (back office; read/recommend/draft only).
+export const agentRunTotal = new client.Counter({
+  name: "agent_run_total",
+  help: "Internal agent operations workflow runs",
+  labelNames: ["skill", "outcome"], // outcome: executed|queued|rejected|error
+  registers: [registry],
+});
+
+export const agentEscalationTotal = new client.Counter({
+  name: "agent_escalation_total",
+  help: "Internal agent operations runs escalated to a human gate",
+  labelNames: ["skill", "reason"],
+  registers: [registry],
+});

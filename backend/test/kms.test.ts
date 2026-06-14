@@ -194,6 +194,42 @@ describe("hedera keys are wrapped at rest", () => {
   });
 });
 
+describe("hedera operator key custody", () => {
+  it("resolveOperatorKey accepts both raw and vault-wrapped HEDERA_OPERATOR_KEY", async () => {
+    const { config } = await import("../src/config");
+    const { resolveOperatorKey } = await import("../src/services/hederaService");
+    setKeyVaultProvider(localAeadProvider());
+    const der = PrivateKey.generateED25519().toStringDer();
+    const orig = config.HEDERA_OPERATOR_KEY;
+    try {
+      // raw
+      (config as { HEDERA_OPERATOR_KEY?: string }).HEDERA_OPERATOR_KEY = der;
+      expect((await resolveOperatorKey()).toStringDer()).toBe(der);
+      // wrapped (aad must match hederaService's "hedera:operator")
+      (config as { HEDERA_OPERATOR_KEY?: string }).HEDERA_OPERATOR_KEY =
+        await getKeyVault().wrap(der, { aad: "hedera:operator" });
+      expect((await resolveOperatorKey()).toStringDer()).toBe(der);
+    } finally {
+      (config as { HEDERA_OPERATOR_KEY?: string }).HEDERA_OPERATOR_KEY = orig;
+      setKeyVaultProvider(null);
+    }
+  });
+
+  it("productionFatals requires the operator key be wrapped in production", () => {
+    const base = {
+      NODE_ENV: "production", JWT_SECRET: "a".repeat(48), ADMIN_JWT_SECRET: "b".repeat(48),
+      ALLOW_PASSWORD_AUTH: false, KMS_PROVIDER: "aws",
+      ONBOARDING_ORCHESTRATOR: "simulated", SMARTCHAT_ORCHESTRATOR: "simulated", OPERATIONS_ORCHESTRATOR: "simulated",
+      ANTHROPIC_API_KEY: "", HEDERA_ENABLED: true, HEDERA_OPERATOR_ID: "0.0.2",
+      HEDERA_OPERATOR_KEY: "gcm.v1.aaa.bbb.ccc",
+    } as unknown as Parameters<typeof productionFatals>[0];
+
+    expect(productionFatals(base).some((f) => f.includes("HEDERA_OPERATOR_KEY"))).toBe(false); // wrapped → ok
+    const raw = { ...base, HEDERA_OPERATOR_KEY: "302e0201plaintext" } as Parameters<typeof productionFatals>[0];
+    expect(productionFatals(raw).some((f) => f.includes("HEDERA_OPERATOR_KEY"))).toBe(true);
+  });
+});
+
 describe("m. production refuses the local key-vault stand-in", () => {
   it("productionFatals flags KMS_PROVIDER=local in production", () => {
     const base = {

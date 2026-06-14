@@ -18,7 +18,7 @@ import fs from "fs";
 import path from "path";
 import { getDb, closeDb, type Db } from "./index";
 
-const APPEND_ONLY_TABLES = ["audit_logs", "ledger_entries", "ledger_journals", "mcp_audit_logs", "fraud_decisions", "fills", "escrow_events", "payment_events", "reconciliation_runs", "reconciliation_findings", "account_holds", "transaction_flags"];
+const APPEND_ONLY_TABLES = ["audit_logs", "ledger_entries", "ledger_journals", "mcp_audit_logs", "fraud_decisions", "fills", "escrow_events", "payment_events", "reconciliation_runs", "reconciliation_findings", "account_holds", "transaction_flags", "agent_runs"];
 
 async function applyAppendOnlyTriggers(db: Db): Promise<void> {
   if (db.dialect === "sqlite") {
