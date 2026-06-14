@@ -159,6 +159,12 @@ const schema = z.object({
   CONDUCTOR_ENABLED: boolish,
   CONDUCTOR_URL: z.string().default("http://localhost:8080/api"),
 
+  // Phase 20 — Temporal for the MONEY path (design §7). When on, transfers run as a
+  // durable, exactly-once Temporal workflow (the activity is the idempotency-keyed
+  // ledger transfer); off by default → direct call. Degrades to direct if unavailable.
+  TEMPORAL_MONEY_ENABLED: boolish,
+  TEMPORAL_MONEY_TASK_QUEUE: z.string().default("argus-money"),
+
   METRICS_TOKEN: z.string().optional(),
 
   AUTH_MAX_FAILURES: z.coerce.number().int().positive().default(5),
