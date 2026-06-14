@@ -172,7 +172,11 @@ describe("Phase 5: Hedera account creation", () => {
 
     expect(account.hedera_account_id).toMatch(/^0\.0\.\d+$/);
     expect(account.public_key).toBe(MOCK_PUBLIC_KEY_HEX);
-    expect(account.private_key_hex).toBe(MOCK_PRIVATE_KEY_HEX);
+    // Phase 20 — the private key is wrapped at rest, never stored as plaintext.
+    expect(account.private_key_hex).toBeNull();
+    const { isWrapped, getKeyVault } = await import("../src/services/keyVaultService");
+    expect(isWrapped(account.private_key_enc!)).toBe(true);
+    expect(await getKeyVault().unwrap(account.private_key_enc!, { aad: userId })).toBe(MOCK_PRIVATE_KEY_HEX);
     expect(account.network).toBe("testnet");
     expect(account.user_id).toBe(userId);
   });

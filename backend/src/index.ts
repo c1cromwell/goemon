@@ -30,6 +30,7 @@ import { agentsRouter } from "./routes/agents";
 import { accountsRouter } from "./routes/accounts";
 import { bootstrapSystemAccounts } from "./services/ledgerService";
 import { initHedera } from "./services/hederaService";
+import { initKeyVault } from "./services/keyVaultService";
 import { hederaRouter } from "./routes/hedera";
 import { onboardingRouter } from "./routes/onboarding";
 import { adminRouter } from "./routes/admin";
@@ -58,6 +59,9 @@ async function bootstrap(): Promise<void> {
     await runMigrations();
   }
 
+  // Phase 20 — key-vault custody must be wired before any service that reads a
+  // wrapped secret (initTokenFactory → initDid loads the issuer JWK).
+  initKeyVault();
   await initTokenFactory();
   await bootstrapSystemAccounts();
   await initHedera();

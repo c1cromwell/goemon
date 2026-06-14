@@ -124,6 +124,13 @@ const schema = z.object({
   HEDERA_OPERATOR_KEY: z.string().optional(),
   HEDERA_USDC_TOKEN_ID: z.string().optional(),
 
+  // Phase 20 — key-vault custody (closes invariant m / audit C-1). At-rest secrets
+  // (per-user Hedera keys, the issuer JWK) are wrapped via keyVaultService. The
+  // `local` AES-256-GCM provider is dev/test only — production must use a real KMS
+  // (aws|gcp); see productionFatals.
+  KMS_PROVIDER: z.enum(["local", "aws", "gcp"]).default("local"),
+  KMS_MASTER_KEY: z.string().optional(), // base64, ≥32 bytes — only used by the local provider
+
   METRICS_TOKEN: z.string().optional(),
 
   AUTH_MAX_FAILURES: z.coerce.number().int().positive().default(5),
@@ -155,6 +162,11 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.HEDERA_ENABLED && (!c.HEDERA_OPERATOR_ID || !c.HEDERA_OPERATOR_KEY)) {
     fatal.push("HEDERA_ENABLED=true requires HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY.");
+  }
+  // Custody: the local AES stand-in is a server-held master key — encryption at
+  // rest, not HSM/on-device custody. Production must wrap keys with a real KMS.
+  if (c.KMS_PROVIDER === "local") {
+    fatal.push("KMS_PROVIDER=local (AES stand-in) must not be used in production; use a real KMS (aws|gcp).");
   }
   if (c.TRADING_ENABLED) {
     fatal.push("TRADING_ENABLED must be false in production — the Phase-17 Stage-1 broker is simulated only.");

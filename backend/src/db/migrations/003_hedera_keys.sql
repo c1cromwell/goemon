@@ -1,9 +1,9 @@
 -- Phase 5 — Hedera account keys (prototype/dev only).
 --
--- Production note: private_key_hex stores the DER-encoded ED25519 private key
--- plaintext. This is acceptable for the TypeScript prototype only. Before any
--- staging deployment, replace with a KMS-wrapped value (same pattern as
--- did_keys.private_jwk — see C-1 in the security audit notes).
+-- Production note: private_key_hex originally stored the DER-encoded ED25519
+-- private key as plaintext. As of Phase 20 (migration 013) keys are wrapped via
+-- keyVaultService and stored in private_key_enc; private_key_hex is nulled on
+-- backfill and never written for new accounts (closes audit C-1 / invariant m).
 --
 -- usdc_associated tracks whether the HTS USDC token has been associated with
 -- the account (required before receiving USDC on Hedera).

@@ -7,7 +7,7 @@
 CREATE TABLE IF NOT EXISTS did_keys (
   kid         TEXT PRIMARY KEY,            -- UUID v4; used as the JWKS kid
   algorithm   TEXT NOT NULL DEFAULT 'RS256',
-  private_jwk TEXT NOT NULL,              -- JSON-stringified JWK (dev: plaintext; prod: KMS-wrapped)
+  private_jwk TEXT NOT NULL,              -- Phase 20: keyVault-wrapped (gcm.v1. prefix); legacy rows hold raw JSON until wrapped on load
   public_jwk  TEXT NOT NULL,              -- JSON-stringified JWK (public)
   active      INTEGER NOT NULL DEFAULT 1, -- 1 = current signing key; 0 = retired (verification only)
   created_at  TEXT DEFAULT CURRENT_TIMESTAMP,

@@ -15,6 +15,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { generateKeyPair, exportJWK, importJWK, type JWK, type KeyLike } from "jose";
 import { getDb } from "../db";
+import { getKeyVault, isWrapped } from "./keyVaultService";
 
 const ALG = "RS256";
 const ROTATION_WINDOW_DAYS = 90;
@@ -49,15 +50,30 @@ export async function initDid(): Promise<void> {
   }
 
   _allKeys = await Promise.all(
-    rows.map(async (row, idx) => ({
+    rows.map(async (row) => ({
       kid: row.kid,
-      privateKey: (await importJWK(JSON.parse(row.private_jwk) as JWK, ALG)) as KeyLike,
+      privateKey: (await importJWK(await loadPrivateJwk(row.kid, row.private_jwk), ALG)) as KeyLike,
       publicKey: (await importJWK(JSON.parse(row.public_jwk) as JWK, ALG)) as KeyLike,
       publicJwk: JSON.parse(row.public_jwk) as JWK,
     }))
   );
 
   _activeKey = _allKeys[0]!;
+}
+
+/**
+ * Phase 20 — resolve the issuer private JWK from its custody-wrapped form.
+ *   - wrapped (gcm.v1.) → unwrap (AAD-bound to the kid).
+ *   - legacy raw JSON   → parse once, then lazily re-wrap the column in place.
+ */
+async function loadPrivateJwk(kid: string, stored: string): Promise<JWK> {
+  if (isWrapped(stored)) {
+    return JSON.parse(await getKeyVault().unwrap(stored, { aad: kid })) as JWK;
+  }
+  const jwk = JSON.parse(stored) as JWK;
+  const wrapped = await getKeyVault().wrap(stored, { aad: kid });
+  await getDb().execute("UPDATE did_keys SET private_jwk = ? WHERE kid = ?", [wrapped, kid]);
+  return jwk;
 }
 
 /** The key used for signing new tokens / VCs. */
@@ -107,11 +123,13 @@ async function _generateAndPersist(): Promise<ActiveKey> {
   const kid = uuidv4();
   const privateJwk = await exportJWK(priv);
   const publicJwk = await exportJWK(pub);
+  // Phase 20 — the private JWK is wrapped at rest (never stored as plaintext).
+  const privateJwkEnc = await getKeyVault().wrap(JSON.stringify(privateJwk), { aad: kid });
 
   await db.execute(
     `INSERT INTO did_keys (kid, algorithm, private_jwk, public_jwk, active, created_at)
      VALUES (?, ?, ?, ?, 1, ?)`,
-    [kid, ALG, JSON.stringify(privateJwk), JSON.stringify(publicJwk), new Date().toISOString()]
+    [kid, ALG, privateJwkEnc, JSON.stringify(publicJwk), new Date().toISOString()]
   );
 
   return { kid, privateKey: priv, publicKey: pub, publicJwk };

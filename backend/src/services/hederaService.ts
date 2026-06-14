@@ -34,6 +34,7 @@ import { hederaTxTotal } from "../observability/metrics";
 import { getOrCreateUserAccount, getSystemAccount, postJournal } from "./ledgerService";
 import { getUserById } from "./authService";
 import { assertSettlementUngated } from "./reconciliationService";
+import { getKeyVault } from "./keyVaultService";
 
 export interface HederaAccountRow {
   id: string;
@@ -41,10 +42,43 @@ export interface HederaAccountRow {
   hedera_account_id: string | null;
   evm_address: string | null;
   public_key: string | null;
+  /** Legacy plaintext DER key. Null for accounts created after Phase-20 key wrapping. */
   private_key_hex: string | null;
+  /** Wrapped DER key (keyVaultService). The custody-safe store going forward. */
+  private_key_enc: string | null;
   usdc_associated: number;
   network: string;
   created_at: string;
+}
+
+/**
+ * Phase 20 — resolve a user's signing key from its custody-wrapped form.
+ *   - private_key_enc present → unwrap (AAD-bound to the userId).
+ *   - legacy private_key_hex only → use it once, then lazily re-encrypt the row
+ *     (write private_key_enc, null the plaintext) so the DB self-heals on access.
+ * Throws NOT_FOUND when the account has no key material at all.
+ */
+async function loadSignerKey(account: HederaAccountRow): Promise<PrivateKey> {
+  if (account.private_key_enc) {
+    const der = await getKeyVault().unwrap(account.private_key_enc, { aad: account.user_id });
+    return PrivateKey.fromStringDer(der);
+  }
+  if (account.private_key_hex) {
+    const key = PrivateKey.fromStringDer(account.private_key_hex);
+    // Lazy migration: wrap the legacy plaintext and drop it.
+    const enc = await getKeyVault().wrap(account.private_key_hex, { aad: account.user_id });
+    await getDb().execute(
+      "UPDATE hedera_accounts SET private_key_enc = ?, private_key_hex = NULL WHERE id = ?",
+      [enc, account.id]
+    );
+    return key;
+  }
+  throw new AppError(ErrorCode.NOT_FOUND, "Account has no signing key material");
+}
+
+/** True when an account row carries usable signing key material (wrapped or legacy). */
+function hasSignerKey(account: HederaAccountRow | null): boolean {
+  return !!(account && (account.private_key_enc || account.private_key_hex));
 }
 
 let hederaClient: Client | null = null;
@@ -111,22 +145,23 @@ export async function getOrCreateUserHederaAccount(userId: string): Promise<Hede
 
   const receipt = await txResponse.getReceipt(client);
   const hederaAccountId = receipt.accountId!.toString();
-  const privateKeyHex = privateKey.toStringDer();
   const publicKeyHex = publicKey.toStringDer();
+  // Phase 20 — the private key is wrapped at rest (never stored as plaintext).
+  const privateKeyEnc = await getKeyVault().wrap(privateKey.toStringDer(), { aad: userId });
 
   const db = getDb();
   if (existing) {
     await db.execute(
       `UPDATE hedera_accounts
-       SET hedera_account_id = ?, public_key = ?, private_key_hex = ?, network = ?, usdc_associated = 0
+       SET hedera_account_id = ?, public_key = ?, private_key_enc = ?, private_key_hex = NULL, network = ?, usdc_associated = 0
        WHERE user_id = ?`,
-      [hederaAccountId, publicKeyHex, privateKeyHex, config.HEDERA_NETWORK, userId]
+      [hederaAccountId, publicKeyHex, privateKeyEnc, config.HEDERA_NETWORK, userId]
     );
   } else {
     await db.execute(
-      `INSERT INTO hedera_accounts (id, user_id, hedera_account_id, public_key, private_key_hex, usdc_associated, network)
+      `INSERT INTO hedera_accounts (id, user_id, hedera_account_id, public_key, private_key_enc, usdc_associated, network)
        VALUES (?, ?, ?, ?, ?, 0, ?)`,
-      [uuidv4(), userId, hederaAccountId, publicKeyHex, privateKeyHex, config.HEDERA_NETWORK]
+      [uuidv4(), userId, hederaAccountId, publicKeyHex, privateKeyEnc, config.HEDERA_NETWORK]
     );
   }
 
@@ -189,7 +224,7 @@ export async function transferUsdcOnChain(input: {
   await assertSettlementUngated();
 
   const senderAccount = await getUserHederaAccount(input.fromUserId);
-  if (!senderAccount?.hedera_account_id || !senderAccount.private_key_hex) {
+  if (!senderAccount?.hedera_account_id || !hasSignerKey(senderAccount)) {
     throw new AppError(
       ErrorCode.NOT_FOUND,
       "Sender has no Hedera account — call POST /api/hedera/account first"
@@ -198,7 +233,7 @@ export async function transferUsdcOnChain(input: {
 
   const client = assertEnabled();
   const tokenId = TokenId.fromString(config.HEDERA_USDC_TOKEN_ID);
-  const senderKey = PrivateKey.fromStringDer(senderAccount.private_key_hex);
+  const senderKey = await loadSignerKey(senderAccount);
   // Safe cast: USDC micro-units fit in Number for any realistic transfer amount.
   const amount = Number(input.amountMicro);
 
@@ -263,10 +298,10 @@ export async function submitEscrowHoldOnChain(payerUserId: string, amountMicro: 
   const client = assertEnabled();
   const tokenId = usdcTokenId();
   const payer = await getUserHederaAccount(payerUserId);
-  if (!payer?.hedera_account_id || !payer.private_key_hex) {
+  if (!payer?.hedera_account_id || !hasSignerKey(payer)) {
     throw new AppError(ErrorCode.NOT_FOUND, "Payer has no Hedera account — provision one first");
   }
-  const payerKey = PrivateKey.fromStringDer(payer.private_key_hex);
+  const payerKey = await loadSignerKey(payer);
   const amount = Number(amountMicro);
   const signed = await new TransferTransaction()
     .addTokenTransfer(tokenId, AccountId.fromString(payer.hedera_account_id), -amount)
