@@ -18,6 +18,7 @@ import { requireAdmin, requireRole, type AdminRequest } from "../middleware/rbac
 import * as tokenization from "../services/tokenizationService";
 import * as listings from "../services/listingService";
 import * as marketplace from "../services/marketplaceService";
+import { declareCorporateAction, distributeDividend } from "../services/corporateActionService";
 
 export const marketplaceAdminRouter = Router();
 
@@ -172,6 +173,54 @@ marketplaceAdminRouter.post(
     try {
       await marketplace.refundSubscription(req.params.orderId!);
       res.json({ refunded: true });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// Phase 18.6 — declare a corporate action (dividend/split) for an equity asset.
+marketplaceAdminRouter.post(
+  "/assets/:id/corporate-action",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const body = z
+        .object({
+          type: z.enum(["dividend", "split"]),
+          amountPerUnitMinor: z.union([z.string(), z.number()]).optional(),
+          currency: z.string().optional(),
+          exDate: z.string().optional(),
+          recordDate: z.string().optional(),
+          payDate: z.string().optional(),
+        })
+        .parse(req.body);
+      const ca = await declareCorporateAction({
+        assetId: req.params.id!,
+        type: body.type,
+        amountPerUnitMinor: BigInt(body.amountPerUnitMinor ?? 0),
+        currency: body.currency,
+        exDate: body.exDate,
+        recordDate: body.recordDate,
+        payDate: body.payDate,
+      });
+      res.status(201).json({ corporateAction: ca });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// Phase 18.6 — distribute a declared dividend to all current holders (idempotent per holder).
+marketplaceAdminRouter.post(
+  "/corporate-actions/:caId/distribute",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const result = await distributeDividend(req.params.caId!);
+      res.json({ ...result, totalMinor: result.totalMinor.toString() });
     } catch (e) {
       next(e);
     }

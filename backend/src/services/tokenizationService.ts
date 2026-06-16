@@ -26,7 +26,7 @@ import {
   postJournal,
 } from "./ledgerService";
 
-export type AssetKind = "security" | "collectible" | "gaming";
+export type AssetKind = "security" | "collectible" | "gaming" | "equity";
 export type TokenStandard = "erc3643" | "hts";
 
 export interface AssetRow {
@@ -84,7 +84,7 @@ export function toAsset(row: AssetRow): Asset {
     holderCap: row.holder_cap,
     totalSupply: BigInt(row.total_supply ?? 0),
     status: row.status,
-    isSecurity: row.kind === "security" || row.token_standard === "erc3643",
+    isSecurity: row.kind === "security" || row.kind === "equity" || row.token_standard === "erc3643",
   };
 }
 

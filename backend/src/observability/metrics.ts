@@ -120,3 +120,18 @@ export const agentEscalationTotal = new client.Counter({
   labelNames: ["skill", "reason"],
   registers: [registry],
 });
+
+// Phase 18.6 — tokenized equities (dividends + on-chain redemption).
+export const equityDividendTotal = new client.Counter({
+  name: "equity_dividend_total",
+  help: "Per-holder dividend payouts posted for tokenized equities",
+  labelNames: ["asset"],
+  registers: [registry],
+});
+
+export const equityRedemptionTotal = new client.Counter({
+  name: "equity_redemption_total",
+  help: "Tokenized-equity redemptions",
+  labelNames: ["result"], // settled | failed
+  registers: [registry],
+});

@@ -118,6 +118,12 @@ const schema = z.object({
   // prototype (money-transmission licensing pending) and must never run in production.
   ARGUS_PAY_ENABLED: boolish,
 
+  // Phase 18.6 — tokenized 1:1-backed public equities (prototype seam). Off by default;
+  // a kill-switch that gates new dividend/redemption endpoints. EQUITY_ISSUER selects the
+  // backing/redemption provider (simulated stand-in; dinari/firstparty are prod swaps).
+  EQUITIES_ENABLED: boolish,
+  EQUITY_ISSUER: z.enum(["simulated", "dinari", "firstparty"]).default("simulated"),
+
   HEDERA_ENABLED: boolish,
   HEDERA_NETWORK: z.enum(["testnet", "mainnet", "previewnet"]).default("testnet"),
   HEDERA_OPERATOR_ID: z.string().optional(),
@@ -212,6 +218,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.ARGUS_PAY_ENABLED) {
     fatal.push("ARGUS_PAY_ENABLED must be false in production — the Phase-21 Stage-1 rail is a prototype (money-transmission licensing pending).");
+  }
+  if (c.EQUITIES_ENABLED) {
+    fatal.push("EQUITIES_ENABLED must be false in production — the Phase-18.6 tokenized-equities seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");
   }
   if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
     fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");

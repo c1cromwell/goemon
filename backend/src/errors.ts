@@ -55,6 +55,9 @@ export enum ErrorCode {
   // Internal agent operations (Phase 15 — back-office runner kill-switch)
   AGENT_DISABLED = "AGENT_DISABLED",
 
+  // Tokenized equities (Phase 18.6 — prototype kill-switch)
+  EQUITIES_DISABLED = "EQUITIES_DISABLED",
+
   // Generic
   NOT_FOUND = "NOT_FOUND",
   CONFLICT = "CONFLICT",
@@ -85,6 +88,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.TRADING_DISABLED]: 503,
   [ErrorCode.PAY_DISABLED]: 503,
   [ErrorCode.AGENT_DISABLED]: 503,
+  [ErrorCode.EQUITIES_DISABLED]: 503,
   [ErrorCode.RECONCILIATION_HOLD]: 503,
   [ErrorCode.NOT_FOUND]: 404,
   [ErrorCode.CONFLICT]: 409,
