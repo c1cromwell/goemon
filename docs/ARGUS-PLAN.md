@@ -1234,6 +1234,27 @@ Promote the Phase-8 marketplace from demo to real-money RWA issuance and seconda
 - **Reuses:** Phase-8 `complianceService` (transfer restrictions), escrow subscribe→close, atomic
   cash+asset+fee journals, versioned listings + RBAC lifecycle, and the Phase-15 Marketplace-DD agent.
 
+### Phase 18.6 — Tokenized 1:1-backed public equities (prototype seam BUILT) → **Corp B/C**
+
+Real public-company **shares tokenized 1:1** — users **trade, hold, redeem on-chain** and **receive
+dividends automatically**; **no derivatives, no IOUs** (the Dinari dShares / Backed bToken / Ondo model).
+Distinct from Phase 17 (off-chain brokerage) and from the RWA classes above (treasuries/real-estate/
+private credit). **Design: `docs/PHASE-18.6-TOKENIZED-EQUITIES.md`.**
+- **Issuance — both, as phases:** a swappable `EquityIssuer` seam (`EQUITY_ISSUER`); **v1** distributes a
+  regulated 1:1 issuer (**Dinari** US / **Backed**, **Ondo** non-US) with Argus as wallet + compliance +
+  distribution + dividend/redemption pass-through; **v2** first-party issuance (Argus + transfer agent +
+  qualified custodian + ATS — the full 18.1–18.5 stack).
+- **New machinery (the only real gaps):** a dividend/corporate-action engine (per-holder, idempotent,
+  pro-rata pass-through) and on-chain redemption (burn → deliver the underlying). 1:1 backing proven by a
+  custodian attestation reconciled like `RECONCILIATION_HOLD`.
+- **Prototype-1 BUILT** (simulated, `EQUITIES_ENABLED` kill-switch, prod-fatal): `equity` asset kind
+  reusing Phase 8; `equityIssuerService`/`corporateActionService`/`redemptionService`; migration 016
+  (`corporate_actions` append-only + `redemptions`); routes (`/assets/:id/redeem`, `/backing`, admin
+  corporate-action + distribute); `equities.test.ts` (6). Reuses `complianceService` (equity = security),
+  ledger, pricing/listings.
+- **Hard dependency:** securities counsel; a regulated 1:1 issuer (v1) or BD + transfer agent + qualified
+  custodian + ATS (v2); a corporate-actions + market-data feed; a jurisdiction matrix.
+
 ## Phase 19 — Full-bank rails (fiat, cards, deposits via partner) → **Corp B**
 
 Add the "money app" rails that make Argus a daily-driver account — **without** becoming a bank: partner

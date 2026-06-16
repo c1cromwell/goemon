@@ -25,6 +25,7 @@ import * as marketplace from "../services/marketplaceService";
 import * as listings from "../services/listingService";
 import { getAsset } from "../services/tokenizationService";
 import { getCurrentListing } from "../services/listingService";
+import { redeem, backingAttestation } from "../services/redemptionService";
 
 export const marketplaceRouter = Router();
 
@@ -124,6 +125,44 @@ marketplaceRouter.post("/assets/:id/transfer", requireAuth, idempotency(), async
     const key = req.header("Idempotency-Key")!;
     const result = await marketplace.transferAsset(req.userId!, body.toUserId, req.params.id!, qty(body.qtyBase), key);
     res.status(201).json({ transferred: true, ...result });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// Phase 18.6 — tokenized equities: on-chain redemption + 1:1 backing attestation.
+marketplaceRouter.post("/assets/:id/redeem", requireAuth, idempotency(), async (req: AuthRequest, res, next) => {
+  try {
+    const body = z.object({ qtyBase: z.union([z.string(), z.number()]) }).parse(req.body);
+    const result = await redeem({
+      userId: req.userId!,
+      assetId: req.params.id!,
+      qtyBase: qty(body.qtyBase),
+      idempotencyKey: req.header("Idempotency-Key")!,
+    });
+    res.status(201).json({
+      redeemed: true,
+      redemptionId: result.redemptionId,
+      journalId: result.journalId,
+      proceedsMinor: result.proceedsMinor.toString(),
+      externalRef: result.externalRef,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+marketplaceRouter.get("/assets/:id/backing", requireAuth, async (req: AuthRequest, res, next) => {
+  try {
+    const a = await backingAttestation(req.params.id!);
+    res.json({
+      symbol: a.symbol,
+      sharesCustodied: a.sharesCustodied.toString(),
+      tokenSupply: a.tokenSupply.toString(),
+      backedOneToOne: a.backedOneToOne,
+      custodian: a.custodian,
+      asOf: a.asOf,
+    });
   } catch (e) {
     next(e);
   }
