@@ -30,6 +30,8 @@ import { getUserByEmail } from "./authService";
 import { getUserBalances } from "./ledgerService";
 import { getTransactionHistory } from "./transferService";
 import { executeTransfer } from "../money/moneyEngine";
+import { deposit as bankDeposit, withdraw as bankWithdraw } from "./bankRailService";
+import { payBill } from "./billPayService";
 
 /** Transfers strictly above this (integer minor units = $500.00) require MFA. */
 export const MFA_THRESHOLD_MINOR = 50_000n;
@@ -94,9 +96,13 @@ function scopeFor(intent: ClassifiedIntent, amountMinor: bigint | null): string[
     case "transactions.read":
       return ["statement:read"];
     case "transfer.send":
+    case "bank.withdraw":
+    case "bill.pay":
       return amountMinor != null && amountMinor > MFA_THRESHOLD_MINOR
         ? ["transfer:high"]
         : ["transfer:low"];
+    case "bank.deposit":
+      return ["balance:read"]; // money IN — low risk, no transfer scope needed
     default:
       return [];
   }
@@ -212,6 +218,30 @@ async function issueOperationToken(
     params.recipientEmail = recipientUser.email;
     params.amountMinor = amountMinor.toString();
     params.currency = currency;
+    mfaRequired = amountMinor > MFA_THRESHOLD_MINOR;
+  } else if (intent.operation === "bank.deposit" || intent.operation === "bank.withdraw") {
+    if (!intent.amountMinor) throw new AppError(ErrorCode.VALIDATION, "I couldn't determine the amount.");
+    amountMinor = BigInt(intent.amountMinor);
+    if (amountMinor <= 0n) throw new AppError(ErrorCode.VALIDATION, "Amount must be positive.");
+    params.amountMinor = amountMinor.toString();
+    params.currency = intent.currency === "USDC" ? "USDC" : "USD";
+    // Deposits are money IN — never MFA-gated; withdrawals follow the >$500 gate.
+    mfaRequired = intent.operation === "bank.withdraw" && amountMinor > MFA_THRESHOLD_MINOR;
+  } else if (intent.operation === "bill.pay") {
+    if (!intent.amountMinor) throw new AppError(ErrorCode.VALIDATION, "I couldn't determine the amount to pay.");
+    amountMinor = BigInt(intent.amountMinor);
+    if (amountMinor <= 0n) throw new AppError(ErrorCode.VALIDATION, "Bill amount must be positive.");
+    if (!intent.payee) throw new AppError(ErrorCode.VALIDATION, "I couldn't determine which biller to pay.");
+    // Resolve the named biller against the user's saved payees (case-insensitive contains).
+    const payee = await getDb().queryOne<{ id: string; name: string }>(
+      "SELECT id, name FROM bill_payees WHERE user_id = ? AND status = 'active' AND lower(name) LIKE ? ORDER BY created_at DESC LIMIT 1",
+      [userId, `%${intent.payee.toLowerCase()}%`]
+    );
+    if (!payee) throw new AppError(ErrorCode.NOT_FOUND, `No saved biller matching "${intent.payee}". Add it on the Bills page first.`);
+    params.payeeId = payee.id;
+    params.payeeName = payee.name;
+    params.amountMinor = amountMinor.toString();
+    params.currency = "USD";
     mfaRequired = amountMinor > MFA_THRESHOLD_MINOR;
   }
 
@@ -367,6 +397,24 @@ export async function executeOperationToken(
         };
         break;
       }
+      case "bank.deposit": {
+        const amountMinor = BigInt(String(metadata.amountMinor));
+        const r = await bankDeposit({ userId, amountMinor, currency: String(metadata.currency ?? "USD"), idempotencyKey: `optoken:${tokenId}` });
+        result = { transferId: r.transferId, amount_minor: amountMinor.toString(), currency: metadata.currency ?? "USD", status: r.status };
+        break;
+      }
+      case "bank.withdraw": {
+        const amountMinor = BigInt(String(metadata.amountMinor));
+        const r = await bankWithdraw({ userId, amountMinor, currency: String(metadata.currency ?? "USD"), method: "ach", idempotencyKey: `optoken:${tokenId}`, channel: "smartchat" });
+        result = { transferId: r.transferId, amount_minor: amountMinor.toString(), currency: metadata.currency ?? "USD", status: r.status };
+        break;
+      }
+      case "bill.pay": {
+        const amountMinor = BigInt(String(metadata.amountMinor));
+        const r = await payBill({ userId, payeeId: String(metadata.payeeId), amountMinor, idempotencyKey: `optoken:${tokenId}` });
+        result = { paymentId: r.paymentId, amount_minor: amountMinor.toString(), currency: "USD", payee: metadata.payeeName, status: r.status };
+        break;
+      }
       default:
         throw new AppError(ErrorCode.NOT_IMPLEMENTED, `Unsupported operation: ${operation}`);
     }
@@ -507,6 +555,12 @@ export function generateResponse(intent: ClassifiedIntent, result: unknown): str
       return `Done — sent ${formatMinor(BigInt(String(r.amount_minor ?? "0")), String(r.currency ?? "USD"))} to ${String(
         r.recipient ?? "the recipient"
       )}.`;
+    case "bank.deposit":
+      return `Done — deposited ${formatMinor(BigInt(String(r.amount_minor ?? "0")), String(r.currency ?? "USD"))} to your account.`;
+    case "bank.withdraw":
+      return `Done — withdrew ${formatMinor(BigInt(String(r.amount_minor ?? "0")), String(r.currency ?? "USD"))} to your bank (${String(r.status ?? "settled")}).`;
+    case "bill.pay":
+      return `Done — paid ${formatMinor(BigInt(String(r.amount_minor ?? "0")), String(r.currency ?? "USD"))} to ${String(r.payee ?? "the biller")}.`;
     default:
       return "Okay.";
   }
