@@ -57,6 +57,7 @@ Most products are behind kill-switches (off by default). For a full demo set the
 ALLOW_PASSWORD_AUTH=true          # lets you log in with the demo passwords (passkeys otherwise)
 TRADING_ENABLED=true              # /trade journey (Phase 17 simulated broker)
 ARGUS_PAY_ENABLED=true            # Argus Pay merchant journey (Phase 21)
+BANK_RAILS_ENABLED=true           # bank rails: deposit/withdraw/statement (Phase 19 Stage-1)
 # Fraud engine wiring (both sides must share the key):
 FRAUD_ENGINE_URL=http://localhost:4500
 FRAUD_ENGINE_API_KEY=<a-strong-shared-secret-32+chars>
@@ -160,6 +161,26 @@ curl -sX POST localhost:3001/api/pay/intents -H "Authorization: Bearer $BLAIR" \
 - Pay the intent as **alex**, then capture as **blair**; try a refund and a payer dispute.
 - **Verify:** every payment is **escrow-protected** (status derives from the escrow row); zero rail fee;
   agents can pay via the `pay_merchant` MCP tool (scope `pay:merchant`).
+
+### J9b — Bank rails: deposit, withdraw, statement (needs `BANK_RAILS_ENABLED=true`)
+- **API** (Tier 2; get `$ALEX` Bearer from the portal Network tab). The simulated partner bank settles
+  instantly into the ledger via `external_clearing`.
+```bash
+# on-ramp (deposit) — Idempotency-Key required
+curl -sX POST localhost:3001/api/bank/deposit -H "Authorization: Bearer $ALEX" \
+  -H 'Idempotency-Key: dep-1' -H 'Content-Type: application/json' -d '{"amountMinor":"50000"}'
+# off-ramp (ACH payout)
+curl -sX POST localhost:3001/api/bank/withdraw -H "Authorization: Bearer $ALEX" \
+  -H 'Idempotency-Key: wd-1' -H 'Content-Type: application/json' -d '{"amountMinor":"20000","method":"ach","destination":"ext-1"}'
+curl -s "localhost:3001/api/bank/statement?from=1970-01-01T00:00:00Z&to=2999-01-01T00:00:00Z" -H "Authorization: Bearer $ALEX"
+# admin: ACH return reversal + FBO coverage (compliance/admin)
+curl -sX POST localhost:3001/api/admin/bank/transfers/<id>/return -H "Authorization: Bearer $ADMIN"
+curl -s localhost:3001/api/admin/bank/fbo?currency=USD -H "Authorization: Bearer $ADMIN"
+```
+- **Verify:** deposit credits / withdraw debits `user_cash` (visible in `/activity`); replaying an
+  Idempotency-Key posts no second journal; an over-balance withdrawal → `INSUFFICIENT_FUNDS`; a frozen
+  account (fraud, J§4) → `ACCOUNT_FROZEN`; the statement's closing balance reconciles to the ledger; FBO
+  coverage shows the partner bank backing customer cash 1:1; a return reverses the journal.
 
 ### J10 — On-chain wallet (only with `HEDERA_ENABLED=true`)
 - **Start:** `/wallet`. Provision a Hedera account → Receive (QR) → Send USDC.
@@ -394,7 +415,7 @@ only recommend/draft; humans gate material actions; every tool scoped + audited.
 
 - **Can't log in with a password** → set `ALLOW_PASSWORD_AUTH=true` and restart; or use a passkey.
 - **`ACCOUNT_LOCKED`** → `npm run reset:auth`.
-- **`/trade` or Pay 503** → set `TRADING_ENABLED` / `ARGUS_PAY_ENABLED=true`.
+- **`/trade`, Pay, or bank 503** → set `TRADING_ENABLED` / `ARGUS_PAY_ENABLED` / `BANK_RAILS_ENABLED=true`.
 - **Fraud engine "unreachable, degrading open"** → engine not running or `FRAUD_ENGINE_URL`/key mismatch.
 - **Temporal/Conductor "falling back to in-process"** → server not up; start the compose file (§6).
 - **CORS errors from :5174** → ensure `CORS_ORIGIN` allows the agent app origin.

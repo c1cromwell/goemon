@@ -124,6 +124,12 @@ const schema = z.object({
   EQUITIES_ENABLED: boolish,
   EQUITY_ISSUER: z.enum(["simulated", "dinari", "firstparty"]).default("simulated"),
 
+  // Phase 19 Stage-1 — full-bank rails (fiat on/off-ramp + ACH/wire payouts). Off by
+  // default; a kill-switch that gates deposits/withdrawals. BANK_RAIL_PROVIDER selects the
+  // partner-bank provider (simulated stand-in; column/treasuryprime/unit are prod swaps).
+  BANK_RAILS_ENABLED: boolish,
+  BANK_RAIL_PROVIDER: z.enum(["simulated", "column", "treasuryprime", "unit"]).default("simulated"),
+
   HEDERA_ENABLED: boolish,
   HEDERA_NETWORK: z.enum(["testnet", "mainnet", "previewnet"]).default("testnet"),
   HEDERA_OPERATOR_ID: z.string().optional(),
@@ -221,6 +227,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.EQUITIES_ENABLED) {
     fatal.push("EQUITIES_ENABLED must be false in production — the Phase-18.6 tokenized-equities seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");
+  }
+  if (c.BANK_RAILS_ENABLED) {
+    fatal.push("BANK_RAILS_ENABLED must be false in production — the Phase-19 Stage-1 bank rails are simulated (BaaS/partner-bank + FinCEN MSB + KYC/AML vendor pending).");
   }
   if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
     fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
