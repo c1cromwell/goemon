@@ -59,8 +59,8 @@ export interface Reason {
 
 /** A normalized money-path event. In Stage 2 this becomes a Kafka record. */
 export interface TransferRiskEvent {
-  eventType: "transfer.send" | "bank.withdraw" | "card.auth";
-  channel: string; // api | smartchat | mcp | bank | card
+  eventType: "transfer.send" | "bank.withdraw" | "card.auth" | "bill.pay";
+  channel: string; // api | smartchat | mcp | bank | card | billpay
   userId: string;
   counterpartyId: string;
   /** Resolved ledger account ids — used for prior-payee derivation. */

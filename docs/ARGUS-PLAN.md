@@ -1288,7 +1288,14 @@ in every regulated leg (the `CORPORATE-STRUCTURE.md` Phase-B thesis).
     `void` (release), `refund`; masked PAN only; migration 018 (`cards`/`card_authorizations`), `/api/cards`
     + `/api/admin/cards`, `CARDS_ENABLED` kill-switch (**prod-fatal**), `card_auth_total`, `cards.test.ts` (8).
     Card BIN-sponsor + PCI scope stay with the processor (prod).
-  - **Next sub-stage:** **bill pay** (19.3) — not yet built.
+  - **19.3 bill pay BUILT:** `billPayService` (saved `bill_payees`; rides the same `BankRailProvider`) —
+    `payBill` (immediate or scheduled; recurrence none|weekly|monthly; freeze+balance+fraud `bill.pay`
+    gates; idempotent; user_cash→external_clearing), `processScheduledBills` (settles due + seeds the next
+    recurring instance), `cancelBill`; migration 019 (`bill_payees`/`bill_payments`), `/api/billpay` +
+    `/api/admin/billpay/process`, `BILLPAY_ENABLED` kill-switch (**prod-fatal**), `bill_payment_total`,
+    `billpay.test.ts` (6).
+  - **Stage-1 complete (19.1–19.5).** Production gates remain: a BaaS/partner bank, FinCEN MSB, an
+    industrialized KYC/AML vendor, a card BIN-sponsor/PCI scope, and a biller network.
 
 ## Phase 20 — Production hardening & scale (custody, reconciliation, fraud platform, orchestration) → **Corp B/C**
 

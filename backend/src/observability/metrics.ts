@@ -150,3 +150,10 @@ export const cardAuthTotal = new client.Counter({
   labelNames: ["result"], // authorized | captured | voided | refunded
   registers: [registry],
 });
+
+export const billPaymentTotal = new client.Counter({
+  name: "bill_payment_total",
+  help: "Bill payments",
+  labelNames: ["result"], // scheduled | sent | canceled | failed
+  registers: [registry],
+});

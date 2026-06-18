@@ -59,6 +59,7 @@ TRADING_ENABLED=true              # /trade journey (Phase 17 simulated broker)
 ARGUS_PAY_ENABLED=true            # Argus Pay merchant journey (Phase 21)
 BANK_RAILS_ENABLED=true           # bank rails: deposit/withdraw/statement (Phase 19 Stage-1)
 CARDS_ENABLED=true                # debit cards: issue/authorize/capture (Phase 19.4)
+BILLPAY_ENABLED=true              # bill pay: payees + scheduled/recurring payments (Phase 19.3)
 # Fraud engine wiring (both sides must share the key):
 FRAUD_ENGINE_URL=http://localhost:4500
 FRAUD_ENGINE_API_KEY=<a-strong-shared-secret-32+chars>
@@ -200,6 +201,22 @@ curl -sX POST localhost:3001/api/admin/cards/authorizations/<authId>/refund  -H 
   into `card_holds`); capture settles out via `external_clearing` (money gone); void releases the hold
   back; refund returns a captured amount; replaying the auth Idempotency-Key places no second hold;
   over-balance → `INSUFFICIENT_FUNDS`; a frozen account → `ACCOUNT_FROZEN`.
+
+### J9d — Bill pay: payees + scheduled/recurring payments (needs `BILLPAY_ENABLED=true`)
+```bash
+# save a biller
+curl -sX POST localhost:3001/api/billpay/payees -H "Authorization: Bearer $ALEX" \
+  -H 'Content-Type: application/json' -d '{"name":"City Power","category":"utility","last4":"4321"}'
+# pay now (Idempotency-Key); or schedule with "scheduledFor":"2026-07-01T00:00:00Z" + "recurrence":"monthly"
+curl -sX POST localhost:3001/api/billpay/pay -H "Authorization: Bearer $ALEX" \
+  -H 'Idempotency-Key: bp-1' -H 'Content-Type: application/json' -d '{"payeeId":"<id>","amountMinor":"9000"}'
+curl -sX POST localhost:3001/api/billpay/payments/<id>/cancel -H "Authorization: Bearer $ALEX"  # cancel a scheduled one
+# ops due-loop (admin): settle all due scheduled payments
+curl -sX POST localhost:3001/api/admin/billpay/process -H "Authorization: Bearer $ADMIN"
+```
+- **Verify:** pay-now debits `user_cash` via `external_clearing` (visible in `/activity`); replaying the
+  Idempotency-Key pays once; over-balance → `INSUFFICIENT_FUNDS`; frozen → `ACCOUNT_FROZEN`; a future-dated
+  payment stays `scheduled` until the due-loop settles it; a recurring payment seeds its next instance on send.
 
 ### J10 — On-chain wallet (only with `HEDERA_ENABLED=true`)
 - **Start:** `/wallet`. Provision a Hedera account → Receive (QR) → Send USDC.
@@ -434,7 +451,7 @@ only recommend/draft; humans gate material actions; every tool scoped + audited.
 
 - **Can't log in with a password** → set `ALLOW_PASSWORD_AUTH=true` and restart; or use a passkey.
 - **`ACCOUNT_LOCKED`** → `npm run reset:auth`.
-- **`/trade`, Pay, bank, or cards 503** → set `TRADING_ENABLED` / `ARGUS_PAY_ENABLED` / `BANK_RAILS_ENABLED` / `CARDS_ENABLED=true`.
+- **`/trade`, Pay, bank, cards, or bill-pay 503** → set the matching `*_ENABLED` flag (`TRADING_ENABLED` / `ARGUS_PAY_ENABLED` / `BANK_RAILS_ENABLED` / `CARDS_ENABLED` / `BILLPAY_ENABLED`).
 - **Fraud engine "unreachable, degrading open"** → engine not running or `FRAUD_ENGINE_URL`/key mismatch.
 - **Temporal/Conductor "falling back to in-process"** → server not up; start the compose file (§6).
 - **CORS errors from :5174** → ensure `CORS_ORIGIN` allows the agent app origin.

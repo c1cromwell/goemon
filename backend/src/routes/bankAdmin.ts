@@ -12,6 +12,7 @@ import type { Response, NextFunction } from "express";
 import { requireAdmin, requireRole, type AdminRequest } from "../middleware/rbac";
 import { returnTransfer, fboCoverage } from "../services/bankRailService";
 import { capture, refund } from "../services/cardService";
+import { processScheduledBills } from "../services/billPayService";
 
 export const bankAdminRouter = Router();
 
@@ -64,6 +65,20 @@ bankAdminRouter.post(
   async (req: AdminRequest, res: Response, next: NextFunction) => {
     try {
       res.json(await refund(req.params.id!));
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// Phase 19.3 — settle all due scheduled bill payments (the ops due-loop).
+bankAdminRouter.post(
+  "/billpay/process",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (_req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      res.json(await processScheduledBills());
     } catch (e) {
       next(e);
     }

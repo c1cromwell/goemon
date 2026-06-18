@@ -49,6 +49,7 @@ import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
 import { bankRouter } from "./routes/bank";
 import { bankAdminRouter } from "./routes/bankAdmin";
 import { cardsRouter } from "./routes/cards";
+import { billpayRouter } from "./routes/billpay";
 import { selectOperationsEngine } from "./operations/selectEngine";
 import { internalRemediationRouter } from "./routes/internalRemediation";
 import { initReconciliation, startReconciliationLoop, runReconciliation } from "./services/reconciliationService";
@@ -195,6 +196,9 @@ async function bootstrap(): Promise<void> {
 
   // ---- Phase 19.4 — debit cards ----
   app.use("/api/cards", cardsRouter);
+
+  // ---- Phase 19.3 — bill pay ----
+  app.use("/api/billpay", billpayRouter);
 
   // ---- Phase 20 fraud add-on — remediation callbacks from the fraud engine ----
   // Service-bearer auth (FRAUD_ENGINE_API_KEY), not user sessions. The engine calls
