@@ -1329,6 +1329,27 @@ The non-feature work that must land before real money flows at scale — the ite
 - **Build out Phase 15** internal agent operations (KYC review, Fraud/AML triage, support, compliance
   drafting) from design to runtime, on the orchestration substrate above.
 
+## Phase 22 — Argus Starter (13+ family/teen wealth-building suite) → **Corp B/C** (DESIGN)
+
+A full-suite **starter product for the 13+ age group**: teen **debit card**, a **credit-builder card**,
+**high-yield savings**, and **custodial investing**, all **gamified to teach wealth-building**.
+**Design: `docs/PHASE-22-STARTER-TEEN.md`.**
+- **Legal frame:** a 13–17 user is a minor → **guardian-owned, teen-operated** (Household = guardian
+  [adult, KYC'd, liable] + 1..N teens [minor, DOB-verified, controlled]). "Credit card" = a guardian-funded
+  **credit-builder** (secured/charge, bureau-reported) — not real revolving credit. Investing = **custodial
+  (UGMA/UTMA)**, guardian-approved.
+- **Reuses (no rebuild):** `cardService` (teen debit + credit-builder `card_type`s), `bankRailService` +
+  `user_savings` (a new `interestAccrualService` mirrors `corporateActionService.distributeDividend`),
+  `marketplace`/equities (fractional custodial orders), the **operations human-gate** (`operationsWorkflow`
+  → `agent_reviews`) for guardian approval, `accountHoldService` (guardian freeze) + a new spend-limit policy
+  gate, the read/recommend skill framework (teen coach), and the Phase-9 gamification scaffold.
+- **Staged build (each = simulated seam + `TEEN_ENABLED` prod-fatal + tests):** 22.0 households/guardian
+  linkage + minor account type; 22.1 teen debit + controls + approval; 22.2 savings APY + goals + round-ups +
+  match; 22.3 gamification core + coach; 22.4 credit-builder + `CreditBureauReporter` (bureau partner);
+  22.5 custodial investing (broker/transfer-agent). 22.0–22.3 buildable now; 22.4/22.5 partner/counsel-gated.
+- **Hard dependency:** consumer-finance/securities counsel + COPPA/UGMA posture; BaaS bank, card issuer,
+  bureau-reporting partner, custodial broker/transfer agent, KYC vendor.
+
 ---
 
 ## Quick Start (After Build)
