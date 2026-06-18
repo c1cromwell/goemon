@@ -46,6 +46,8 @@ import { escrowAdminRouter } from "./routes/escrowAdmin";
 import { payRouter } from "./routes/pay";
 import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
+import { bankRouter } from "./routes/bank";
+import { bankAdminRouter } from "./routes/bankAdmin";
 import { selectOperationsEngine } from "./operations/selectEngine";
 import { internalRemediationRouter } from "./routes/internalRemediation";
 import { initReconciliation, startReconciliationLoop, runReconciliation } from "./services/reconciliationService";
@@ -185,6 +187,10 @@ async function bootstrap(): Promise<void> {
 
   // ---- Phase 15 — internal agent operations (RBAC admin surface) ----
   app.use("/api/admin", agentOpsAdminRouter);
+
+  // ---- Phase 19 Stage-1 — full-bank rails (fiat on/off-ramp + ACH/wire) ----
+  app.use("/api/bank", bankRouter);
+  app.use("/api/admin", bankAdminRouter);
 
   // ---- Phase 20 fraud add-on — remediation callbacks from the fraud engine ----
   // Service-bearer auth (FRAUD_ENGINE_API_KEY), not user sessions. The engine calls

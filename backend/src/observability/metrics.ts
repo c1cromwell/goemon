@@ -135,3 +135,11 @@ export const equityRedemptionTotal = new client.Counter({
   labelNames: ["result"], // settled | failed
   registers: [registry],
 });
+
+// Phase 19 — full-bank rails (fiat on/off-ramp + ACH/wire payouts).
+export const bankTransferTotal = new client.Counter({
+  name: "bank_transfer_total",
+  help: "Bank-rail transfers (deposits/withdrawals)",
+  labelNames: ["direction", "result"], // direction: in|out ; result: settled|failed|returned
+  registers: [registry],
+});

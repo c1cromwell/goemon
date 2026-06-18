@@ -1270,6 +1270,19 @@ in every regulated leg (the `CORPORATE-STRUCTURE.md` Phase-B thesis).
   compliance officer (CORPORATE-STRUCTURE §8).
 - **Reuses:** the ledger's existing **`external_clearing`** account is the documented attach seam; the
   tiered identity ladder + DID/VC + append-only audit are ~70% of the AML evidence layer.
+- **Stage-1 simulated seam BUILT.** A swappable `BankRailProvider` (`bankRailService`,
+  `BANK_RAIL_PROVIDER`: simulated default; **column/treasuryprime/unit** `NOT_IMPLEMENTED` stubs) moves
+  money between the partner bank and `external_clearing`:
+  - **19.1 on/off-ramp:** `deposit` (external_clearing→user_cash) and `withdraw` (user_cash→external_clearing,
+    ACH/wire) — reuse the **freeze** (`ACCOUNT_FROZEN`), **fraud-screen** (`bank.withdraw`), and balance
+    gates from the transfer path; idempotent + append-only at the ledger.
+  - **19.2 FBO:** `fboCoverage` asserts the partner-bank FBO backs total customer cash **1:1** (the
+    never-commingle invariant); a real provider reports the bank's true balance → coverage drift.
+  - **19.3/19.5:** `returnTransfer` (ACH-return reversal); `statementService.getStatement` derives
+    opening/closing + line items from the ledger; linked external `bank_accounts` (last4 only).
+  - Migration 017 (`bank_transfers` state machine + `bank_accounts`); `/api/bank` + `/api/admin/bank`;
+    `BANK_RAILS_ENABLED` kill-switch (**prod-fatal**); `bank_transfer_total`; `bank-rails.test.ts` (9).
+  - **Next sub-stages:** debit **cards** (19.4) and **bill pay** (19.3) — not in Stage-1.
 
 ## Phase 20 — Production hardening & scale (custody, reconciliation, fraud platform, orchestration) → **Corp B/C**
 

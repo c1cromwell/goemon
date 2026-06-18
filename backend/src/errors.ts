@@ -58,6 +58,9 @@ export enum ErrorCode {
   // Tokenized equities (Phase 18.6 — prototype kill-switch)
   EQUITIES_DISABLED = "EQUITIES_DISABLED",
 
+  // Full-bank rails (Phase 19 Stage-1 — prototype kill-switch)
+  BANK_RAILS_DISABLED = "BANK_RAILS_DISABLED",
+
   // Generic
   NOT_FOUND = "NOT_FOUND",
   CONFLICT = "CONFLICT",
@@ -89,6 +92,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.PAY_DISABLED]: 503,
   [ErrorCode.AGENT_DISABLED]: 503,
   [ErrorCode.EQUITIES_DISABLED]: 503,
+  [ErrorCode.BANK_RAILS_DISABLED]: 503,
   [ErrorCode.RECONCILIATION_HOLD]: 503,
   [ErrorCode.NOT_FOUND]: 404,
   [ErrorCode.CONFLICT]: 409,
