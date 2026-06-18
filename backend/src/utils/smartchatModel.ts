@@ -20,13 +20,21 @@ export type SmartChatOperation =
   | "balance.read"
   | "transactions.read"
   | "transfer.send"
+  | "bank.deposit"
+  | "bank.withdraw"
+  | "bill.pay"
   | "chat";
+
+/** Operations that move money (used for the MFA-gate / scope decisions downstream). */
+export const MONEY_OPS: SmartChatOperation[] = ["transfer.send", "bank.deposit", "bank.withdraw", "bill.pay"];
 
 export interface ClassifiedIntent {
   operation: SmartChatOperation;
   /** For transfer.send — the raw recipient identifier the user named (email). */
   recipient?: string;
-  /** For transfer.send — amount in INTEGER minor units, carried as a string for JSON/bigint safety. */
+  /** For bill.pay — the biller name the user named. */
+  payee?: string;
+  /** Amount in INTEGER minor units, carried as a string for JSON/bigint safety. */
   amountMinor?: string;
   /** ISO-4217-ish code; only USD/USDC are supported downstream. */
   currency?: string;
@@ -35,6 +43,21 @@ export interface ClassifiedIntent {
 }
 
 const EMAIL_RE = /\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/i;
+
+function fmtUsd(minor: bigint): string {
+  return `$${(minor / 100n).toString()}.${(minor % 100n).toString().padStart(2, "0")}`;
+}
+
+/** Best-effort biller-name extraction for "pay <biller> $X" (quotes win, else heuristic). */
+function extractPayee(text: string): string | undefined {
+  const quoted = text.match(/"([^"]+)"|'([^']+)'/);
+  if (quoted) return (quoted[1] ?? quoted[2])?.trim();
+  let s = text.replace(/^.*?\bpay\b\s*/i, ""); // drop everything up to and incl. "pay"
+  s = s.replace(/\b(my|the|bill|to|for|now|usd|usdc|dollars?)\b/gi, " ");
+  s = s.replace(/\$?\d[\d,]*(?:\.\d+)?/g, " "); // strip amounts
+  s = s.replace(/\s+/g, " ").trim();
+  return s || undefined;
+}
 
 /**
  * Parse a human money string into integer minor units (cents) WITHOUT floating
@@ -59,21 +82,36 @@ export function classifyIntentSimulated(message: string): ClassifiedIntent {
   const text = message.trim();
   const lower = text.toLowerCase();
 
-  const isTransfer = /\b(send|transfer|pay|wire|remit)\b/.test(lower);
-  if (isTransfer) {
-    const amount = parseAmountMinor(text);
-    const recipient = text.match(EMAIL_RE)?.[0];
-    const currency = /\busdc\b/i.test(text) ? "USDC" : "USD";
+  const amount = parseAmountMinor(text);
+  const currency = /\busdc\b/i.test(text) ? "USDC" : "USD";
+  const email = text.match(EMAIL_RE)?.[0];
+  const amt = amount != null ? amount.toString() : undefined;
+
+  // Deposit (on-ramp).
+  if (/\b(deposit|add (funds|money|cash)|top ?up|cash in|fund my account)\b/.test(lower)) {
+    return { operation: "bank.deposit", amountMinor: amt, currency,
+      summary: amount != null ? `Deposit ${fmtUsd(amount)}` : "Deposit (missing amount)" };
+  }
+  // Withdraw / payout (off-ramp).
+  if (/\b(withdraw|cash out|take out|move .*to (my )?bank|send .*to (my )?bank|to my bank account)\b/.test(lower)) {
+    return { operation: "bank.withdraw", amountMinor: amt, currency,
+      summary: amount != null ? `Withdraw ${fmtUsd(amount)} to your bank` : "Withdraw (missing amount)" };
+  }
+  // Transfer to a person: a money verb AND a named email recipient.
+  if (email && /\b(send|transfer|pay|wire|remit)\b/.test(lower)) {
     return {
       operation: "transfer.send",
-      recipient,
-      amountMinor: amount != null ? amount.toString() : undefined,
+      recipient: email,
+      amountMinor: amt,
       currency,
-      summary:
-        amount != null && recipient
-          ? `Transfer ${currency} ${(amount / 100n).toString()}.${(amount % 100n).toString().padStart(2, "0")} to ${recipient}`
-          : "Transfer (missing amount or recipient)",
+      summary: amount != null ? `Transfer ${currency} ${fmtUsd(amount).slice(1)} to ${email}` : "Transfer (missing amount or recipient)",
     };
+  }
+  // Bill pay: "pay <biller>" / "bill" without an email recipient.
+  if (/\b(bill|pay)\b/.test(lower)) {
+    const payee = extractPayee(text);
+    return { operation: "bill.pay", payee, amountMinor: amt, currency,
+      summary: payee && amount != null ? `Pay ${fmtUsd(amount)} to ${payee}` : "Bill pay (missing payee or amount)" };
   }
 
   if (/\b(balance|how much|funds|available|account total)\b/.test(lower)) {
@@ -101,9 +139,10 @@ const SUBMIT_TOOL = {
     properties: {
       operation: {
         type: "string",
-        enum: ["balance.read", "transactions.read", "transfer.send", "chat"],
+        enum: ["balance.read", "transactions.read", "transfer.send", "bank.deposit", "bank.withdraw", "bill.pay", "chat"],
       },
       recipient: { type: "string", description: "Recipient email, only for transfer.send" },
+      payee: { type: "string", description: "Biller name, only for bill.pay" },
       amount_minor: { type: "integer", description: "Amount in integer minor units (cents)" },
       currency: { type: "string", enum: ["USD", "USDC"] },
       summary: { type: "string", description: "One-line human-readable summary of the intent" },
@@ -112,7 +151,7 @@ const SUBMIT_TOOL = {
   },
 } as const;
 
-const VALID_OPS: SmartChatOperation[] = ["balance.read", "transactions.read", "transfer.send", "chat"];
+const VALID_OPS: SmartChatOperation[] = ["balance.read", "transactions.read", "transfer.send", "bank.deposit", "bank.withdraw", "bill.pay", "chat"];
 
 function sanitizeIntent(raw: Record<string, unknown>): ClassifiedIntent {
   const operation = VALID_OPS.includes(raw.operation as SmartChatOperation)
@@ -120,7 +159,7 @@ function sanitizeIntent(raw: Record<string, unknown>): ClassifiedIntent {
     : "chat";
   const currency = raw.currency === "USDC" ? "USDC" : "USD";
   let amountMinor: string | undefined;
-  if (operation === "transfer.send" && raw.amount_minor != null) {
+  if (MONEY_OPS.includes(operation) && raw.amount_minor != null) {
     // Coerce to a non-negative integer; reject NaN/negatives by dropping them.
     const n = Math.trunc(Number(raw.amount_minor));
     if (Number.isFinite(n) && n > 0) amountMinor = BigInt(n).toString();
@@ -129,9 +168,11 @@ function sanitizeIntent(raw: Record<string, unknown>): ClassifiedIntent {
     operation === "transfer.send" && typeof raw.recipient === "string" && EMAIL_RE.test(raw.recipient)
       ? raw.recipient
       : undefined;
+  const payee = operation === "bill.pay" && typeof raw.payee === "string" ? raw.payee.slice(0, 120) : undefined;
   return {
     operation,
     recipient,
+    payee,
     amountMinor,
     currency,
     summary: typeof raw.summary === "string" ? raw.summary.slice(0, 300) : "Intent",

@@ -501,7 +501,52 @@ export const userApi = {
   hederaBalance: () => uget<HederaBalance>("/hedera/balance"),
   hederaTransfer: (body: { toUserId?: string; toHederaAccountId?: string; amountMicro: string }, key: string) =>
     umoney<{ txId: string; journalId: string }>("/hedera/transfer", body, key),
+
+  // --- bank rails (Phase 19) ---
+  bankTransfers: () => uget<{ transfers: BankTransfer[] }>("/bank/transfers"),
+  bankDeposit: (amountMinor: string, key: string, currency = "USD") =>
+    umoney<BankTransferResult>("/bank/deposit", { amountMinor, currency }, key),
+  bankWithdraw: (body: { amountMinor: string; currency?: string; method?: "ach" | "wire" | "instant"; destination?: string }, key: string) =>
+    umoney<BankTransferResult>("/bank/withdraw", body, key),
+  bankStatement: (from: string, to: string, currency = "USD") =>
+    uget<Statement>(`/bank/statement?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&currency=${currency}`),
+  bankAccounts: () => uget<{ accounts: BankAccount[] }>("/bank/accounts"),
+  linkBankAccount: (body: { label?: string; type?: "checking" | "savings"; last4: string; routing?: string }) =>
+    upost<BankAccount>("/bank/accounts", body),
+
+  // --- cards (Phase 19.4) ---
+  cards: () => uget<{ cards: Card[] }>("/cards"),
+  issueCard: () => upost<Card>("/cards"),
+  cardAuthorizations: () => uget<{ authorizations: CardAuth[] }>("/cards/authorizations"),
+  cardAuthorize: (cardId: string, amountMinor: string, key: string, merchant?: string) =>
+    umoney<CardAuth>(`/cards/${cardId}/authorize`, { amountMinor, merchant }, key),
+  cardVoid: (authId: string) => upost<{ voided: boolean }>(`/cards/authorizations/${authId}/void`),
+
+  // --- bill pay (Phase 19.3) ---
+  billPayees: () => uget<{ payees: BillPayee[] }>("/billpay/payees"),
+  addBillPayee: (body: { name: string; category?: string; last4?: string }) => upost<BillPayee>("/billpay/payees", body),
+  billPayments: () => uget<{ payments: BillPayment[] }>("/billpay/payments"),
+  payBill: (body: { payeeId: string; amountMinor: string; recurrence?: "none" | "weekly" | "monthly"; scheduledFor?: string }, key: string) =>
+    umoney<{ paymentId: string; status: string }>("/billpay/pay", body, key),
+  cancelBill: (id: string) => upost<{ canceled: boolean }>(`/billpay/payments/${id}/cancel`),
 };
+
+// --- Phase 19 row/result types (snake_case mirrors the backend rows) ---
+export interface BankTransfer {
+  id: string; direction: "in" | "out"; method: string; amount_minor: string; currency: string;
+  status: string; counterparty: string | null; external_ref: string | null; created_at: string; settled_at: string | null;
+}
+export interface BankTransferResult { transferId: string; journalId: string; status: string; externalRef: string }
+export interface BankAccount { id: string; label: string | null; type: string; masked_number: string; routing: string | null; status: string; created_at: string }
+export interface StatementLine { date: string; description: string; direction: "debit" | "credit"; amountMinor: string; signedMinor: string }
+export interface Statement { currency: string; from: string; to: string; openingMinor: string; closingMinor: string; lines: StatementLine[] }
+export interface Card { id: string; network: string; masked_number: string; exp_month: number; exp_year: number; currency: string; status: string; created_at: string }
+export interface CardAuth { id: string; card_id: string; merchant: string | null; amount_minor: string; currency: string; status: string; created_at: string }
+export interface BillPayee { id: string; name: string; category: string | null; masked_account: string | null; status: string; created_at: string }
+export interface BillPayment {
+  id: string; payee_id: string; amount_minor: string; currency: string; status: string; recurrence: string;
+  scheduled_for: string; created_at: string; sent_at: string | null;
+}
 
 export { newIdempotencyKey };
 

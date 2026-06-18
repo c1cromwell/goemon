@@ -136,6 +136,19 @@ Each journey lists the **start URL**, steps, and **what to verify**. Log in as t
   the **MFA gate**.
 - **Verify:** intent classified → scoped 90s RS256 operation token → transfer posts idempotently on the
   token id; an expired token is rejected; MFA required above $500.
+- **SmartChat now also drives the money rails** (Phase 19): try "deposit $50", "withdraw $20 to my bank",
+  and `pay "City Power" $90` (add the biller on the Bills page first). Deposits are money-in → never
+  MFA-gated; a >$500 withdrawal/bill prompts for MFA.
+
+### J6b — Console (terminal-style agent; `/console`, Tier 2)
+- **Start:** `/console`. Type `help`, then commands like `balance`, `deposit $50`, `pay "City Power" $90`,
+  `send $20 to blair@demo.com`. It routes each line through the SmartChat agent (same 90s token + MFA);
+  an MFA-gated command flips the prompt to `mfa>` for the code.
+
+### Portal money-app pages (Phase 19 UI)
+The customer portal now has **Bank** (deposit/withdraw/statement/linked accounts), **Cards**
+(issue/authorize/void), **Bills** (payees/pay/schedule/cancel), and **Console** — in the sidebar (wide)
+and the **More** menu (mobile). They need the matching `*_ENABLED` flag set (§1.1).
 
 ### J7 — Trading (Phase 17 simulated broker; needs `TRADING_ENABLED=true`)
 - **Start:** `/trade` as **alex**.
