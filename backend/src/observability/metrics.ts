@@ -143,3 +143,10 @@ export const bankTransferTotal = new client.Counter({
   labelNames: ["direction", "result"], // direction: in|out ; result: settled|failed|returned
   registers: [registry],
 });
+
+export const cardAuthTotal = new client.Counter({
+  name: "card_auth_total",
+  help: "Card authorization lifecycle events",
+  labelNames: ["result"], // authorized | captured | voided | refunded
+  registers: [registry],
+});

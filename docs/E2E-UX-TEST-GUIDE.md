@@ -58,6 +58,7 @@ ALLOW_PASSWORD_AUTH=true          # lets you log in with the demo passwords (pas
 TRADING_ENABLED=true              # /trade journey (Phase 17 simulated broker)
 ARGUS_PAY_ENABLED=true            # Argus Pay merchant journey (Phase 21)
 BANK_RAILS_ENABLED=true           # bank rails: deposit/withdraw/statement (Phase 19 Stage-1)
+CARDS_ENABLED=true                # debit cards: issue/authorize/capture (Phase 19.4)
 # Fraud engine wiring (both sides must share the key):
 FRAUD_ENGINE_URL=http://localhost:4500
 FRAUD_ENGINE_API_KEY=<a-strong-shared-secret-32+chars>
@@ -181,6 +182,24 @@ curl -s localhost:3001/api/admin/bank/fbo?currency=USD -H "Authorization: Bearer
   Idempotency-Key posts no second journal; an over-balance withdrawal → `INSUFFICIENT_FUNDS`; a frozen
   account (fraud, J§4) → `ACCOUNT_FROZEN`; the statement's closing balance reconciles to the ledger; FBO
   coverage shows the partner bank backing customer cash 1:1; a return reverses the journal.
+
+### J9c — Debit cards: issue, authorize, capture/void/refund (needs `CARDS_ENABLED=true`)
+```bash
+# issue a card (Tier 2)
+curl -sX POST localhost:3001/api/cards -H "Authorization: Bearer $ALEX"
+# simulate a purchase — places a hold on funds (Idempotency-Key required)
+curl -sX POST localhost:3001/api/cards/<cardId>/authorize -H "Authorization: Bearer $ALEX" \
+  -H 'Idempotency-Key: auth-1' -H 'Content-Type: application/json' -d '{"amountMinor":"7500","merchant":"Acme"}'
+# cardholder cancels before capture
+curl -sX POST localhost:3001/api/cards/authorizations/<authId>/void -H "Authorization: Bearer $ALEX"
+# merchant/processor side (admin): capture or refund
+curl -sX POST localhost:3001/api/admin/cards/authorizations/<authId>/capture -H "Authorization: Bearer $ADMIN"
+curl -sX POST localhost:3001/api/admin/cards/authorizations/<authId>/refund  -H "Authorization: Bearer $ADMIN"
+```
+- **Verify:** only a masked PAN (••••last4) is returned; authorize **holds** funds (spendable cash drops
+  into `card_holds`); capture settles out via `external_clearing` (money gone); void releases the hold
+  back; refund returns a captured amount; replaying the auth Idempotency-Key places no second hold;
+  over-balance → `INSUFFICIENT_FUNDS`; a frozen account → `ACCOUNT_FROZEN`.
 
 ### J10 — On-chain wallet (only with `HEDERA_ENABLED=true`)
 - **Start:** `/wallet`. Provision a Hedera account → Receive (QR) → Send USDC.
@@ -415,7 +434,7 @@ only recommend/draft; humans gate material actions; every tool scoped + audited.
 
 - **Can't log in with a password** → set `ALLOW_PASSWORD_AUTH=true` and restart; or use a passkey.
 - **`ACCOUNT_LOCKED`** → `npm run reset:auth`.
-- **`/trade`, Pay, or bank 503** → set `TRADING_ENABLED` / `ARGUS_PAY_ENABLED` / `BANK_RAILS_ENABLED=true`.
+- **`/trade`, Pay, bank, or cards 503** → set `TRADING_ENABLED` / `ARGUS_PAY_ENABLED` / `BANK_RAILS_ENABLED` / `CARDS_ENABLED=true`.
 - **Fraud engine "unreachable, degrading open"** → engine not running or `FRAUD_ENGINE_URL`/key mismatch.
 - **Temporal/Conductor "falling back to in-process"** → server not up; start the compose file (§6).
 - **CORS errors from :5174** → ensure `CORS_ORIGIN` allows the agent app origin.

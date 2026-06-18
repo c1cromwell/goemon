@@ -11,6 +11,7 @@ import { Router } from "express";
 import type { Response, NextFunction } from "express";
 import { requireAdmin, requireRole, type AdminRequest } from "../middleware/rbac";
 import { returnTransfer, fboCoverage } from "../services/bankRailService";
+import { capture, refund } from "../services/cardService";
 
 export const bankAdminRouter = Router();
 
@@ -36,6 +37,33 @@ bankAdminRouter.get(
       const currency = typeof req.query.currency === "string" ? req.query.currency : "USD";
       const c = await fboCoverage(currency);
       res.json({ currency, liabilityMinor: c.liabilityMinor.toString(), fboBalanceMinor: c.fboBalanceMinor.toString(), covered: c.covered });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// Phase 19.4 — card capture/refund (the merchant/processor settlement side).
+bankAdminRouter.post(
+  "/cards/authorizations/:id/capture",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      res.json(await capture(req.params.id!));
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+bankAdminRouter.post(
+  "/cards/authorizations/:id/refund",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      res.json(await refund(req.params.id!));
     } catch (e) {
       next(e);
     }

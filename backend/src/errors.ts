@@ -61,6 +61,9 @@ export enum ErrorCode {
   // Full-bank rails (Phase 19 Stage-1 — prototype kill-switch)
   BANK_RAILS_DISABLED = "BANK_RAILS_DISABLED",
 
+  // Debit cards (Phase 19.4 — prototype kill-switch)
+  CARDS_DISABLED = "CARDS_DISABLED",
+
   // Generic
   NOT_FOUND = "NOT_FOUND",
   CONFLICT = "CONFLICT",
@@ -93,6 +96,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.AGENT_DISABLED]: 503,
   [ErrorCode.EQUITIES_DISABLED]: 503,
   [ErrorCode.BANK_RAILS_DISABLED]: 503,
+  [ErrorCode.CARDS_DISABLED]: 503,
   [ErrorCode.RECONCILIATION_HOLD]: 503,
   [ErrorCode.NOT_FOUND]: 404,
   [ErrorCode.CONFLICT]: 409,

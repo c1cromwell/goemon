@@ -1282,7 +1282,13 @@ in every regulated leg (the `CORPORATE-STRUCTURE.md` Phase-B thesis).
     opening/closing + line items from the ledger; linked external `bank_accounts` (last4 only).
   - Migration 017 (`bank_transfers` state machine + `bank_accounts`); `/api/bank` + `/api/admin/bank`;
     `BANK_RAILS_ENABLED` kill-switch (**prod-fatal**); `bank_transfer_total`; `bank-rails.test.ts` (9).
-  - **Next sub-stages:** debit **cards** (19.4) and **bill pay** (19.3) — not in Stage-1.
+  - **19.4 debit cards BUILT:** `cardService` with a swappable `CardProcessor` (simulated; marqeta/lithic/
+    stripe stubs) and the auth→capture/void/refund lifecycle as ledger holds — `authorize`
+    (user_cash→`card_holds`, freeze+balance+fraud gates, idempotent), `capture` (card_holds→external_clearing),
+    `void` (release), `refund`; masked PAN only; migration 018 (`cards`/`card_authorizations`), `/api/cards`
+    + `/api/admin/cards`, `CARDS_ENABLED` kill-switch (**prod-fatal**), `card_auth_total`, `cards.test.ts` (8).
+    Card BIN-sponsor + PCI scope stay with the processor (prod).
+  - **Next sub-stage:** **bill pay** (19.3) — not yet built.
 
 ## Phase 20 — Production hardening & scale (custody, reconciliation, fraud platform, orchestration) → **Corp B/C**
 

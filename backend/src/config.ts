@@ -130,6 +130,11 @@ const schema = z.object({
   BANK_RAILS_ENABLED: boolish,
   BANK_RAIL_PROVIDER: z.enum(["simulated", "column", "treasuryprime", "unit"]).default("simulated"),
 
+  // Phase 19.4 — debit cards (prototype seam). Off by default; a kill-switch gating card
+  // issuance/auth. CARD_PROCESSOR selects the processor (simulated; marqeta/lithic/stripe stubs).
+  CARDS_ENABLED: boolish,
+  CARD_PROCESSOR: z.enum(["simulated", "marqeta", "lithic", "stripe"]).default("simulated"),
+
   HEDERA_ENABLED: boolish,
   HEDERA_NETWORK: z.enum(["testnet", "mainnet", "previewnet"]).default("testnet"),
   HEDERA_OPERATOR_ID: z.string().optional(),
@@ -230,6 +235,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.BANK_RAILS_ENABLED) {
     fatal.push("BANK_RAILS_ENABLED must be false in production — the Phase-19 Stage-1 bank rails are simulated (BaaS/partner-bank + FinCEN MSB + KYC/AML vendor pending).");
+  }
+  if (c.CARDS_ENABLED) {
+    fatal.push("CARDS_ENABLED must be false in production — the Phase-19.4 cards seam is simulated (card processor + BIN sponsor + PCI scope pending).");
   }
   if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
     fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
