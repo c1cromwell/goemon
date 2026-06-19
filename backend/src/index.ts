@@ -50,6 +50,7 @@ import { bankRouter } from "./routes/bank";
 import { bankAdminRouter } from "./routes/bankAdmin";
 import { cardsRouter } from "./routes/cards";
 import { billpayRouter } from "./routes/billpay";
+import { starterRouter } from "./routes/starter";
 import { selectOperationsEngine } from "./operations/selectEngine";
 import { internalRemediationRouter } from "./routes/internalRemediation";
 import { initReconciliation, startReconciliationLoop, runReconciliation } from "./services/reconciliationService";
@@ -199,6 +200,9 @@ async function bootstrap(): Promise<void> {
 
   // ---- Phase 19.3 — bill pay ----
   app.use("/api/billpay", billpayRouter);
+
+  // ---- Phase 22.0 — Argus Starter (households + guardian↔teen linkage) ----
+  app.use("/api/starter", starterRouter);
 
   // ---- Phase 20 fraud add-on — remediation callbacks from the fraud engine ----
   // Service-bearer auth (FRAUD_ENGINE_API_KEY), not user sessions. The engine calls

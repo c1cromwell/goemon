@@ -139,6 +139,21 @@ const schema = z.object({
   // payments. Rides the BANK_RAIL_PROVIDER (bill pay is a directed payout to a biller).
   BILLPAY_ENABLED: boolish,
 
+  // Phase 22 — Argus Starter (13+ family/teen suite). Off by default; a kill-switch
+  // gating household/teen endpoints. Stages 22.0–22.3 are simulated; prod requires
+  // partner bank, card issuer, COPPA counsel, etc.
+  TEEN_ENABLED: boolish,
+
+  // Phase 22.4 — credit-builder card + bureau reporting seam. Off by default; prod-fatal
+  // until a credit-builder reporting partner + consumer-credit counsel land.
+  TEEN_CREDIT_BUILDER_ENABLED: boolish,
+  CREDIT_BUREAU_REPORTER: z.enum(["simulated", "step", "experian"]).default("simulated"),
+
+  // Phase 22.5 — custodial investing (UGMA/UTMA). Off by default; prod-fatal until a
+  // custodial broker-dealer + transfer agent + securities counsel land.
+  TEEN_CUSTODIAL_ENABLED: boolish,
+  CUSTODIAL_BROKER: z.enum(["simulated", "alpaca", "drivewealth"]).default("simulated"),
+
   HEDERA_ENABLED: boolish,
   HEDERA_NETWORK: z.enum(["testnet", "mainnet", "previewnet"]).default("testnet"),
   HEDERA_OPERATOR_ID: z.string().optional(),
@@ -245,6 +260,15 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.BILLPAY_ENABLED) {
     fatal.push("BILLPAY_ENABLED must be false in production — the Phase-19.3 bill-pay seam is simulated (partner bank + biller network pending).");
+  }
+  if (c.TEEN_ENABLED) {
+    fatal.push("TEEN_ENABLED must be false in production — the Phase-22 Starter suite is simulated (BaaS/card issuer + COPPA/custodial counsel pending).");
+  }
+  if (c.TEEN_CREDIT_BUILDER_ENABLED) {
+    fatal.push("TEEN_CREDIT_BUILDER_ENABLED must be false in production — the Phase-22.4 credit-builder seam is simulated (bureau-reporting partner + consumer-credit counsel pending).");
+  }
+  if (c.TEEN_CUSTODIAL_ENABLED) {
+    fatal.push("TEEN_CUSTODIAL_ENABLED must be false in production — the Phase-22.5 custodial-investing seam is simulated (custodial broker-dealer + transfer agent + securities counsel pending).");
   }
   if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
     fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");

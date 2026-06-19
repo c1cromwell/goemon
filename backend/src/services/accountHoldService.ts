@@ -17,7 +17,7 @@ import { getDb } from "../db";
 import { logAudit } from "./auditService";
 import { accountHoldTotal } from "../observability/metrics";
 
-export type HoldSource = "fraud_engine" | "admin" | "compliance";
+export type HoldSource = "fraud_engine" | "admin" | "compliance" | "guardian";
 
 /** True when the user has an unreleased hold. */
 export async function isAccountFrozen(userId: string): Promise<boolean> {

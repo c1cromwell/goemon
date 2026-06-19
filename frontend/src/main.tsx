@@ -22,6 +22,8 @@ import { Bank } from "./pages/Bank";
 import { Console } from "./pages/Console";
 import { Cards } from "./pages/Cards";
 import { Bills } from "./pages/Bills";
+import { StarterGuardian } from "./pages/StarterGuardian";
+import { StarterTeen } from "./pages/StarterTeen";
 import { More } from "./pages/More";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminConsole } from "./pages/AdminConsole";
@@ -81,6 +83,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="/bank" element={<Bank />} />
               <Route path="/cards" element={<Cards />} />
               <Route path="/bills" element={<Bills />} />
+              <Route
+                path="/starter"
+                element={
+                  <RequireTier tier={2}>
+                    <StarterGuardian />
+                  </RequireTier>
+                }
+              />
+              <Route path="/starter/teen" element={<StarterTeen />} />
               <Route path="/escrow" element={<Escrow />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/more" element={<More />} />

@@ -17,6 +17,8 @@ import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
 import { issueCredential } from "./vcService";
 
+export type AccountType = "standard" | "guardian" | "minor";
+
 export interface IdentityProfile {
   id: string;
   user_id: string;
@@ -29,6 +31,11 @@ export interface IdentityProfile {
   completed_at: string | null;
   created_at: string;
   updated_at: string;
+  account_type: AccountType;
+  guardian_user_id: string | null;
+  dob: string | null;
+  is_minor: number;
+  household_id: string | null;
 }
 
 const TIER_OPS: Record<number, string[]> = {
@@ -38,6 +45,24 @@ const TIER_OPS: Record<number, string[]> = {
   3: ["balance:read", "transfer:low", "transfer:high", "statement:read", "profile:read"],
   4: ["balance:read", "transfer:low", "transfer:high", "statement:read", "profile:read", "lending:read"],
 };
+
+/** Ops minors never receive regardless of tier (Phase 22 — guardian-gated money-out lands in 22.1). */
+const MINOR_FORBIDDEN_OPS = new Set(["transfer:high", "lending:read"]);
+
+export function isMinorProfile(profile: Pick<IdentityProfile, "account_type" | "is_minor">): boolean {
+  return profile.account_type === "minor" || profile.is_minor === 1;
+}
+
+/** Single source of truth for tier-scoped ops; applies minor restrictions when applicable. */
+export function getTierOpsForProfile(profile: Pick<IdentityProfile, "tier" | "account_type" | "is_minor">): string[] {
+  const base = TIER_OPS[profile.tier] ?? TIER_OPS[0]!;
+  if (!isMinorProfile(profile)) return [...base];
+  return base.filter((op) => !MINOR_FORBIDDEN_OPS.has(op));
+}
+
+export function getTierOps(tier: number): string[] {
+  return TIER_OPS[tier] ?? TIER_OPS[0]!;
+}
 
 export async function getProfile(userId: string): Promise<IdentityProfile | null> {
   return getDb().queryOne<IdentityProfile>(
@@ -146,7 +171,7 @@ export async function completeKycDecision(userId: string, input: KycDecisionInpu
 
   const now = new Date().toISOString();
   const tier = input.tier;
-  const allowedOps = TIER_OPS[tier] ?? TIER_OPS[2]!;
+  const allowedOps = getTierOpsForProfile({ tier, account_type: profile.account_type ?? "standard", is_minor: profile.is_minor ?? 0 });
   const status = tier >= 2 ? "kyc_passed" : "tier1_verified";
   const sanctionsResult = input.sanctionsClear ? "clear" : "blocked";
 

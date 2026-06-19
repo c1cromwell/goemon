@@ -232,6 +232,8 @@ export async function bootstrapSystemAccounts(): Promise<void> {
     { kind: "fee", currency: "USDC" },
     { kind: "external_clearing", currency: "USD" },
     { kind: "external_clearing", currency: "USDC" },
+    { kind: "card_holds", currency: "USD" },
+    { kind: "interest_source", currency: "USD" },
     // Phase 8 — marketplace escrow (holds subscription cash until close/refund).
     { kind: "escrow", currency: "USD" },
     { kind: "escrow", currency: "USDC" },

@@ -129,6 +129,8 @@ export interface IdentityProfile {
   completed_at: string | null;
   created_at: string;
   updated_at: string;
+  account_type?: string;
+  is_minor?: number;
 }
 export interface Passkey {
   id: string;
@@ -529,6 +531,32 @@ export const userApi = {
   payBill: (body: { payeeId: string; amountMinor: string; recurrence?: "none" | "weekly" | "monthly"; scheduledFor?: string }, key: string) =>
     umoney<{ paymentId: string; status: string }>("/billpay/pay", body, key),
   cancelBill: (id: string) => upost<{ canceled: boolean }>(`/billpay/payments/${id}/cancel`),
+
+  // --- Argus Starter (Phase 22.0) ---
+  starterHousehold: () => uget<{ household: StarterHousehold | null }>("/starter/household"),
+  createStarterHousehold: (name?: string) => upost<{ household: StarterHousehold }>("/starter/household", name ? { name } : {}),
+  starterDashboard: () => uget<StarterGuardianDashboard>("/starter/household/dashboard"),
+  starterTeens: () => uget<{ teens: StarterTeenSummary[] }>("/starter/household/teens"),
+  addStarterTeen: (body: { email: string; fullName: string; dob: string }) =>
+    upost<{ teen: StarterTeenSummary }>("/starter/household/teens", body),
+  issueTeenCard: (teenId: string) => upost<{ card: Card }>(`/starter/teens/${teenId}/card`),
+  updateTeenSpendPolicy: (teenId: string, body: { dailyLimitMinor?: string; blockedMerchants?: string[] }) =>
+    http(`/starter/teens/${teenId}/spend-policy`, { method: "PUT", body, token: getUserToken() }),
+  starterReviews: () => uget<{ reviews: StarterReview[] }>("/starter/reviews"),
+  decideStarterReview: (id: string, decision: "approve" | "reject", reason?: string) =>
+    upost<{ status: string }>(`/starter/reviews/${id}/decide`, { decision, reason }),
+  freezeTeen: (teenId: string, reason?: string) => upost<{ frozen: boolean }>(`/starter/teens/${teenId}/freeze`, { reason }),
+  unfreezeTeen: (teenId: string, reason?: string) => upost<{ frozen: boolean }>(`/starter/teens/${teenId}/unfreeze`, { reason }),
+  starterSavings: () => uget<StarterSavingsOverview>("/starter/savings"),
+  createSavingsGoal: (name: string, targetMinor: string) =>
+    upost<{ goal: SavingsGoal }>("/starter/savings/goals", { name, targetMinor }),
+  depositSavings: (amountMinor: string, goalId: string | undefined, key: string) =>
+    umoney<{ journalId: string; match?: { matchMinor: string } | null }>("/starter/savings/deposit", { amountMinor, goalId }, key),
+  starterGamification: () => uget<GamificationState>("/starter/gamification"),
+  starterCheckIn: () => upost<{ currentCount: number }>("/starter/gamification/check-in"),
+  completeStarterLesson: (lessonId: string, score = 100) =>
+    upost<{ completed: boolean }>(`/starter/gamification/lessons/${lessonId}/complete`, { score }),
+  starterCoach: () => uget<StarterCoachDashboard>("/starter/coach"),
 };
 
 // --- Phase 19 row/result types (snake_case mirrors the backend rows) ---
@@ -546,6 +574,64 @@ export interface BillPayee { id: string; name: string; category: string | null; 
 export interface BillPayment {
   id: string; payee_id: string; amount_minor: string; currency: string; status: string; recurrence: string;
   scheduled_for: string; created_at: string; sent_at: string | null;
+}
+
+export interface StarterHousehold {
+  id: string;
+  guardianUserId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface StarterTeenSummary {
+  userId: string;
+  email: string;
+  fullName: string | null;
+  dob: string;
+  tier: number;
+  identityStatus: string;
+  balances: { cash: string; savings: string; currency: string };
+  allowedOps: string[];
+}
+export interface StarterGuardianDashboard {
+  household: StarterHousehold;
+  teens: StarterTeenSummary[];
+  pendingApprovals: number;
+  coachInsights: Array<{ id: string; teenUserId: string; insightType: string; summary: string; createdAt: string }>;
+}
+export interface StarterReview {
+  id: string;
+  skill: string;
+  subject_user_id: string | null;
+  status: string;
+  recommendation: string;
+  reason: string;
+  created_at: string;
+}
+export interface SavingsGoal {
+  id: string;
+  user_id: string;
+  name: string;
+  target_minor: string;
+  allocated_minor: string;
+  status: string;
+}
+export interface StarterSavingsOverview {
+  balances: { cash: string; savings: string };
+  goals: SavingsGoal[];
+  settings: { apy_bps: number; guardian_match_bps: number; savings_locked: number } | null;
+}
+export interface GamificationState {
+  quests: Array<{ id: string; title: string; description: string; status: string }>;
+  streaks: Array<{ streakType: string; currentCount: number; lastTickDate: string | null }>;
+  badges: string[];
+  lessons: Array<{ id: string; title: string; completed: boolean; score: number | null }>;
+  netWorth: { cashMinor: string; savingsMinor: string; totalMinor: string; projectedMonthly: string[] };
+}
+export interface StarterCoachDashboard {
+  nudge: string;
+  spending: { summary: string; topMerchants: string[] };
+  savings: { recommendation: string };
 }
 
 export { newIdempotencyKey };

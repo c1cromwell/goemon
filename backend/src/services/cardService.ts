@@ -67,7 +67,7 @@ export function getCardProcessor(): CardProcessor {
 }
 
 export interface CardRow {
-  id: string; user_id: string; network: string; masked_number: string; exp_month: number; exp_year: number; currency: string; processor_ref: string | null; status: string; created_at: string;
+  id: string; user_id: string; network: string; masked_number: string; exp_month: number; exp_year: number; currency: string; processor_ref: string | null; status: string; card_type: string; guardian_user_id: string | null; created_at: string;
 }
 export interface CardAuthRow {
   id: string; card_id: string; user_id: string; merchant: string | null; amount_minor: string; currency: string; status: string;
@@ -99,11 +99,43 @@ async function requireCard(cardId: string, userId: string): Promise<CardRow> {
 }
 
 /** Authorize a purchase: place a hold on the cardholder's cash (balance + freeze + fraud gates). */
-export async function authorize(input: { userId: string; cardId: string; amountMinor: bigint; merchant?: string; idempotencyKey: string; channel?: string }): Promise<CardAuthRow> {
+export async function authorize(input: {
+  userId: string;
+  cardId: string;
+  amountMinor: bigint;
+  merchant?: string;
+  category?: string;
+  idempotencyKey: string;
+  channel?: string;
+  skipTeenSpendGate?: boolean;
+}): Promise<CardAuthRow> {
   assertEnabled();
   if (input.amountMinor <= 0n) throw new AppError(ErrorCode.VALIDATION, "Amount must be positive");
   if (await isAccountFrozen(input.userId)) throw new AppError(ErrorCode.ACCOUNT_FROZEN, "Account is frozen pending review");
   const card = await requireCard(input.cardId, input.userId);
+
+  if (card.card_type === "teen_debit" && !input.skipTeenSpendGate) {
+    const { assertTeenSpendAllowed } = await import("./teenSpendService");
+    await assertTeenSpendAllowed({
+      userId: input.userId,
+      card,
+      amountMinor: input.amountMinor,
+      merchant: input.merchant,
+      category: input.category,
+      idempotencyKey: input.idempotencyKey,
+    });
+  }
+
+  if (card.card_type === "credit_builder") {
+    const { authorizeCreditBuilder } = await import("./creditBuilderService");
+    return authorizeCreditBuilder({
+      userId: input.userId,
+      card,
+      amountMinor: input.amountMinor,
+      merchant: input.merchant,
+      idempotencyKey: input.idempotencyKey,
+    });
+  }
 
   const prior = await getDb().queryOne<CardAuthRow>("SELECT * FROM card_authorizations WHERE idempotency_key = ?", [input.idempotencyKey]);
   if (prior) return prior;
@@ -139,6 +171,12 @@ export async function authorize(input: { userId: string; cardId: string; amountM
     );
     cardAuthTotal.inc({ result: "authorized" });
     await logAudit({ userId: input.userId, action: "card.authorized", resource: id, details: { amountMinor: input.amountMinor.toString(), merchant: input.merchant } });
+
+    if (card.card_type === "teen_debit") {
+      const { processRoundUp } = await import("./savingsGoalService");
+      await processRoundUp(input.userId, input.amountMinor, input.idempotencyKey).catch(() => undefined);
+    }
+
     return (await tx.queryOne<CardAuthRow>("SELECT * FROM card_authorizations WHERE id = ?", [id]))!;
   });
 }

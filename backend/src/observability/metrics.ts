@@ -157,3 +157,45 @@ export const billPaymentTotal = new client.Counter({
   labelNames: ["result"], // scheduled | sent | canceled | failed
   registers: [registry],
 });
+
+export const starterHouseholdTotal = new client.Counter({
+  name: "starter_household_total",
+  help: "Argus Starter household lifecycle events",
+  labelNames: ["action"], // created | teen_added
+  registers: [registry],
+});
+
+export const teenSpendTotal = new client.Counter({
+  name: "teen_spend_total",
+  help: "Teen debit spend gate outcomes",
+  labelNames: ["result"], // blocked | approval_queued | approved | denied
+  registers: [registry],
+});
+
+export const interestAccrualTotal = new client.Counter({
+  name: "interest_accrual_total",
+  help: "Savings interest accrual posts",
+  labelNames: ["result"], // accrued | skipped
+  registers: [registry],
+});
+
+export const gamificationEventTotal = new client.Counter({
+  name: "gamification_event_total",
+  help: "Gamification events (quests, streaks, badges, lessons)",
+  labelNames: ["kind"],
+  registers: [registry],
+});
+
+export const creditBuilderTotal = new client.Counter({
+  name: "credit_builder_total",
+  help: "Credit-builder card lifecycle events",
+  labelNames: ["action"],
+  registers: [registry],
+});
+
+export const custodialOrderTotal = new client.Counter({
+  name: "custodial_order_total",
+  help: "Custodial investing order lifecycle events",
+  labelNames: ["action"],
+  registers: [registry],
+});

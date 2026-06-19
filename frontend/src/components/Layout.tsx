@@ -20,6 +20,8 @@ const SECONDARY = [
   { to: "/bank", label: "Bank" },
   { to: "/cards", label: "Cards" },
   { to: "/bills", label: "Bills" },
+  { to: "/starter", label: "Starter (guardian)" },
+  { to: "/starter/teen", label: "Starter (teen)" },
   { to: "/console", label: "Console" },
   { to: "/trade", label: "Trade" },
   { to: "/escrow", label: "Escrow" },

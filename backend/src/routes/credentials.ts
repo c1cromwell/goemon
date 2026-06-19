@@ -17,7 +17,7 @@ import { requireAuth, type AuthRequest } from "../middleware/auth";
 import * as vcService from "../services/vcService";
 import * as statusListService from "../services/statusListService";
 import { getActiveKey, issuerDid, userDid } from "../services/didService";
-import { getProfile } from "../services/identityService";
+import { getProfile, getTierOpsForProfile } from "../services/identityService";
 import { SignJWT } from "jose";
 import { config } from "../config";
 import { AppError, ErrorCode } from "../errors";
@@ -69,15 +69,8 @@ credentialsRouter.post("/issue", requireAuth, async (req: AuthRequest, res, next
     const profile = await getProfile(req.userId!);
     if (!profile) throw new AppError(ErrorCode.NOT_FOUND, "Identity profile not found");
 
-    const TIER_OPS: Record<number, string[]> = {
-      0: ["balance:read", "profile:read"],
-      1: ["balance:read", "statement:read", "profile:read"],
-      2: ["balance:read", "transfer:low", "statement:read", "profile:read"],
-      3: ["balance:read", "transfer:low", "transfer:high", "statement:read", "profile:read"],
-      4: ["balance:read", "transfer:low", "transfer:high", "statement:read", "profile:read", "lending:read"],
-    };
     const kycStatus = profile.tier >= 2 ? "PASSED" : profile.tier >= 1 ? "PENDING" : "PENDING";
-    const allowedOps = TIER_OPS[profile.tier] ?? [];
+    const allowedOps = getTierOpsForProfile(profile);
 
     const jwt = await vcService.issueCredential(req.userId!, profile.tier, allowedOps, kycStatus);
     res.status(201).json({ jwt });

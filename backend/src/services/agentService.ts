@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getDb } from "../db";
 import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
-import { getProfile } from "./identityService";
+import { getProfile, getTierOpsForProfile } from "./identityService";
 
 export interface AgentRow {
   id: string;
@@ -37,17 +37,9 @@ export interface CreateAgentInput {
 const DEFAULT_PERMISSIONS = ["balance:read", "profile:read"]; // safe for all tiers (Tier 0 minimum)
 const MAX_TRANSFER_MINOR = 100_000; // $1,000.00
 
-const TIER_OPS: Record<number, string[]> = {
-  0: ["balance:read", "profile:read"],
-  1: ["balance:read", "statement:read", "profile:read"],
-  2: ["balance:read", "transfer:low", "statement:read", "profile:read"],
-  3: ["balance:read", "transfer:low", "transfer:high", "statement:read", "profile:read"],
-  4: ["balance:read", "transfer:low", "transfer:high", "statement:read", "profile:read", "lending:read"],
-};
-
 async function assertPermissionsWithinTier(userId: string, permissions: string[]): Promise<void> {
   const profile = await getProfile(userId);
-  const allowed = new Set(TIER_OPS[profile?.tier ?? 0] ?? []);
+  const allowed = new Set(getTierOpsForProfile(profile ?? { tier: 0, account_type: "standard", is_minor: 0 }));
   const forbidden = permissions.filter((p) => !allowed.has(p));
   if (forbidden.length > 0) {
     throw new AppError(
