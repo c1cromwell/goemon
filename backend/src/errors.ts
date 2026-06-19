@@ -52,6 +52,9 @@ export enum ErrorCode {
   // Reconciliation (Phase 20 — ledger⇄chain drift gates on-chain settlement)
   RECONCILIATION_HOLD = "RECONCILIATION_HOLD",
 
+  // Data warehouse export (Phase 20 — analytics pipeline prototype)
+  DATA_WAREHOUSE_DISABLED = "DATA_WAREHOUSE_DISABLED",
+
   // Internal agent operations (Phase 15 — back-office runner kill-switch)
   AGENT_DISABLED = "AGENT_DISABLED",
 
@@ -117,6 +120,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.TEEN_CREDIT_BUILDER_DISABLED]: 503,
   [ErrorCode.TEEN_CUSTODIAL_DISABLED]: 503,
   [ErrorCode.RECONCILIATION_HOLD]: 503,
+  [ErrorCode.DATA_WAREHOUSE_DISABLED]: 503,
   [ErrorCode.NOT_FOUND]: 404,
   [ErrorCode.CONFLICT]: 409,
   [ErrorCode.INTERNAL]: 500,

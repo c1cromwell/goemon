@@ -1,5 +1,8 @@
 /**
- * Phase 17 Stage 1 — Trading service (simulated, isolated).
+ * Phase 17 — Trading service (simulated, isolated).
+ *
+ * Stage 1: market/limit orders, async settlement, options-level gate.
+ * Stage 2: stop/stop_limit, market-data-backed fills, admin options approval.
  *
  * The buildable-now slice of docs/PHASE-17-TRADING-BROKERAGE.md. It proves the
  * SLA-isolation architecture without a real broker:
@@ -38,11 +41,12 @@ import {
 import {
   execute as brokerExecute,
   BrokerUnavailableError,
+  OrderNotExecutableError,
   type BrokerOrder,
 } from "./tradingBroker";
 
 export type OrderSide = "buy" | "sell";
-export type OrderType = "market" | "limit";
+export type OrderType = "market" | "limit" | "stop" | "stop_limit";
 export type OrderStatus = "accepted" | "settled" | "rejected" | "canceled";
 
 export interface PlaceOrderInput {
@@ -52,6 +56,7 @@ export interface PlaceOrderInput {
   type: OrderType;
   qtyBase: bigint;
   limitPriceMinor?: bigint | null;
+  stopPriceMinor?: bigint | null;
   idempotencyKey: string;
 }
 
@@ -86,6 +91,7 @@ interface RawOrder {
   type: OrderType;
   qty_base: string | number;
   limit_price_minor: string | number | null;
+  stop_price_minor: string | number | null;
   status: OrderStatus;
   reject_reason: string | null;
   created_at: string;
@@ -150,9 +156,14 @@ export async function placeOrder(input: PlaceOrderInput): Promise<OrderRow> {
   }
   if (input.qtyBase <= 0n) throw new AppError(ErrorCode.VALIDATION, "Order quantity must be positive");
   if (input.side !== "buy" && input.side !== "sell") throw new AppError(ErrorCode.VALIDATION, "Invalid side");
-  if (input.type !== "market" && input.type !== "limit") throw new AppError(ErrorCode.VALIDATION, "Invalid order type");
-  if (input.type === "limit" && (input.limitPriceMinor == null || input.limitPriceMinor <= 0n)) {
-    throw new AppError(ErrorCode.VALIDATION, "Limit orders require a positive limit price");
+  if (!["market", "limit", "stop", "stop_limit"].includes(input.type)) {
+    throw new AppError(ErrorCode.VALIDATION, "Invalid order type");
+  }
+  if ((input.type === "limit" || input.type === "stop_limit") && (input.limitPriceMinor == null || input.limitPriceMinor <= 0n)) {
+    throw new AppError(ErrorCode.VALIDATION, "Limit and stop-limit orders require a positive limit price");
+  }
+  if ((input.type === "stop" || input.type === "stop_limit") && (input.stopPriceMinor == null || input.stopPriceMinor <= 0n)) {
+    throw new AppError(ErrorCode.VALIDATION, "Stop and stop-limit orders require a positive stop price");
   }
 
   const db = getDb();
@@ -177,9 +188,13 @@ export async function placeOrder(input: PlaceOrderInput): Promise<OrderRow> {
   if (existing) return mapOrder(existing, instrument.symbol);
 
   const id = uuidv4();
+  const limitPrice =
+    input.type === "limit" || input.type === "stop_limit" ? input.limitPriceMinor : null;
+  const stopPrice = input.type === "stop" || input.type === "stop_limit" ? input.stopPriceMinor : null;
+
   await db.execute(
-    `INSERT INTO orders_trading (id, user_id, instrument_id, side, type, qty_base, limit_price_minor, status, idempotency_key, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, 'accepted', ?, ?)`,
+    `INSERT INTO orders_trading (id, user_id, instrument_id, side, type, qty_base, limit_price_minor, stop_price_minor, status, idempotency_key, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'accepted', ?, ?)`,
     [
       id,
       input.userId,
@@ -187,7 +202,8 @@ export async function placeOrder(input: PlaceOrderInput): Promise<OrderRow> {
       input.side,
       input.type,
       input.qtyBase,
-      input.type === "limit" ? input.limitPriceMinor : null,
+      limitPrice,
+      stopPrice,
       input.idempotencyKey,
       new Date().toISOString(),
     ]
@@ -251,12 +267,19 @@ export async function settleOrder(orderId: string): Promise<void> {
     type: order.type,
     qtyBase: BigInt(order.qty_base),
     limitPriceMinor: order.limit_price_minor == null ? null : BigInt(order.limit_price_minor),
+    stopPriceMinor: order.stop_price_minor == null ? null : BigInt(order.stop_price_minor),
   };
 
   let exec;
   try {
     exec = await brokerExecute(brokerOrder, instrument);
   } catch (e) {
+    if (e instanceof OrderNotExecutableError) {
+      // Stop not triggered or limit not marketable — leave pending; retry on next drain.
+      queue.push(orderId);
+      tradingSettlementTotal.inc({ result: "pending" });
+      return;
+    }
     if (e instanceof BrokerUnavailableError) {
       // Broker down — leave the order pending; re-enqueue for a later drain.
       // This is the isolation point: a broker outage NEVER becomes a money error.
@@ -355,6 +378,31 @@ export async function getOrders(userId: string, limit = 50): Promise<OrderRow[]>
     [userId, capped]
   );
   return rows.map((r) => mapOrder(r, r.symbol));
+}
+
+/** Admin/compliance: raise a user's options approval level (0–4). */
+export async function setOptionsLevel(userId: string, level: number): Promise<{ userId: string; optionsLevel: number }> {
+  if (level < 0 || level > 4 || !Number.isInteger(level)) {
+    throw new AppError(ErrorCode.VALIDATION, "Options level must be an integer 0–4");
+  }
+  await ensureTradingAccount(userId);
+  await getDb().execute("UPDATE trading_accounts SET options_level = ? WHERE user_id = ?", [level, userId]);
+  await logAudit({
+    userId,
+    action: "trading_options_level_set",
+    resource: userId,
+    details: { optionsLevel: level },
+  });
+  return { userId, optionsLevel: level };
+}
+
+export async function getTradingAccount(userId: string): Promise<{ optionsLevel: number; marginEnabled: boolean }> {
+  const row = await ensureTradingAccount(userId);
+  const acct = await getDb().queryOne<{ margin_enabled: number }>(
+    "SELECT margin_enabled FROM trading_accounts WHERE user_id = ?",
+    [userId]
+  );
+  return { optionsLevel: row.options_level, marginEnabled: (acct?.margin_enabled ?? 0) === 1 };
 }
 
 export async function getPositions(userId: string): Promise<{ symbol: string; qtyBase: string }[]> {

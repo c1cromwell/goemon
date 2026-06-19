@@ -41,10 +41,12 @@ import { myAgentsRouter } from "./routes/myAgents";
 import { marketplaceRouter } from "./routes/marketplace";
 import { marketplaceAdminRouter } from "./routes/marketplaceAdmin";
 import { tradingRouter } from "./routes/trading";
+import { tradingAdminRouter } from "./routes/tradingAdmin";
 import { escrowRouter } from "./routes/escrow";
 import { escrowAdminRouter } from "./routes/escrowAdmin";
 import { payRouter } from "./routes/pay";
 import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
+import { warehouseAdminRouter } from "./routes/warehouseAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
 import { bankRouter } from "./routes/bank";
 import { bankAdminRouter } from "./routes/bankAdmin";
@@ -177,6 +179,7 @@ async function bootstrap(): Promise<void> {
 
   // ---- Phase 17 Stage 1 — trading (isolated; service-gated by TRADING_ENABLED) ----
   app.use("/api/trading", tradingRouter);
+  app.use("/api/admin", tradingAdminRouter);
 
   // ---- Escrow & dispute layer (customer surface + RBAC mediator surface) ----
   app.use("/api/escrow", escrowRouter);
@@ -187,6 +190,9 @@ async function bootstrap(): Promise<void> {
 
   // ---- Phase 20 — ledger⇄chain reconciliation (RBAC admin surface) ----
   app.use("/api/admin", reconciliationAdminRouter);
+
+  // ---- Phase 20 — data warehouse export (RBAC admin surface) ----
+  app.use("/api/admin", warehouseAdminRouter);
 
   // ---- Phase 15 — internal agent operations (RBAC admin surface) ----
   app.use("/api/admin", agentOpsAdminRouter);

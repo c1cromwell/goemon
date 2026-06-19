@@ -1,10 +1,12 @@
 /**
- * Phase 17 Stage 1 — Trading routes (thin REST over the isolated trading seam).
+ * Phase 17 — Trading routes (thin REST over the isolated trading seam).
  *
  * GET  /api/trading/instruments — tradable instruments + simulated marks
- * POST /api/trading/orders      — place an order (idempotent; HOT PATH, no ledger)
- * GET  /api/trading/orders      — the user's recent orders
- * GET  /api/trading/positions   — the user's ledger-derived positions
+ * GET  /api/trading/quotes       — live quotes (source/as-of/staleness; CQRS)
+ * GET  /api/trading/account      — user's trading enrolment (options level)
+ * POST /api/trading/orders       — place an order (idempotent; HOT PATH, no ledger)
+ * GET  /api/trading/orders       — the user's recent orders
+ * GET  /api/trading/positions    — the user's ledger-derived positions
  *
  * Order placement returns 'accepted' immediately; the async settlement worker
  * settles it (clients poll GET orders/positions). When TRADING_ENABLED is off the
@@ -17,7 +19,8 @@ import type { Response, NextFunction } from "express";
 import { requireAuth, type AuthRequest } from "../middleware/auth";
 import { idempotency } from "../middleware/idempotency";
 import { getDb } from "../db";
-import { placeOrder, getOrders, getPositions } from "../services/tradingService";
+import { placeOrder, getOrders, getPositions, getTradingAccount } from "../services/tradingService";
+import { getQuotes } from "../services/marketDataService";
 
 export const tradingRouter = Router();
 
@@ -46,12 +49,45 @@ tradingRouter.get("/instruments", requireAuth, async (_req: AuthRequest, res: Re
   }
 });
 
+tradingRouter.get("/quotes", requireAuth, async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const symbolsParam = req.query.symbols;
+    const symbols =
+      typeof symbolsParam === "string" && symbolsParam.length > 0
+        ? symbolsParam.split(",").map((s) => s.trim()).filter(Boolean)
+        : undefined;
+    const quotes = await getQuotes(symbols);
+    res.json(
+      quotes.map((q) => ({
+        symbol: q.symbol,
+        bidMinor: q.bidMinor.toString(),
+        askMinor: q.askMinor.toString(),
+        lastMinor: q.lastMinor.toString(),
+        source: q.source,
+        asOf: q.asOf,
+        stale: q.stale,
+      }))
+    );
+  } catch (e) {
+    next(e);
+  }
+});
+
+tradingRouter.get("/account", requireAuth, async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    res.json(await getTradingAccount(req.userId!));
+  } catch (e) {
+    next(e);
+  }
+});
+
 const placeOrderSchema = z.object({
   symbol: z.string().min(1),
   side: z.enum(["buy", "sell"]),
-  type: z.enum(["market", "limit"]).default("market"),
+  type: z.enum(["market", "limit", "stop", "stop_limit"]).default("market"),
   qtyBase: z.union([z.string().regex(/^\d+$/), z.number().int().positive()]),
   limitPriceMinor: z.union([z.string().regex(/^\d+$/), z.number().int().positive()]).optional(),
+  stopPriceMinor: z.union([z.string().regex(/^\d+$/), z.number().int().positive()]).optional(),
 });
 
 tradingRouter.post("/orders", requireAuth, idempotency(), async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -64,6 +100,7 @@ tradingRouter.post("/orders", requireAuth, idempotency(), async (req: AuthReques
       type: body.type,
       qtyBase: BigInt(body.qtyBase),
       limitPriceMinor: body.limitPriceMinor != null ? BigInt(body.limitPriceMinor) : null,
+      stopPriceMinor: body.stopPriceMinor != null ? BigInt(body.stopPriceMinor) : null,
       idempotencyKey: req.header("Idempotency-Key")!,
     });
     res.status(201).json(order);

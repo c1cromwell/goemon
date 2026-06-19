@@ -1,34 +1,23 @@
 /**
- * Phase 17 Stage 1 — Simulated broker + market data, behind a circuit breaker.
+ * Phase 17 — Simulated broker + market data, behind a circuit breaker.
+ *
+ * Stage 1: basic market/limit execution.
+ * Stage 2: stop/stop_limit triggers, limit marketability, quotes via marketDataService.
  *
  * This is the anti-corruption-layer stand-in for a real broker-dealer/clearing +
- * market-data partner (docs/PHASE-17-TRADING-BROKERAGE.md §6, §9). It is the ONLY
- * place that "talks to the market"; the rest of trading depends on this narrow
- * interface, so a real partner later implements the same shape.
- *
- * SLA isolation: every call is async (yields the event loop — a slow broker never
- * blocks the bank's money path) and guarded by a circuit breaker that fast-fails
- * once the broker is unhealthy, so a broker outage cannot back up into shared
- * resources. The settlement worker treats a BrokerUnavailable as "leave the order
- * pending", never as a money error.
+ * market-data partner (docs/PHASE-17-TRADING-BROKERAGE.md §6, §9).
  */
 
-export interface InstrumentLike {
-  id: string;
-  symbol: string;
-  last_price_minor: number | string;
-}
+import { getQuote, type InstrumentRef } from "./marketDataService";
 
-export interface Quote {
-  instrumentId: string;
-  priceMinor: bigint;
-}
+export type InstrumentLike = InstrumentRef;
 
 export interface BrokerOrder {
   side: "buy" | "sell";
-  type: "market" | "limit";
+  type: "market" | "limit" | "stop" | "stop_limit";
   qtyBase: bigint;
   limitPriceMinor: bigint | null;
+  stopPriceMinor: bigint | null;
 }
 
 export interface ExecutionResult {
@@ -37,6 +26,14 @@ export interface ExecutionResult {
   feeMinor: bigint;
   grossMinor: bigint;
   brokerOrderId: string;
+}
+
+/** Order not yet executable (stop not triggered, limit not marketable) — re-queue, not an error. */
+export class OrderNotExecutableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "OrderNotExecutableError";
+  }
 }
 
 /** Thrown when the broker/circuit is unavailable — NOT a money error. */
@@ -55,18 +52,16 @@ function feeFor(grossMinor: bigint): bigint {
 }
 
 // ---------------------------------------------------------------------------
-// Test / fault-injection hooks (Stage 1 only — drives the isolation tests).
+// Test / fault-injection hooks.
 // ---------------------------------------------------------------------------
 type BrokerMode = "ok" | "fail" | "stall";
 let mode: BrokerMode = "ok";
 let stallMs = 0;
 
-/** Force the simulated broker into a fault mode (tests). */
 export function __setBrokerMode(m: BrokerMode, opts?: { stallMs?: number }): void {
   mode = m;
   stallMs = opts?.stallMs ?? 0;
 }
-/** Reset broker + breaker to healthy (tests). */
 export function __resetBroker(): void {
   mode = "ok";
   stallMs = 0;
@@ -85,7 +80,6 @@ let openedAt: number | null = null;
 export function breakerOpen(): boolean {
   if (openedAt == null) return false;
   if (Date.now() - openedAt >= COOLDOWN_MS) {
-    // half-open: allow a probe through
     openedAt = null;
     failures = 0;
     return false;
@@ -104,24 +98,42 @@ function recordSuccess(): void {
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
-/** Deterministic mark for an instrument (simulated market data). */
-export function getQuote(instrument: InstrumentLike): Quote {
-  return { instrumentId: instrument.id, priceMinor: BigInt(instrument.last_price_minor) };
+function stopTriggered(order: BrokerOrder, last: bigint): boolean {
+  if (order.type !== "stop" && order.type !== "stop_limit") return true;
+  const stop = order.stopPriceMinor;
+  if (stop == null) return false;
+  if (order.side === "buy") return last >= stop;
+  return last <= stop;
+}
+
+function limitMarketable(order: BrokerOrder, last: bigint): boolean {
+  if (order.type !== "limit" && order.type !== "stop_limit") return true;
+  const limit = order.limitPriceMinor;
+  if (limit == null) return false;
+  if (order.side === "buy") return last <= limit;
+  return last >= limit;
+}
+
+function fillPrice(order: BrokerOrder, last: bigint): bigint {
+  if (order.type === "market" || order.type === "stop") return last;
+  if (order.type === "limit" || order.type === "stop_limit") {
+    return order.limitPriceMinor ?? last;
+  }
+  return last;
 }
 
 let brokerSeq = 0;
 
 /**
  * Execute an order against the simulated broker. Async (non-blocking), breaker-guarded.
- * Throws BrokerUnavailableError when the broker is unhealthy — the caller leaves the
- * order pending; it is never turned into a money mutation.
+ * Throws OrderNotExecutableError when stop/limit conditions aren't met (order stays pending).
+ * Throws BrokerUnavailableError when the broker is unhealthy.
  */
 export async function execute(order: BrokerOrder, instrument: InstrumentLike): Promise<ExecutionResult> {
   if (breakerOpen()) {
     throw new BrokerUnavailableError("circuit open");
   }
 
-  // A slow broker yields the event loop — the bank's money path runs concurrently.
   if (mode === "stall" && stallMs > 0) await sleep(stallMs);
 
   if (mode === "fail") {
@@ -131,9 +143,21 @@ export async function execute(order: BrokerOrder, instrument: InstrumentLike): P
 
   recordSuccess();
 
-  // Market orders fill at the quote; limit orders fill at the limit (already validated marketable).
-  const quote = getQuote(instrument);
-  const priceMinor = order.type === "limit" && order.limitPriceMinor != null ? order.limitPriceMinor : quote.priceMinor;
+  const quote = await getQuote(instrument);
+  const last = quote.lastMinor;
+
+  if (!stopTriggered(order, last)) {
+    throw new OrderNotExecutableError("stop not triggered");
+  }
+
+  const effectiveType =
+    order.type === "stop" ? "market" : order.type === "stop_limit" ? "limit" : order.type;
+
+  if (!limitMarketable({ ...order, type: effectiveType }, last)) {
+    throw new OrderNotExecutableError("limit not marketable");
+  }
+
+  const priceMinor = fillPrice({ ...order, type: effectiveType }, last);
   const grossMinor = order.qtyBase * priceMinor;
   return {
     qtyBase: order.qtyBase,
@@ -142,4 +166,9 @@ export async function execute(order: BrokerOrder, instrument: InstrumentLike): P
     grossMinor,
     brokerOrderId: `sim-${++brokerSeq}-${order.side}`,
   };
+}
+
+/** @deprecated Use marketDataService.getQuote — kept for tests that import getQuote from broker. */
+export function getQuoteLegacy(instrument: InstrumentLike): { instrumentId: string; priceMinor: bigint } {
+  return { instrumentId: instrument.id, priceMinor: BigInt(instrument.last_price_minor) };
 }

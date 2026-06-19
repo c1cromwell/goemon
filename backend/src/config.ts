@@ -112,6 +112,10 @@ const schema = z.object({
   // The Stage-1 broker is SIMULATED only and must never run in production (see productionFatals).
   TRADING_ENABLED: boolish,
 
+  // Phase 17 Stage 2 — market-data provider for trading quotes (CQRS read path).
+  // Simulated default; polygon/iex are prod swaps requiring market-data licensing.
+  MARKET_DATA_PROVIDER: z.enum(["simulated", "polygon", "iex"]).default("simulated"),
+
   // Phase 21 Stage 1 — "Argus Pay" native payment rail. Off by default — a kill-switch
   // that sheds new payment intents/payments without touching transfers or in-flight
   // escrows (docs/business/PAYMENT-NETWORK-STRATEGY.md §4/§8). The Stage-1 rail is a
@@ -172,6 +176,11 @@ const schema = z.object({
   //   hsm      — sign via an HSM; the private key never enters the process
   //   ondevice — non-custodial: the server holds no key; signing is on the user's device
   HEDERA_SIGNER: z.enum(["keyvault", "hsm", "ondevice"]).default("keyvault"),
+
+  // Phase 20 — data warehouse export (analytics pipeline prototype). Off by default;
+  // incremental export of audit/ledger/MCP streams to a swappable sink.
+  DATA_WAREHOUSE_ENABLED: boolish,
+  WAREHOUSE_SINK: z.enum(["simulated", "bigquery", "snowflake", "redshift"]).default("simulated"),
 
   // Phase 15 — internal agent operations (back office). Master kill-switch (on by
   // default; agents only recommend/draft — a deterministic RBAC gate executes).
@@ -269,6 +278,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.TEEN_CUSTODIAL_ENABLED) {
     fatal.push("TEEN_CUSTODIAL_ENABLED must be false in production — the Phase-22.5 custodial-investing seam is simulated (custodial broker-dealer + transfer agent + securities counsel pending).");
+  }
+  if (c.DATA_WAREHOUSE_ENABLED && c.WAREHOUSE_SINK === "simulated") {
+    fatal.push("DATA_WAREHOUSE_ENABLED with WAREHOUSE_SINK=simulated must not run in production — wire a real warehouse (bigquery/snowflake/redshift).");
   }
   if (c.ONBOARDING_ORCHESTRATOR === "anthropic" && !c.ANTHROPIC_API_KEY) {
     fatal.push("ONBOARDING_ORCHESTRATOR=anthropic requires ANTHROPIC_API_KEY.");
