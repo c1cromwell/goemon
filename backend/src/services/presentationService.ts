@@ -73,6 +73,8 @@ export interface ScopedTokenResult {
   jti: string;
   userId: string;
   clientDid: string;
+  /** The single-use nonce this VP consumed — the relay correlation key (Phase 10). */
+  nonce: string;
 }
 
 interface VpPayload {
@@ -244,7 +246,60 @@ export async function verifyPresentation(input: VerifyPresentationInput): Promis
     jti,
     userId,
     clientDid,
+    nonce,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Phase 10 — OID4VP token relay. The wallet's scoped token is parked keyed by the
+// single-use nonce so the requesting agent can fetch it once (the wallet→agent handoff
+// a native wallet needs; the Phase-11 browser app sidesteps it with an embedded bridge).
+// ---------------------------------------------------------------------------
+
+const RELAY_TTL_SECS = 120;
+
+/** Park a freshly minted scoped token for one-time agent retrieval by nonce. */
+export async function storePendingToken(result: ScopedTokenResult): Promise<void> {
+  const now = new Date();
+  await getDb().execute(
+    `INSERT INTO present_relay_tokens (nonce, client_did, access_token, token_type, expires_in, scope, jti, fetched, expires_at, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`,
+    [
+      result.nonce, result.clientDid, result.accessToken, result.tokenType, result.expiresIn,
+      JSON.stringify(result.scope), result.jti,
+      new Date(now.getTime() + RELAY_TTL_SECS * 1000).toISOString(), now.toISOString(),
+    ]
+  );
+}
+
+export interface PendingTokenView {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string[];
+  jti: string;
+}
+
+/**
+ * Fetch (once) the relayed token for a nonce. Single-use + TTL: a second fetch or an
+ * expired entry returns null. The nonce is the bearer secret for this one handoff.
+ */
+export async function fetchPendingToken(nonce: string): Promise<PendingTokenView | null> {
+  const db = getDb();
+  return db.transaction(async (tx) => {
+    const row = await tx.queryOne<{
+      access_token: string; token_type: string; expires_in: number; scope: string; jti: string; fetched: number; expires_at: string;
+    }>("SELECT access_token, token_type, expires_in, scope, jti, fetched, expires_at FROM present_relay_tokens WHERE nonce = ?", [nonce]);
+    if (!row || row.fetched === 1 || new Date(row.expires_at).getTime() < Date.now()) return null;
+    await tx.execute("UPDATE present_relay_tokens SET fetched = 1 WHERE nonce = ?", [nonce]);
+    return {
+      access_token: row.access_token,
+      token_type: row.token_type,
+      expires_in: row.expires_in,
+      scope: JSON.parse(row.scope || "[]"),
+      jti: row.jti,
+    };
+  });
 }
 
 // ---------------------------------------------------------------------------

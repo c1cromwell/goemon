@@ -6,9 +6,10 @@ import Foundation
 /// Secure-Enclave key (Face ID) and posts it to `/api/present`, which mints a 90s
 /// scoped token.
 ///
-/// RELAY NOTE: the current backend returns the token to the poster (the wallet).
-/// Handing it back to the requesting agent needs a pending-token relay keyed by the
-/// nonce (a small backend addition). Until then the wallet shows the result locally.
+/// RELAY NOTE: the backend now ALSO parks the scoped token keyed by the nonce, so the
+/// requesting agent fetches it once via `GET /api/present/token/:nonce` (single-use +
+/// 120s TTL). The wallet flow here is unchanged — it just POSTs the signed VP; no wallet
+/// code change is needed for the relay. The wallet may still show the result locally.
 struct ConsentRequest: Identifiable {
     let id = UUID()
     let nonce: String
