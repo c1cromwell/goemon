@@ -114,7 +114,7 @@ export function StarterGuardian() {
                 return (
                   <div key={r.id} className="card inset stack xs">
                     <div className="muted small">{r.reason}</div>
-                    <div>{payload.merchant ?? "Purchase"} · {formatMoney(payload.amountMinor ?? "0")}</div>
+                    <div>{payload.merchant ?? "Purchase"} · {formatMoney(payload.amountMinor ?? "0", "USD")}</div>
                     <div className="row" style={{ gap: 8 }}>
                       <button className="btn primary" disabled={busy} onClick={() => run(() => userApi.decideStarterReview(r.id, "approve"), "Approved")}>Approve</button>
                       <button className="btn" disabled={busy} onClick={() => run(() => userApi.decideStarterReview(r.id, "reject"), "Denied")}>Deny</button>
@@ -170,7 +170,7 @@ export function StarterGuardian() {
                   Save spend limit
                 </button>
               </div>
-            )) : <Empty message="No teens linked yet." />}
+            )) : <Empty>No teens linked yet.</Empty>}
           </div>
 
           <div className="card stack md">

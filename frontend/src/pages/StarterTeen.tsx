@@ -65,8 +65,8 @@ export function StarterTeen() {
       <div className="card row spread">
         <div>
           <div className="micro">Net worth</div>
-          <div style={{ fontSize: "1.5rem", fontWeight: 600 }}>{formatMoney(game.netWorth.totalMinor)}</div>
-          <div className="muted small">Cash {formatMoney(game.netWorth.cashMinor)} · Savings {formatMoney(game.netWorth.savingsMinor)}</div>
+          <div style={{ fontSize: "1.5rem", fontWeight: 600 }}>{formatMoney(game.netWorth.totalMinor, "USD")}</div>
+          <div className="muted small">Cash {formatMoney(game.netWorth.cashMinor, "USD")} · Savings {formatMoney(game.netWorth.savingsMinor, "USD")}</div>
         </div>
         <ProgressRing percent={Math.min(100, streak * 5)} label="Streak" />
       </div>
@@ -92,7 +92,7 @@ export function StarterTeen() {
               <ProgressRing percent={pct} label={g.name} />
             </div>
           );
-        }) : <Empty message="No goals yet." />}
+        }) : <Empty>No goals yet.</Empty>}
         <label className="field"><span className="label">Goal name</span><input value={goalName} onChange={(e) => setGoalName(e.target.value)} /></label>
         <label className="field"><span className="label">Target ($)</span><input value={goalTarget} onChange={(e) => setGoalTarget(e.target.value)} /></label>
         <button className="btn" disabled={busy} onClick={() => {
