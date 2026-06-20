@@ -49,6 +49,10 @@ vi.mock("@hashgraph/sdk", () => ({
     generateED25519: vi.fn(() => mockPrivateKey),
     fromStringDer: vi.fn(() => mockPrivateKey),
   },
+  PublicKey: {
+    fromString: vi.fn(() => mockPrivateKey.publicKey),
+    fromStringED25519: vi.fn(() => mockPrivateKey.publicKey),
+  },
   AccountId: {
     fromString: vi.fn((s: string) => ({ toString: () => s, toSolidityAddress: () => s })),
   },

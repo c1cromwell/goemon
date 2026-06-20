@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   Client,
   PrivateKey,
+  PublicKey,
   AccountId,
   TokenId,
   Hbar,
@@ -36,6 +37,7 @@ import { getUserById } from "./authService";
 import { assertSettlementUngated } from "./reconciliationService";
 import { getKeyVault, isWrapped } from "./keyVaultService";
 import { hasSignerKey, getHederaSigner } from "./signerService";
+import { parseDevicePublicKey, publicKeyToStoredDer } from "./hederaPublicKey";
 
 /** AAD binding the paymaster/operator key to its purpose in the key vault. */
 const OPERATOR_KEY_AAD = "hedera:operator";
@@ -203,14 +205,14 @@ export async function getOrCreateUserHederaAccount(
   let privateKeyEnc: string | null = null;
 
   if (opts?.publicKeyDer) {
-    publicKeyHex = PrivateKey.fromStringDer(opts.publicKeyDer).publicKey.toStringDer();
+    publicKeyHex = publicKeyToStoredDer(parseDevicePublicKey(opts.publicKeyDer));
   } else {
     const privateKey = PrivateKey.generateED25519();
     publicKeyHex = privateKey.publicKey.toStringDer();
     privateKeyEnc = await getKeyVault().wrap(privateKey.toStringDer(), { aad: userId });
   }
 
-  const accountPublicKey = PrivateKey.fromStringDer(publicKeyHex).publicKey;
+  const accountPublicKey = PublicKey.fromString(publicKeyHex);
 
   // Paymaster (operator) funds initial HBAR and pays transaction fees.
   const txResponse = await new AccountCreateTransaction()
@@ -438,8 +440,12 @@ export async function buildUsdcTransfer(input: {
 export async function submitUsdcTransfer(input: {
   fromUserId: string;
   buildId: string;
-  signedTransactionBytesBase64: string;
+  signedTransactionBytesBase64?: string;
+  signatureHex?: string;
 }): Promise<{ transactionId: string; journalId: string }> {
+  if (!input.signedTransactionBytesBase64 && !input.signatureHex) {
+    throw new AppError(ErrorCode.VALIDATION, "Provide signedTransactionBytesBase64 or signatureHex");
+  }
   await assertSettlementUngated();
 
   const build = await getDb().queryOne<TransferBuildRow>(
@@ -454,9 +460,20 @@ export async function submitUsdcTransfer(input: {
     throw new AppError(ErrorCode.VALIDATION, "Transfer build expired — call /transfer/build again");
   }
 
+  const senderAccount = await getUserHederaAccount(input.fromUserId);
+  if (!senderAccount?.public_key) {
+    throw new AppError(ErrorCode.NOT_FOUND, "Sender has no Hedera public key on file");
+  }
+
   const client = assertEnabled();
-  const signedBytes = Buffer.from(input.signedTransactionBytesBase64, "base64");
-  const signedTx = TransferTransaction.fromBytes(signedBytes);
+  let signedTx;
+  if (input.signedTransactionBytesBase64) {
+    signedTx = TransferTransaction.fromBytes(Buffer.from(input.signedTransactionBytesBase64, "base64"));
+  } else {
+    const frozen = TransferTransaction.fromBytes(Buffer.from(build.frozen_tx_bytes, "base64"));
+    const pubKey = PublicKey.fromString(senderAccount.public_key);
+    signedTx = frozen.addSignature(pubKey, Buffer.from(input.signatureHex!, "hex"));
+  }
 
   let transactionId: string;
   try {

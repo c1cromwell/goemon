@@ -1,6 +1,7 @@
 import Foundation
 import CryptoKit
 import LocalAuthentication
+import Hiero
 
 /// Holds the wallet's two private keys and performs on-device signing. The server
 /// NEVER sees a private key (Phase 14 invariant m).
@@ -20,7 +21,8 @@ final class KeyService {
 
     private let vpKeyTag = "vp_signing_key_v1"      // Secure Enclave blob or software raw
     private let vpFallbackFlag = "vp_signing_is_software"
-    private let hederaKeyTag = "hedera_ed25519_key_v1"
+    private let hederaKeyTag = "hedera_hiero_private_key_v1"
+    private let hederaLegacyKeyTag = "hedera_ed25519_key_v1"
 
     private init() {}
 
@@ -80,25 +82,28 @@ final class KeyService {
 
     var isUsingSoftwareFallback: Bool { !SecureEnclave.isAvailable || Keychain.getString(vpFallbackFlag) != nil }
 
-    // MARK: - Hedera key (Ed25519)
+    // MARK: - Hedera key (Ed25519 via Hiero SDK)
 
-    private func hederaKey() throws -> Curve25519.Signing.PrivateKey {
-        if let raw = Keychain.get(hederaKeyTag) {
-            return try Curve25519.Signing.PrivateKey(rawRepresentation: raw)
+    private func hederaPrivateKey() throws -> PrivateKey {
+        if let stored = Keychain.getString(hederaKeyTag), let key = PrivateKey(stored) {
+            return key
         }
-        let key = Curve25519.Signing.PrivateKey()
-        Keychain.set(key.rawRepresentation, for: hederaKeyTag)
+        // Drop legacy CryptoKit-only material — Hiero signing requires a Hiero PrivateKey.
+        Keychain.delete(hederaLegacyKeyTag)
+        let key = PrivateKey.generateEd25519()
+        Keychain.setString(key.toString(), for: hederaKeyTag)
         return key
     }
 
-    /// DER/hex public key the backend uses to provision the Hedera account.
+    /// Raw Ed25519 public key hex (64 chars) for POST /api/hedera/account.
     func hederaPublicKeyHex() throws -> String {
-        try hederaKey().publicKey.rawRepresentation.map { String(format: "%02x", $0) }.joined()
+        try hederaPrivateKey().publicKey.toStringRaw()
     }
 
-    /// Sign Hedera transaction bytes on-device (Face ID gated at the call site).
-    func signHedera(_ data: Data) throws -> Data {
-        try hederaKey().signature(for: data)
+    /// Sign a frozen Hedera transaction (from /transfer/build) for /transfer/submit.
+    func signHederaTransaction(_ frozenBytes: Data) throws -> Data {
+        let tx = try Transaction.fromBytes([UInt8](frozenBytes))
+        return Data(try hederaPrivateKey().signTransaction(tx))
     }
 
     // MARK: - Reset (sign out)
@@ -107,6 +112,7 @@ final class KeyService {
         Keychain.delete(vpKeyTag)
         Keychain.delete(vpFallbackFlag)
         Keychain.delete(hederaKeyTag)
+        Keychain.delete(hederaLegacyKeyTag)
     }
 }
 

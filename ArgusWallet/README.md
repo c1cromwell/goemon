@@ -42,11 +42,14 @@ ArgusWallet/
 2. Add all files under `ArgusWallet/` to the target (keep the folder groups).
 3. Build settings: set **INFOPLIST_FILE** to `ArgusWallet/Info.plist` and turn
    **GENERATE_INFOPLIST_FILE = NO** (Phase 14 invariant p — no generated plist).
-4. Signing & Capabilities: a development team (Secure Enclave needs a real device;
+4. **File → Add Package Dependencies…** → `https://github.com/hiero-ledger/hiero-sdk-swift`
+   (from `0.49.0`) → add product **Hiero** to the ArgusWallet target. Required for
+   non-custodial Hedera send (`/transfer/build` → sign → `/transfer/submit`).
+5. Signing & Capabilities: a development team (Secure Enclave needs a real device;
    the simulator falls back to a software key, clearly flagged in the UI).
-5. Run the backend (`cd backend && npm run dev`) and seed (`npm run setup`). On a
-   simulator, `localhost` resolves to the host; on a device, set `ARGUS_API_BASE`
-   to your Mac's LAN IP.
+6. Run the backend (`cd backend && npm run dev`) with `HEDERA_ENABLED=true` and
+   `HEDERA_SIGNER=ondevice`. On a simulator, `localhost` resolves to the host; on a
+   device, set `ARGUS_API_BASE` to your Mac's LAN IP.
 
 ## How it maps to the backend security model
 
@@ -65,10 +68,10 @@ ArgusWallet/
 - **Hedera key custody.** The Secure Enclave only supports P-256, not Ed25519 or
   secp256k1, so the Hedera key cannot live in the Enclave. It is an Ed25519
   software key in the Keychain. (The **VP signing key is** in the Enclave.)
-- **On-device Hedera signing.** The non-custodial `build → sign → submit` split is
-  implemented server-side: `POST /api/hedera/transfer/build` and `/submit` (migration
-  026, `hedera-build-submit.test.ts`). `HederaService.send` still falls back to the
-  server-signed `POST /api/hedera/transfer` until the Swift client is wired to build/submit.
+- **On-device Hedera signing.** Wired: `HederaService.send` calls
+  `/api/hedera/transfer/build` → Hiero `signTransaction` on-device →
+  `/api/hedera/transfer/submit` with `signatureHex`. Requires the **Hiero** SPM
+  package and backend `HEDERA_SIGNER=ondevice`.
 - **OID4VP token relay — IMPLEMENTED (server side).** `/api/present` now also parks the
   scoped token keyed by the single-use nonce; the requesting agent fetches it once via
   `GET /api/present/token/:nonce` (single-use + 120s TTL). The wallet flow is unchanged

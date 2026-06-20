@@ -184,7 +184,10 @@ hederaRouter.post(
 
 const submitTransferSchema = z.object({
   buildId: z.string().min(1),
-  signedTransactionBytesBase64: z.string().min(1),
+  signedTransactionBytesBase64: z.string().min(1).optional(),
+  signatureHex: z.string().regex(/^[0-9a-fA-F]+$/).optional(),
+}).refine((b) => !!(b.signedTransactionBytesBase64 || b.signatureHex), {
+  message: "Provide signedTransactionBytesBase64 or signatureHex",
 });
 
 hederaRouter.post(
@@ -198,6 +201,7 @@ hederaRouter.post(
         fromUserId: req.userId!,
         buildId: body.buildId,
         signedTransactionBytesBase64: body.signedTransactionBytesBase64,
+        signatureHex: body.signatureHex,
       });
       res.status(201).json(result);
     } catch (e) {

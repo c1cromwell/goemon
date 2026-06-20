@@ -1,4 +1,5 @@
 import SwiftUI
+import LocalAuthentication
 import CoreImage.CIFilterBuiltins
 
 /// On-chain wallet tab: Hedera account id / EVM alias, USDC balance, Receive (QR),
@@ -60,7 +61,7 @@ struct WalletView: View {
             TextField("To account id (0.0.x)", text: $toAccount).textFieldStyle(.roundedBorder)
             TextField("Amount", text: $amount).keyboardType(.decimalPad).textFieldStyle(.roundedBorder)
             Button(busy ? "Submitting…" : "Send") { Task { await send() } }.buttonStyle(PrimaryButtonStyle()).disabled(busy)
-            Text("Signed on-device (Face ID) in the non-custodial target; server-signed in the current build.")
+            Text("Signed on-device with Face ID; the server builds and submits the transaction.")
                 .font(.system(size: 11)).foregroundColor(Theme.text2)
             Spacer()
         }
@@ -82,9 +83,22 @@ struct WalletView: View {
     }
     private func send() async {
         guard let token = session.token, let micro = toMicro(amount) else { error = "Invalid amount"; return }
+        let ctx = LAContext()
+        var authError: NSError?
+        guard ctx.canEvaluatePolicy(.deviceOwnerAuthentication, error: &authError) else {
+            error = authError?.localizedDescription ?? "Face ID unavailable"
+            return
+        }
         busy = true; error = nil
-        do { _ = try await HederaService.shared.send(toAccountId: toAccount, amountMicro: micro, session: token); showSend = false; await load() }
-        catch { self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription }
+        do {
+            let ok = try await ctx.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "Sign USDC transfer")
+            guard ok else { error = "Authentication required"; busy = false; return }
+            _ = try await HederaService.shared.send(toAccountId: toAccount, amountMicro: micro, session: token)
+            showSend = false
+            await load()
+        } catch {
+            self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+        }
         busy = false
     }
 

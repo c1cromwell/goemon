@@ -22,6 +22,7 @@ function createTransferTx() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tx: any = {
     addTokenTransfer: vi.fn(() => tx),
+    addSignature: vi.fn(() => tx),
     freezeWith: vi.fn(() => tx),
     sign: vi.fn(async () => tx),
     signWith: vi.fn(async () => tx),
@@ -43,6 +44,10 @@ vi.mock("@hashgraph/sdk", () => ({
   PrivateKey: {
     generateED25519: vi.fn(() => mockPrivateKey),
     fromStringDer: vi.fn(() => mockPrivateKey),
+  },
+  PublicKey: {
+    fromString: vi.fn(() => ({ toStringDer: () => MOCK_PUBLIC_KEY_HEX })),
+    fromStringED25519: vi.fn(() => ({ toStringDer: () => MOCK_PUBLIC_KEY_HEX, toStringRaw: () => "aa".repeat(32) })),
   },
   AccountId: {
     fromString: vi.fn((s: string) => ({ toString: () => s })),
@@ -215,5 +220,22 @@ describe("Hedera non-custodial build/submit", () => {
     });
     expect(second.transactionId).toBe(first.transactionId);
     expect(second.journalId).toBe(first.journalId);
+  });
+
+  it("submit accepts signatureHex from on-device signing", async () => {
+    const { buildUsdcTransfer, submitUsdcTransfer } = await import("../src/services/hederaService");
+    const build = await buildUsdcTransfer({
+      fromUserId: senderId,
+      toHederaAccountId: recipientHederaId,
+      amountMicro: 3_000n,
+      idempotencyKey: "build-submit-sig",
+    });
+    const result = await submitUsdcTransfer({
+      fromUserId: senderId,
+      buildId: build.buildId,
+      signatureHex: "deadbeef",
+    });
+    expect(result.transactionId).toBe(MOCK_TX_ID);
+    expect(result.journalId).toBeTruthy();
   });
 });

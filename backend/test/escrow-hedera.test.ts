@@ -18,6 +18,10 @@ const mockClient = { setOperator: vi.fn() };
 vi.mock("@hashgraph/sdk", () => ({
   Client: { forTestnet: vi.fn(() => mockClient), forMainnet: vi.fn(() => mockClient), forPreviewnet: vi.fn(() => mockClient) },
   PrivateKey: { generateED25519: vi.fn(() => mockPrivateKey), fromStringDer: vi.fn(() => mockPrivateKey) },
+  PublicKey: {
+    fromString: vi.fn(() => mockPrivateKey.publicKey),
+    fromStringED25519: vi.fn(() => mockPrivateKey.publicKey),
+  },
   AccountId: { fromString: vi.fn((s: string) => ({ toString: () => s })) },
   TokenId: { fromString: vi.fn((s: string) => ({ toString: () => s })) },
   Hbar: vi.fn((n: number) => ({ amount: n })),
