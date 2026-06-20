@@ -69,10 +69,12 @@ ArgusWallet/
   needs backend endpoints `POST /api/hedera/transfer/build` and `/submit` that do
   not exist yet; `HederaService.send` documents the target and falls back to the
   current server-signed `POST /api/hedera/transfer`.
-- **OID4VP token relay.** `/api/present` returns the scoped token to the poster
-  (the wallet). Delivering it to the requesting agent needs a small pending-token
-  relay keyed by the nonce (the agent app currently embeds its own wallet bridge to
-  sidestep this in the browser demo).
+- **OID4VP token relay — IMPLEMENTED (server side).** `/api/present` now also parks the
+  scoped token keyed by the single-use nonce; the requesting agent fetches it once via
+  `GET /api/present/token/:nonce` (single-use + 120s TTL). The wallet flow is unchanged
+  (it still just POSTs the signed VP), so a real native-wallet→agent handoff now works
+  without the embedded bridge the browser demo uses. (Backend: `present_relay_tokens`,
+  migration 025, `present-relay.test.ts`.)
 - **OID4VCI** is simplified: the credential-offer deep link issues the VC directly
   for a signed-in user rather than running the full pre-authorized-code exchange.
 - **Auth** uses dev password login; production would use passkeys (WebAuthn).
