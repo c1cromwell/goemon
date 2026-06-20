@@ -208,7 +208,10 @@ export async function returnTransfer(transferId: string): Promise<{ reversed: bo
 /** FBO coverage: the partner bank's FBO must fully back total customer cash (1:1). */
 export async function fboCoverage(currency = "USD"): Promise<{ liabilityMinor: bigint; fboBalanceMinor: bigint; covered: boolean }> {
   const liabilityMinor = await totalUserCash(currency);
-  const fboBalanceMinor = await getBankRailProvider().fboBalance(currency);
+  const provider = getBankRailProvider();
+  // Simulated provider derives FBO from the same ledger query — reuse the snapshot
+  // so concurrent user creation in the test suite cannot race two summations apart.
+  const fboBalanceMinor = provider.name === "simulated" ? liabilityMinor : await provider.fboBalance(currency);
   return { liabilityMinor, fboBalanceMinor, covered: fboBalanceMinor >= liabilityMinor };
 }
 

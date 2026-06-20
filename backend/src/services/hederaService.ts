@@ -118,31 +118,109 @@ export async function getUserHederaAccount(userId: string): Promise<HederaAccoun
   );
 }
 
+const BUILD_TTL_MS = 5 * 60 * 1000;
+
+interface TransferTarget {
+  toHederaAccountId: string;
+  toUserId?: string;
+}
+
+async function resolveTransferTarget(input: {
+  toUserId?: string;
+  toHederaAccountId?: string;
+}): Promise<TransferTarget> {
+  if (!input.toUserId && !input.toHederaAccountId) {
+    throw new AppError(ErrorCode.VALIDATION, "Provide either toUserId or toHederaAccountId");
+  }
+  if (input.toUserId && input.toHederaAccountId) {
+    throw new AppError(ErrorCode.VALIDATION, "Provide toUserId or toHederaAccountId, not both");
+  }
+
+  if (input.toUserId) {
+    const toUser = await getUserById(input.toUserId);
+    if (!toUser) throw new AppError(ErrorCode.NOT_FOUND, "Recipient user not found");
+    const recipientAccount = await getUserHederaAccount(input.toUserId);
+    if (!recipientAccount?.hedera_account_id) {
+      throw new AppError(ErrorCode.NOT_FOUND, "Recipient has no Hedera account");
+    }
+    return { toHederaAccountId: recipientAccount.hedera_account_id, toUserId: input.toUserId };
+  }
+
+  return { toHederaAccountId: input.toHederaAccountId! };
+}
+
+async function postUsdcTransferJournal(input: {
+  fromUserId: string;
+  toUserId?: string;
+  amountMicro: bigint;
+  transactionId: string;
+  idempotencyKey?: string;
+}): Promise<string> {
+  const senderLedgerId = await getOrCreateUserAccount(input.fromUserId, "user_cash", "USDC");
+  const receiverLedgerId = input.toUserId
+    ? await getOrCreateUserAccount(input.toUserId, "user_cash", "USDC")
+    : await getSystemAccount("external_clearing", "USDC");
+
+  return postJournal(
+    [
+      { ledgerAccountId: senderLedgerId, direction: "debit", amountMinor: input.amountMicro, currency: "USDC" },
+      { ledgerAccountId: receiverLedgerId, direction: "credit", amountMinor: input.amountMicro, currency: "USDC" },
+    ],
+    `USDC on-chain transfer: ${input.transactionId}`,
+    { idempotencyKey: input.idempotencyKey, externalRef: input.transactionId }
+  );
+}
+
+interface TransferBuildRow {
+  id: string;
+  user_id: string;
+  to_hedera_account_id: string;
+  to_user_id: string | null;
+  amount_micro: string | number;
+  frozen_tx_bytes: string;
+  idempotency_key: string | null;
+  status: string;
+  transaction_id: string | null;
+  journal_id: string | null;
+  expires_at: string;
+}
+
 /**
  * Return the user's existing Hedera account, or create one via the paymaster.
- * Idempotent: calling twice returns the same account.
+ * When `publicKeyDer` is supplied (non-custodial wallet), the account is keyed to
+ * the device public key and no server-side private key is stored.
  */
-export async function getOrCreateUserHederaAccount(userId: string): Promise<HederaAccountRow> {
+export async function getOrCreateUserHederaAccount(
+  userId: string,
+  opts?: { publicKeyDer?: string }
+): Promise<HederaAccountRow> {
   const existing = await getUserHederaAccount(userId);
   if (existing?.hedera_account_id) return existing;
 
   const client = assertEnabled();
 
-  const privateKey = PrivateKey.generateED25519();
-  const publicKey = privateKey.publicKey;
+  let publicKeyHex: string;
+  let privateKeyEnc: string | null = null;
+
+  if (opts?.publicKeyDer) {
+    publicKeyHex = PrivateKey.fromStringDer(opts.publicKeyDer).publicKey.toStringDer();
+  } else {
+    const privateKey = PrivateKey.generateED25519();
+    publicKeyHex = privateKey.publicKey.toStringDer();
+    privateKeyEnc = await getKeyVault().wrap(privateKey.toStringDer(), { aad: userId });
+  }
+
+  const accountPublicKey = PrivateKey.fromStringDer(publicKeyHex).publicKey;
 
   // Paymaster (operator) funds initial HBAR and pays transaction fees.
   const txResponse = await new AccountCreateTransaction()
-    .setKey(publicKey)
+    .setKey(accountPublicKey)
     .setInitialBalance(new Hbar(1))
     .setMaxAutomaticTokenAssociations(10)
     .execute(client);
 
   const receipt = await txResponse.getReceipt(client);
   const hederaAccountId = receipt.accountId!.toString();
-  const publicKeyHex = publicKey.toStringDer();
-  // Phase 20 — the private key is wrapped at rest (never stored as plaintext).
-  const privateKeyEnc = await getKeyVault().wrap(privateKey.toStringDer(), { aad: userId });
 
   const db = getDb();
   if (existing) {
@@ -164,7 +242,7 @@ export async function getOrCreateUserHederaAccount(userId: string): Promise<Hede
     userId,
     action: "hedera.account.create",
     resource: hederaAccountId,
-    details: { network: config.HEDERA_NETWORK },
+    details: { network: config.HEDERA_NETWORK, nonCustodial: !!opts?.publicKeyDer },
   });
 
   return (await getUserHederaAccount(userId))!;
@@ -215,7 +293,12 @@ export async function transferUsdcOnChain(input: {
   if (!config.HEDERA_USDC_TOKEN_ID) {
     throw new AppError(ErrorCode.VALIDATION, "HEDERA_USDC_TOKEN_ID is not configured");
   }
-  // Phase 20: drift in the last reconciliation run gates all on-chain settlement.
+  if (config.HEDERA_SIGNER === "ondevice") {
+    throw new AppError(
+      ErrorCode.NOT_IMPLEMENTED,
+      "HEDERA_SIGNER=ondevice: use POST /api/hedera/transfer/build then /submit for on-device signing"
+    );
+  }
   await assertSettlementUngated();
 
   const senderAccount = await getUserHederaAccount(input.fromUserId);
@@ -228,14 +311,12 @@ export async function transferUsdcOnChain(input: {
 
   const client = assertEnabled();
   const tokenId = TokenId.fromString(config.HEDERA_USDC_TOKEN_ID);
-  // Safe cast: USDC micro-units fit in Number for any realistic transfer amount.
   const amount = Number(input.amountMicro);
 
   const frozenTx = new TransferTransaction()
     .addTokenTransfer(tokenId, AccountId.fromString(senderAccount.hedera_account_id), -amount)
     .addTokenTransfer(tokenId, AccountId.fromString(input.toHederaAccountId), amount)
     .freezeWith(client);
-  // Signed per HEDERA_SIGNER (in-process keyvault / HSM / on-device).
   const signedTx = await getHederaSigner(senderAccount).signTransaction(frozenTx);
 
   let transactionId: string;
@@ -249,26 +330,164 @@ export async function transferUsdcOnChain(input: {
     throw e;
   }
 
-  // Mirror in double-entry ledger
-  const senderLedgerId = await getOrCreateUserAccount(input.fromUserId, "user_cash", "USDC");
-  const receiverLedgerId = input.toUserId
-    ? await getOrCreateUserAccount(input.toUserId, "user_cash", "USDC")
-    : await getSystemAccount("external_clearing", "USDC");
-
-  const journalId = await postJournal(
-    [
-      { ledgerAccountId: senderLedgerId, direction: "debit", amountMinor: input.amountMicro, currency: "USDC" },
-      { ledgerAccountId: receiverLedgerId, direction: "credit", amountMinor: input.amountMicro, currency: "USDC" },
-    ],
-    `USDC on-chain transfer: ${transactionId}`,
-    { idempotencyKey: input.idempotencyKey, externalRef: transactionId }
-  );
+  const journalId = await postUsdcTransferJournal({
+    fromUserId: input.fromUserId,
+    toUserId: input.toUserId,
+    amountMicro: input.amountMicro,
+    transactionId,
+    idempotencyKey: input.idempotencyKey,
+  });
 
   await logAudit({
     userId: input.fromUserId,
     action: "hedera.usdc.transfer",
     resource: transactionId,
     details: { to: input.toHederaAccountId, amountMicro: input.amountMicro.toString() },
+  });
+
+  return { transactionId, journalId };
+}
+
+/**
+ * Non-custodial send — step 1: build a frozen USDC transfer for the wallet to sign.
+ * The server never signs; frozen bytes are returned for on-device Ed25519 signing.
+ */
+export async function buildUsdcTransfer(input: {
+  fromUserId: string;
+  toUserId?: string;
+  toHederaAccountId?: string;
+  amountMicro: bigint;
+  idempotencyKey: string;
+}): Promise<{ buildId: string; transactionBytesBase64: string; expiresAt: string }> {
+  if (!config.HEDERA_USDC_TOKEN_ID) {
+    throw new AppError(ErrorCode.VALIDATION, "HEDERA_USDC_TOKEN_ID is not configured");
+  }
+  if (input.amountMicro <= 0n) throw new AppError(ErrorCode.VALIDATION, "amountMicro must be positive");
+
+  const senderAccount = await getUserHederaAccount(input.fromUserId);
+  if (!senderAccount?.hedera_account_id || !senderAccount.public_key) {
+    throw new AppError(ErrorCode.NOT_FOUND, "Sender has no Hedera account — call POST /api/hedera/account first");
+  }
+
+  const target = await resolveTransferTarget({
+    toUserId: input.toUserId,
+    toHederaAccountId: input.toHederaAccountId,
+  });
+
+  const db = getDb();
+  const existing = await db.queryOne<TransferBuildRow>(
+    "SELECT * FROM hedera_transfer_builds WHERE idempotency_key = ?",
+    [input.idempotencyKey]
+  );
+  if (existing) {
+    if (existing.status === "submitted") {
+      throw new AppError(ErrorCode.IDEMPOTENCY_CONFLICT, "Transfer already submitted for this idempotency key");
+    }
+    if (new Date(existing.expires_at).getTime() > Date.now()) {
+      return {
+        buildId: existing.id,
+        transactionBytesBase64: existing.frozen_tx_bytes,
+        expiresAt: existing.expires_at,
+      };
+    }
+  }
+
+  const client = assertEnabled();
+  const tokenId = TokenId.fromString(config.HEDERA_USDC_TOKEN_ID);
+  const amount = Number(input.amountMicro);
+  const frozenTx = new TransferTransaction()
+    .addTokenTransfer(tokenId, AccountId.fromString(senderAccount.hedera_account_id), -amount)
+    .addTokenTransfer(tokenId, AccountId.fromString(target.toHederaAccountId), amount)
+    .freezeWith(client);
+
+  const txBytes = frozenTx.toBytes();
+  const transactionBytesBase64 = Buffer.from(txBytes).toString("base64");
+  const buildId = uuidv4();
+  const expiresAt = new Date(Date.now() + BUILD_TTL_MS).toISOString();
+
+  await db.execute(
+    `INSERT INTO hedera_transfer_builds
+       (id, user_id, to_hedera_account_id, to_user_id, amount_micro, frozen_tx_bytes, idempotency_key, status, expires_at, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)`,
+    [
+      buildId,
+      input.fromUserId,
+      target.toHederaAccountId,
+      target.toUserId ?? null,
+      input.amountMicro,
+      transactionBytesBase64,
+      input.idempotencyKey,
+      expiresAt,
+      new Date().toISOString(),
+    ]
+  );
+
+  await logAudit({
+    userId: input.fromUserId,
+    action: "hedera.usdc.transfer.build",
+    resource: buildId,
+    details: { to: target.toHederaAccountId, amountMicro: input.amountMicro.toString() },
+  });
+
+  return { buildId, transactionBytesBase64, expiresAt };
+}
+
+/**
+ * Non-custodial send — step 2: submit wallet-signed transaction bytes and post the ledger journal.
+ */
+export async function submitUsdcTransfer(input: {
+  fromUserId: string;
+  buildId: string;
+  signedTransactionBytesBase64: string;
+}): Promise<{ transactionId: string; journalId: string }> {
+  await assertSettlementUngated();
+
+  const build = await getDb().queryOne<TransferBuildRow>(
+    "SELECT * FROM hedera_transfer_builds WHERE id = ? AND user_id = ?",
+    [input.buildId, input.fromUserId]
+  );
+  if (!build) throw new AppError(ErrorCode.NOT_FOUND, "Transfer build not found");
+  if (build.status === "submitted" && build.transaction_id && build.journal_id) {
+    return { transactionId: build.transaction_id, journalId: build.journal_id };
+  }
+  if (new Date(build.expires_at).getTime() <= Date.now()) {
+    throw new AppError(ErrorCode.VALIDATION, "Transfer build expired — call /transfer/build again");
+  }
+
+  const client = assertEnabled();
+  const signedBytes = Buffer.from(input.signedTransactionBytesBase64, "base64");
+  const signedTx = TransferTransaction.fromBytes(signedBytes);
+
+  let transactionId: string;
+  try {
+    const txResponse = await signedTx.execute(client);
+    await txResponse.getReceipt(client);
+    transactionId = txResponse.transactionId.toString();
+    hederaTxTotal.inc({ result: "success" });
+  } catch (e) {
+    hederaTxTotal.inc({ result: "error" });
+    throw e;
+  }
+
+  const amountMicro = BigInt(build.amount_micro);
+  const journalId = await postUsdcTransferJournal({
+    fromUserId: input.fromUserId,
+    toUserId: build.to_user_id ?? undefined,
+    amountMicro,
+    transactionId,
+    idempotencyKey: build.idempotency_key ?? undefined,
+  });
+
+  await getDb().execute(
+    "UPDATE hedera_transfer_builds SET status = 'submitted', transaction_id = ?, journal_id = ? WHERE id = ?",
+    [transactionId, journalId, build.id]
+  );
+
+  await logAudit({
+    userId: input.fromUserId,
+    action: "hedera.usdc.transfer.submit",
+    resource: transactionId,
+    details: { buildId: build.id, amountMicro: amountMicro.toString() },
   });
 
   return { transactionId, journalId };

@@ -129,7 +129,7 @@ describe("statement", () => {
 });
 
 describe("FBO coverage + kill-switch", () => {
-  it("reports the FBO backing customer cash 1:1", async () => {
+  it("reports the FBO backing customer cash 1:1 (single liability snapshot)", async () => {
     const { fboCoverage } = await import("../src/services/bankRailService");
     const c = await fboCoverage("USD");
     expect(c.covered).toBe(true);

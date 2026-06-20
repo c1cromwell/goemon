@@ -65,10 +65,10 @@ ArgusWallet/
 - **Hedera key custody.** The Secure Enclave only supports P-256, not Ed25519 or
   secp256k1, so the Hedera key cannot live in the Enclave. It is an Ed25519
   software key in the Keychain. (The **VP signing key is** in the Enclave.)
-- **On-device Hedera signing.** The non-custodial `build → sign → submit` split
-  needs backend endpoints `POST /api/hedera/transfer/build` and `/submit` that do
-  not exist yet; `HederaService.send` documents the target and falls back to the
-  current server-signed `POST /api/hedera/transfer`.
+- **On-device Hedera signing.** The non-custodial `build → sign → submit` split is
+  implemented server-side: `POST /api/hedera/transfer/build` and `/submit` (migration
+  026, `hedera-build-submit.test.ts`). `HederaService.send` still falls back to the
+  server-signed `POST /api/hedera/transfer` until the Swift client is wired to build/submit.
 - **OID4VP token relay — IMPLEMENTED (server side).** `/api/present` now also parks the
   scoped token keyed by the single-use nonce; the requesting agent fetches it once via
   `GET /api/present/token/:nonce` (single-use + 120s TTL). The wallet flow is unchanged

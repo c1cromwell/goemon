@@ -1,10 +1,12 @@
 /**
  * Phase 5 — Hedera routes.
  *
- * GET  /api/hedera/account    — fetch user's Hedera account info (404 if none)
- * POST /api/hedera/account    — create Hedera account (paymaster funds it)
- * GET  /api/hedera/balance    — on-chain HBAR + USDC and ledger USDC balance
- * POST /api/hedera/transfer   — USDC transfer on-chain + ledger journal (idempotent)
+ * GET  /api/hedera/account           — fetch user's Hedera account info (404 if none)
+ * POST /api/hedera/account           — create Hedera account (paymaster funds it; optional device publicKey)
+ * GET  /api/hedera/balance           — on-chain HBAR + USDC and ledger USDC balance
+ * POST /api/hedera/transfer          — USDC transfer on-chain + ledger journal (server-signed; idempotent)
+ * POST /api/hedera/transfer/build    — frozen tx bytes for on-device signing (non-custodial)
+ * POST /api/hedera/transfer/submit   — submit wallet-signed bytes + post ledger journal
  *
  * All routes require authentication. All routes require HEDERA_ENABLED=true.
  */
@@ -20,6 +22,8 @@ import {
   getOrCreateUserHederaAccount,
   getOnChainBalances,
   transferUsdcOnChain,
+  buildUsdcTransfer,
+  submitUsdcTransfer,
   isHederaEnabled,
 } from "../services/hederaService";
 import { getUserById } from "../services/authService";
@@ -54,7 +58,8 @@ hederaRouter.get("/account", requireAuth, async (req: AuthRequest, res: Response
 hederaRouter.post("/account", requireAuth, async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     assertHederaEnabled();
-    const account = await getOrCreateUserHederaAccount(req.userId!);
+    const body = z.object({ publicKey: z.string().min(1).optional() }).parse(req.body ?? {});
+    const account = await getOrCreateUserHederaAccount(req.userId!, { publicKeyDer: body.publicKey });
     res.status(201).json({
       hederaAccountId: account.hedera_account_id,
       network: account.network,
@@ -142,6 +147,58 @@ hederaRouter.post(
         idempotencyKey,
       });
 
+      res.status(201).json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+const buildTransferSchema = transferSchema;
+
+hederaRouter.post(
+  "/transfer/build",
+  requireAuth,
+  idempotency(),
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      assertHederaEnabled();
+      const body = buildTransferSchema.parse(req.body);
+      const amountMicro = BigInt(body.amountMicro);
+      if (amountMicro <= 0n) throw new AppError(ErrorCode.VALIDATION, "amountMicro must be positive");
+
+      const build = await buildUsdcTransfer({
+        fromUserId: req.userId!,
+        toUserId: body.toUserId,
+        toHederaAccountId: body.toHederaAccountId,
+        amountMicro,
+        idempotencyKey: req.header("Idempotency-Key")!,
+      });
+
+      res.status(201).json(build);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+const submitTransferSchema = z.object({
+  buildId: z.string().min(1),
+  signedTransactionBytesBase64: z.string().min(1),
+});
+
+hederaRouter.post(
+  "/transfer/submit",
+  requireAuth,
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      assertHederaEnabled();
+      const body = submitTransferSchema.parse(req.body);
+      const result = await submitUsdcTransfer({
+        fromUserId: req.userId!,
+        buildId: body.buildId,
+        signedTransactionBytesBase64: body.signedTransactionBytesBase64,
+      });
       res.status(201).json(result);
     } catch (e) {
       next(e);

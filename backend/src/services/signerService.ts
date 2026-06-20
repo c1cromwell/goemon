@@ -72,10 +72,11 @@ export async function loadSignerKey(account: HederaAccountRow): Promise<PrivateK
   throw new AppError(ErrorCode.NOT_FOUND, "Account has no signing key material");
 }
 
-/** True when an account row carries usable signing material (wrapped, legacy, or HSM-referenced). */
+/** True when an account row carries usable signing material (wrapped, legacy, HSM-referenced, or on-device public key). */
 export function hasSignerKey(account: HederaAccountRow | null): boolean {
   if (!account) return false;
-  if (config.HEDERA_SIGNER === "hsm") return !!account.public_key; // key lives in the HSM
+  if (config.HEDERA_SIGNER === "ondevice") return !!account.public_key && !!account.hedera_account_id;
+  if (config.HEDERA_SIGNER === "hsm") return !!account.public_key;
   return !!(account.private_key_enc || account.private_key_hex);
 }
 
