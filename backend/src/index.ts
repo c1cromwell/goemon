@@ -53,9 +53,12 @@ import { bankAdminRouter } from "./routes/bankAdmin";
 import { cardsRouter } from "./routes/cards";
 import { billpayRouter } from "./routes/billpay";
 import { starterRouter } from "./routes/starter";
+import { collectiblesRouter } from "./routes/collectibles";
+import { collectiblesAdminRouter } from "./routes/collectiblesAdmin";
 import { selectOperationsEngine } from "./operations/selectEngine";
 import { internalRemediationRouter } from "./routes/internalRemediation";
 import { initReconciliation, startReconciliationLoop, runReconciliation } from "./services/reconciliationService";
+import { startMirrorSubscriptionLoop } from "./services/mirrorSubscriptionService";
 import { requireAuth } from "./middleware/auth";
 import { requireTier } from "./middleware/requireTier";
 
@@ -89,6 +92,7 @@ async function bootstrap(): Promise<void> {
   initReconciliation();
   if (config.HEDERA_ENABLED) {
     startReconciliationLoop();
+    startMirrorSubscriptionLoop();
     void runReconciliation().catch((e) => logger.error(e, "Initial reconciliation run failed"));
   }
 
@@ -209,6 +213,10 @@ async function bootstrap(): Promise<void> {
 
   // ---- Phase 22.0 — Argus Starter (households + guardian↔teen linkage) ----
   app.use("/api/starter", starterRouter);
+
+  // ---- Seller P2P collectibles (slab cert verify + human review) ----
+  app.use("/api/collectibles", collectiblesRouter);
+  app.use("/api/admin/collectibles", collectiblesAdminRouter);
 
   // ---- Phase 20 fraud add-on — remediation callbacks from the fraud engine ----
   // Service-bearer auth (FRAUD_ENGINE_API_KEY), not user sessions. The engine calls

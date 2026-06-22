@@ -26,6 +26,11 @@ import * as listings from "../services/listingService";
 import { getAsset } from "../services/tokenizationService";
 import { getCurrentListing } from "../services/listingService";
 import { redeem, backingAttestation } from "../services/redemptionService";
+import { config } from "../config";
+import {
+  getActivePurchaseForAsset,
+  isSellerP2pAsset,
+} from "../services/collectiblePurchaseService";
 
 export const marketplaceRouter = Router();
 
@@ -63,6 +68,8 @@ marketplaceRouter.get("/assets/:id", requireAuth, async (req: AuthRequest, res, 
     const asset = await getAsset(req.params.id!);
     if (!asset) throw new AppError(ErrorCode.NOT_FOUND, "Asset not found");
     const listing = await getCurrentListing(asset.id);
+    const activePurchase = await getActivePurchaseForAsset(asset.id);
+    const sellerP2p = isSellerP2pAsset(asset);
     res.json({
       asset: {
         id: asset.id,
@@ -78,6 +85,16 @@ marketplaceRouter.get("/assets/:id", requireAuth, async (req: AuthRequest, res, 
         status: asset.status,
       },
       listing,
+      purchaseMode: sellerP2p ? "escrow" : "instant",
+      collectiblesEscrowEnabled: config.COLLECTIBLES_ESCROW_ENABLED,
+      activePurchase: activePurchase
+        ? {
+            id: activePurchase.id,
+            status: activePurchase.status,
+            buyerUserId: activePurchase.buyerUserId,
+            sellerUserId: activePurchase.sellerUserId,
+          }
+        : null,
     });
   } catch (e) {
     next(e);

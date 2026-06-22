@@ -13,6 +13,7 @@ import { z } from "zod";
 import type { Response, NextFunction } from "express";
 import { requireAdmin, requireRole, type AdminRequest } from "../middleware/rbac";
 import { listDisputed, resolveDispute } from "../services/escrowService";
+import { syncFromEscrowResolution } from "../services/collectiblePurchaseService";
 
 export const escrowAdminRouter = Router();
 
@@ -37,6 +38,7 @@ escrowAdminRouter.post(
     try {
       const { outcome } = z.object({ outcome: z.enum(["release", "refund"]) }).parse(req.body);
       const result = await resolveDispute(req.params.id!, outcome, req.adminId!);
+      await syncFromEscrowResolution(req.params.id!, outcome);
       res.json(result);
     } catch (e) {
       next(e);

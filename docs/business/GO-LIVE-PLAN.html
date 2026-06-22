@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Go-Live Plan — Argus Financial Partners</title>
+<style>/* Argus Financial Partners strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Go-Live Plan</h1>
+  <p class="sub">Child-owned, founder-controlled: an anonymous Wyoming IP holdco, a separate management company for banking &amp; taxes, the full legal &amp; equity agreement set, and a guerrilla GTM.</p>
+  <div class="meta">Argus Financial Partners &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 22, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-executive-summary-the-ownership-thesis">1. Executive summary &amp; the ownership thesis</a></li><li class="lvl-2"><a href="#2-entity-1-the-ip-holdco-argus-financial-partners-llc-wyoming">2. Entity 1 — the IP HoldCo (Argus Financial Partners LLC, Wyoming)</a></li><li class="lvl-3"><a href="#21-formation-governance">2.1 Formation &amp; governance</a></li><li class="lvl-3"><a href="#22-why-the-asset-lives-here">2.2 Why the asset lives here</a></li><li class="lvl-3"><a href="#23-anonymity-mechanics-maximum">2.3 Anonymity mechanics (maximum) ⚖</a></li><li class="lvl-3"><a href="#24-how-it-converts-later-defer-phase-bc">2.4 How it converts later (DEFER → Phase B/C)</a></li><li class="lvl-2"><a href="#3-entity-2-the-management-company-argus-management-llc">3. Entity 2 — the Management Company (Argus Management LLC)</a></li><li class="lvl-3"><a href="#31-what-it-is">3.1 What it is</a></li><li class="lvl-3"><a href="#32-the-management-services-agreement-the-connective-tissue">3.2 The Management Services Agreement (the connective tissue) ⚖</a></li><li class="lvl-3"><a href="#33-why-this-gives-you-what-you-asked-for">3.3 Why this gives you what you asked for</a></li><li class="lvl-2"><a href="#4-the-gift-ownership-transfer-to-your-child-heaviest-counsel-cpa-flag">4. The gift / ownership transfer to your child ⚖ (heaviest counsel + CPA flag)</a></li><li class="lvl-2"><a href="#5-the-complete-legal-corporate-agreement-set">5. The complete legal &amp; corporate agreement set</a></li><li class="lvl-2"><a href="#6-equity-stock-option-framework-future-hires-advisors-co-founder">6. Equity &amp; stock-option framework (future hires · advisors · co-founder)</a></li><li class="lvl-3"><a href="#61-now-llc-stage-profits-interests">6.1 Now (LLC stage) — profits interests</a></li><li class="lvl-3"><a href="#62-the-three-recipient-types">6.2 The three recipient types</a></li><li class="lvl-3"><a href="#63-at-the-c-corp-conversion-defer">6.3 At the C-corp conversion (DEFER)</a></li><li class="lvl-2"><a href="#7-guerrilla-marketing-plan-x-instagram-beyond">7. Guerrilla marketing plan — X, Instagram &amp; beyond</a></li><li class="lvl-3"><a href="#71-positioning-the-compliance-vocabulary-gate">7.1 Positioning &amp; the compliance vocabulary gate ⚠</a></li><li class="lvl-3"><a href="#72-x-twitter-the-primary-build-in-public-channel">7.2 X (Twitter) — the primary build-in-public channel</a></li><li class="lvl-3"><a href="#73-instagram-reels-tiktok-the-visual-demo-channel">7.3 Instagram / Reels (+ TikTok) — the visual demo channel</a></li><li class="lvl-3"><a href="#74-other-low-cost-guerrilla-channels">7.4 Other low-cost / guerrilla channels</a></li><li class="lvl-3"><a href="#75-cadence-funnel-metrics">7.5 Cadence, funnel &amp; metrics</a></li><li class="lvl-2"><a href="#8-the-go-live-timeline-corporate-compliance-marketing">8. The go-live timeline (corporate + compliance + marketing)</a></li><li class="lvl-2"><a href="#9-cost-envelope-risk-register">9. Cost envelope &amp; risk register</a></li><li class="lvl-3"><a href="#year-1-cost-extends-corporate-structuremds-appendix">Year-1 cost (extends CORPORATE-STRUCTURE.md&#39;s appendix)</a></li><li class="lvl-3"><a href="#risk-register">Risk register ⚖</a></li></ol></nav>
+  <main class="content">
+<h1 id="go-live-plan-child-owned-founder-controlled-with-a-guerrilla-gtm">Go-Live Plan — Child-Owned, Founder-Controlled, with a Guerrilla GTM</h1>
+<p>The operator&#39;s plan for taking Argus Financial Partners live under a specific ownership design:
+<strong>your adult child owns the company anonymously, you control it and earn through a separate
+management company you own, and you grow it with a low-budget guerrilla marketing engine</strong> — all
+inside the Phase-A non-custodial posture and the &quot;never call it a bank&quot; guardrail.</p>
+<blockquote>
+<p><strong>How to read this.</strong> This document <em>layers on top of</em> — it does not replace — three existing docs:
+<code>CORPORATE-STRUCTURE.md</code> (the Wyoming-LLC → Delaware-C-corp ramp + the Phase A/B/C compliance
+ladder), <code>LAUNCH.md</code> (the launch readiness / go-no-go gate), and <code>PRODUCTION-STRATEGY.md</code> (cloud,
+ops, GTM positioning). Where those cover something, this cross-references rather than repeats.
+Every section is tagged <strong>DO NOW</strong>, <strong>DEFER → Phase B/C</strong>, or <strong>⚖ see counsel</strong>, matching the house
+style. Dollar/time figures are 2025–2026 planning estimates, not quotes.</p>
+</blockquote>
+<blockquote>
+<p>⚖ <strong>This is strategy, not legal or tax advice.</strong> Gifting a company to your child, the
+management-company structure, the anonymity layering, and the equity grants each carry <strong>gift-tax,
+valuation, asset-protection, securities, and control</strong> consequences. <strong>A fintech/securities attorney
+and a CPA must review this before you file, sign, or transfer anything.</strong> Treat every ⚖ tag as a
+hard stop until counsel signs off. Gift-tax exemption and exclusion <em>amounts change every year</em> — this
+doc describes the <strong>mechanics</strong>, not the current-year numbers; your CPA supplies those.</p>
+</blockquote>
+<hr>
+<h2 id="1-executive-summary-the-ownership-thesis">1. Executive summary &amp; the ownership thesis</h2>
+<p>You want three things at once that normally pull against each other: (a) your <strong>child to own</strong> the
+company, (b) <strong>you to keep control</strong> and have a clean way to <strong>bank and pay taxes</strong>, and (c) the
+ownership to be <strong>anonymous</strong>. The clean way to get all three is a <strong>two-entity split</strong>, formed on day
+one and built to survive the future Delaware C-corp conversion:</p>
+<pre><code>        You (founder)                          Your adult child
+              │ owns 100%                            │ owns 100% (anonymously)
+              ▼                                       ▼
+   ┌───────────────────────┐  Management   ┌───────────────────────────────┐
+   │  Argus Management LLC  │ Services Agr. │  Argus Financial Partners LLC │
+   │  (your home state)     │ ────────────▶ │  (Wyoming, manager-managed)   │
+   │  • you bank here       │  fee for svc  │  • owns ALL IP + brand + code │
+   │  • you draw income     │ ◀──────────── │  • the appreciating asset     │
+   │  • you file taxes here │   the asset   │  • YOU are the named manager  │
+   │  • you control it      │   stays put   │    → control without ownership │
+   └───────────────────────┘                └───────────────────────────────┘
+</code></pre>
+<p><strong>The thesis — &quot;freeze the value to the child now; keep control and income via the management
+company.&quot;</strong></p>
+<ul>
+<li>The valuable, appreciating asset is the <strong>IP</strong>: the code in this repo, the architecture, the brand,
+the domains. It lives in the <strong>IP HoldCo</strong> (<code>Argus Financial Partners LLC</code>, Wyoming), which your
+child owns 100%. Because the gift happens <strong>now, pre-revenue</strong>, the company is worth very little — the
+<strong>most tax-efficient moment</strong> to move ownership and future appreciation into your child&#39;s hands. ⚖</li>
+<li><strong>Ownership ≠ control.</strong> A Wyoming LLC can be <strong>manager-managed</strong>: you are appointed <strong>manager</strong> in
+the operating agreement and run everything and sign for the company, while your child is the passive
+<strong>member/owner</strong>. You don&#39;t need to own it to control it.</li>
+<li>The <strong>Management Company</strong> (<code>Argus Management LLC</code>) is owned by <strong>you</strong>. It contracts with the IP
+HoldCo under a <strong>Management Services Agreement</strong> and is paid a fee. This is the entity where <strong>you
+open bank accounts, draw income, and file taxes</strong> — and it owns no IP and does no regulated activity,
+so it carries no appreciating value and no licensing exposure.</li>
+<li><strong>Anonymity</strong> comes from Wyoming (members are not on the public record) plus a manager-managed
+filing and a registered agent, optionally hardened with a holding-LLC/trust layer (§2.3).</li>
+</ul>
+<p>This is a recognized estate-planning / asset-protection pattern. Its sharp edges — gift-tax valuation,
+keeping the management fee defensible to the IRS, and not piercing the liability shield by commingling
+— are exactly the things §4, §3, and §9 flag for counsel.</p>
+<p><strong>Decisions baked in (from your direction):</strong> child is an <strong>adult (18+)</strong> → can hold units and sign
+directly, <strong>no trust/custodian required</strong> (a trust is offered only as an optional anonymity wrapper);
+your entity is a <strong>management company you own</strong>; <strong>maximum anonymity</strong>; equity grants are scoped for
+<strong>future hires, advisors, and a co-founder</strong>.</p>
+<hr>
+<h2 id="2-entity-1-the-ip-holdco-argus-financial-partners-llc-wyoming">2. Entity 1 — the IP HoldCo (<code>Argus Financial Partners LLC</code>, Wyoming)</h2>
+<p><strong>DO NOW.</strong> This is the same Wyoming LLC that <code>CORPORATE-STRUCTURE.md</code> §2 recommends — the lowest-cost,
+most private, most crypto-forward US entity — with two modifications for your design: it is
+<strong>manager-managed</strong> (you as manager) and <strong>owned by your child</strong> (not you).</p>
+<h3 id="21-formation-governance">2.1 Formation &amp; governance</h3>
+<ul>
+<li><strong>Articles of Organization</strong> filed in Wyoming, <strong>manager-managed</strong>, naming only the <strong>registered
+agent</strong> publicly (~$50–125/yr; Wyoming Agents / Northwest / etc.).</li>
+<li><strong>Operating Agreement (manager-managed):</strong> names <strong>you as manager</strong> with full operating authority
+(sign contracts, open the company&#39;s own operational accounts, hire, execute the IP assignment), and
+your <strong>child as the sole member/owner</strong>. This private document — not the state filing — is where
+ownership is recorded. It also contains the <strong>admission rules</strong> for later equity grants and the
+conversion mechanics (§6, §2.4).</li>
+<li><strong>EIN</strong> from the IRS (free; a single-member LLC still gets its own EIN).</li>
+<li><strong>All IP assigned <em>into</em> this entity</strong> (§5) — this is the box that must own the code, so that when
+your child receives the company, they receive the IP with it.</li>
+</ul>
+<h3 id="22-why-the-asset-lives-here">2.2 Why the asset lives here</h3>
+<p>This entity holds the thing that appreciates. Putting it in the child&#39;s hands <strong>while it&#39;s worth almost
+nothing</strong> is the whole tax play (§4). Everything regulated-but-deferred (Phase B/C: partner bank, MSB,
+licensing) eventually sits in <em>subsidiaries of this entity&#39;s successor</em>, never in your management
+company — see the holdco/opco split in <code>CORPORATE-STRUCTURE.md</code> §2.2.</p>
+<h3 id="23-anonymity-mechanics-maximum">2.3 Anonymity mechanics (maximum) ⚖</h3>
+<ul>
+<li><strong>Baseline (free):</strong> Wyoming does not list LLC members publicly. Manager-managed means the public
+filing shows the registered agent and (optionally) the manager — <strong>never the member/owner</strong>. Your
+child&#39;s name appears only in the private operating agreement.</li>
+<li><strong>Optional hardening:</strong> have your child hold their membership through <strong>their own Wyoming holding
+LLC</strong> or a <strong>trust</strong>, so even the manager/organizer line doesn&#39;t tie to a personal name, and use the
+registered agent as the organizer of record. A trust also adds asset-protection and a clean
+succession path. This is optional because your child is an adult; weigh it against the extra admin. ⚖</li>
+<li><strong>Honest limit:</strong> anonymity is <em>privacy from casual public record</em>, not from the IRS, a bank&#39;s
+beneficial-ownership (KYC/BOI) process, or a court order. Banks and any future investor <strong>will</strong> see
+the real owner. Don&#39;t design around hiding from regulators — design around keeping it off the public
+internet. The &quot;anonymity vs. fundability&quot; tension resurfaces at the C-corp conversion (§9 risk
+register).</li>
+</ul>
+<h3 id="24-how-it-converts-later-defer-phase-bc">2.4 How it converts later (DEFER → Phase B/C)</h3>
+<p>When you raise or stand up a regulated subsidiary, convert the IP HoldCo to a <strong>Delaware C-corp</strong>
+(<code>Argus Financial Partners, Inc.</code>) per <code>CORPORATE-STRUCTURE.md</code> §2.2: the child&#39;s units become
+<strong>founder stock</strong>, profits interests convert to an <strong>ISO/NSO option pool</strong> (§6), and the holdco/opco
+split insulates licenses from the IP. Papering the operating agreement cleanly now makes that
+conversion tax-neutral and cheap. <strong>Don&#39;t pay for any of this today.</strong> ⚖</p>
+<hr>
+<h2 id="3-entity-2-the-management-company-argus-management-llc">3. Entity 2 — the Management Company (<code>Argus Management LLC</code>)</h2>
+<p><strong>DO NOW.</strong> This is the entity you asked for — <em>your</em> vehicle for <strong>taxes and bank accounts</strong>.</p>
+<h3 id="31-what-it-is">3.1 What it is</h3>
+<ul>
+<li>A <strong>second LLC, owned 100% by you</strong>, formed in <strong>your home state</strong> (where you actually work — no
+need for Wyoming here; you want it local and simple for banking and taxes). Single-member →
+disregarded for federal tax, so its income flows to your personal return.</li>
+<li>It is the entity where <strong>you open the operating bank account</strong> (Mercury or Brex — see
+<code>CORPORATE-STRUCTURE.md</code> §7), <strong>draw your income</strong>, and <strong>file your taxes</strong>.</li>
+<li>It <strong>owns no IP and does no regulated activity.</strong> That keeps it value-light (so it&#39;s not part of the
+estate you&#39;re freezing) and license-free.</li>
+</ul>
+<h3 id="32-the-management-services-agreement-the-connective-tissue">3.2 The Management Services Agreement (the connective tissue) ⚖</h3>
+<p>A written <strong>Management Services Agreement (MSA)</strong> between <code>Argus Management LLC</code> (provider) and
+<code>Argus Financial Partners LLC</code> (client):</p>
+<ul>
+<li><strong>Scope:</strong> software development, product management, operations, marketing, and administration
+performed by you/your company <strong>for</strong> the IP HoldCo.</li>
+<li><strong>Fee:</strong> a <strong>defensible, arm&#39;s-length</strong> fee (cost-plus or a market rate for the services) — this is
+the income you live on. ⚖ The fee must be <em>reasonable and documented</em>; an inflated or arbitrary fee
+invites the IRS to recharacterize it and can undercut both entities. Your CPA sets the basis.</li>
+<li><strong>IP stays put:</strong> the MSA states explicitly that <strong>all work product and IP belongs to the IP HoldCo</strong>
+(reinforced by the contributor IP-assignment in §5) — the management company is paid for services and
+never accrues ownership of the asset.</li>
+<li><strong>Formalities:</strong> keep the two entities&#39; books and bank accounts <strong>fully separate</strong> (no commingling),
+invoice on a regular cadence, and observe the agreement in practice. This is what makes the structure
+respected rather than ignored. ⚖</li>
+</ul>
+<h3 id="33-why-this-gives-you-what-you-asked-for">3.3 Why this gives you what you asked for</h3>
+<p>You said you want &quot;a separate LLC that gives me some way to do taxes, set up bank accounts, etc.&quot; This
+is it: <strong>you bank and pay taxes through a company you own outright</strong>, you draw a real income via the
+MSA, and yet <strong>the appreciating asset and its future upside sit with your child</strong> in the other entity.
+Control (via the manager role) and income (via the MSA) are decoupled from ownership.</p>
+<hr>
+<h2 id="4-the-gift-ownership-transfer-to-your-child-heaviest-counsel-cpa-flag">4. The gift / ownership transfer to your child ⚖ (heaviest counsel + CPA flag)</h2>
+<p>This is the step that makes your child the owner. Because they&#39;re an adult, it&#39;s mechanically simple —
+but the <strong>tax treatment is the part to get right with a CPA before you sign.</strong></p>
+<ul>
+<li><strong>The instrument:</strong> an <strong>Assignment of Membership Interest / Gift Agreement</strong> transferring 100% of
+<code>Argus Financial Partners LLC</code> to your child, recorded in the operating agreement&#39;s member schedule.
+Document <strong>donative intent</strong> (it&#39;s a gift, not a sale).</li>
+<li><strong>Do it pre-revenue, at low valuation.</strong> The earlier and emptier the company, the lower the gift&#39;s
+value, the less of your lifetime exemption it consumes, and the more future appreciation lands
+<strong>outside your estate</strong> in your child&#39;s hands. This timing is the entire tax advantage — <strong>gift
+before the company has measurable value.</strong> ⚖</li>
+<li><strong>Form 709 + valuation.</strong> A gift above the annual exclusion generally requires you to file a <strong>federal
+gift-tax return (Form 709)</strong> and apply your lifetime exemption (usually no tax <em>due</em>, but a filing).
+Support the reported value with a <strong>defensible valuation memo</strong> (a pre-revenue software entity is
+low, but show the work). Your CPA decides whether a formal appraisal is warranted. ⚖</li>
+<li><strong>Basis:</strong> a gift generally carries over <strong>your cost basis</strong> to your child (unlike an inheritance&#39;s
+step-up) — your CPA will weigh this against the estate-freeze benefit. ⚖</li>
+<li><strong>No trust/custodian needed (adult child).</strong> Because your child is 18+, they can own and sign
+directly. A <strong>trust or a child-owned holding LLC</strong> remains an <em>optional</em> wrapper purely for
+<strong>anonymity (§2.3) and asset protection</strong> — not a requirement. ⚖</li>
+<li><strong>Sequencing matters:</strong> <strong>assign the IP into the HoldCo <em>before</em> you gift the HoldCo</strong> (§5 → §4), so
+your child receives the entity <em>with the IP already in it</em>. Gifting an empty shell and assigning IP
+afterward muddies who owned the IP at transfer.</li>
+</ul>
+<hr>
+<h2 id="5-the-complete-legal-corporate-agreement-set">5. The complete legal &amp; corporate agreement set</h2>
+<p>The full paper trail you asked to have &quot;completed.&quot; Tagged by timing; ⚖ = do not sign without counsel.
+Items already detailed elsewhere are cross-referenced, not rewritten.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Document</th>
+<th>Entity</th>
+<th>Who signs</th>
+<th>When</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Articles of Organization</strong></td>
+<td>IP HoldCo (WY) + Mgmt Co (home state)</td>
+<td>Organizer / registered agent</td>
+<td>DO NOW</td>
+<td>Forms each LLC; only the agent is public</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Operating Agreement — manager-managed</strong></td>
+<td>IP HoldCo</td>
+<td>You (mgr) + child (member)</td>
+<td>DO NOW</td>
+<td>Ownership, your control as manager, admission rules for §6 grants, conversion mechanics</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Operating Agreement</strong></td>
+<td>Mgmt Co</td>
+<td>You (sole member/mgr)</td>
+<td>DO NOW</td>
+<td>Your wholly-owned services vehicle</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>EIN</strong> (each entity)</td>
+<td>Both</td>
+<td>You</td>
+<td>DO NOW</td>
+<td>Gates each bank account</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>IP / Technology Assignment</strong> (you → IP HoldCo)</td>
+<td>IP HoldCo</td>
+<td>You</td>
+<td>DO NOW ⚖</td>
+<td>Moves all repo code/designs/marks/domains into the HoldCo — the #1 diligence item (<code>CORPORATE-STRUCTURE.md</code> §5). <strong>Before the gift (§4).</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Membership-Interest Assignment / Gift Agreement</strong> (you → child)</td>
+<td>IP HoldCo</td>
+<td>You + child</td>
+<td>DO NOW ⚖</td>
+<td>Transfers 100% ownership to your child (§4)</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Form 709 + valuation memo</strong></td>
+<td>— (your personal filing)</td>
+<td>You (CPA-prepared)</td>
+<td>DO NOW ⚖</td>
+<td>Reports the gift; applies lifetime exemption (§4)</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Management Services Agreement</strong></td>
+<td>Mgmt Co ↔ IP HoldCo</td>
+<td>You (both sides)</td>
+<td>DO NOW ⚖</td>
+<td>Your income + the IP-stays-put + arm&#39;s-length-fee terms (§3.2)</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Member/Manager Consent Resolutions</strong></td>
+<td>Both</td>
+<td>You (mgr) + child (member)</td>
+<td>DO NOW</td>
+<td>Authorize the bank accounts, the IP assignment, the gift, the MSA</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Contributor / Contractor IP-Assignment + NDA</strong> template</td>
+<td>IP HoldCo</td>
+<td>Any contributor</td>
+<td>DO NOW</td>
+<td>Anyone who ever touches the code assigns it to the HoldCo (work-for-hire alone is insufficient)</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>ToS / Privacy / E-Sign / risk + &quot;not advice&quot; disclaimers</strong></td>
+<td>IP HoldCo</td>
+<td>— (publish)</td>
+<td>DO NOW</td>
+<td>Cross-ref <code>LAUNCH.md</code> §5; publish before any signup</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>AML/KYC/BSA policy + named compliance officer + OFAC screening</strong></td>
+<td>IP HoldCo</td>
+<td>You (officer)</td>
+<td>DO NOW</td>
+<td>Cross-ref <code>CORPORATE-STRUCTURE.md</code> §8; the identity ladder + VC + append-only audit are ~70% of the evidence layer already</td>
+</tr>
+<tr>
+<td>13</td>
+<td><strong>Trademark application</strong> (Argus brand)</td>
+<td>IP HoldCo</td>
+<td>You</td>
+<td>Soon</td>
+<td>USPTO knockout search + file; marks company-owned via #5</td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>Beneficial Ownership (BOI) status check</strong></td>
+<td>Both</td>
+<td>You</td>
+<td>DO NOW ⚖</td>
+<td>FinCEN BOI rules have shifted; confirm current applicability for each entity</td>
+</tr>
+<tr>
+<td>15</td>
+<td><strong>Equity Incentive Framework</strong> (profits-interest plan + pool)</td>
+<td>IP HoldCo</td>
+<td>You (mgr)</td>
+<td>DO NOW</td>
+<td>§6 — set up the framework even before the first grant</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Items 11–13 and the Phase-A compliance posture are the same gate <code>LAUNCH.md</code> §5 already enforces —
+this plan just adds the <strong>two-entity, gift, and MSA</strong> rows (2–9) on top.</p>
+</blockquote>
+<hr>
+<h2 id="6-equity-stock-option-framework-future-hires-advisors-co-founder">6. Equity &amp; stock-option framework (future hires · advisors · co-founder)</h2>
+<p>You asked that &quot;stock options&quot; be completed. In an LLC there is no stock yet — the correct analog is
+<strong>profits interests</strong> — so the framework is two-stage, matching the LLC → C-corp ramp
+(<code>CORPORATE-STRUCTURE.md</code> §4).</p>
+<h3 id="61-now-llc-stage-profits-interests">6.1 Now (LLC stage) — profits interests</h3>
+<ul>
+<li>Adopt an <strong>Equity Incentive Framework</strong> and <strong>reserve a pool</strong> (e.g., <strong>10–15%</strong> of fully-diluted
+interests) for grants. Grants are <strong>profits interests</strong> — a share of <em>future</em> upside only (not
+existing value), which is the tax-efficient LLC instrument when papered correctly. ⚖</li>
+<li><strong>83(b) election within 30 days</strong> of any grant subject to vesting — for <em>every</em> recipient
+(co-founder, advisor, hire). Missing the 30-day window is <strong>unfixable.</strong> Put it on a checklist. ⚖</li>
+<li><strong>Child-owner interaction:</strong> every grant <strong>dilutes the child&#39;s 100%</strong> per the operating agreement&#39;s
+admission rules (§2.1). Reserve the pool <strong>up front</strong> so dilution is planned, disclosed, and clean —
+not a surprise to the owner. The operating agreement should pre-authorize the manager to issue from
+the reserved pool.</li>
+</ul>
+<h3 id="62-the-three-recipient-types">6.2 The three recipient types</h3>
+<ul>
+<li><strong>Co-founder / partner:</strong> an equity split with <strong>vesting + a 1-year cliff</strong> (standard 4-year vest)
+and <strong>83(b) within 30 days</strong>. ⚠ Admitting a member <strong>converts the single-member LLC tax treatment to a
+partnership</strong> — this is a real trigger to consider <strong>doing the Delaware C-corp conversion early</strong>
+(<code>CORPORATE-STRUCTURE.md</code> §4) so you grant clean options instead. Decide co-founder timing with that
+in mind. ⚖</li>
+<li><strong>Advisors:</strong> a standard <strong>advisor agreement</strong> (e.g., FAST-style) + a small profits-interest/option
+grant on a <strong>1–2 year vest, no cliff</strong>, sized by advisor tier.</li>
+<li><strong>Future hires / employees:</strong> grant profits interests from the reserved pool now; these become
+<strong>ISO/NSO options</strong> at conversion (§6.3).</li>
+</ul>
+<h3 id="63-at-the-c-corp-conversion-defer">6.3 At the C-corp conversion (DEFER)</h3>
+<p>Profits interests convert to a normal <strong>ISO/NSO option pool</strong> under a Delaware <strong>Equity Incentive
+Plan</strong>; the child&#39;s units become founder stock; adopt <strong>Carta/Pulley</strong> to manage the cap table (overkill
+for the LLC, right at conversion). This is the moment &quot;stock options&quot; in the literal sense exist. ⚖</p>
+<hr>
+<h2 id="7-guerrilla-marketing-plan-x-instagram-beyond">7. Guerrilla marketing plan — X, Instagram &amp; beyond</h2>
+<p>The growth engine: maximum reach, minimum budget — operating <strong>strictly inside</strong> the <code>LAUNCH.md</code> §1
+compliance guardrail. The product&#39;s genuine novelty (an <strong>AI agent that moves your money under
+cryptographic, scoped, revocable permission</strong> + <strong>tokenized real-world assets in a non-custodial
+wallet</strong>) is the wedge (<code>PRODUCTION-STRATEGY.md</code> §8).</p>
+<h3 id="71-positioning-the-compliance-vocabulary-gate">7.1 Positioning &amp; the compliance vocabulary gate ⚠</h3>
+<ul>
+<li><strong>Narrative:</strong> <em>&quot;the first money app run by AI agents — that you actually control.&quot;</em> Lead with the
+agent + MCP + tokenized-RWA story, not feature parity with a bank.</li>
+<li><strong>Say:</strong> &quot;tokenized assets,&quot; &quot;non-custodial wallet,&quot; &quot;agentic finance,&quot; &quot;you hold the keys,&quot;
+&quot;scoped, revocable permission.&quot;</li>
+<li><strong>Never say:</strong> &quot;bank,&quot; &quot;banking,&quot; &quot;your bank,&quot; &quot;deposits,&quot; &quot;FDIC,&quot; &quot;bank account,&quot; or any
+investment-return promise. Every investment surface carries the &quot;not advice / not an offering&quot;
+disclaimer the product already models. <strong>Every post, caption, and clip passes this gate before it
+ships.</strong></li>
+</ul>
+<h3 id="72-x-twitter-the-primary-build-in-public-channel">7.2 X (Twitter) — the primary build-in-public channel</h3>
+<ul>
+<li><strong>Founder build-in-public cadence:</strong> a recurring ship-log of the agent/MCP/DID/VC tech — real
+progress, real demos. Developer-credible content earns the early AI + crypto crowd.</li>
+<li><strong>Demo clips:</strong> short screen-recordings of the wedge — <em>&quot;watch an AI agent move money under a
+90-second permission it can&#39;t exceed&quot;</em> — the single most shareable moment the product has.</li>
+<li><strong>Reply strategy:</strong> thoughtful, value-first replies into AI-agent, MCP, crypto, and fintech
+timelines; engage the MCP/agent-dev community where the product is genuinely a platform they could
+build on.</li>
+<li><strong>Waitlist drops:</strong> periodic invite waves to manufacture scarcity and control onboarding risk.</li>
+</ul>
+<h3 id="73-instagram-reels-tiktok-the-visual-demo-channel">7.3 Instagram / Reels (+ TikTok) — the visual demo channel</h3>
+<ul>
+<li><strong>Reels:</strong> the same demo moments cut for vertical video — the agent permission flow, the tokenized
+asset UI, the Quiet-Premium design aesthetic. Visual, fast, looped.</li>
+<li><strong>Founder story:</strong> a tasteful <em>&quot;why I built this and put it in my kid&#39;s name&quot;</em> angle — the ownership
+design itself is a differentiated, human story (handle with care; keep your child&#39;s privacy intact,
+consistent with §2.3).</li>
+<li><strong>Design-led brand clips:</strong> lean on the monochrome + jade Quiet-Premium look as a recognizable
+visual signature.</li>
+</ul>
+<h3 id="74-other-low-cost-guerrilla-channels">7.4 Other low-cost / guerrilla channels</h3>
+<ul>
+<li><strong>Invite-only waitlist + referral mechanics:</strong> scarcity + a referral coefficient is the core growth
+loop; it also throttles onboarding risk in Phase A.</li>
+<li><strong>Build-in-public beyond X:</strong> a public changelog, <strong>Hacker News</strong> / <strong>dev.to</strong> posts on the
+agent/MCP/DID tech, and a <strong>Product Hunt</strong> launch when the portal is demo-ready.</li>
+<li><strong>Communities:</strong> value-first participation in crypto/AI <strong>Discords</strong> and relevant <strong>Reddit</strong> subs —
+contribute, don&#39;t spam.</li>
+<li><strong>Short YouTube explainers:</strong> &quot;how the agent actually works&quot; — the credibility long-form.</li>
+<li><strong>Guerrilla tactics (zero/low budget):</strong> light, defensible hot takes on &quot;agentic finance,&quot;
+meme-able demo moments, cross-promo with AI-tool creators, and <strong>stunt demos</strong> (an AI agent doing
+something legitimately novel, on camera). Tie the <strong>teen/family angle</strong> to the Phase-22 <em>Argus
+Starter</em> product for a distinct audience.</li>
+</ul>
+<h3 id="75-cadence-funnel-metrics">7.5 Cadence, funnel &amp; metrics</h3>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>Cadence</th>
+<th>Primary asset</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>X</td>
+<td>3–5×/week + daily replies</td>
+<td>Ship-log, demo clips, waitlist drops</td>
+</tr>
+<tr>
+<td>Instagram/TikTok</td>
+<td>2–3 Reels/week</td>
+<td>Demo moments, founder story, brand aesthetic</td>
+</tr>
+<tr>
+<td>Long-form (HN/dev.to/YouTube)</td>
+<td>1–2×/month</td>
+<td>&quot;How the agent works&quot; deep dives</td>
+</tr>
+<tr>
+<td>Community (Discord/Reddit)</td>
+<td>Ongoing, value-first</td>
+<td>Helpful presence, no spam</td>
+</tr>
+<tr>
+<td>Product Hunt</td>
+<td>One launch</td>
+<td>Coordinated with portal readiness</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>Funnel:</strong> content → <strong>waitlist signup</strong> → invite wave → <strong>activation</strong> (passkey + first
+agent/tokenized action).</li>
+<li><strong>Metrics that matter:</strong> waitlist signups, <strong>referral coefficient (K)</strong>, demo-clip reach/saves,
+activation rate, and qualitative dev-community signal. Keep it lightweight; optimize the loop, not
+vanity counts.</li>
+<li><strong>Guardrail:</strong> <strong>all</strong> claims route past the §7.1 vocabulary gate before publishing.</li>
+</ul>
+<hr>
+<h2 id="8-the-go-live-timeline-corporate-compliance-marketing">8. The go-live timeline (corporate + compliance + marketing)</h2>
+<p>Mirrors the <code>CORPORATE-STRUCTURE.md</code> §10 90-day cadence, extended with the two-entity formation, the
+gift, the MSA, the equity framework, and the marketing ramp. Order matters — note the dependencies.</p>
+<p><strong>Days 1–14 — exist as the structure</strong></p>
+<ol>
+<li>Clear the names (Wyoming name check + USPTO knockout for the brand).</li>
+<li>File <strong>both LLCs</strong> — IP HoldCo (WY, manager-managed) + Management Co (home state).</li>
+<li>Get <strong>EINs</strong> for both.</li>
+<li>Adopt both <strong>operating agreements</strong> (HoldCo manager-managed: you = manager).</li>
+<li>Execute the <strong>IP / Technology Assignment</strong> into the IP HoldCo <em>(must precede the gift)</em>.</li>
+<li><strong>Gift the IP HoldCo to your child</strong> (Assignment of Membership Interest) + capture Form 709 posture
+with your CPA.</li>
+</ol>
+<p><strong>Days 15–45 — be controlled, bankable &amp; papered</strong>
+7. Sign the <strong>Management Services Agreement</strong> (Mgmt Co ↔ HoldCo).
+8. Open the <strong>Management Company</strong> bank account (Mercury/Brex); keep books fully separate.
+9. <strong>Foreign-qualify</strong> where you operate.
+10. Engage a <strong>startup CPA + fintech/securities attorney</strong> — scope them specifically to the <strong>gift +
+    valuation/709</strong>, the <strong>management fee</strong>, the <strong>anonymity layer</strong>, and the <strong>equity framework</strong>.
+11. Stand up the <strong>Equity Incentive Framework + reserved pool</strong> (§6); template the advisor/co-founder
+    docs and the 83(b) checklist.</p>
+<p><strong>Days 46–90 — launch posture + marketing ramp</strong>
+12. Publish <strong>ToS / Privacy / E-Sign / &quot;not advice&quot; disclaimers</strong> before any signup.
+13. Write the <strong>AML/KYC policy</strong>; name yourself compliance officer; wire <strong>OFAC screening</strong>.
+14. File the <strong>trademark</strong>; confirm <strong>BOI</strong> status for both entities.
+15. <strong>Lock the Phase-A scope</strong> (non-custodial / no customer funds) and tie into the <code>LAUNCH.md</code>
+    go/no-go gate — this plan&#39;s corporate rows feed gate <strong>B6</strong> there.
+16. <strong>Start the guerrilla marketing ramp:</strong> waitlist live, build-in-public cadence on X/IG, first demo
+    clips — all through the §7.1 vocabulary gate.</p>
+<blockquote>
+<p>The engineering go/no-go gates (iOS verification, E2E green, Hedera testnet vs. mainnet KMS) are
+owned by <code>LAUNCH.md</code> §3–6 and are unchanged by this plan.</p>
+</blockquote>
+<hr>
+<h2 id="9-cost-envelope-risk-register">9. Cost envelope &amp; risk register</h2>
+<h3 id="year-1-cost-extends-corporate-structuremds-appendix">Year-1 cost (extends <code>CORPORATE-STRUCTURE.md</code>&#39;s appendix)</h3>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>Estimate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>(all of <code>CORPORATE-STRUCTURE.md</code>&#39;s Year-1 LLC/agent/legal/CPA/ToS lines)</em></td>
+<td>~$5–18k</td>
+</tr>
+<tr>
+<td><strong>Second LLC</strong> (Management Co) formation + home-state fees</td>
+<td>$100–500 + annual</td>
+</tr>
+<tr>
+<td><strong>Management Services Agreement</strong> drafting</td>
+<td>$0.5–2k</td>
+</tr>
+<tr>
+<td><strong>Gift: valuation memo + Form 709</strong> prep (CPA)</td>
+<td>$0.5–3k</td>
+</tr>
+<tr>
+<td><strong>Equity plan</strong> (profits-interest framework + templates)</td>
+<td>$1–4k</td>
+</tr>
+<tr>
+<td>Optional anonymity wrapper (trust / child holding-LLC)</td>
+<td>$0.5–3k</td>
+</tr>
+<tr>
+<td><strong>Added realistic Year-1</strong></td>
+<td><strong>~$2.5–12.5k on top of the base</strong></td>
+</tr>
+</tbody></table>
+<p>Still a small fraction of Phase-C licensing ($50–150k+ for MTLs) — the lean-now logic holds.</p>
+<h3 id="risk-register">Risk register ⚖</h3>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>What goes wrong</th>
+<th>Mitigation / owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Gift-tax / valuation</strong></td>
+<td>Over-valued gift burns exemption or triggers tax; under-documented gift is challenged</td>
+<td>Gift pre-revenue; CPA valuation memo + Form 709 (§4) — <strong>CPA</strong></td>
+</tr>
+<tr>
+<td><strong>Management fee not respected</strong></td>
+<td>IRS recharacterizes an arbitrary/inflated fee; structure ignored</td>
+<td>Arm&#39;s-length, documented, regularly invoiced fee; separate books (§3.2) — <strong>CPA/Counsel</strong></td>
+</tr>
+<tr>
+<td><strong>Pierced liability shield</strong></td>
+<td>Commingling the two entities&#39; funds collapses the separation</td>
+<td>Separate accounts, observe formalities, never commingle — <strong>You</strong></td>
+</tr>
+<tr>
+<td><strong>&quot;Bank&quot; naming trap</strong></td>
+<td>Marketing implies a charter → cease-and-desist</td>
+<td>§7.1 vocabulary gate on every post — <strong>Product/Legal</strong></td>
+</tr>
+<tr>
+<td><strong>83(b) missed</strong></td>
+<td>A grant recipient owes tax on vesting; unfixable</td>
+<td>30-day checklist on every vesting grant (§6) — <strong>Counsel</strong></td>
+</tr>
+<tr>
+<td><strong>Anonymity vs. fundability</strong></td>
+<td>Investors/banks require ownership disclosure at conversion</td>
+<td>Accept privacy = public-record only; plan disclosure at the C-corp raise (§2.3) — <strong>You/Counsel</strong></td>
+</tr>
+<tr>
+<td><strong>Co-founder converts LLC to partnership</strong></td>
+<td>Tax treatment changes on adding a member</td>
+<td>Consider early C-corp conversion when adding a co-founder (§6.2) — <strong>Counsel</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<p><em>Companion documents: <code>CORPORATE-STRUCTURE.md</code> (the entity ramp + Phase A/B/C compliance ladder this
+plan sits inside), <code>LAUNCH.md</code> (the launch readiness / go-no-go gate this plan&#39;s corporate rows feed),
+and <code>PRODUCTION-STRATEGY.md</code> (cloud, ops, and the GTM positioning §7 builds on).</em></p>
+
+  </main>
+</div>
+</body></html>

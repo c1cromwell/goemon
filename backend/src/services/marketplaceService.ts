@@ -394,6 +394,14 @@ export async function placeOrder(
   const t = await priceTrade(assetId, side, qtyBase);
   if (t.asset.status !== "active") throw new AppError(ErrorCode.CONFLICT, "Asset is not active for trading");
 
+  const listingType = (t.asset.metadata ?? {}).listingType;
+  if (listingType === "seller_p2p") {
+    throw new AppError(
+      ErrorCode.VALIDATION,
+      "Seller listings use in-app escrow — purchase via POST /api/collectibles/purchase"
+    );
+  }
+
   // Compliance gates the BUYER (the party acquiring a securities position).
   if (side === "buy") {
     const compliance = await checkTransfer(t.asset, userId);
@@ -478,6 +486,52 @@ export async function placeOrder(
       currency: t.currency,
       journalId,
     };
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Treasury delivery (escrow-confirmed seller P2P collectibles)
+// ---------------------------------------------------------------------------
+
+/** Move asset units from the asset treasury to a buyer (no cash leg). Idempotent on idempotencyKey. */
+export async function deliverFromTreasury(
+  buyerUserId: string,
+  assetId: string,
+  qtyBase: bigint,
+  idempotencyKey: string
+): Promise<{ journalId: string }> {
+  if (qtyBase <= 0n) throw new AppError(ErrorCode.VALIDATION, "qtyBase must be a positive integer");
+  await requireAsset(assetId);
+
+  const code = assetLedgerCode(assetId);
+  const ledgerKey = `mkt:deliver:${idempotencyKey}`;
+
+  const db = getDb();
+  return db.transaction(async (tx) => {
+    const existing = await tx.queryOne<{ id: string }>("SELECT id FROM ledger_journals WHERE idempotency_key = ?", [ledgerKey]);
+    if (existing) return { journalId: existing.id };
+
+    const treasury = await getOrCreateAssetTreasury(assetId, tx);
+    const buyerAcct = await getOrCreateUserAssetAccount(buyerUserId, assetId, tx);
+
+    const treasuryBal = await getBalance(treasury, tx);
+    if (treasuryBal < qtyBase) throw new AppError(ErrorCode.CONFLICT, "Insufficient treasury inventory");
+
+    const journalId = await postJournal(
+      [
+        { ledgerAccountId: treasury, direction: "debit", amountMinor: qtyBase, currency: code },
+        { ledgerAccountId: buyerAcct, direction: "credit", amountMinor: qtyBase, currency: code },
+      ],
+      `Treasury delivery of asset ${assetId}`,
+      { idempotencyKey: ledgerKey, db: tx }
+    );
+    await logAudit({
+      userId: buyerUserId,
+      action: "marketplace.deliver",
+      resource: journalId,
+      details: { assetId, qtyBase: qtyBase.toString() },
+    });
+    return { journalId };
   });
 }
 

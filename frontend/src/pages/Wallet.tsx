@@ -135,6 +135,12 @@ export function Wallet() {
           <div className="grow">
             <div className="micro">Account id</div>
             <div className="code" style={{ marginTop: 4 }}>{account.hederaAccountId}</div>
+            {account.evmAddress ? (
+              <>
+                <div className="micro" style={{ marginTop: 10 }}>EVM alias (HIP-583)</div>
+                <div className="code" style={{ marginTop: 4 }}>{account.evmAddress}</div>
+              </>
+            ) : null}
             <button
               className="ghost sm"
               style={{ marginTop: 10 }}
@@ -143,10 +149,11 @@ export function Wallet() {
                 toast.show("Copied");
               }}
             >
-              Copy
+              Copy account id
             </button>
           </div>
         </div>
+        <p className="micro" style={{ marginTop: 10 }}>USDC on Hedera only in v1. CCTP bridge for Ethereum/Base/Polygon when enabled.</p>
       </div>
 
       <div className="card">

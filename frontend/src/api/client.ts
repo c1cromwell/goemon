@@ -228,6 +228,44 @@ export interface Credential {
 
 // Marketplace
 export type Surface = "invest" | "collect";
+export type SlabGrader = "psa" | "bgs" | "sgc" | "cgc";
+export type SlabCategory = "sports" | "pokemon";
+export type SubmissionStatus = "pending_cert" | "pending_human" | "approved" | "rejected";
+
+export interface CertPreview {
+  verified: boolean;
+  source: string;
+  grader: SlabGrader;
+  certNumber: string;
+  cardDescription?: string;
+  grade?: string;
+  year?: string;
+  brand?: string;
+  subject?: string;
+  imageUrl?: string;
+}
+
+export interface SellerSubmission {
+  id: string;
+  sellerUserId: string;
+  category: SlabCategory;
+  grader: SlabGrader;
+  certNumber: string;
+  title: string | null;
+  description: string | null;
+  askUsdcMicro: string;
+  imageUrls: string[];
+  certVerified: boolean;
+  certSource: string | null;
+  cert: CertPreview;
+  comp: { priceMinor: string; source: string | null; asOf: string | null } | null;
+  aiGrade: { source: string; predictedGrade?: string; confidence?: number; notes?: string } | null;
+  status: SubmissionStatus;
+  rejectionReason: string | null;
+  assetId: string | null;
+  createdAt: string;
+}
+
 export interface ListingView {
   assetId: string;
   version: number;
@@ -270,6 +308,29 @@ export interface AssetDetail {
     status: string;
     ddOutcome: string | null;
   } | null;
+  purchaseMode?: "escrow" | "instant";
+  collectiblesEscrowEnabled?: boolean;
+  activePurchase?: {
+    id: string;
+    status: CollectiblePurchaseStatus;
+    buyerUserId: string;
+    sellerUserId: string;
+  } | null;
+}
+export type CollectiblePurchaseStatus = "escrow_held" | "shipped" | "completed" | "refunded" | "disputed";
+export interface CollectiblePurchase {
+  id: string;
+  assetId: string;
+  buyerUserId: string;
+  sellerUserId: string;
+  escrowId: string;
+  amountMinor: string;
+  currency: string;
+  status: CollectiblePurchaseStatus;
+  shippedAt: string | null;
+  completedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface Holding {
   assetId: string;
@@ -357,6 +418,7 @@ export interface TradePosition {
 // Hedera
 export interface HederaAccount {
   hederaAccountId: string;
+  evmAddress?: string;
   publicKey?: string;
   network: string;
   usdcAssociated: boolean;
@@ -482,6 +544,32 @@ export const userApi = {
   order: (assetId: string, side: "buy" | "sell", qtyBase: string, key: string) =>
     umoney<OrderResult>("/marketplace/orders", { assetId, side, qtyBase }, key),
 
+  // --- seller collectibles (slab P2P) ---
+  verifySlabCert: (grader: SlabGrader, certNumber: string) =>
+    upost<{ cert: CertPreview }>("/collectibles/verify-cert", { grader, certNumber }),
+  submitCollectible: (body: {
+    category: SlabCategory;
+    grader: SlabGrader;
+    certNumber: string;
+    askUsdcMicro: string;
+    title?: string;
+    description?: string;
+    imageUrls?: string[];
+    runAiPreGrade?: boolean;
+  }) => upost<{ submission: SellerSubmission }>("/collectibles/submissions", body),
+  myCollectibleSubmissions: () => uget<{ submissions: SellerSubmission[] }>("/collectibles/submissions/mine"),
+
+  purchaseCollectible: (assetId: string, key: string) =>
+    umoney<{ purchase: CollectiblePurchase }>("/collectibles/purchase", { assetId }, key),
+  collectiblePurchases: (limit?: number) =>
+    uget<{ purchases: CollectiblePurchase[] }>(`/collectibles/purchases${limit ? `?limit=${limit}` : ""}`),
+  collectiblePurchase: (id: string) => uget<{ purchase: CollectiblePurchase }>(`/collectibles/purchases/${id}`),
+  shipCollectiblePurchase: (id: string) => upost<{ purchase: CollectiblePurchase }>(`/collectibles/purchases/${id}/ship`),
+  confirmCollectiblePurchase: (id: string) => upost<{ purchase: CollectiblePurchase }>(`/collectibles/purchases/${id}/confirm`),
+  cancelCollectiblePurchase: (id: string) => upost<{ purchase: CollectiblePurchase }>(`/collectibles/purchases/${id}/cancel`),
+  disputeCollectiblePurchase: (id: string, reason: string) =>
+    upost<{ purchase: CollectiblePurchase }>(`/collectibles/purchases/${id}/dispute`, { reason }),
+
   // --- escrow & dispute ---
   escrows: () => uget<EscrowView[]>("/escrow"),
   escrowHold: (body: { payeeEmail?: string; payeeId?: string; amountMinor: string; currency?: string; memo?: string }, key: string) =>
@@ -503,6 +591,8 @@ export const userApi = {
   hederaBalance: () => uget<HederaBalance>("/hedera/balance"),
   hederaTransfer: (body: { toUserId?: string; toHederaAccountId?: string; amountMicro: string }, key: string) =>
     umoney<{ txId: string; journalId: string }>("/hedera/transfer", body, key),
+  registerPushDevice: (body: { platform: "ios" | "android" | "web"; token: string }) =>
+    upost<{ registered: boolean }>("/hedera/devices", body),
 
   // --- bank rails (Phase 19) ---
   bankTransfers: () => uget<{ transfers: BankTransfer[] }>("/bank/transfers"),
@@ -699,4 +789,14 @@ export const api = {
   escrowDisputes: () => adminRequest<EscrowView[]>("/admin/escrow/disputes"),
   resolveEscrow: (id: string, outcome: "release" | "refund") =>
     adminRequest<EscrowView>(`/admin/escrow/${id}/resolve`, { method: "POST", body: JSON.stringify({ outcome }) }),
+
+  // --- seller collectible human review ---
+  collectibleReviews: () => adminRequest<{ submissions: SellerSubmission[] }>("/admin/collectibles/reviews"),
+  approveCollectible: (id: string) =>
+    adminRequest<{ submission: SellerSubmission; assetId: string }>(`/admin/collectibles/reviews/${id}/approve`, { method: "POST" }),
+  rejectCollectible: (id: string, reason: string) =>
+    adminRequest<{ submission: SellerSubmission }>(`/admin/collectibles/reviews/${id}/reject`, {
+      method: "POST",
+      body: JSON.stringify({ reason }),
+    }),
 };

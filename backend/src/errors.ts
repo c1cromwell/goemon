@@ -70,6 +70,9 @@ export enum ErrorCode {
   // Bill pay (Phase 19.3 — prototype kill-switch)
   BILLPAY_DISABLED = "BILLPAY_DISABLED",
 
+  // Seller P2P collectibles — in-app escrow (Corp B prototype kill-switch)
+  COLLECTIBLES_ESCROW_DISABLED = "COLLECTIBLES_ESCROW_DISABLED",
+
   // Argus Starter (Phase 22 — prototype kill-switch)
   TEEN_DISABLED = "TEEN_DISABLED",
 
@@ -114,6 +117,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.BANK_RAILS_DISABLED]: 503,
   [ErrorCode.CARDS_DISABLED]: 503,
   [ErrorCode.BILLPAY_DISABLED]: 503,
+  [ErrorCode.COLLECTIBLES_ESCROW_DISABLED]: 503,
   [ErrorCode.TEEN_DISABLED]: 503,
   [ErrorCode.SPEND_LIMIT_EXCEEDED]: 403,
   [ErrorCode.GUARDIAN_APPROVAL_REQUIRED]: 403,

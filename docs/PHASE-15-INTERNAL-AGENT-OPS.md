@@ -1,9 +1,7 @@
 # Phase 15 — Internal Agent Operations (Design)
 
-**Status: design only — not built.** This is the implementation-ready elaboration of
-the Phase 15 block in `ARGUS-PLAN.md`, grounded in the code that already exists so
-each sub-phase can be picked up directly. Prerequisites are met: Phase 7 (MCP +
-presentation gate) and Phase 12 (RBAC, per-agent-DID rate limit, metrics) are in.
+**Status: BUILT (15.0–15.3 + Conductor/Temporal seams).** Mechanical governance overlay
+via SantanderAI-inspired `mechGovService` (R1/R2/R3). This doc is the design reference;
 
 It runs the bank's **back office** — support, KYC review, fraud/AML triage,
 marketplace due-diligence, marketing, SRE, compliance drafting — through AI agents

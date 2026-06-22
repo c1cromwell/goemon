@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api, clearToken, getToken, type IdentitySummary, type ReviewItem, type EscrowView } from "../api/client";
 import { formatMoney } from "../lib/money";
 
@@ -87,6 +87,7 @@ export function AdminConsole() {
       <header className="bar">
         <h1>Argus Financial Partners Admin · Identities</h1>
         <div>
+          <Link to="/admin/collectibles" className="ghost sm" style={{ marginRight: 8 }}>Collectibles review</Link>
           <button className="ghost" onClick={simulate} disabled={busy}>
             {busy ? "Generating…" : "Generate simulated identities"}
           </button>

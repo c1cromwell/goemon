@@ -27,6 +27,9 @@ import { StarterTeen } from "./pages/StarterTeen";
 import { More } from "./pages/More";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminConsole } from "./pages/AdminConsole";
+import { AdminCollectibles } from "./pages/AdminCollectibles";
+import { CollectSell } from "./pages/CollectSell";
+import { CollectPurchases } from "./pages/CollectPurchases";
 import "./styles.css";
 
 // Apply the persisted theme before first paint.
@@ -45,6 +48,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             {/* Admin console (Phase 5A — separate token) */}
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminConsole />} />
+            <Route path="/admin/collectibles" element={<AdminCollectibles />} />
 
             {/* Customer portal */}
             <Route
@@ -57,6 +61,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="/" element={<Dashboard />} />
               <Route path="/invest" element={<Invest />} />
               <Route path="/collect" element={<Collect />} />
+              <Route path="/collect/sell" element={<CollectSell />} />
+              <Route path="/collect/purchases" element={<CollectPurchases />} />
               <Route path="/asset/:id" element={<AssetDetail />} />
               <Route
                 path="/agent"

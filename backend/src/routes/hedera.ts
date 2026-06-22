@@ -28,6 +28,10 @@ import {
 } from "../services/hederaService";
 import { getUserById } from "../services/authService";
 import { getUserBalances } from "../services/ledgerService";
+import { hederaAccountToEvmAddress } from "../utils/hip583";
+import { initiateCctpTransfer, listCctpTransfers } from "../services/cctpService";
+import { registerDeviceToken } from "../services/notificationService";
+import { pollInboundForUser } from "../services/mirrorSubscriptionService";
 
 export const hederaRouter = Router();
 
@@ -46,6 +50,7 @@ hederaRouter.get("/account", requireAuth, async (req: AuthRequest, res: Response
     }
     res.json({
       hederaAccountId: account.hedera_account_id,
+      evmAddress: account.evm_address ?? hederaAccountToEvmAddress(account.hedera_account_id),
       publicKey: account.public_key,
       network: account.network,
       usdcAssociated: account.usdc_associated === 1,
@@ -62,6 +67,7 @@ hederaRouter.post("/account", requireAuth, async (req: AuthRequest, res: Respons
     const account = await getOrCreateUserHederaAccount(req.userId!, { publicKeyDer: body.publicKey });
     res.status(201).json({
       hederaAccountId: account.hedera_account_id,
+      evmAddress: account.evm_address ?? (account.hedera_account_id ? hederaAccountToEvmAddress(account.hedera_account_id) : null),
       network: account.network,
       usdcAssociated: account.usdc_associated === 1,
     });
@@ -209,3 +215,57 @@ hederaRouter.post(
     }
   }
 );
+
+hederaRouter.post("/cctp", requireAuth, idempotency(), async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const body = z.object({
+      direction: z.enum(["in", "out"]),
+      sourceChain: z.enum(["ethereum", "base", "polygon", "hedera"]),
+      destChain: z.enum(["ethereum", "base", "polygon", "hedera"]).optional(),
+      amountMicro: z.union([z.string().regex(/^\d+$/), z.number().int().positive()]),
+    }).parse(req.body);
+    const result = await initiateCctpTransfer({
+      userId: req.userId!,
+      direction: body.direction,
+      sourceChain: body.sourceChain,
+      destChain: body.destChain,
+      amountMicro: BigInt(body.amountMicro),
+      idempotencyKey: req.header("Idempotency-Key")!,
+    });
+    res.status(201).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+hederaRouter.get("/cctp", requireAuth, async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const rows = await listCctpTransfers(req.userId!);
+    res.json({ transfers: rows });
+  } catch (e) {
+    next(e);
+  }
+});
+
+hederaRouter.post("/devices", requireAuth, async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const body = z.object({
+      platform: z.enum(["ios", "android", "web"]),
+      token: z.string().min(1),
+    }).parse(req.body);
+    await registerDeviceToken({ userId: req.userId!, platform: body.platform, token: body.token });
+    res.status(201).json({ registered: true });
+  } catch (e) {
+    next(e);
+  }
+});
+
+hederaRouter.post("/poll-inbound", requireAuth, async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    assertHederaEnabled();
+    const count = await pollInboundForUser(req.userId!);
+    res.json({ newEvents: count });
+  } catch (e) {
+    next(e);
+  }
+});

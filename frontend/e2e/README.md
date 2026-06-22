@@ -20,6 +20,7 @@ in `docs/E2E-VALIDATION.md` §2 (Web channel).
 | `agent.spec.ts` | SmartChat reply; **>$500 transfer → MFA gate** + live token countdown | Does not confirm — no transfer executes |
 | `onboarding.spec.ts` | Tiered identity ladder 0 → 1 → 2 unlocks SmartChat | Throwaway user |
 | `admin.spec.ts` | RBAC admin console: guard + seeded-admin login | Phase 5A |
+| `wallet.spec.ts` | Wallet page smoke; Receive + HIP-583 EVM alias when Hedera on | Phase A gap plan |
 | `theme.spec.ts` | Dark ↔ light `data-theme`, persisted across reload | |
 
 **Repeatability rule:** read-only assertions use the seeded demo users

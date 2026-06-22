@@ -20,6 +20,7 @@ import { idempotency } from "../middleware/idempotency";
 import { AppError, ErrorCode } from "../errors";
 import { getDb } from "../db";
 import { hold, release, refund, openDispute, getEscrow, listEscrows } from "../services/escrowService";
+import { assertEscrowNotPurchaseLinked } from "../services/collectiblePurchaseService";
 
 export const escrowRouter = Router();
 
@@ -93,6 +94,7 @@ escrowRouter.post("/:id/release", requireAuth, async (req: AuthRequest, res: Res
   try {
     const e = await requireParty(req.params.id!, req.userId!);
     if (e.payerId !== req.userId) throw new AppError(ErrorCode.FORBIDDEN, "Only the payer can release");
+    await assertEscrowNotPurchaseLinked(e.id, "release");
     res.json(await release(e.id, req.userId!));
   } catch (e) {
     next(e);
@@ -103,6 +105,7 @@ escrowRouter.post("/:id/refund", requireAuth, async (req: AuthRequest, res: Resp
   try {
     const e = await requireParty(req.params.id!, req.userId!);
     if (e.payeeId !== req.userId) throw new AppError(ErrorCode.FORBIDDEN, "Only the payee can refund");
+    await assertEscrowNotPurchaseLinked(e.id, "refund");
     res.json(await refund(e.id, req.userId!));
   } catch (e) {
     next(e);

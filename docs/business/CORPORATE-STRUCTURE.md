@@ -413,6 +413,10 @@ obvious: **spend thousands to launch, defer the hundreds-of-thousands until reve
 
 ---
 
+*Companion document: `GO-LIVE-PLAN.md` — applies this entity ramp to a specific ownership design
+(an anonymous, child-owned Wyoming IP HoldCo + a separate founder-owned management company for
+banking/taxes), with the full legal/equity agreement set and a guerrilla marketing plan layered on.*
+
 *Next document: the Production Deployment & Technology Strategy — cloud, the agent/MCP/skills
 automation fabric, the Neo4j Identity Vault, the fraud system on your orchestration engine,
 Constellation digital evidence, iOS-vs-Android, and GTM.*

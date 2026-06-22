@@ -26,6 +26,7 @@ import { agentRunTotal, agentEscalationTotal } from "../observability/metrics";
 import type { AdminRole } from "../middleware/rbac";
 import { createScopedClient, type Skill, type ScopedSkillClient, type ToolCallRecord } from "./skillRegistry";
 import { type WorkflowEngine, getEngine, setDefaultEngine } from "./engine";
+import { applyMechanicalGovernance } from "../integrations/mechGovService";
 
 export type SupervisionTier = "auto_approve" | "auto_approve_audit" | "human_required" | "human_led";
 
@@ -178,6 +179,7 @@ export async function executeInProcess<Ctx, Rec>(
   }
 
   let decision = def.gate(ctx, rec, confidence);
+  decision = applyMechanicalGovernance({ skill: def.skill, confidence, gate: decision }).gate;
   // Supervision: human_* workflows never auto-execute; an approve becomes an escalation.
   const humanSupervised = def.supervision === "human_required" || def.supervision === "human_led";
   if (forcedEscalation) {

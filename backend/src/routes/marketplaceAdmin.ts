@@ -19,6 +19,8 @@ import * as tokenization from "../services/tokenizationService";
 import * as listings from "../services/listingService";
 import * as marketplace from "../services/marketplaceService";
 import { declareCorporateAction, distributeDividend } from "../services/corporateActionService";
+import { syncCollectiblesInventory, listExternalCollectibles } from "../services/collectiblesProvider";
+import { fetchRwaCatalog } from "../services/rwaIssuerService";
 
 export const marketplaceAdminRouter = Router();
 
@@ -221,6 +223,54 @@ marketplaceAdminRouter.post(
     try {
       const result = await distributeDividend(req.params.caId!);
       res.json({ ...result, totalMinor: result.totalMinor.toString() });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// Collectibles partner sync (Courtyard / Collector Crypt seam).
+marketplaceAdminRouter.post(
+  "/collectibles/sync",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const result = await syncCollectiblesInventory(req.adminId);
+      res.status(201).json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+marketplaceAdminRouter.get(
+  "/collectibles/external",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const provider = typeof req.query.provider === "string" ? req.query.provider : undefined;
+      const listings = await listExternalCollectibles(provider);
+      res.json({ listings });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// RWA issuer catalog (Corp B — Ondo/Securitize/RealT).
+marketplaceAdminRouter.get(
+  "/rwa/catalog",
+  requireAdmin,
+  async (_req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const catalog = await fetchRwaCatalog();
+      res.json({
+        listings: catalog.map((l) => ({
+          ...l,
+          priceMinor: l.priceMinor.toString(),
+        })),
+      });
     } catch (e) {
       next(e);
     }

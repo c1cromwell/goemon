@@ -164,6 +164,29 @@ const schema = z.object({
   HEDERA_OPERATOR_KEY: z.string().optional(),
   HEDERA_USDC_TOKEN_ID: z.string().optional(),
 
+  // Wallet extensions (competitive gap plan) — CCTP bridge, mirror polling, push, partners.
+  CCTP_ENABLED: boolish,
+  CCTP_PROVIDER: z.enum(["simulated", "circle"]).default("simulated"),
+  MIRROR_SUBSCRIPTION_ENABLED: boolishDefaultTrue,
+  MIRROR_POLL_INTERVAL_MS: z.coerce.number().int().positive().default(15_000),
+  COLLECTIBLES_PROVIDER: z.enum(["simulated", "courtyard", "collectorcrypt"]).default("simulated"),
+  TRAVEL_RULE_ENABLED: boolish,
+  TRAVEL_RULE_PROVIDER: z.enum(["simulated", "notabene", "sumsub", "verifyvasp"]).default("simulated"),
+  RWA_ISSUER_ENABLED: boolish,
+  RWA_ISSUER_PROVIDER: z.enum(["simulated", "ondo", "securitize", "realt"]).default("simulated"),
+  MECH_GOV_ENABLED: boolishDefaultTrue,
+
+  // Slab cert verification for seller P2P collectibles (PSA / GemRate / comps / AI pre-grade).
+  CERT_VERIFY_PROVIDER: z.enum(["simulated", "psa", "gemrate"]).default("simulated"),
+  PSA_API_TOKEN: z.string().optional(),
+  GEMRATE_API_KEY: z.string().optional(),
+  PRICECHARTING_API_KEY: z.string().optional(),
+  CARDGRADE_API_KEY: z.string().optional(),
+
+  // Seller P2P collectibles — in-app USDC escrow (buy → ship → confirm). Off by default;
+  // Corp B money-transmission / marketplace-intermediary counsel required before prod.
+  COLLECTIBLES_ESCROW_ENABLED: boolish,
+
   // Phase 20 — key-vault custody (closes invariant m / audit C-1). At-rest secrets
   // (per-user Hedera keys, the issuer JWK) are wrapped via keyVaultService. The
   // `local` AES-256-GCM provider is dev/test only — production must use a real KMS
@@ -269,6 +292,11 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.BILLPAY_ENABLED) {
     fatal.push("BILLPAY_ENABLED must be false in production — the Phase-19.3 bill-pay seam is simulated (partner bank + biller network pending).");
+  }
+  if (c.COLLECTIBLES_ESCROW_ENABLED) {
+    fatal.push(
+      "COLLECTIBLES_ESCROW_ENABLED must be false in production — in-app collectible escrow is a Corp B prototype (MSB/marketplace-intermediary counsel pending)."
+    );
   }
   if (c.TEEN_ENABLED) {
     fatal.push("TEEN_ENABLED must be false in production — the Phase-22 Starter suite is simulated (BaaS/card issuer + COPPA/custodial counsel pending).");

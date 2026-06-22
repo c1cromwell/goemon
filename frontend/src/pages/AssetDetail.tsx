@@ -10,6 +10,7 @@ import { userApi, type AssetDetail as AssetDetailT } from "../api/client";
 import { formatMoney, formatUnits } from "../lib/money";
 import { Loading } from "../components/ui";
 import { TradeSheet } from "../components/TradeSheet";
+import { CollectibleBuySheet } from "../components/CollectibleBuySheet";
 
 type Side = "buy" | "sell" | "subscribe";
 
@@ -49,6 +50,10 @@ export function AssetDetail() {
   const held = BigInt(heldBase) > 0n;
   const eligible = tier >= asset.minTier;
   const meta = asset.metadata ?? {};
+  const escrowBuy = detail.purchaseMode === "escrow";
+  const openPurchase = detail.activePurchase;
+  const purchasePending = openPurchase && openPurchase.status !== "completed" && openPurchase.status !== "refunded";
+  const canBuy = active && listing && !purchasePending;
 
   return (
     <div className="page stack lg narrow" style={{ maxWidth: 640 }}>
@@ -75,6 +80,22 @@ export function AssetDetail() {
         </div>
       </div>
 
+      {escrowBuy ? (
+        <div className="card" style={{ borderColor: "var(--accent)" }}>
+          <span className="badge ok">Seller listing · escrow protected</span>
+          <p className="small muted" style={{ marginBottom: 0, marginTop: 10 }}>
+            Payment is held until you confirm receipt. Seller ships the slab directly — no vault partner.
+          </p>
+          {purchasePending && openPurchase ? (
+            <p className="small" style={{ marginTop: 10, marginBottom: 0 }}>
+              Purchase in progress ({openPurchase.status.replace(/_/g, " ")}).
+              {" "}
+              <button className="link" onClick={() => navigate("/collect/purchases")}>Manage purchase →</button>
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
       {!eligible ? (
         <div className="card" style={{ borderColor: "var(--warn)" }}>
           <span className="badge warn">Requires Tier {asset.minTier}</span>
@@ -85,12 +106,17 @@ export function AssetDetail() {
         </div>
       ) : (
         <div className="row wrap">
-          {active ? (
-            <button className="lg" disabled={!listing} onClick={() => setSide("buy")}>Buy</button>
-          ) : (
-            <button className="lg" disabled={!listing} onClick={() => setSide("subscribe")}>Subscribe</button>
-          )}
-          {active && held ? (
+          {active && canBuy ? (
+            <button className="lg" onClick={() => setSide("buy")}>
+              {escrowBuy ? "Buy with escrow" : "Buy"}
+            </button>
+          ) : active && purchasePending ? (
+            <button className="lg ghost" onClick={() => navigate("/collect/purchases")}>View purchase</button>
+          ) : null}
+          {!active && listing ? (
+            <button className="lg" onClick={() => setSide("subscribe")}>Subscribe</button>
+          ) : null}
+          {active && held && !escrowBuy ? (
             <button className="ghost" onClick={() => setSide("sell")}>Sell</button>
           ) : null}
           {active && listing?.surface === "invest" ? (
@@ -122,7 +148,16 @@ export function AssetDetail() {
         ))}
       </div>
 
-      {side ? (
+      {side === "buy" && escrowBuy ? (
+        <CollectibleBuySheet
+          detail={detail}
+          onClose={() => setSide(null)}
+          onDone={() => {
+            setSide(null);
+            void load();
+          }}
+        />
+      ) : side ? (
         <TradeSheet
           detail={detail}
           side={side}

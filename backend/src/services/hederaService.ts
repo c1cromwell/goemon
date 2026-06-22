@@ -38,6 +38,7 @@ import { assertSettlementUngated } from "./reconciliationService";
 import { getKeyVault, isWrapped } from "./keyVaultService";
 import { hasSignerKey, getHederaSigner } from "./signerService";
 import { parseDevicePublicKey, publicKeyToStoredDer } from "./hederaPublicKey";
+import { hederaAccountToEvmAddress } from "../utils/hip583";
 
 /** AAD binding the paymaster/operator key to its purpose in the key vault. */
 const OPERATOR_KEY_AAD = "hedera:operator";
@@ -223,20 +224,21 @@ export async function getOrCreateUserHederaAccount(
 
   const receipt = await txResponse.getReceipt(client);
   const hederaAccountId = receipt.accountId!.toString();
+  const evmAddress = hederaAccountToEvmAddress(hederaAccountId);
 
   const db = getDb();
   if (existing) {
     await db.execute(
       `UPDATE hedera_accounts
-       SET hedera_account_id = ?, public_key = ?, private_key_enc = ?, private_key_hex = NULL, network = ?, usdc_associated = 0
+       SET hedera_account_id = ?, evm_address = ?, public_key = ?, private_key_enc = ?, private_key_hex = NULL, network = ?, usdc_associated = 0
        WHERE user_id = ?`,
-      [hederaAccountId, publicKeyHex, privateKeyEnc, config.HEDERA_NETWORK, userId]
+      [hederaAccountId, evmAddress, publicKeyHex, privateKeyEnc, config.HEDERA_NETWORK, userId]
     );
   } else {
     await db.execute(
-      `INSERT INTO hedera_accounts (id, user_id, hedera_account_id, public_key, private_key_enc, usdc_associated, network)
-       VALUES (?, ?, ?, ?, ?, 0, ?)`,
-      [uuidv4(), userId, hederaAccountId, publicKeyHex, privateKeyEnc, config.HEDERA_NETWORK]
+      `INSERT INTO hedera_accounts (id, user_id, hedera_account_id, evm_address, public_key, private_key_enc, usdc_associated, network)
+       VALUES (?, ?, ?, ?, ?, ?, 0, ?)`,
+      [uuidv4(), userId, hederaAccountId, evmAddress, publicKeyHex, privateKeyEnc, config.HEDERA_NETWORK]
     );
   }
 
