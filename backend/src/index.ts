@@ -46,6 +46,8 @@ import { escrowRouter } from "./routes/escrow";
 import { escrowAdminRouter } from "./routes/escrowAdmin";
 import { payRouter } from "./routes/pay";
 import { fxRouter } from "./routes/fx";
+import { journeysRouter } from "./routes/journeys";
+import { seedDefaultJourneys } from "./journeys/onboardingJourney";
 import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
 import { warehouseAdminRouter } from "./routes/warehouseAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
@@ -100,6 +102,11 @@ async function bootstrap(): Promise<void> {
 
   if (config.ARGUS_PAY_ENABLED) {
     logger.warn("Argus Pay rail ENABLED (Phase 21 Stage 1 prototype — not licensed for production)");
+  }
+
+  if (config.JOURNEYS_ENABLED) {
+    await seedDefaultJourneys();
+    logger.info("Journey orchestration ENABLED (prototype) — default journeys seeded");
   }
 
   const app = express();
@@ -196,6 +203,9 @@ async function bootstrap(): Promise<void> {
 
   // ---- FX quote seam (quote-only; service-gated by FX_ENABLED) ----
   app.use("/api/fx", fxRouter);
+
+  // ---- Journey orchestration platform (prototype; gated by JOURNEYS_ENABLED) ----
+  app.use("/api/journeys", journeysRouter);
 
   // ---- Phase 20 — ledger⇄chain reconciliation (RBAC admin surface) ----
   app.use("/api/admin", reconciliationAdminRouter);

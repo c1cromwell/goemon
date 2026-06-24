@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journey Orchestration Platform — Argus Financial Partners</title>
+<style>/* Argus Financial Partners strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Journey Orchestration Platform</h1>
+  <p class="sub">Reusable journey-builder architecture (à la Alloy/Transmit/Strivacity): declarative journeys, server-driven UI, connector marketplace, and fraud-as-a-step — with a working engine prototype.</p>
+  <div class="meta">Argus Financial Partners &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 24, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-honest-review-gap-analysis">1. Honest review &amp; gap analysis</a></li><li class="lvl-2"><a href="#2-pillar-1-declarative-journey-engine-prototyped">2. Pillar 1 — Declarative journey engine (prototyped)</a></li><li class="lvl-2"><a href="#3-pillar-2-server-driven-ui-multi-channel-renderer-contract-prototyped-renderers-designed">3. Pillar 2 — Server-Driven UI + multi-channel renderer (contract prototyped; renderers designed)</a></li><li class="lvl-2"><a href="#4-pillar-3-connector-framework-vendor-marketplace-prototyped">4. Pillar 3 — Connector framework + vendor marketplace (prototyped)</a></li><li class="lvl-2"><a href="#5-pillar-4-riskfraud-as-a-journey-node-prototyped">5. Pillar 4 — Risk/fraud as a journey node (prototyped)</a></li><li class="lvl-2"><a href="#6-cross-cutting-the-am-i-missing-features-answer">6. Cross-cutting — the &quot;am I missing features?&quot; answer</a></li><li class="lvl-2"><a href="#7-what-the-prototype-proves-the-build-roadmap">7. What the prototype proves &amp; the build roadmap</a></li></ol></nav>
+  <main class="content">
+<h1 id="journey-orchestration-platform-architecture-review-design">Journey Orchestration Platform — architecture review &amp; design</h1>
+<p>How Argus becomes a reusable, configurable platform that can run <strong>any account-opening flow</strong> — a
+journey builder over a data layer, a vendor marketplace + bring-your-own-service, fraud/risk called at
+each step via a context, custom branding, and one journey rendered to any channel (web/iOS/Android) —
+benchmarked against <strong>Alloy, Transmit Security, Strivacity</strong>, with a working prototype of the core.</p>
+<blockquote>
+<p><strong>How to read this.</strong> A design doc (sibling to <code>PHASE-15-INTERNAL-AGENT-OPS.md</code>). The four pillars
+below are designed in full; the <strong>declarative journey engine + connector framework + risk-node + SDUI
+contract are prototyped</strong> (<code>backend/src/journeys/</code>, <code>test/journeys.test.ts</code>, 8 tests). Scope decision:
+<strong>internal reusable engine</strong> (not multi-tenant white-label yet) — but architected so productizing later
+is a seam, not a rewrite.</p>
+</blockquote>
+<hr>
+<h2 id="1-honest-review-gap-analysis">1. Honest review &amp; gap analysis</h2>
+<p>Argus has excellent orchestration <strong>primitives</strong>, but was <strong>not</strong> architected as this platform. The
+benchmark vendors: <strong>Alloy</strong> (vendor orchestration + decisioning + waterfall/cascade + case mgmt),
+<strong>Transmit</strong> (CIAM + risk/DRS + orchestration), <strong>Strivacity</strong> (no-code journey builder + branding).</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Argus before</th>
+<th>Status</th>
+<th>The platform</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Flow definition</td>
+<td><code>riskOrchestratorService</code> — <strong>hardcoded TS</strong></td>
+<td>🔴 → 🟢 (proto)</td>
+<td><strong>Journey-as-data DAG</strong> (<code>journeys/types.ts</code>)</td>
+</tr>
+<tr>
+<td>Orchestration runner</td>
+<td><code>WorkflowEngine</code>/<code>WorkflowDef</code> — imperative, <strong>headless</strong>, back-office</td>
+<td>🟡 substrate</td>
+<td>Declarative runner over the DAG (<code>journeyRunner.ts</code>)</td>
+</tr>
+<tr>
+<td>Conditions/branching</td>
+<td>TS <code>if</code></td>
+<td>🔴 → 🟢</td>
+<td><strong>CEL</strong> over the journey context (<code>journeys/cel.ts</code>)</td>
+</tr>
+<tr>
+<td>Vendors</td>
+<td>compile-time provider <strong>enums</strong></td>
+<td>🔴 → 🟢 (proto)</td>
+<td><strong>Runtime connector registry + BYO + waterfall</strong> (<code>connectors.ts</code>)</td>
+</tr>
+<tr>
+<td>Fraud/risk</td>
+<td>called on money events only</td>
+<td>🔴 → 🟢 (proto)</td>
+<td><strong><code>risk_check</code> step</strong> with journey context (<code>riskNode.ts</code>)</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>hand-built per platform</td>
+<td>🔴 (design)</td>
+<td><strong>Server-Driven UI</strong> descriptors → thin renderers</td>
+</tr>
+<tr>
+<td>Journey builder</td>
+<td>none</td>
+<td>🔴 (design)</td>
+<td>No-code editor over the DAG schema</td>
+</tr>
+<tr>
+<td>Human-in-the-loop</td>
+<td><code>agent_reviews</code> queue</td>
+<td>🟢 reuse</td>
+<td><code>manual_review</code> step (pause/resume)</td>
+</tr>
+<tr>
+<td>Versioning/rollout</td>
+<td>fraud <strong>model-registry</strong> shadow/canary</td>
+<td>🟢 pattern</td>
+<td>Journey versions + canary</td>
+</tr>
+<tr>
+<td>Audit</td>
+<td>append-only tables</td>
+<td>🟢 reuse</td>
+<td>Append-only <code>journey_steps</code> trail</td>
+</tr>
+<tr>
+<td>Resumability</td>
+<td>Temporal/Conductor durable substrate</td>
+<td>🟢 substrate</td>
+<td>Persisted run state (<code>journey_runs</code>)</td>
+</tr>
+<tr>
+<td>Multi-tenant / branding</td>
+<td>single-tenant; theming only</td>
+<td>🔴 (deferred)</td>
+<td>Branding tokens now; tenancy later</td>
+</tr>
+</tbody></table>
+<p><strong>Verdict:</strong> the substrate was strong; what was missing is the <strong>declarative layer + the UI dimension +
+the runtime connector/risk model.</strong> The prototype builds the engine core; SDUI renderers and the visual
+builder are designed here and deferred.</p>
+<hr>
+<h2 id="2-pillar-1-declarative-journey-engine-prototyped">2. Pillar 1 — Declarative journey engine <em>(prototyped)</em></h2>
+<p>A <strong><code>JourneyDef</code></strong> is a versioned DAG: <code>{ id, version, start, steps: StepDef[] }</code>. Each <code>StepDef</code> is a
+typed node with <code>config</code> + routing (<code>next</code> and/or CEL <code>branches</code>). The <strong>runner</strong> (<code>journeyRunner.ts</code>)
+walks it over a <strong><code>JourneyContext</code></strong> (<code>data</code> + <code>connectorResults</code> + <code>riskDecisions</code> + <code>outcome</code>),
+recording an append-only step trail and persisting run state at every pause (fully <strong>resumable</strong> — start
+on web, finish on mobile).</p>
+<ul>
+<li><strong>Step-type registry</strong> (<code>stepRegistry.ts</code>) — pluggable handlers: <code>collect · connector · risk_check · decision · branch · consent · manual_review · complete</code> (+ <code>sub_journey</code> for layered/composable flows,
+designed). New step types are a registry entry, not an engine change.</li>
+<li><strong>CEL conditions</strong> (<code>journeys/cel.ts</code>) — the same non-Turing-complete subset as the fraud engine; a
+branch like <code>risk.kyc_risk.decision == &#39;deny&#39;</code> routes the flow. Malformed CEL fails at <strong>load</strong>
+(<code>validateJourney</code>), never mid-run on a live applicant.</li>
+<li><strong>Versioning + canary</strong> — reuse the fraud <strong>model-registry shadow/canary</strong> pattern: shadow a new
+journey version against the live one, compare, canary, promote — no redeploy.</li>
+<li><strong>Durable execution</strong> — the runner can target the existing <code>WorkflowEngine</code> (Temporal/Conductor) for
+long-running, crash-safe journeys; the prototype persists to <code>journey_runs</code> directly.</li>
+</ul>
+<p><strong>Proven:</strong> the onboarding flow is now a <code>JourneyDef</code> (<code>onboardingJourney.ts</code>); editing a step&#39;s CEL
+threshold changes routing with <strong>no code change</strong> (<code>journeys.test.ts</code>).</p>
+<hr>
+<h2 id="3-pillar-2-server-driven-ui-multi-channel-renderer-contract-prototyped-renderers-designed">3. Pillar 2 — Server-Driven UI + multi-channel renderer <em>(contract prototyped; renderers designed)</em></h2>
+<p>The linchpin for &quot;any UI.&quot; A <code>collect</code>/<code>consent</code> step emits a <strong>channel-agnostic <code>ScreenDescriptor</code></strong>
+(<code>types.ts</code>): screen id, title, <strong>typed fields</strong> (text/email/date/select/checkbox/<strong>document</strong>/
+<strong>biometric</strong>), validation (CEL), primary action, and <strong>branding tokens</strong> (accent/logo/theme). The
+journey defines the UI <strong>once</strong>; thin per-platform renderers interpret it:</p>
+<pre><code>JourneyDef ──&gt; runner ──&gt; ScreenDescriptor ──&gt; [ web renderer | iOS renderer | Android renderer ]
+                                   └─ branding tokens (white-label-ready, single-tenant today)
+</code></pre>
+<p><strong>Designed (not built):</strong> the three renderers, a component registry per platform, client-side validation
+from the CEL <code>validation</code>, i18n/accessibility. <strong>Why SDUI:</strong> it&#39;s the only way one journey definition
+serves web + iOS + Android without re-implementing each flow per platform — the property Transmit/
+Strivacity sell. The prototype returns real <code>ScreenDescriptor</code>s so the contract is exercised end-to-end.</p>
+<hr>
+<h2 id="4-pillar-3-connector-framework-vendor-marketplace-prototyped">4. Pillar 3 — Connector framework + vendor marketplace <em>(prototyped)</em></h2>
+<p>Argus&#39;s provider enums (<code>IDV_PROVIDER</code>, <code>SANCTIONS_PROVIDER</code>, …) are <strong>compile-time</strong>. The platform needs
+<strong>runtime connectors</strong> (<code>connectors.ts</code>):</p>
+<ul>
+<li><strong>Registry</strong> — connectors registered by id; a <code>connector</code> step names vendors by id (a builder UI could
+add one without a deploy).</li>
+<li><strong>Bring-your-own</strong> — a <strong>generic HTTP connector</strong> (<code>httpConnector</code>) plugs any vendor/internal API or
+webhook in via <code>{ url, method, headers }</code>.</li>
+<li><strong>Waterfall / cascade</strong> (<code>waterfall</code>) — try connectors in order, <strong>first success wins</strong>, every attempt
+recorded (Alloy&#39;s signature; auditable failover). <em>Proven:</em> the onboarding <code>verify_document</code> step
+cascades <code>always-fail → simulated</code> and records both attempts on the step trail.</li>
+</ul>
+<p><strong>Designed (not built):</strong> per-connector <strong>secret vault</strong> (reuse <code>keyVaultService</code>), request/response
+<strong>field mapping</strong>, cost/rate-limit + retry policy, a connector catalog UI. The existing provider seams
+wrap as connectors with a thin adapter.</p>
+<hr>
+<h2 id="5-pillar-4-riskfraud-as-a-journey-node-prototyped">5. Pillar 4 — Risk/fraud as a journey node <em>(prototyped)</em></h2>
+<p>Exactly your &quot;fraud called at each step via a context.&quot; A <strong><code>risk_check</code> step</strong> (<code>riskNode.ts</code>) lifts
+signals from the <strong>accumulated journey context</strong> (via CEL maps), calls a <strong><code>RiskProvider</code></strong>, and the
+journey <strong>branches on the decision + reason codes</strong>:</p>
+<pre><code>risk_check(signals from ctx) ─&gt; { decision, score, reasonCodes } ─&gt; branches:
+   risk.kyc_risk.decision == &#39;deny&#39;   -&gt; rejected
+   risk.kyc_risk.decision == &#39;review&#39; -&gt; manual_review
+   (default)                          -&gt; consent (approve)
+</code></pre>
+<p>The default <code>RiskProvider</code> is simulated/offline; the <strong>production swap</strong> calls <code>fraudService</code> →
+<code>fraud-engine</code> (the same engine that scores money events, now a drop-in step) behind the same interface
+(<code>setRiskProvider</code>). Drop a <code>risk_check</code> anywhere — pre-collect device risk, post-document KYC,
+pre-funding fraud — passing whatever context has accumulated. <em>Proven:</em> sanctions → reject, elevated risk
+→ review, clean → approve (<code>journeys.test.ts</code>).</p>
+<hr>
+<h2 id="6-cross-cutting-the-am-i-missing-features-answer">6. Cross-cutting — the &quot;am I missing features?&quot; answer</h2>
+<p>Beyond your list, a complete platform needs these (each maps to an existing Argus primitive to reuse):</p>
+<table>
+<thead>
+<tr>
+<th>Missing capability</th>
+<th>Why it matters</th>
+<th>Reuse</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Server-Driven UI</strong> (renderers)</td>
+<td>the actual &quot;any UI&quot;</td>
+<td>the <code>ScreenDescriptor</code> contract (built)</td>
+</tr>
+<tr>
+<td><strong>Connector secret vault + field mapping</strong></td>
+<td>real vendor integration</td>
+<td><code>keyVaultService</code>; a mapping DSL (CEL)</td>
+</tr>
+<tr>
+<td><strong>Consent / e-sign + versioned disclosures</strong></td>
+<td>mandatory for account opening</td>
+<td><code>consent</code> step + a disclosures table</td>
+</tr>
+<tr>
+<td><strong>Save-&amp;-resume / async + webhook-callback steps</strong></td>
+<td>long flows, vendor callbacks, review re-entry</td>
+<td><code>journey_runs</code> (built) + Temporal</td>
+</tr>
+<tr>
+<td><strong>Journey versioning + sandbox + simulation/replay</strong></td>
+<td>safe iteration</td>
+<td>fraud model-registry shadow/canary</td>
+</tr>
+<tr>
+<td><strong>Analytics: per-step funnel / drop-off</strong></td>
+<td>conversion optimization</td>
+<td>the append-only <code>journey_steps</code> trail</td>
+</tr>
+<tr>
+<td><strong>Composable sub-journeys (&quot;layered&quot;)</strong></td>
+<td>reuse fragments across flows</td>
+<td>a <code>sub_journey</code> step type (designed)</td>
+</tr>
+<tr>
+<td><strong>SDK / embeddable widget</strong></td>
+<td>drop into a partner/own app</td>
+<td>the SDUI renderer + a JS SDK</td>
+</tr>
+<tr>
+<td><strong>PII governance</strong> (residency, retention, right-to-delete, field encryption)</td>
+<td>compliance</td>
+<td><code>keyVaultService</code> + retention jobs</td>
+</tr>
+<tr>
+<td><strong>Idempotency + cost control + rate limiting</strong> on connector calls</td>
+<td>money + spend safety</td>
+<td>the idempotency middleware pattern</td>
+</tr>
+<tr>
+<td><strong>Outcome + reason-codes object</strong></td>
+<td>explainable decisions</td>
+<td>built into <code>complete</code> + risk node</td>
+</tr>
+<tr>
+<td><strong>Per-step observability</strong></td>
+<td>ops</td>
+<td>prom-client counters (add <code>journey_step_total</code>)</td>
+</tr>
+<tr>
+<td><strong>Decision/rules versioning + shadow</strong></td>
+<td>safe policy change</td>
+<td>CEL + the model-registry pattern (proven)</td>
+</tr>
+<tr>
+<td><strong>Multi-tenancy + white-label + billing</strong></td>
+<td>productize to others</td>
+<td><strong>deferred</strong> — a tenant key on every table + per-tenant secrets/branding</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="7-what-the-prototype-proves-the-build-roadmap">7. What the prototype proves &amp; the build roadmap</h2>
+<p><strong>Built (<code>backend/src/journeys/</code>, 8 tests):</strong> journey-as-data DAG · step-type registry · CEL branching ·
+risk-as-a-node · connector registry + BYO-HTTP + <strong>waterfall</strong> · SDUI <code>ScreenDescriptor</code> contract ·
+resumable runs + append-only trail · the onboarding flow re-expressed as data. Decision-only and gated by
+<code>JOURNEYS_ENABLED</code> (it does not move money or grant tiers — shadow-style, like the fraud-CEL adoption).</p>
+<p><strong>Roadmap (internal-first):</strong></p>
+<ol>
+<li><strong>Now:</strong> engine core (this prototype) → shadow the onboarding journey against <code>riskOrchestratorService</code>,
+compare outcomes, cut over.</li>
+<li><strong>Next:</strong> SDUI <strong>web renderer</strong> (then iOS/Android) over the <code>ScreenDescriptor</code> contract; connector
+<strong>secret vault + field mapping</strong>; consent/e-sign; per-step analytics.</li>
+<li><strong>Then:</strong> the <strong>no-code journey-builder UI</strong> over the <code>JourneyDef</code> schema; sub-journeys; sandbox +
+simulation/replay.</li>
+<li><strong>Deferred (productize):</strong> multi-tenancy, per-tenant branding/secrets/domains, SDK/widget, billing —
+the seams (branding tokens, runtime connectors, journey-as-data) are already in place so this is
+additive, not a rewrite.</li>
+</ol>
+<hr>
+<p><em>Prototype: <code>backend/src/journeys/{types,cel,stepRegistry,connectors,riskNode,journeyStore,journeyRunner, onboardingJourney}.ts</code>, <code>routes/journeys.ts</code>, migration <code>035_journeys.sql</code>, <code>test/journeys.test.ts</code>.
+Reuses the CEL subset (ported from <code>fraud-engine/src/rules/celEvaluator.ts</code>), the <code>agent_reviews</code>
+human-gate pattern, the fraud model-registry shadow/canary pattern, and append-only audit.</em></p>
+
+  </main>
+</div>
+</body></html>

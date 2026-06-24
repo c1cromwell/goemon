@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>US GTM — Tokenized Collectibles — Argus Financial Partners</title>
+<style>/* Argus Financial Partners strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>US GTM — Tokenized Collectibles</h1>
+  <p class="sub">A bootstrapped launch around graded slabs: build audience and supply now, launch the escrow-protected marketplace at Corp B, then roll out the full suite wave-by-wave.</p>
+  <div class="meta">Argus Financial Partners &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 24, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-the-wedge-thesis">1. The wedge thesis</a></li><li class="lvl-2"><a href="#2-the-value-proposition-both-sides-of-the-marketplace">2. The value proposition — both sides of the marketplace</a></li><li class="lvl-3"><a href="#21-to-the-consumer-buyer-the-new-returning-collector">2.1 To the consumer / buyer (the new + returning collector)</a></li><li class="lvl-3"><a href="#22-to-the-collectible-holder-seller-the-slab-owner">2.2 To the collectible holder / seller (the slab owner)</a></li><li class="lvl-2"><a href="#3-compliance-coupled-messaging-guardrails-the-say-never-say-gate">3. Compliance-coupled messaging guardrails (the say / never-say gate)</a></li><li class="lvl-2"><a href="#4-phase-0-build-audience-supply-now-guerrilla-zero-money-movement">4. Phase 0 — build audience + supply NOW (guerrilla, zero money movement)</a></li><li class="lvl-3"><a href="#41-demand-engine-the-hobby-lives-on-video">4.1 Demand engine (the hobby lives on video)</a></li><li class="lvl-3"><a href="#42-supply-moat-the-harder-more-important-side">4.2 Supply moat (the harder, more important side)</a></li><li class="lvl-3"><a href="#43-cadence-funnel-metrics">4.3 Cadence, funnel, metrics</a></li><li class="lvl-2"><a href="#5-the-launch-moment-at-corp-b-the-marketplace-goes-transactional">5. The launch moment (at Corp B) — the marketplace goes transactional</a></li><li class="lvl-2"><a href="#6-full-suite-rollout-sequenced-to-legalcompliance-status">6. Full-suite rollout — sequenced to legal/compliance status</a></li><li class="lvl-2"><a href="#7-brand-positioning-guardrails">7. Brand &amp; positioning guardrails</a></li><li class="lvl-2"><a href="#8-funnel-metrics-across-phases">8. Funnel &amp; metrics across phases</a></li><li class="lvl-2"><a href="#9-risks-mitigations">9. Risks &amp; mitigations</a></li><li class="lvl-2"><a href="#10-the-one-line-strategy">10. The one-line strategy</a></li></ol></nav>
+  <main class="content">
+<h1 id="us-go-to-market-the-tokenized-collectibles-wedge-full-suite-rollout">US Go-To-Market — the Tokenized Collectibles Wedge → Full-Suite Rollout</h1>
+<p>A bootstrapped, compliance-coupled launch plan: build audience and supply <strong>now</strong> around tokenized
+graded collectibles (the only thing that&#39;s marketable today), launch the escrow-protected marketplace
+the day <strong>Corp B</strong> unlocks it, then roll out the rest of the suite wave-by-wave as legal status lands.</p>
+<blockquote>
+<p><strong>How to read this.</strong> Companion to <code>LAUNCH-READINESS.md</code> (the gate scorecard), <code>CORPORATE-STRUCTURE.md</code>
+(Corp A/B/C ramp), and <code>GO-LIVE-PLAN.md</code> §7 / <code>PRODUCTION-STRATEGY.md</code> §8 (which this builds on, not
+duplicates). Tags: <strong>DO NOW</strong>, <strong>DEFER → Corp B/C</strong>, <strong>⚖ see counsel</strong>.</p>
+<p>⚖ <strong>Strategy, not legal or investment advice.</strong> Securities/MSB/marketing-claim calls go through the
+fintech + securities counsel named in <code>CORPORATE-STRUCTURE.md</code> / <code>GO-LIVE-PLAN.md</code>. Every marketing
+claim must pass the §3 say/never-say gate before it ships.</p>
+</blockquote>
+<hr>
+<h2 id="1-the-wedge-thesis">1. The wedge thesis</h2>
+<p><strong>Lead with one thing: a &quot;graded slabs&quot; marketplace</strong> — PSA/BGS/SGC/CGC-graded <strong>sports cards and Pokémon
+/ TCG</strong> under a single brand. The PRD already picked this wedge (&quot;collectibles have proven consumer pull&quot;;
+<code>argus_prdv1/01</code>), and it&#39;s the <strong>lowest-securities-risk</strong> real-world asset (a whole graded card is a
+<em>good</em>, not an investment contract — see §3), which is exactly why it&#39;s the safe first surface.</p>
+<p><strong>The honest sequencing — the spine of this plan:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Today (Phase A)</th>
+<th>Launch (Corp B)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What&#39;s legal</td>
+<td>Authentication, tokenization, <strong>non-custodial ownership, provenance</strong></td>
+<td>+ <strong>escrow-protected, fiat-friendly buying</strong> (the trust moat)</td>
+</tr>
+<tr>
+<td>What we do</td>
+<td><strong>Build audience + supply</strong> (waitlist, content, founding sellers tokenize slabs as provenance — <em>no money moves</em>)</td>
+<td><strong>Transact</strong> — the real marketplace goes live</td>
+</tr>
+<tr>
+<td>Marketing</td>
+<td>Demand + supply priming; &quot;own it, prove it&#39;s real&quot;</td>
+<td>Convert the primed waitlist; &quot;buy with zero risk&quot;</td>
+</tr>
+</tbody></table>
+<p>The escrow-protected purchase (<code>COLLECTIBLES_ESCROW_ENABLED</code>) is <strong>prod-fatal pending Corp-B counsel +
+MSB</strong> (<code>LAUNCH-READINESS.md</code> §3). So we <strong>manufacture demand and lock up supply now</strong> — all Phase-A safe,
+zero money movement — and flip the transactional marketplace on the day escrow is legal. A primed waitlist</p>
+<ul>
+<li>a seeded catalog = a launch, not a cold start.</li>
+</ul>
+<p><strong>Voice (PRD 01):</strong> outcomes, not infrastructure. <em>&quot;Own a graded first-edition Charizard — and actually
+own it.&quot;</em> Marketplace, <strong>not</strong> an exchange. Never &quot;investing app,&quot; never &quot;crypto.&quot;</p>
+<hr>
+<h2 id="2-the-value-proposition-both-sides-of-the-marketplace">2. The value proposition — both sides of the marketplace</h2>
+<p>A two-sided market only works if both sides win. Map each claim to the real product.</p>
+<h3 id="21-to-the-consumer-buyer-the-new-returning-collector">2.1 To the consumer / buyer (the new + returning collector)</h3>
+<ul>
+<li><strong>Authenticity, guaranteed.</strong> Every listing is <strong>grading-cert verified</strong> (<code>CERT_VERIFY_PROVIDER</code>) and
+<strong>AI pre-graded</strong> (<code>sellerCollectibleService</code>) — the counterfeit and grading-scam problem that plagues
+eBay/Marketplace is designed out. <em>&quot;If it&#39;s listed, it&#39;s real.&quot;</em></li>
+<li><strong>You actually own it.</strong> The token lives in your <strong>non-custodial wallet</strong> with <strong>on-chain provenance</strong> —
+not an account entry on someone&#39;s server. Portable, yours, verifiable.</li>
+<li><strong>Buy with zero risk (Corp B).</strong> <strong>Escrow-protected</strong> purchase (<code>collectiblePurchaseService</code>:
+hold → ship → confirm → release) is the <strong>chargeback substitute</strong> an irreversible rail needs — funds
+release to the seller only when you confirm. <em>Scam protection without a credit-card middleman.</em></li>
+<li><strong>Lower fees.</strong> Far below <strong>eBay (~13% all-in)</strong> and <strong>auction houses (~20%+ buyer&#39;s premium)</strong> — more
+of the price goes to the card, not the platform.</li>
+<li><strong>Instant liquidity + discovery.</strong> Resell in taps, not a 7-day auction; an <strong>AI agent</strong> helps you find,
+price, and track cards under scoped, revocable permission.</li>
+<li><strong>One app.</strong> Your slabs sit <strong>next to your dollars and other tokenized assets</strong> — the advantage
+single-category players (Courtyard, Collector Crypt, PWCC Vault) structurally can&#39;t match.</li>
+</ul>
+<h3 id="22-to-the-collectible-holder-seller-the-slab-owner">2.2 To the collectible holder / seller (the slab owner)</h3>
+<ul>
+<li><strong>Instant liquidity for a graded slab</strong> — a global buyer pool on tap, not a consignment queue.</li>
+<li><strong>An authenticity/provenance premium</strong> — a tokenized, cert-verified slab with on-chain history is worth
+more and sells faster than a photo on a forum.</li>
+<li><strong>Get paid, keep it</strong> — <strong>escrow</strong> means no chargebacks, no &quot;item not as described&quot; reversals, no PayPal
+holds (Corp B). The buyer can&#39;t claw funds after you&#39;ve shipped.</li>
+<li><strong>Keep more</strong> — a take rate well under eBay/auction houses; price discovery instead of a lowball offer.</li>
+<li><strong>The physical stays safe</strong> — vault-or-ship-on-sale via escrow; tokenize once, trade many times without
+the card moving each time.</li>
+<li><strong>Be early</strong> — the <strong>Founding Sellers</strong> program (§4) gives the first holders catalog placement and
+status before the marketplace is public.</li>
+</ul>
+<hr>
+<h2 id="3-compliance-coupled-messaging-guardrails-the-say-never-say-gate">3. Compliance-coupled messaging guardrails (the say / never-say gate)</h2>
+<p>The wedge is safe <strong>only if we keep the framing tight.</strong> Graded cards are <strong>goods, not securities</strong> —
+<em>provided</em> we never fractionalize, never promise returns, and never market them as investments. That is
+the whole reason collectibles is the launch surface; cross the line and it becomes a securities offering
+(B5 collectibles memo, <code>LAUNCH-READINESS.md</code>). ⚖</p>
+<table>
+<thead>
+<tr>
+<th>✅ Say</th>
+<th>❌ Never say</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>own, collect, authenticate, provenance, trade, true ownership</td>
+<td><strong>invest, investment, returns, ROI, appreciate, portfolio, yield</strong></td>
+</tr>
+<tr>
+<td>graded, cert-verified, escrow-protected, non-custodial</td>
+<td><strong>bank, banking, deposits, FDIC, account</strong> (the chartered terms)</td>
+</tr>
+<tr>
+<td>marketplace, collection, liquidity</td>
+<td><strong>exchange, securities, shares, fractional</strong> (v1)</td>
+</tr>
+<tr>
+<td>&quot;own a piece of the hobby&quot;</td>
+<td>&quot;your cards will go up in value&quot; / price predictions</td>
+</tr>
+</tbody></table>
+<p>Every post, caption, creator brief, and landing-page line passes this gate before it ships. The Howey
+line is a <strong>firing-offense rule</strong> for anyone authoring marketing.</p>
+<hr>
+<h2 id="4-phase-0-build-audience-supply-now-guerrilla-zero-money-movement">4. Phase 0 — build audience + supply NOW (guerrilla, zero money movement)</h2>
+<p>Everything here is <strong>Phase-A safe</strong>: no customer funds, no money movement, collectibles framed as goods.
+This is pure top-of-funnel + supply lock-up while the Corp-B gates close.</p>
+<h3 id="41-demand-engine-the-hobby-lives-on-video">4.1 Demand engine (the hobby lives on video)</h3>
+<ul>
+<li><strong>TikTok + YouTube Shorts — &quot;rip&quot; culture.</strong> The hobby&#39;s center of gravity. Partner with rippers/
+breakers; the shareable moment is <em>&quot;pull → grade → tokenize → own it forever, provably real.&quot;</em></li>
+<li><strong>Instagram Reels</strong> — slab beauty shots, provenance reveals, the design-led brand aesthetic.</li>
+<li><strong>X — build-in-public</strong> — the tech (non-custodial, provenance, agent discovery) for the crypto/AI-curious
+crossover audience; ship log + demos.</li>
+<li><strong>Reddit / Discord</strong> — r/PokemonTCG, r/sportscards, r/PSAcard, grading Discords. <strong>Value-first</strong>
+participation (authentication tips, scam call-outs), never spam.</li>
+<li><strong>Invite-only waitlist + referral loop</strong> — manufacture scarcity, control onboarding risk, and measure a
+referral coefficient. Founding-collector tiers by referral count.</li>
+<li><strong>Card-show circuit</strong> — the cheapest high-intent in-person channel; a booth that <em>authenticates +
+tokenizes on the spot</em> (provenance only) turns attendees into founding sellers.</li>
+</ul>
+<h3 id="42-supply-moat-the-harder-more-important-side">4.2 Supply moat (the harder, more important side)</h3>
+<ul>
+<li><strong>&quot;Founding Sellers / Holders&quot; program.</strong> Recruit slab owners to <strong>authenticate + tokenize their
+inventory as provenance only</strong> — cataloged, not yet for sale. <strong>No money moves → fully Phase-A safe.</strong>
+This seeds the catalog and a <strong>supply advantage</strong> competitors can&#39;t quickly copy, and gives sellers
+status + placement at launch. The catalog <em>is</em> the moat: marketplaces are won on supply.</li>
+<li><strong>Creator seeding</strong> — give rippers/PSA influencers founding-seller status; their pulls become the launch
+catalog and their audiences become the waitlist.</li>
+</ul>
+<h3 id="43-cadence-funnel-metrics">4.3 Cadence, funnel, metrics</h3>
+<ul>
+<li><strong>Weekly:</strong> 3–5 TikTok/Shorts, 2–3 Reels, daily X presence + replies, ongoing community value posts,
+1 long-form &quot;how authentication/provenance works.&quot;</li>
+<li><strong>Funnel:</strong> content → <strong>waitlist</strong> → referral → <strong>founding-seller tokenization (supply)</strong> → (at Corp B)
+<strong>first buy/sell</strong>.</li>
+<li><strong>Metrics that matter:</strong> waitlist signups, <strong>referral coefficient (K)</strong>, <strong># slabs tokenized as
+provenance</strong> (supply), creator-content reach/saves, Discord/community size. Optimize the loops, not
+vanity counts.</li>
+</ul>
+<hr>
+<h2 id="5-the-launch-moment-at-corp-b-the-marketplace-goes-transactional">5. The launch moment (at Corp B) — the marketplace goes transactional</h2>
+<p>The day <code>COLLECTIBLES_ESCROW_ENABLED</code> clears counsel + MSB, the escrow-protected, fiat-friendly
+marketplace opens — and the primed waitlist + seeded catalog convert into a real launch:</p>
+<ul>
+<li><strong>Convert the waitlist</strong> in invite waves (scarcity + onboarding-risk control).</li>
+<li><strong>The trust-moat campaign:</strong> <em>cert-verified + AI-graded + escrow-protected + you-truly-own-it + zero
+counterfeit</em> — the single message no incumbent marketplace can claim all of.</li>
+<li><strong>Founding-seller drops</strong> — the seeded catalog goes live first; founding sellers get launch-week
+spotlight.</li>
+<li><strong>Amplify:</strong> Product Hunt, hobby-press + crypto/fintech-press PR, creator launch content, the card-show
+circuit now selling for real.</li>
+<li><strong>Launch-week mechanics:</strong> limited drops, referral unlocks, a public &quot;authenticity guarantee.&quot;</li>
+</ul>
+<hr>
+<h2 id="6-full-suite-rollout-sequenced-to-legalcompliance-status">6. Full-suite rollout — sequenced to legal/compliance status</h2>
+<p>Each product&#39;s marketing wave is <strong>gated on its compliance unlock</strong> (the prod-fatal switches in
+<code>LAUNCH-READINESS.md</code> §3; the Corp A/B/C ramp in <code>CORPORATE-STRUCTURE.md</code>). Marketing a capability before
+its gate clears is how fintechs get a cease-and-desist — so the waves are strict.</p>
+<table>
+<thead>
+<tr>
+<th>Wave</th>
+<th>Product</th>
+<th>Compliance trigger (switch / phase)</th>
+<th>The message</th>
+<th>Pulls / cross-sell</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td><strong>Provenance + non-custodial wallet</strong></td>
+<td>Phase A (now)</td>
+<td>&quot;Own it. Prove it&#39;s real.&quot;</td>
+<td>Collectors → waitlist + supply</td>
+</tr>
+<tr>
+<td>1</td>
+<td><strong>Escrow-protected collectibles marketplace</strong></td>
+<td><strong>Corp B</strong> · <code>COLLECTIBLES_ESCROW_ENABLED</code> ⚖</td>
+<td>&quot;Buy with zero risk.&quot;</td>
+<td>The launch; waitlist → buyers/sellers</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>USD cash balance + retention</strong></td>
+<td>Phase A→B (non-custodial USDC now; fiat at B)</td>
+<td>&quot;Your dollars live next to your cards.&quot;</td>
+<td>Marketplace users → hold balances</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Debit cards</strong></td>
+<td>Corp B · <code>CARDS_ENABLED</code> (BIN-sponsor + PCI) ⚖</td>
+<td>&quot;Spend from your collection&#39;s value.&quot;</td>
+<td>Holders → daily spend</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Bank rails / ACH (deposit-withdraw)</strong></td>
+<td>Corp B · <code>BANK_RAILS_ENABLED</code> (BaaS + MSB) ⚖</td>
+<td>&quot;Move real dollars in and out.&quot;</td>
+<td>Everyone → primary-account behavior</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>FX / cross-border</strong></td>
+<td>Corp B/C · <code>FX_*ENABLED</code> (MT posture) ⚖</td>
+<td>&quot;Buy from / sell to collectors worldwide.&quot;</td>
+<td>Sellers → global liquidity</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Argus Pay (stablecoin rail)</strong></td>
+<td>Corp B/C · <code>ARGUS_PAY_ENABLED</code> ⚖</td>
+<td>&quot;Pay any merchant, agent-native.&quot;</td>
+<td>Power users → payments</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>RWA: real estate / treasuries / equities</strong></td>
+<td>Corp B/C · <code>EQUITIES_ENABLED</code> + counsel/TA/ATS ⚖</td>
+<td>&quot;Own everything else, same tap.&quot;</td>
+<td>Broaden the marketplace surface</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Starter (teen / family)</strong></td>
+<td>Corp B/C · <code>TEEN_ENABLED</code> (COPPA, custodial) ⚖</td>
+<td>&quot;Start your kid&#39;s collection + savings.&quot;</td>
+<td>Parents in the collector base</td>
+</tr>
+</tbody></table>
+<p><strong>The throughline:</strong> collectibles is the <strong>acquisition wedge</strong>; the <strong>wallet + USD balance is retention</strong>;
+each later wave is a <strong>cross-sell into a base that already trusts the brand</strong> — and each only turns on when
+its license/partner exists. You market what&#39;s legal, in order.</p>
+<hr>
+<h2 id="7-brand-positioning-guardrails">7. Brand &amp; positioning guardrails</h2>
+<ul>
+<li><strong>Outcomes, not infrastructure</strong> (PRD 01): &quot;own a graded Charizard,&quot; not &quot;HTS tokens on Hedera.&quot;</li>
+<li><strong>Marketplace, not exchange.</strong> No charts, no day-trading UX, no &quot;buy low sell high.&quot;</li>
+<li><strong>The anti-positioning</strong> (PRD 01) is a marketing constraint: not an investing app, not a crypto exchange,
+no advice, no recommendations — <em>users browse and decide.</em> This <em>is</em> the compliance moat.</li>
+<li><strong>Design-led</strong> — the monochrome + jade &quot;Quiet Premium&quot; aesthetic as a recognizable signature against a
+loud, scammy category.</li>
+</ul>
+<hr>
+<h2 id="8-funnel-metrics-across-phases">8. Funnel &amp; metrics across phases</h2>
+<pre><code>Phase 0 (now):   content → waitlist → referral(K) → founding-seller tokenizations (SUPPLY)
+Launch (Corp B): waitlist → activation → first buy/sell → GMV → take-rate revenue
+Retention:       30/90-day retention → USD-balance attach → cross-product attach (waves 3–8)
+</code></pre>
+<p>The few numbers to watch by phase: <strong>supply</strong> (slabs tokenized) and <strong>K</strong> pre-launch; <strong>activation +
+first-transaction conversion + GMV</strong> at launch; <strong>retention + attach rate</strong> after. Keep it lean.</p>
+<hr>
+<h2 id="9-risks-mitigations">9. Risks &amp; mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Incumbent copies the wedge</strong> (Robinhood/PayPal)</td>
+<td>Win <strong>supply</strong> first (founding-seller moat); be tokenization-native + one-app, not bolt-on</td>
+</tr>
+<tr>
+<td><strong>Howey-reframe trap</strong> — community/creators call it &quot;investing&quot;</td>
+<td>The §3 gate is a hard rule; brief every creator; correct &quot;investment&quot; language publicly</td>
+</tr>
+<tr>
+<td><strong>Supply cold-start</strong></td>
+<td>Founding-Sellers program + card-show on-the-spot tokenization <em>before</em> launch</td>
+</tr>
+<tr>
+<td><strong>Corp-B timing slip</strong> (escrow delayed)</td>
+<td>The <strong>provenance + authentication product stays live as the bridge</strong> — audience keeps a reason to engage without money movement</td>
+</tr>
+<tr>
+<td><strong>Creator dependency</strong></td>
+<td>Diversify across rippers/sports/Pokémon + owned channels (waitlist, Discord, email)</td>
+</tr>
+<tr>
+<td><strong>Counterfeit / grading-fraud reputational hit</strong></td>
+<td>Cert-verify + AI-grade + escrow are the product; lead with the &quot;authenticity guarantee&quot;</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="10-the-one-line-strategy">10. The one-line strategy</h2>
+<p><strong>Manufacture demand and lock up supply now around the one thing that&#39;s legal to market — authenticated,
+truly-owned graded slabs — then flip the escrow-protected marketplace on at Corp B and cross-sell the rest
+of the suite into a base that already trusts you, one compliance unlock at a time.</strong></p>
+<hr>
+<p><em>Companion documents: <code>LAUNCH-READINESS.md</code> (gate scorecard + the prod-fatal switches that gate each wave),
+<code>CORPORATE-STRUCTURE.md</code> (Corp A/B/C), <code>GO-LIVE-PLAN.md</code> §7 (guerrilla channels), <code>PRODUCTION-STRATEGY.md</code>
+§8 (positioning), <code>argus_prdv1/01</code>,<code>/05</code> (vision + marketplace). Product surface: <code>sellerCollectibleService</code>,
+<code>collectiblePurchaseService</code>, <code>marketplaceService</code>, <code>collectiblesProvider</code>.</em></p>
+
+  </main>
+</div>
+</body></html>

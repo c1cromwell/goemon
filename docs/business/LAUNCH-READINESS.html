@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Launch Readiness — Argus Financial Partners</title>
+<style>/* Argus Financial Partners strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Launch Readiness</h1>
+  <p class="sub">An honest US launch go/no-go: gate-by-gate scorecard and a 90-day plan that closes gates and ships zero new features.</p>
+  <div class="meta">Argus Financial Partners &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 24, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-the-verdict">1. The verdict</a></li><li class="lvl-2"><a href="#2-phase-a-scorecard-door-1-the-only-near-term-path">2. Phase-A scorecard (Door 1 — the only near-term path)</a></li><li class="lvl-2"><a href="#3-the-corp-b-wall-door-2-every-money-rail-is-gated">3. The Corp-B wall (Door 2 — every money rail is gated)</a></li><li class="lvl-2"><a href="#4-the-90-day-gate-closing-plan-ships-zero-new-features">4. The 90-day gate-closing plan (ships ZERO new features)</a></li><li class="lvl-3"><a href="#sprint-1-days-130-exist-freeze-engage">Sprint 1 (Days 1–30) — exist + freeze + engage</a></li><li class="lvl-3"><a href="#sprint-2-days-3160-compliant-verifiable">Sprint 2 (Days 31–60) — compliant + verifiable</a></li><li class="lvl-3"><a href="#sprint-3-days-6190-launch-posture-the-corp-b-decision">Sprint 3 (Days 61–90) — launch posture + the Corp-B decision</a></li><li class="lvl-2"><a href="#5-the-one-line-answer">5. The one-line answer</a></li></ol></nav>
+  <main class="content">
+<h1 id="launch-readiness-honest-scorecard-90-day-gate-closing-plan">Launch Readiness — honest scorecard + 90-day gate-closing plan</h1>
+<p>A candid go/no-go on launching Argus in the US: where each gate actually stands, who owns it, and the
+shortest dependency-ordered path to a real launch. <strong>No new features</strong> — this is about closing gates.</p>
+<blockquote>
+<p><strong>How to read this.</strong> Companion to <code>LAUNCH.md</code> (the gate definitions B1–B8), <code>CORPORATE-STRUCTURE.md</code>
+(the Corp A/B/C ramp), and <code>GO-LIVE-PLAN.md</code> (entity + ownership + GTM). Status: 🔴 not started ·
+🟡 in progress · 🟢 done. Tags: <strong>DO NOW</strong>, <strong>DEFER → Corp B/C</strong>, <strong>⚖ see counsel</strong>.</p>
+<p>⚖ <strong>Honest opinion + readiness map — not legal advice.</strong> Entity, MSB, securities, and money-transmitter
+decisions must go through the fintech attorney + CPA named in <code>CORPORATE-STRUCTURE.md</code> / <code>GO-LIVE-PLAN.md</code>.</p>
+</blockquote>
+<hr>
+<h2 id="1-the-verdict">1. The verdict</h2>
+<p><strong>Not ready to fully launch — and the gap is not features, it&#39;s gates.</strong> The codebase is feature-rich and
+architecturally strong (append-only ledger, non-custodial keys, DID/VC + agent rails, a real fraud
+engine, disciplined prod-fatal config). But &quot;launch a US money business&quot; is gated on
+<strong>legal · licensing · partners · verification</strong>, and almost none of that is done. <strong>More prototype
+features do not close a single gate.</strong></p>
+<p><strong>Two doors:</strong></p>
+<ul>
+<li><strong>Door 1 — narrow Phase-A launch</strong> (non-custodial <em>software</em>, <strong>no customer funds</strong>, money rails OFF,
+testnet, RWA demo-only). The only door open in <strong>weeks-to-months</strong>, and it&#39;s mostly <em>non-engineering</em>
+work (counsel, vendor contracts, app verification). <strong>Still not ready</strong> — see §2.</li>
+<li><strong>Door 2 — the full neobank</strong> (deposits, cards, FX, Argus Pay, real trading/RWA). <strong>Corp B/C</strong>:
+<strong>multi-quarter-to-multi-year, capital-intensive</strong>, gated on a partner bank + FinCEN MSB + real
+vendors + licensing + production custody + SOC 2 + an ops org that doesn&#39;t exist yet. See §3.</li>
+</ul>
+<hr>
+<h2 id="2-phase-a-scorecard-door-1-the-only-near-term-path">2. Phase-A scorecard (Door 1 — the only near-term path)</h2>
+<p>These are the <code>LAUNCH.md</code> B1–B8 gates plus the Phase-A compliance items, scored honestly.</p>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Status</th>
+<th>Owner</th>
+<th>Evidence today</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Entity formed</strong> (WY LLC) + EIN + registered agent</td>
+<td>🔴</td>
+<td>Founder</td>
+<td><code>B6</code> checklist all unchecked</td>
+<td>1–2 wks</td>
+</tr>
+<tr>
+<td><strong>IP assignment</strong> (repo/marks → LLC)</td>
+<td>🔴</td>
+<td>Founder/Counsel</td>
+<td>Not executed; #1 diligence item (<code>GO-LIVE-PLAN.md</code>)</td>
+<td>days ⚖</td>
+</tr>
+<tr>
+<td><strong>Operating agreement</strong></td>
+<td>🔴</td>
+<td>Founder/Counsel</td>
+<td>Not adopted</td>
+<td>days ⚖</td>
+</tr>
+<tr>
+<td><strong>AML/BSA policy + named compliance officer</strong></td>
+<td>🔴</td>
+<td>Founder/Counsel</td>
+<td>No written policy</td>
+<td>2–4 wks ⚖</td>
+</tr>
+<tr>
+<td><strong>Real OFAC/sanctions screening</strong></td>
+<td>🔴</td>
+<td>Eng + Vendor</td>
+<td><code>SANCTIONS_PROVIDER=simulated</code> (stub)</td>
+<td>2–4 wks</td>
+</tr>
+<tr>
+<td><strong>Real KYC/IDV</strong> (if onboarding real users)</td>
+<td>🔴</td>
+<td>Eng + Vendor</td>
+<td><code>IDV_PROVIDER=simulated</code> (stub)</td>
+<td>3–6 wks</td>
+</tr>
+<tr>
+<td><strong>ToS / Privacy / E-Sign / &quot;not advice&quot; disclaimers</strong></td>
+<td>🔴</td>
+<td>Counsel</td>
+<td>Not published</td>
+<td>2–3 wks ⚖</td>
+</tr>
+<tr>
+<td><strong>Compliance-safe messaging</strong> (no &quot;bank&quot;/&quot;deposits&quot;/&quot;FDIC&quot;)</td>
+<td>🟡</td>
+<td>Product/Legal</td>
+<td>Rebrand done; copy review pending (<code>LAUNCH.md</code> §1)</td>
+<td>days</td>
+</tr>
+<tr>
+<td><strong>B1 — iOS wallet verified</strong></td>
+<td>🔴</td>
+<td>Eng</td>
+<td>Source never compiled (no Xcode)</td>
+<td>1–3 wks</td>
+</tr>
+<tr>
+<td><strong>B2 — Frontend + Playwright UI smoke</strong></td>
+<td>🟡</td>
+<td>Eng</td>
+<td>Portal built; <code>wallet.spec.ts</code> green TBD</td>
+<td>1–2 wks</td>
+</tr>
+<tr>
+<td><strong>B3 — <code>e2e-validator full</code> green</strong></td>
+<td>🟡</td>
+<td>Eng</td>
+<td>Deterministic floor green; full hybrid TBD</td>
+<td>days–1 wk</td>
+</tr>
+<tr>
+<td><strong>B4 — Securities counsel sign-off</strong> (if real RWA)</td>
+<td>🔴</td>
+<td>Counsel</td>
+<td><code>docs/legal/B4</code> is a scaffold</td>
+<td>3–6 wks ⚖</td>
+</tr>
+<tr>
+<td><strong>B5 — Collectibles legal memo</strong></td>
+<td>🔴</td>
+<td>Counsel</td>
+<td><code>docs/legal/B5</code> is a scaffold</td>
+<td>2–4 wks ⚖</td>
+</tr>
+<tr>
+<td><strong>B6 — Entity + Phase-A compliance pack</strong></td>
+<td>🔴</td>
+<td>Founder/Counsel</td>
+<td>scaffold, all unchecked</td>
+<td>rolls up the above ⚖</td>
+</tr>
+<tr>
+<td><strong>B7 — Hedera posture</strong> (testnet-labeled OR mainnet KMS/HSM)</td>
+<td>🟡</td>
+<td>Eng/Sec</td>
+<td>Testnet OK to launch <em>labeled</em>; mainnet needs KMS/HSM+multisig</td>
+<td>testnet: now</td>
+</tr>
+<tr>
+<td><strong>B8 — Trail of Bits wallet audit</strong></td>
+<td>🔴</td>
+<td>Sec</td>
+<td>&quot;ENGAGEMENT PLANNED — not scheduled&quot;</td>
+<td>schedule now; 4–8 wks to report</td>
+</tr>
+</tbody></table>
+<p><strong>Phase-A reality:</strong> ~everything red is <strong>paperwork, counsel, vendor contracts, and app verification</strong> —
+not code. The engineering that remains (B1/B2/B3) is small next to the legal/compliance lift.</p>
+<hr>
+<h2 id="3-the-corp-b-wall-door-2-every-money-rail-is-gated">3. The Corp-B wall (Door 2 — every money rail is gated)</h2>
+<p><code>backend/src/config.ts</code> makes <strong>14 capabilities prod-fatal</strong>. Each is a prototype on a simulated
+provider; flipping it on in production is blocked until its real prerequisite exists. <strong>Do not flip any
+of these for launch.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Prod-fatal switch</th>
+<th>What it enables</th>
+<th>Blocking prerequisite</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>BANK_RAILS_ENABLED</code></td>
+<td>deposits / ACH / wire</td>
+<td><strong>BaaS partner bank + FinCEN MSB + KYC/AML vendor</strong></td>
+<td>Corp B ⚖</td>
+</tr>
+<tr>
+<td><code>CARDS_ENABLED</code></td>
+<td>debit cards</td>
+<td><strong>card processor + BIN-sponsor bank + PCI scope</strong></td>
+<td>Corp B ⚖</td>
+</tr>
+<tr>
+<td><code>ARGUS_PAY_ENABLED</code></td>
+<td>stablecoin merchant rail</td>
+<td><strong>money-transmission licensing / partner</strong></td>
+<td>Corp B/C ⚖</td>
+</tr>
+<tr>
+<td><code>FX_ENABLED</code> / <code>FX_SETTLEMENT_ENABLED</code></td>
+<td>currency conversion</td>
+<td><strong>licensed FX rate provider + MT posture</strong></td>
+<td>Corp B/C ⚖</td>
+</tr>
+<tr>
+<td><code>BILLPAY_ENABLED</code></td>
+<td>bill pay</td>
+<td><strong>partner bank + biller network</strong></td>
+<td>Corp B ⚖</td>
+</tr>
+<tr>
+<td><code>TRADING_ENABLED</code></td>
+<td>brokerage</td>
+<td><strong>broker-dealer/clearing partner</strong></td>
+<td>Corp C ⚖</td>
+</tr>
+<tr>
+<td><code>EQUITIES_ENABLED</code></td>
+<td>tokenized equities</td>
+<td><strong>issuer + transfer agent + ATS + securities counsel</strong></td>
+<td>Corp B/C ⚖</td>
+</tr>
+<tr>
+<td><code>COLLECTIBLES_ESCROW_ENABLED</code></td>
+<td>in-app collectible escrow</td>
+<td><strong>MSB / marketplace-intermediary counsel</strong></td>
+<td>Corp B ⚖</td>
+</tr>
+<tr>
+<td><code>TEEN_ENABLED</code> (+ credit/custodial)</td>
+<td>teen suite</td>
+<td><strong>BaaS/card issuer + COPPA + custodial broker</strong></td>
+<td>Corp B/C ⚖</td>
+</tr>
+<tr>
+<td><code>DATA_WAREHOUSE_ENABLED</code></td>
+<td>analytics sink</td>
+<td>real warehouse (not blocking launch)</td>
+<td>Stage 1</td>
+</tr>
+</tbody></table>
+<p><strong>Also missing for a real money product</strong> (not seams — operational reality): customer <strong>support/ops
+console</strong>, <strong>dispute/chargeback</strong> ops, <strong>statements + tax docs (1099-INT/B/DIV)</strong>, production
+<strong>notifications</strong>, <strong>real-time fiat rails</strong> (FedNow/RTP — today &quot;instant&quot; is a label), <strong>multi-chain
+reconciliation</strong> (Hedera-only today), <strong>fraud at scale</strong> (in-process, not Kafka/Flink), <strong>SOC 2</strong>,
+insurance (E&amp;O/D&amp;O/cyber), and a <strong>status page + incident-response</strong> runbook.</p>
+<hr>
+<h2 id="4-the-90-day-gate-closing-plan-ships-zero-new-features">4. The 90-day gate-closing plan (ships ZERO new features)</h2>
+<p>Dependency-ordered. The goal of 90 days is <strong>Door 1 ready</strong>, <em>not</em> Door 2. Costs are planning estimates.</p>
+<h3 id="sprint-1-days-130-exist-freeze-engage">Sprint 1 (Days 1–30) — exist + freeze + engage</h3>
+<ul>
+<li><strong>Freeze feature scope.</strong> No new seams. Pick the wedge: <strong>web-first, non-custodial, no customer funds,
+collectibles <em>viewing</em> + agent experience, money rails OFF, RWA demo-only.</strong> <em>(Owner: Founder. Exit:
+written one-paragraph scope, all money switches confirmed off in the prod env template.)</em></li>
+<li><strong>Form the entity + EIN + registered agent + operating agreement; execute the IP assignment.</strong> *(Founder<ul>
+<li>Counsel. Exit: <code>B6</code> entity rows checked; signed IP assignment. ~$2–4k ⚖)*</li>
+</ul>
+</li>
+<li><strong>Engage fintech/securities counsel + a startup CPA</strong> (scoped hours). <em>(Founder. Exit: engagement
+letters signed. ~$5–15k ⚖)</em></li>
+<li><strong>Schedule the Trail of Bits audit</strong> (B8). <em>(Eng+Sec. Exit: SOW signed, dates booked.)</em></li>
+<li><strong>Close B3 + start B2:</strong> get <code>e2e-validator full</code> green and the Playwright wallet smoke running.
+<em>(Eng. Exit: green run artifacts.)</em></li>
+</ul>
+<h3 id="sprint-2-days-3160-compliant-verifiable">Sprint 2 (Days 31–60) — compliant + verifiable</h3>
+<ul>
+<li><strong>Write the AML/BSA policy; name the compliance officer; wire a REAL OFAC/sanctions vendor</strong> (swap
+<code>SANCTIONS_PROVIDER</code> off simulated). <em>(Founder/Counsel + Eng. Exit: policy doc + a live SDN screen on
+onboarding. ⚖)</em></li>
+<li><strong>Wire a real KYC/IDV vendor</strong> <em>if</em> onboarding real users (else keep waitlist + manual). <em>(Eng. Exit:
+one real identity verified end-to-end, or a documented decision to defer with no real onboarding.)</em></li>
+<li><strong>Decide iOS vs. web-only for v1</strong> and close it: either pass <code>verify-ios-wallet.sh</code> + device smoke
+(B1), or <strong>launch web-only</strong> and shelve the app. <em>(Eng. Exit: B1 green OR a written web-only decision +
+B2 green.)</em></li>
+<li><strong>Draft ToS / Privacy / E-Sign / disclaimers</strong> with counsel. <em>(Counsel. Exit: published-ready drafts. ⚖)</em></li>
+</ul>
+<h3 id="sprint-3-days-6190-launch-posture-the-corp-b-decision">Sprint 3 (Days 61–90) — launch posture + the Corp-B decision</h3>
+<ul>
+<li><strong>Securities posture (B4/B5):</strong> counsel sign-off, or keep <strong>all</strong> RWA explicitly demo-labeled and
+ship nothing real. <em>(Counsel. Exit: signed memo OR enforced demo-only. ⚖)</em></li>
+<li><strong>Publish ToS/Privacy/disclaimers; finalize compliance-safe messaging review.</strong> <em>(Counsel/Product.)</em></li>
+<li><strong>Lock the Phase-A prod config:</strong> Hedera testnet-labeled (B7), every money switch off, password auth
+off — and run <code>LAUNCH.md</code> §6 go/no-go with all four sign-offs. <em>(Eng/Founder. Exit: a real GO on the
+§6 checklist.)</em></li>
+<li><strong>Begin the Corp-B conversation (do NOT build):</strong> shortlist a <strong>BaaS partner bank</strong> + start <strong>FinCEN
+MSB</strong> prep so the <em>first</em> money rail has a home after Door 1 is live. <em>(Founder/Counsel. Exit: partner
+shortlist + MSB checklist — not an integration. ⚖)</em></li>
+</ul>
+<p><strong>Outcome at day 90:</strong> a defensible <strong>Phase-A launch</strong> (or invite-only beta) of non-custodial software,
+or a clear-eyed decision to stay in private testing — with the Corp-B path scoped but not yet built.</p>
+<hr>
+<h2 id="5-the-one-line-answer">5. The one-line answer</h2>
+<p>You&#39;re <strong>not</strong> missing features — you have more than enough. You&#39;re missing an <strong>entity, counsel, real
+compliance vendors, app verification, and a partner/licensing path.</strong> Stop building; start closing gates.</p>
+<hr>
+<p><em>Companion documents: <code>LAUNCH.md</code> (gate definitions + §6 sign-off), <code>CORPORATE-STRUCTURE.md</code> (Corp A/B/C
+ramp), <code>GO-LIVE-PLAN.md</code> (entity/ownership/GTM), <code>docs/legal/</code> (B4–B6 scaffolds),
+<code>docs/security/TRAIL-OF-BITS-AUDIT.md</code> (B8).</em></p>
+
+  </main>
+</div>
+</body></html>

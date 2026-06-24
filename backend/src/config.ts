@@ -229,6 +229,11 @@ const schema = z.object({
   DATA_WAREHOUSE_ENABLED: boolish,
   WAREHOUSE_SINK: z.enum(["simulated", "bigquery", "snowflake", "redshift"]).default("simulated"),
 
+  // Journey orchestration platform (prototype). Off by default; gates the /api/journeys
+  // routes. Decision-only: runs produce a decision + Server-Driven-UI descriptors and do
+  // not move money or grant tiers (the live onboarding stays authoritative until cutover).
+  JOURNEYS_ENABLED: boolish,
+
   // Phase 15 — internal agent operations (back office). Master kill-switch (on by
   // default; agents only recommend/draft — a deterministic RBAC gate executes).
   // OPERATIONS_ORCHESTRATOR mirrors ONBOARDING_ORCHESTRATOR; the review floor below
