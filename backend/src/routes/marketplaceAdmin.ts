@@ -14,6 +14,7 @@ import { Router } from "express";
 import type { Response, NextFunction } from "express";
 import { z } from "zod";
 import { AppError, ErrorCode } from "../errors";
+import { optionalCurrencySchema } from "../services/currencyRegistry";
 import { requireAdmin, requireRole, type AdminRequest } from "../middleware/rbac";
 import * as tokenization from "../services/tokenizationService";
 import * as listings from "../services/listingService";
@@ -98,7 +99,7 @@ marketplaceAdminRouter.post(
           assetId: z.string().min(1),
           surface: z.enum(["invest", "collect"]),
           priceMinor: z.union([z.string(), z.number()]),
-          currency: z.enum(["USD", "USDC"]).optional(),
+          currency: optionalCurrencySchema(),
           priceSource: z.enum(["nav", "spot", "orderbook", "issuer"]),
           ddOutcome: z.string().optional(),
         })

@@ -35,6 +35,7 @@ import { getDb, type Db } from "../db";
 import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
 import { isAccountFrozen } from "./accountHoldService";
+import { assertSupported } from "./currencyRegistry";
 import { payEventTotal } from "../observability/metrics";
 import {
   hold,
@@ -45,7 +46,6 @@ import {
   type EscrowStatus,
 } from "./escrowService";
 
-const SUPPORTED_CURRENCIES = new Set(["USD", "USDC"]);
 const DEFAULT_INTENT_TTL_SECS = 15 * 60;
 const MAX_INTENT_TTL_SECS = 24 * 60 * 60;
 const MAX_INTENT_MINOR = 10_000_000n; // $100,000 / 10 USDC-million-micro per intent
@@ -77,7 +77,7 @@ export interface PaymentIntentRow {
   status: IntentStatus;
   payerUserId: string | null;
   escrowId: string | null;
-  authorizedVia: "user" | "agent" | null;
+  authorizedVia: "user" | "agent" | "vp" | null;
   agentDid: string | null;
   expiresAt: string;
   createdAt: string;
@@ -103,7 +103,7 @@ interface RawIntent {
   payer_user_id: string | null;
   escrow_id: string | null;
   escrow_status: EscrowStatus | null;
-  authorized_via: "user" | "agent" | null;
+  authorized_via: "user" | "agent" | "vp" | null;
   agent_did: string | null;
   token_jti: string | null;
   idempotency_key: string | null;
@@ -218,7 +218,7 @@ export async function createPaymentIntent(input: {
   assertPayEnabled();
   if (input.amountMinor <= 0n) throw new AppError(ErrorCode.VALIDATION, "Amount must be positive");
   if (input.amountMinor > MAX_INTENT_MINOR) throw new AppError(ErrorCode.VALIDATION, `Amount exceeds maximum of ${MAX_INTENT_MINOR}`);
-  if (!SUPPORTED_CURRENCIES.has(input.currency)) throw new AppError(ErrorCode.VALIDATION, "Unsupported currency");
+  assertSupported(input.currency);
   const ttl = input.ttlSecs ?? DEFAULT_INTENT_TTL_SECS;
   if (ttl <= 0 || ttl > MAX_INTENT_TTL_SECS) throw new AppError(ErrorCode.VALIDATION, "ttlSecs out of range");
 
@@ -286,7 +286,7 @@ export async function listIntents(userId: string, role: "merchant" | "payer", li
 export async function payIntent(input: {
   intentId: string;
   payerUserId: string;
-  authorizedVia: "user" | "agent";
+  authorizedVia: "user" | "agent" | "vp";
   agentDid?: string;
   tokenJti?: string;
 }): Promise<PaymentIntentRow> {

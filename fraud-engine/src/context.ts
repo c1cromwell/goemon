@@ -10,6 +10,9 @@ import { ModelRegistry } from "./models/registry";
 import { ModelServer } from "./models/serving";
 import { RulesModel } from "./models/rulesModel";
 import { SequenceModel } from "./models/sequenceModel";
+import { CelRulesModel } from "./models/celRulesModel";
+import { DEFAULT_RULE_SET } from "./rules/defaultRuleset";
+import { seedDefaultRuleset, loadRuleSet } from "./rules/rulesetStore";
 import { Router } from "./router/router";
 import { DecisionEngine } from "./router/decisionEngine";
 import { InProcessEventBus } from "./bus/eventBus";
@@ -43,10 +46,19 @@ export async function buildContext(db: Db): Promise<Context> {
   server.registerModel(rules);
   server.registerModel(sequence);
 
+  // CEL ruleset model — the same rules as DATA. Seed the default set (a faithful
+  // CEL port of rules-v1), then build the model from the table. Registered as
+  // SHADOW so it scores alongside prod and divergence is logged, with no behavior
+  // change until the fraud team promotes it — the no-redeploy adoption story.
+  await seedDefaultRuleset(db);
+  const celRules = new CelRulesModel(DEFAULT_RULE_SET, await loadRuleSet(db, DEFAULT_RULE_SET));
+  server.registerModel(celRules);
+
   // Built-in registry state: rules is prod (the deterministic floor), the sequence
   // model ships in shadow until the fraud team promotes it.
   await registry.register(rules.version, "rules", "prod", "built-in deterministic floor");
   await registry.register(sequence.version, "sequence", "shadow", "built-in sequence model (Transformer stand-in)");
+  await registry.register(celRules.version, "rules", "shadow", "CEL rules-as-data (port of rules-v1); promote to take live");
 
   const router = new Router(registry, server, db);
   const decisionBus = new InProcessEventBus<Decision>();

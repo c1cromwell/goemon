@@ -45,6 +45,7 @@ import { tradingAdminRouter } from "./routes/tradingAdmin";
 import { escrowRouter } from "./routes/escrow";
 import { escrowAdminRouter } from "./routes/escrowAdmin";
 import { payRouter } from "./routes/pay";
+import { fxRouter } from "./routes/fx";
 import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
 import { warehouseAdminRouter } from "./routes/warehouseAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
@@ -55,6 +56,7 @@ import { billpayRouter } from "./routes/billpay";
 import { starterRouter } from "./routes/starter";
 import { collectiblesRouter } from "./routes/collectibles";
 import { collectiblesAdminRouter } from "./routes/collectiblesAdmin";
+import { identityVaultAdminRouter, identityVaultRouter } from "./routes/identityVault";
 import { selectOperationsEngine } from "./operations/selectEngine";
 import { internalRemediationRouter } from "./routes/internalRemediation";
 import { initReconciliation, startReconciliationLoop, runReconciliation } from "./services/reconciliationService";
@@ -192,6 +194,9 @@ async function bootstrap(): Promise<void> {
   // ---- Phase 21 Stage 1 — Argus Pay (service-gated by ARGUS_PAY_ENABLED) ----
   app.use("/api/pay", payRouter);
 
+  // ---- FX quote seam (quote-only; service-gated by FX_ENABLED) ----
+  app.use("/api/fx", fxRouter);
+
   // ---- Phase 20 — ledger⇄chain reconciliation (RBAC admin surface) ----
   app.use("/api/admin", reconciliationAdminRouter);
 
@@ -217,6 +222,8 @@ async function bootstrap(): Promise<void> {
   // ---- Seller P2P collectibles (slab cert verify + human review) ----
   app.use("/api/collectibles", collectiblesRouter);
   app.use("/api/admin/collectibles", collectiblesAdminRouter);
+  app.use("/api/admin", identityVaultAdminRouter);
+  app.use("/api/identity-vault", identityVaultRouter);
 
   // ---- Phase 20 fraud add-on — remediation callbacks from the fraud engine ----
   // Service-bearer auth (FRAUD_ENGINE_API_KEY), not user sessions. The engine calls

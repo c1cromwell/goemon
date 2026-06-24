@@ -20,9 +20,14 @@
 import { Router } from "express";
 import { z } from "zod";
 import type { Response, NextFunction } from "express";
-import { requireAuth, type AuthRequest } from "../middleware/auth";
+import { requireAuth, getClientIp, type AuthRequest } from "../middleware/auth";
 import { requireTier } from "../middleware/requireTier";
 import { idempotency } from "../middleware/idempotency";
+import { config } from "../config";
+import { AppError, ErrorCode } from "../errors";
+import { vpVerifyTotal } from "../observability/metrics";
+import { currencySchema } from "../services/currencyRegistry";
+import { issueCheckoutChallenge, verifyCheckoutPresentation } from "../services/presentationService";
 import {
   createMerchant,
   listMerchants,
@@ -37,6 +42,12 @@ import {
 } from "../services/paymentService";
 
 export const payRouter = Router();
+
+function assertCheckoutVpEnabled(): void {
+  if (!config.CHECKOUT_VP_ENABLED) {
+    throw new AppError(ErrorCode.FORBIDDEN, "Login-less checkout (Verifiable Presentation) is not enabled");
+  }
+}
 
 payRouter.post("/merchants", requireAuth, requireTier(2), async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
@@ -58,7 +69,7 @@ payRouter.get("/merchants", requireAuth, async (req: AuthRequest, res: Response,
 const createIntentSchema = z.object({
   merchantId: z.string().min(1),
   amountMinor: z.union([z.string().regex(/^\d+$/), z.number().int().positive()]),
-  currency: z.enum(["USD", "USDC"]).default("USD"),
+  currency: currencySchema(),
   memo: z.string().max(500).optional(),
   ttlSecs: z.number().int().positive().optional(),
 });
@@ -107,6 +118,64 @@ payRouter.get("/intents/:id", requireAuth, async (req: AuthRequest, res: Respons
 payRouter.post("/intents/:id/pay", requireAuth, idempotency(), async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     res.json(await payIntent({ intentId: req.params.id!, payerUserId: req.userId!, authorizedVia: "user" }));
+  } catch (e) {
+    next(e);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Login-less checkout via Verifiable Presentation (NO session / NO redirect).
+//
+// The customer's device proves who they are with a VC-backed VP instead of
+// logging into a provider. There is intentionally no requireAuth here: trust is
+// established entirely by the VP signature + nonce + holder-binding checks in
+// presentationService (the same cardinal rule as /api/present). The payer is
+// derived from the verified credential, never from a caller-supplied id.
+//
+// POST /api/pay/intents/:id/checkout/challenge      — get a VP challenge for this intent
+// POST /api/pay/intents/:id/pay-with-presentation   — pay it by presenting the VP
+// ---------------------------------------------------------------------------
+
+payRouter.post("/intents/:id/checkout/challenge", async (req, res, next) => {
+  try {
+    assertCheckoutVpEnabled();
+    const intent = await getIntent(req.params.id!);
+    if (!intent) {
+      res.status(404).json({ error: { code: "NOT_FOUND", message: "Payment intent not found", retryable: false } });
+      return;
+    }
+    if (intent.status !== "requires_payment") {
+      throw new AppError(ErrorCode.CONFLICT, `Intent is ${intent.status}, not payable`);
+    }
+    const challenge = await issueCheckoutChallenge(intent.id);
+    // Echo back what the wallet is being asked to authorize (display, not trust).
+    res.json({
+      ...challenge,
+      intentId: intent.id,
+      amountMinor: intent.amountMinor,
+      currency: intent.currency,
+      merchantName: intent.merchantName,
+      memo: intent.memo,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+payRouter.post("/intents/:id/pay-with-presentation", async (req, res, next) => {
+  try {
+    assertCheckoutVpEnabled();
+    const { vpJwt } = z.object({ vpJwt: z.string().min(1) }).parse(req.body);
+    let pres;
+    try {
+      pres = await verifyCheckoutPresentation({ vpJwt, intentId: req.params.id!, ipAddress: getClientIp(req) });
+      vpVerifyTotal.inc({ result: "success" });
+    } catch (e) {
+      vpVerifyTotal.inc({ result: "rejected" });
+      throw e;
+    }
+    const intent = await payIntent({ intentId: req.params.id!, payerUserId: pres.userId, authorizedVia: "vp" });
+    res.json({ intent, payer: { userId: pres.userId, walletDid: pres.walletDid }, authorizedVia: "vp" });
   } catch (e) {
     next(e);
   }

@@ -30,6 +30,8 @@ import { AdminConsole } from "./pages/AdminConsole";
 import { AdminCollectibles } from "./pages/AdminCollectibles";
 import { CollectSell } from "./pages/CollectSell";
 import { CollectPurchases } from "./pages/CollectPurchases";
+import { Pay } from "./pages/Pay";
+import { Fx } from "./pages/Fx";
 import "./styles.css";
 
 // Apply the persisted theme before first paint.
@@ -99,6 +101,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               />
               <Route path="/starter/teen" element={<StarterTeen />} />
               <Route path="/escrow" element={<Escrow />} />
+              <Route path="/pay" element={<Pay />} />
+              <Route path="/fx" element={<Fx />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/more" element={<More />} />
             </Route>

@@ -17,6 +17,7 @@ import { z } from "zod";
 import type { Response, NextFunction } from "express";
 import { requireAuth, type AuthRequest } from "../middleware/auth";
 import { idempotency } from "../middleware/idempotency";
+import { currencySchema } from "../services/currencyRegistry";
 import { AppError, ErrorCode } from "../errors";
 import { getDb } from "../db";
 import { hold, release, refund, openDispute, getEscrow, listEscrows } from "../services/escrowService";
@@ -31,7 +32,7 @@ const holdSchema = z
     payeeId: z.string().min(1).optional(),
     payeeEmail: z.string().email().optional(),
     amountMinor: z.union([z.string().regex(/^\d+$/), z.number().int().positive()]),
-    currency: z.enum(["USD", "USDC"]).default("USD"),
+    currency: currencySchema(),
     memo: z.string().max(500).optional(),
   })
   .refine((b) => b.payeeId || b.payeeEmail, { message: "payeeId or payeeEmail is required" });

@@ -23,11 +23,10 @@ import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
 import { getOrCreateUserAccount, getSystemAccount, getBalance, postJournal } from "./ledgerService";
 import { isHederaEnabled, submitEscrowHoldOnChain, submitEscrowSettleOnChain } from "./hederaService";
+import { assertSupported } from "./currencyRegistry";
 
 export type EscrowStatus = "held" | "disputed" | "released" | "refunded";
 export type Resolution = "release" | "refund";
-
-const SUPPORTED_CURRENCIES = new Set(["USD", "USDC"]);
 
 export interface EscrowRow {
   id: string;
@@ -107,7 +106,7 @@ export async function hold(input: {
   idempotencyKey: string;
 }): Promise<EscrowRow> {
   if (input.amountMinor <= 0n) throw new AppError(ErrorCode.VALIDATION, "Escrow amount must be positive");
-  if (!SUPPORTED_CURRENCIES.has(input.currency)) throw new AppError(ErrorCode.VALIDATION, "Unsupported currency");
+  assertSupported(input.currency);
   if (input.payerId === input.payeeId) throw new AppError(ErrorCode.VALIDATION, "Payer and payee must differ");
 
   const db = getDb();

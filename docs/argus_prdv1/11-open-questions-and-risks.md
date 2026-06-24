@@ -16,7 +16,7 @@ This document rolls up every open question (`[Q-XXX-NNN]`) flagged across the PR
 
 | ID | Question | Decision-maker | When needed by | Decision |
 |---|---|---|---|---|
-| Q-WALLET-001 | External security audit firm selection — Trail of Bits, Cure53, or NCC Group? All three are credible; differentiated by Hedera familiarity (Trail of Bits has done Hedera work) and turnaround time | Eng + Compliance | Phase 0 mid | Open |
+| Q-WALLET-001 | External security audit firm selection — Trail of Bits, Cure53, or NCC Group? All three are credible; differentiated by Hedera familiarity (Trail of Bits has done Hedera work) and turnaround time | Eng + Compliance | Phase 0 mid | **Trail of Bits** (primary); Cure53/NCC optional second pass — see `docs/security/TRAIL-OF-BITS-AUDIT.md` |
 | Q-WALLET-002 | Recovery secondary factor — required, or user-configurable? Required gives stronger recovery posture; optional gives smoother onboarding | Product + Compliance | Phase 1 | Open |
 | Q-WALLET-003 | Cross-device key sync mechanism — use iCloud Keychain / Google Password Manager attestation directly, or always require server-side backup retrieval? Direct sync is faster but adds platform dependencies | Engineering | Phase 0 end | Open |
 | Q-WALLET-004 | v2 swap-in evaluation criteria — at what scale/partner-demand threshold do we evaluate moving to Fireblocks Dynamic or equivalent? Need explicit criteria before Phase 2 to prevent later founder-mode swapping | CEO + Eng | Phase 2 | Open |

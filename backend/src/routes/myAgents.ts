@@ -15,6 +15,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { requireAuth, type AuthRequest } from "../middleware/auth";
 import { AppError, ErrorCode } from "../errors";
+import { currencySchema } from "../services/currencyRegistry";
 import { grantAgent, listGrants, revokeGrant } from "../services/userAgentGrantService";
 
 /** Parse a minor-unit amount (integer string/number) into a non-negative bigint. */
@@ -61,7 +62,7 @@ myAgentsRouter.post("/", requireAuth, async (req: AuthRequest, res, next) => {
         description: z.string().max(500).optional(),
         allowedFunctions: z.array(z.string()).min(1),
         maxTransferMinor: z.union([z.string(), z.number()]),
-        currency: z.enum(["USD", "USDC"]).default("USD"),
+        currency: currencySchema(),
       })
       .parse(req.body);
 

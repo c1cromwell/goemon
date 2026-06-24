@@ -25,6 +25,7 @@ const SECONDARY = [
   { to: "/console", label: "Console" },
   { to: "/trade", label: "Trade" },
   { to: "/escrow", label: "Escrow" },
+  { to: "/pay", label: "Argus Pay" },
   { to: "/onboarding", label: "Verification & tiers" },
   { to: "/credentials", label: "Credentials" },
   { to: "/agents", label: "Internal agents" },

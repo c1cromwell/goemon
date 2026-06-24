@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fraud Engine × Google CEL — Argus Financial Partners</title>
+<style>/* Argus Financial Partners strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Fraud Engine × Google CEL</h1>
+  <p class="sub">Rules-as-data, decision policy, and cohort routing with Common Expression Language — a shadow-first prototype.</p>
+  <div class="meta">Argus Financial Partners &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 24, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-why-cel-fits-this-engine-specifically">1. Why CEL fits this engine specifically</a></li><li class="lvl-2"><a href="#2-the-three-cel-applications-all-prototyped">2. The three CEL applications (all prototyped)</a></li><li class="lvl-3"><a href="#21-rules-as-data-the-headline">2.1 Rules-as-data (the headline)</a></li><li class="lvl-3"><a href="#22-decision-policy">2.2 Decision policy</a></li><li class="lvl-3"><a href="#23-routing-canary-cohort-predicates">2.3 Routing / canary cohort predicates</a></li><li class="lvl-2"><a href="#3-the-production-map-where-cel-sits">3. The production map (where CEL sits)</a></li><li class="lvl-2"><a href="#4-risks-how-the-design-handles-them">4. Risks &amp; how the design handles them</a></li><li class="lvl-2"><a href="#5-what-the-prototype-proves-and-how-its-verified">5. What the prototype proves (and how it&#39;s verified)</a></li><li class="lvl-2"><a href="#6-the-cutover-path">6. The cutover path</a></li></ol></nav>
+  <main class="content">
+<h1 id="fraud-engine-google-cel-rules-as-data-decision-policy-cohort-routing">Fraud Engine × Google CEL — rules-as-data, decision policy, cohort routing</h1>
+<p>A review of the Argus Fraud Engine architecture and how <strong>Google CEL</strong> (Common Expression Language,
+cel.dev) makes it better — plus a working prototype that ships CEL rules as a <strong>shadow</strong> model with
+zero risk to the live decision.</p>
+<blockquote>
+<p><strong>How to read this.</strong> Companion to <code>FraudEngine.md</code> (the platform design) and
+<code>FraudEngine-GapAnalysis.md</code> (the &quot;this maps to the real production component&quot; interface map). Same
+framing: every seam has a simulated/in-process default and a documented production swap.</p>
+</blockquote>
+<hr>
+<h2 id="1-why-cel-fits-this-engine-specifically">1. Why CEL fits this engine specifically</h2>
+<p>The engine is already shaped for CEL — three properties make it an unusually clean fit:</p>
+<ul>
+<li><strong>A clean activation object.</strong> <code>enrich()</code> (<code>src/features/enrichment.ts</code>) already turns each event into a
+flat <code>EnrichedEvent</code> — <code>velocity</code>, <code>newPayee</code>, <code>trailingMaxMinor</code>, <code>avgOutMinor</code>, <code>geoChanged</code>,
+<code>deviceChanged</code>, <code>amountMinor</code>, <code>features.transferOutCount</code>. That is <em>exactly</em> the variable bindings a
+CEL expression evaluates against; no new capture layer is needed.</li>
+<li><strong>Rules are the one hardcoded layer.</strong> <code>RulesModel.score()</code> (<code>src/models/rulesModel.ts</code>) is a wall of
+<code>if (cond) add(code, weight)</code> with magic thresholds. Tuning a threshold or adding a typology is a
+<strong>code deploy</strong> today. This is the textbook thing CEL turns into <strong>data</strong>.</li>
+<li><strong>The promotion machinery already exists.</strong> A model is <code>Model { version, kind, score(ev) }</code> registered
+in <code>ModelServer</code>, with a DB-backed status (<code>prod | shadow | canary | retired</code>) the <code>Router</code> reads live
+(<code>src/models/registry.ts</code>, <code>src/router/router.ts</code>). So <strong>a CEL ruleset is just another model version</strong> —
+it inherits shadow-testing, canary %, promote-with-no-redeploy, the <code>fe_shadow_divergence_total</code>
+metric, and the append-only <code>decisions</code> audit <strong>for free</strong>. That is the synergy that makes CEL worth it
+here rather than a generic &quot;add a rules engine.&quot;</li>
+</ul>
+<p><strong>What CEL buys you over hand-rolled <code>if</code>s:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Hardcoded <code>RulesModel</code></th>
+<th>CEL ruleset</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Authoring</td>
+<td>Engineer, in TS</td>
+<td><strong>Analyst, as data</strong> (a <code>{code, expr, weight}</code> row)</td>
+</tr>
+<tr>
+<td>Change cadence</td>
+<td>Code review + deploy</td>
+<td><strong>Hot reload / registry promote — no redeploy</strong></td>
+</tr>
+<tr>
+<td>Safety</td>
+<td>Arbitrary TS (can loop, throw, reach IO)</td>
+<td><strong>Sandboxed, non-Turing-complete, bounded</strong></td>
+</tr>
+<tr>
+<td>Portability</td>
+<td>Node-only</td>
+<td><strong>A spec</strong> — same expr runs on cel-go/Java/Python/C++</td>
+</tr>
+<tr>
+<td>Explainability</td>
+<td><code>{code, weight}</code> per rule</td>
+<td><strong>Identical</strong> — every fired rule still emits a Reason/Contribution</td>
+</tr>
+<tr>
+<td>Rollout</td>
+<td>All-or-nothing</td>
+<td><strong>Shadow → canary → prod</strong> on the existing registry</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-the-three-cel-applications-all-prototyped">2. The three CEL applications (all prototyped)</h2>
+<h3 id="21-rules-as-data-the-headline">2.1 Rules-as-data (the headline)</h3>
+<p><code>RulesModel</code> → a <code>rules</code> table of <code>{code, CEL expr, weight}</code> evaluated by a <code>CelRulesModel</code> that
+implements the same <code>Model</code> interface and emits the <strong>same</strong> <code>ModelOutput</code>/<code>Reason</code>/<code>Contribution</code>. An
+analyst adds the &quot;structuring just under $10k&quot; rule by inserting a row
+(<code>expr: &quot;amountMinor &gt;= 800000 &amp;&amp; amountMinor &lt; 1000000&quot;</code>), not by editing code. The default ruleset is a
+<strong>faithful port of all of rules-v1</strong> (proven by a parity test), so adoption starts at exact equivalence.</p>
+<h3 id="22-decision-policy">2.2 Decision policy</h3>
+<p><code>actionFor()</code>&#39;s fixed <code>block/challenge/flag/freeze</code> ladder → an <code>action_policy</code> table of <code>{action, expr, priority}</code>. The highest-priority matching CEL row decides — e.g.
+<code>block if score &gt;= 800 || (&#39;sanctions_hit&#39; in reasonCodes &amp;&amp; amountMinor &gt; 500000)</code>. Opt-in
+(<code>ACTION_POLICY=cel</code>); the threshold ladder stays the safe default, and the sync path still can&#39;t freeze.</p>
+<h3 id="23-routing-canary-cohort-predicates">2.3 Routing / canary cohort predicates</h3>
+<p>Canary targeting by a CEL <strong>cohort predicate</strong> (<code>models.cohort_expr</code>, e.g. <code>channel == &#39;card&#39; &amp;&amp; geo == &#39;NG&#39;</code>) instead of only a hash percentage — so a new ruleset can be canaried to <em>card payments in a
+specific corridor</em> before a global rollout. Null predicate = today&#39;s percentage-only behavior.</p>
+<hr>
+<h2 id="3-the-production-map-where-cel-sits">3. The production map (where CEL sits)</h2>
+<p><code>FraudEngine-GapAnalysis.md</code> maps each layer to its real-world component (Kafka, Flink, Triton, MLflow).
+CEL fills the <strong>rule/policy authoring layer</strong> that map didn&#39;t name:</p>
+<table>
+<thead>
+<tr>
+<th>Engine layer</th>
+<th>This prototype</th>
+<th>Production swap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rule evaluation</td>
+<td>In-process CEL <strong>subset</strong> (<code>RULE_EVALUATOR=subset</code>)</td>
+<td><strong>cel-go</strong> behind a gRPC sidecar / WASM (<code>RULE_EVALUATOR=celgo</code>) — spec-complete + fastest</td>
+</tr>
+<tr>
+<td>Rule authoring/storage</td>
+<td><code>rules</code> table seeded from code</td>
+<td>A rule-editor UI + approval workflow over the same table</td>
+</tr>
+<tr>
+<td>Rollout</td>
+<td>model registry (shadow/canary/prod)</td>
+<td>unchanged — the registry IS the rollout control</td>
+</tr>
+</tbody></table>
+<p>This mirrors how mature platforms externalize rules (Sift/Unit21 rule editors; OPA/CEL for policy in
+k8s/Envoy/IAM). CEL is the same idea applied to the fraud decision.</p>
+<hr>
+<h2 id="4-risks-how-the-design-handles-them">4. Risks &amp; how the design handles them</h2>
+<ul>
+<li><strong>Node CEL maturity.</strong> The spec-complete impls are Go/C++/Java/Python; Node has only community libs. So
+the evaluator is a <strong>swappable <code>RuleEvaluator</code> seam</strong> with an in-process <strong>CEL-compatible subset</strong> now
+and <strong>cel-go</strong> as the production swap. Expressions are written in CEL syntax so they run <em>unchanged</em> on
+cel-go later. We deliberately did <strong>not</strong> add a heavyweight dependency (the engine keeps its zero-
+expression-lib footprint).</li>
+<li><strong>Honesty about &quot;CEL&quot;.</strong> The in-process evaluator supports a strict subset (field access, comparisons,
+<code>&amp;&amp; || !</code>, arithmetic, <code>in</code>, ternary, <code>size</code>/<code>has</code>) and <strong>omits loops, comprehensions, and user
+functions</strong> — so it is non-Turing-complete and bounded by AST size. It is not a claim of full CEL in
+Node; it is a forward-compatible subset.</li>
+<li><strong>Blocking-path latency.</strong> Expressions <strong>compile once</strong> (program cache) at ruleset load; scoring only
+evaluates, which is bounded and cannot throw for control flow (a bad expression fails at <em>compile</em>, is
+skipped, and is surfaced via <code>compileErrors</code> — a bad analyst rule never takes down scoring).</li>
+<li><strong><code>bigint → int64</code> boundary.</strong> Money is <code>bigint</code> minor units; CEL ints are int64. Minor-unit amounts fit
+in int64 and within JS&#39;s exact-integer range, so the conversion is lossless; documented in
+<code>src/rules/activation.ts</code>.</li>
+<li><strong>Money-path determinism.</strong> <code>rules-v1</code> stays <strong>prod</strong>; CEL ships <strong>shadow-first</strong> and never changes the
+live decision until someone promotes it. The engine is standalone (Argus calls it over HTTP), so there
+is zero Argus money-path risk.</li>
+</ul>
+<hr>
+<h2 id="5-what-the-prototype-proves-and-how-its-verified">5. What the prototype proves (and how it&#39;s verified)</h2>
+<p>Built in <code>fraud-engine/</code> (<code>src/rules/celEvaluator.ts</code>, <code>src/rules/activation.ts</code>,
+<code>src/models/celRulesModel.ts</code>, <code>src/router/decisionPolicy.ts</code>; seeded via <code>src/rules/rulesetStore.ts</code>;
+wired in <code>src/context.ts</code>), with <code>test/cel-rules.test.ts</code> (15 tests). The suite asserts:</p>
+<ol>
+<li><strong>Evaluator correctness + safety</strong> — operators/precedence/membership; a malformed expression throws at
+<strong>compile</strong>, not on the hot path; comprehension/loop syntax is rejected (bounded).</li>
+<li><strong>Parity</strong> — <code>rules-cel-v1</code> produces the <strong>same score + reasons</strong> as the hardcoded <code>rules-v1</code> across
+benign / large-absolute / structuring / pass-through / geo+device scenarios. The CEL port is faithful.</li>
+<li><strong>Hot reload</strong> — <code>UPDATE</code>-ing a rule&#39;s <code>weight</code>/<code>expr</code> row changes scoring with <strong>no code edit</strong> (the
+&quot;analyst tunes a rule without a deploy&quot; proof).</li>
+<li><strong>Registry adoption</strong> — <code>rules-cel-v1</code> registers as <strong>shadow</strong>, is scored alongside prod on a real
+<code>engine.process()</code> event, and <code>registry.promote(…, &quot;prod&quot;)</code> flips it live <strong>with no restart</strong>.</li>
+<li><strong>Decision policy</strong> — a CEL <code>action_policy</code> row maps <code>score → action</code>; no match falls back to thresholds.</li>
+<li><strong>Cohort routing</strong> — a <code>cohort_expr</code> gates canary activation (a card-channel event gets the CEL canary;
+an API-channel event does not).</li>
+</ol>
+<p><strong>Run it:</strong> <code>cd fraud-engine &amp;&amp; npm run typecheck &amp;&amp; npm test</code> (44 pass / 9 files; the existing suite is
+unchanged).</p>
+<hr>
+<h2 id="6-the-cutover-path">6. The cutover path</h2>
+<ol>
+<li><strong>Now (shipped):</strong> CEL ruleset live as <strong>shadow</strong>; divergence vs. rules-v1 visible on
+<code>fe_shadow_divergence_total</code>. Author new rules as data; watch them in shadow.</li>
+<li><strong>Canary:</strong> <code>registry.promote(&quot;rules-cel-v1&quot;, &quot;canary&quot;, pct)</code> (+ optional <code>cohort_expr</code>) — a slice of
+traffic decides on CEL; the rest stays on rules-v1.</li>
+<li><strong>Prod:</strong> promote to <code>prod</code>; retire <code>rules-v1</code> when confidence holds. Add a rule-editor UI over the
+<code>rules</code>/<code>action_policy</code> tables.</li>
+<li><strong>cel-go swap:</strong> when rule volume/latency or cross-language parity demands it, register a <code>celgo</code>
+<code>RuleEvaluator</code> (gRPC sidecar / WASM) behind the same interface — the CEL expressions are unchanged.</li>
+</ol>
+<hr>
+<p><em>Companion documents: <code>FraudEngine.md</code> (platform design), <code>FraudEngine-GapAnalysis.md</code> (production
+interface map). Prototype: <code>fraud-engine/src/rules/*</code>, <code>src/models/celRulesModel.ts</code>,
+<code>src/router/decisionPolicy.ts</code>, <code>test/cel-rules.test.ts</code>.</em></p>
+
+  </main>
+</div>
+</body></html>

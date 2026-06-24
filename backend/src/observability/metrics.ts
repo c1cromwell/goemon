@@ -99,6 +99,22 @@ export const payEventTotal = new client.Counter({
   registers: [registry],
 });
 
+// FX quote seam — currency conversion quotes (quote-only; off the money path).
+export const fxQuoteTotal = new client.Counter({
+  name: "fx_quote_total",
+  help: "FX conversion quotes issued",
+  labelNames: ["pair", "source", "stale"],
+  registers: [registry],
+});
+
+// Cross-currency settlement — executed conversions (moves money on the ledger).
+export const fxConversionTotal = new client.Counter({
+  name: "fx_conversion_total",
+  help: "Cross-currency conversions settled on the ledger",
+  labelNames: ["pair", "result"],
+  registers: [registry],
+});
+
 // Phase 20 — ledger⇄chain reconciliation (invariant n).
 export const reconciliationRunTotal = new client.Counter({
   name: "reconciliation_run_total",

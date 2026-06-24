@@ -49,6 +49,9 @@ export enum ErrorCode {
   // Argus Pay (Phase 21 Stage 1 rail)
   PAY_DISABLED = "PAY_DISABLED",
 
+  // FX quote seam (currency registry + rate provider)
+  FX_DISABLED = "FX_DISABLED",
+
   // Reconciliation (Phase 20 — ledger⇄chain drift gates on-chain settlement)
   RECONCILIATION_HOLD = "RECONCILIATION_HOLD",
 
@@ -112,6 +115,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.ACCOUNT_FROZEN]: 403,
   [ErrorCode.TRADING_DISABLED]: 503,
   [ErrorCode.PAY_DISABLED]: 503,
+  [ErrorCode.FX_DISABLED]: 503,
   [ErrorCode.AGENT_DISABLED]: 503,
   [ErrorCode.EQUITIES_DISABLED]: 503,
   [ErrorCode.BANK_RAILS_DISABLED]: 503,

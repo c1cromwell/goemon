@@ -19,6 +19,35 @@ import { decimalToMinor, formatMoney } from "../lib/money";
 import { useToast } from "../components/Toast";
 import { Loading } from "../components/ui";
 
+function CctpPanel({ toast }: { toast: ReturnType<typeof useToast> }) {
+  const [amount, setAmount] = useState("10");
+  const [busy, setBusy] = useState(false);
+
+  async function bridgeIn() {
+    const micro = decimalToMinor(amount, 6);
+    if (!micro || BigInt(micro) <= 0n) return toast.show("Enter a valid amount", "bad");
+    setBusy(true);
+    try {
+      await userApi.cctpTransfer(
+        { direction: "in", sourceChain: "ethereum", destChain: "hedera", amountMicro: micro },
+        newIdempotencyKey()
+      );
+      toast.show("CCTP bridge initiated");
+    } catch (e) {
+      toast.show(e instanceof ApiError ? e.message : "Bridge failed", "bad");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="row wrap" style={{ gap: 8, marginTop: 8 }}>
+      <input inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="USDC" style={{ width: 100 }} />
+      <button disabled={busy} onClick={bridgeIn}>{busy ? "Bridging…" : "Bridge in (ETH→Hedera)"}</button>
+    </div>
+  );
+}
+
 type State =
   | { kind: "loading" }
   | { kind: "disabled" }
@@ -154,6 +183,47 @@ export function Wallet() {
           </div>
         </div>
         <p className="micro" style={{ marginTop: 10 }}>USDC on Hedera only in v1. CCTP bridge for Ethereum/Base/Polygon when enabled.</p>
+      </div>
+
+      <div className="card">
+        <h2>CCTP bridge</h2>
+        <p className="micro muted" style={{ marginTop: 0 }}>
+          Bridge USDC between Hedera and EVM chains when <span className="code">CCTP_ENABLED=true</span>.
+        </p>
+        <CctpPanel toast={toast} />
+      </div>
+
+      <div className="card">
+        <h2>Notifications</h2>
+        <button
+          className="ghost sm"
+          onClick={async () => {
+            const token = `web-${crypto.randomUUID()}`;
+            try {
+              await userApi.registerPushDevice({ platform: "web", token });
+              toast.show("Push device registered (simulated)");
+            } catch (e) {
+              toast.show(e instanceof Error ? e.message : "Register failed", "bad");
+            }
+          }}
+        >
+          Register this browser for alerts
+        </button>
+        <button
+          className="ghost sm"
+          style={{ marginLeft: 8 }}
+          onClick={async () => {
+            try {
+              const r = await userApi.pollInbound();
+              toast.show(r.newEvents ? `${r.newEvents} new inbound event(s)` : "No new inbound");
+              await load();
+            } catch (e) {
+              toast.show(e instanceof Error ? e.message : "Poll failed", "bad");
+            }
+          }}
+        >
+          Poll inbound USDC
+        </button>
       </div>
 
       <div className="card">

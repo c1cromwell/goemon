@@ -39,7 +39,8 @@ Those are Phases 17–20 (`ARGUS-PLAN.md`), gated on the **Corp B/C** ramp.
 ## 2. MVP-launchable scope (what ships)
 
 The Phase 0–16+ prototype is launchable as non-custodial software once the §3 blockers clear.
-Run `cd backend && npm test` for the current count (**302 pass / 3 todo**).
+Run `cd backend && npm test` for the current count (**311 pass / 3 todo**).
+Run `scripts/launch-gate.sh` for the bundled engineering gate (typecheck, tests, iOS verify, e2e hint).
 
 | Capability | Status | Notes |
 |---|---|---|
@@ -58,9 +59,11 @@ Run `cd backend && npm test` for the current count (**302 pass / 3 todo**).
 | Real-estate / securities tokenization | ⚠ demo only | **legal hold** until B4 counsel |
 | Travel Rule seam | ✅ built | `TRAVEL_RULE_ENABLED`; vendor TBD |
 | Stage-1 fraud + fraud-engine add-on | ✅ built | graph eval via SantanderAI seam |
-| Internal agent ops + mech-gov | ✅ built | Phase 15; R3 human gate on KYC/compliance |
+| Internal agent ops + mech-gov | ✅ built | Phase 15; R3 human gate on KYC/compliance; `mechGovService` |
+| Identity Vault (graph features) | ✅ prototype | SQLite edges; Neo4j Aura prod swap |
+| Argus Pay merchant wedge | ✅ prototype | `/pay` UI + escrow intents; `ARGUS_PAY_ENABLED` off by default |
 | Admin console + RBAC | ✅ built | compliance surfaces gated |
-| Android wallet | ~ scaffold | `ArgusWalletAndroid/` fast-follow |
+| Android wallet | ~ scaffold | `ArgusWalletAndroid/` fast-follow (`WalletScreen.kt`) |
 
 ---
 
@@ -78,6 +81,7 @@ gates require external action.
 | B5 | **Collectibles legal memo** | Legal | Counsel | Template: `docs/legal/B5-collectibles-legal-memo.md` |
 | B6 | **Entity + Phase-A compliance pack** | Compliance | Founder/Counsel | Template: `docs/legal/B6-phase-a-compliance-pack.md` |
 | B7 | **Hedera posture** — testnet labeled OR mainnet KMS/HSM | Eng/Sec | Engineering | Phase-20 custody before mainnet |
+| B8 | **Trail of Bits wallet audit** | Sec | Eng + Compliance | SOW + report before external beta (`docs/security/TRAIL-OF-BITS-AUDIT.md`) |
 
 **Not blockers for Phase A:** partner-bank fiat rails, real KYC vendor, ATS/broker-dealer, production Kafka fraud, data warehouse sink.
 
@@ -86,6 +90,7 @@ gates require external action.
 ## 4. E2E validation gate (technical)
 
 - Deterministic floor: `cd backend && npm run typecheck && npm test` — green.
+- Bundled gate: `scripts/launch-gate.sh` — typecheck + tests + iOS verify (+ optional e2e).
 - Browser UI: `cd frontend && npm run test:e2e` — green (includes wallet smoke).
 - Hybrid: `e2e-validator full` — journeys J1–J8 PASS; money invariants zero FAIL.
 - iOS: gated on B1 (`scripts/verify-ios-wallet.sh`).

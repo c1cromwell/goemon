@@ -16,6 +16,7 @@ import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 import { AppError, ErrorCode } from "../errors";
+import { currencySchema } from "../services/currencyRegistry";
 import { requireAdmin, requireRole, signAdminSession, type AdminRequest } from "../middleware/rbac";
 import * as adminService from "../services/adminService";
 import * as mcpClientRegistry from "../services/mcpClientRegistry";
@@ -134,7 +135,7 @@ adminRouter.post(
           description: z.string().max(500).optional(),
           allowedFunctions: z.array(z.string()).min(1),
           maxTransferMinor: z.union([z.string(), z.number()]),
-          currency: z.enum(["USD", "USDC"]).default("USD"),
+          currency: currencySchema(),
           requireUserApproval: z.boolean().optional(),
         })
         .parse(req.body);

@@ -116,11 +116,32 @@ const schema = z.object({
   // Simulated default; polygon/iex are prod swaps requiring market-data licensing.
   MARKET_DATA_PROVIDER: z.enum(["simulated", "polygon", "iex"]).default("simulated"),
 
+  // FX quote seam — currency conversion rates (quote-only; no money movement yet).
+  // Off by default; a kill-switch gating the /api/fx quote surface. FX_RATE_PROVIDER
+  // selects the rate source (simulated stand-in; circle/oanda are prod swaps). The
+  // simulated provider must never run in production (see productionFatals).
+  FX_ENABLED: boolish,
+  FX_RATE_PROVIDER: z.enum(["simulated", "circle", "oanda"]).default("simulated"),
+
+  // Cross-currency settlement (moves money: debits one currency, credits another with
+  // a spread fee). Off by default; a separate kill-switch from quotes because it touches
+  // the ledger. Prod-fatal while the rate provider is simulated. FX_SPREAD_BPS is the
+  // fee charged on the converted amount (basis points; 50 = 0.50%).
+  FX_SETTLEMENT_ENABLED: boolish,
+  FX_SPREAD_BPS: z.coerce.number().int().nonnegative().max(10_000).default(50),
+
   // Phase 21 Stage 1 — "Argus Pay" native payment rail. Off by default — a kill-switch
   // that sheds new payment intents/payments without touching transfers or in-flight
   // escrows (docs/business/PAYMENT-NETWORK-STRATEGY.md §4/§8). The Stage-1 rail is a
   // prototype (money-transmission licensing pending) and must never run in production.
   ARGUS_PAY_ENABLED: boolish,
+
+  // Phase 21 — login-less merchant checkout via Verifiable Presentation. Off by default.
+  // When on, a customer can authorize a payment intent by presenting a VC-backed VP from
+  // their device (no session/redirect login) — the VP proves the holder and binds to one
+  // intent. Rides ARGUS_PAY_ENABLED for the actual money move, so it inherits that
+  // prototype/prod posture; this flag only gates the two no-auth checkout routes.
+  CHECKOUT_VP_ENABLED: boolish,
 
   // Phase 18.6 — tokenized 1:1-backed public equities (prototype seam). Off by default;
   // a kill-switch that gates new dividend/redemption endpoints. EQUITY_ISSUER selects the
@@ -186,6 +207,9 @@ const schema = z.object({
   // Seller P2P collectibles — in-app USDC escrow (buy → ship → confirm). Off by default;
   // Corp B money-transmission / marketplace-intermediary counsel required before prod.
   COLLECTIBLES_ESCROW_ENABLED: boolish,
+
+  // Identity Vault — relationship graph prototype (Neo4j Aura prod swap). On by default in dev.
+  IDENTITY_VAULT_ENABLED: boolishDefaultTrue,
 
   // Phase 20 — key-vault custody (closes invariant m / audit C-1). At-rest secrets
   // (per-user Hedera keys, the issuer JWK) are wrapped via keyVaultService. The
@@ -280,6 +304,12 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.ARGUS_PAY_ENABLED) {
     fatal.push("ARGUS_PAY_ENABLED must be false in production — the Phase-21 Stage-1 rail is a prototype (money-transmission licensing pending).");
+  }
+  if (c.FX_ENABLED && c.FX_RATE_PROVIDER === "simulated") {
+    fatal.push("FX_ENABLED with FX_RATE_PROVIDER=simulated must not run in production — wire a licensed FX rate provider (circle|oanda).");
+  }
+  if (c.FX_SETTLEMENT_ENABLED && c.FX_RATE_PROVIDER === "simulated") {
+    fatal.push("FX_SETTLEMENT_ENABLED with FX_RATE_PROVIDER=simulated must not run in production — cross-currency settlement at a simulated rate is a prototype.");
   }
   if (c.EQUITIES_ENABLED) {
     fatal.push("EQUITIES_ENABLED must be false in production — the Phase-18.6 tokenized-equities seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");

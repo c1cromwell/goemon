@@ -97,16 +97,20 @@ function intersect(...sets: string[][]): string[] {
   return first!.filter((s) => rest.every((set) => set.includes(s)));
 }
 
-/**
- * Verify a Verifiable Presentation and, if every check passes, mint a 90s scoped
- * token. Throws AppError with a stable code on any failure — the caller never
- * grants access on a thrown path.
- */
-export async function verifyPresentation(input: VerifyPresentationInput): Promise<ScopedTokenResult> {
-  const { vpJwt } = input;
-  const ipAddress = input.ipAddress ?? "";
+interface VerifiedVp {
+  walletDid: string;
+  nonce: string;
+  vcJwt: string;
+  vpHash: string;
+}
 
-  // --- 0. Signature verification FIRST (the cardinal rule) ----------------
+/**
+ * The cardinal rule, factored out so every VP-consuming flow (agent presentation
+ * and login-less checkout) shares ONE crypto path: verify the ES256 signature
+ * against the wallet did:key and the audience BEFORE anything else, then extract
+ * the nonce and the carried credential. Throws AppError on any failure.
+ */
+async function decodeAndVerifyVp(vpJwt: string): Promise<VerifiedVp> {
   let header: { alg?: string };
   let unverified: VpPayload;
   try {
@@ -147,8 +151,54 @@ export async function verifyPresentation(input: VerifyPresentationInput): Promis
   if (!nonce) throw new AppError(ErrorCode.NONCE_INVALID, "Presentation missing nonce");
   if (!vcJwt) throw new AppError(ErrorCode.VP_INVALID, "Presentation carries no credential");
 
+  return { walletDid, nonce, vcJwt, vpHash: sha256Hex(vpJwt) };
+}
+
+interface BoundCredential {
+  userId: string;
+  vcOps: string[];
+}
+
+/**
+ * Verify the carried VC (RS256, our issuer key), that it is not revoked/expired,
+ * and that it is holder-bound to the presenting wallet. Shared by both flows.
+ */
+async function loadBoundCredential(vcJwt: string, walletDid: string): Promise<BoundCredential> {
+  let vcSubject: string | undefined;
+  try {
+    const jwks = createLocalJWKSet(getJWKS());
+    await jwtVerify(vcJwt, jwks, { algorithms: ["RS256"] });
+    vcSubject = (decodeJwt(vcJwt).sub as string) || undefined;
+  } catch {
+    throw new AppError(ErrorCode.VP_INVALID, "Credential signature invalid");
+  }
+  if (!vcSubject) throw new AppError(ErrorCode.VP_INVALID, "Credential has no subject");
+
+  const credential = await getCredentialBySubject(vcSubject);
+  if (!credential) throw new AppError(ErrorCode.VP_INVALID, "Credential not recognized");
+  if (credential.revoked === 1) throw new AppError(ErrorCode.CREDENTIAL_REVOKED, "Credential revoked");
+  if (credential.expires_at && new Date(credential.expires_at).getTime() < Date.now()) {
+    throw new AppError(ErrorCode.CREDENTIAL_REVOKED, "Credential expired");
+  }
+  // Holder binding: the presenting wallet must be the one bound to this credential.
+  if (!credential.wallet_did || credential.wallet_did !== walletDid) {
+    throw new AppError(ErrorCode.VP_INVALID, "Presentation not bound to the credential holder");
+  }
+  return { userId: credential.user_id, vcOps: JSON.parse(credential.allowed_ops || "[]") };
+}
+
+/**
+ * Verify a Verifiable Presentation and, if every check passes, mint a 90s scoped
+ * token. Throws AppError with a stable code on any failure — the caller never
+ * grants access on a thrown path.
+ */
+export async function verifyPresentation(input: VerifyPresentationInput): Promise<ScopedTokenResult> {
+  const ipAddress = input.ipAddress ?? "";
+
+  // --- 0. Signature verification FIRST (the cardinal rule) ----------------
+  const { walletDid, nonce, vcJwt, vpHash } = await decodeAndVerifyVp(input.vpJwt);
+
   // --- 1. Replay prevention (by VP hash) ----------------------------------
-  const vpHash = sha256Hex(vpJwt);
   const db = getDb();
   const seen = await db.queryOne<{ id: string }>("SELECT id FROM vp_presentations WHERE vp_hash = ?", [vpHash]);
   if (seen) throw new AppError(ErrorCode.REPLAY_DETECTED, "Presentation already used");
@@ -170,28 +220,7 @@ export async function verifyPresentation(input: VerifyPresentationInput): Promis
   const requestedScope: string[] = JSON.parse(nonceRow.scope || "[]");
 
   // --- 3. Credential: verify VC signature, revocation, and holder binding ---
-  let vcSubject: string | undefined;
-  try {
-    const jwks = createLocalJWKSet(getJWKS());
-    await jwtVerify(vcJwt, jwks, { algorithms: ["RS256"] });
-    vcSubject = (decodeJwt(vcJwt).sub as string) || undefined;
-  } catch {
-    throw new AppError(ErrorCode.VP_INVALID, "Credential signature invalid");
-  }
-  if (!vcSubject) throw new AppError(ErrorCode.VP_INVALID, "Credential has no subject");
-
-  const credential = await getCredentialBySubject(vcSubject);
-  if (!credential) throw new AppError(ErrorCode.VP_INVALID, "Credential not recognized");
-  if (credential.revoked === 1) throw new AppError(ErrorCode.CREDENTIAL_REVOKED, "Credential revoked");
-  if (credential.expires_at && new Date(credential.expires_at).getTime() < Date.now()) {
-    throw new AppError(ErrorCode.CREDENTIAL_REVOKED, "Credential expired");
-  }
-  // Holder binding: the presenting wallet must be the one bound to this credential.
-  if (!credential.wallet_did || credential.wallet_did !== walletDid) {
-    throw new AppError(ErrorCode.VP_INVALID, "Presentation not bound to the credential holder");
-  }
-  const userId = credential.user_id;
-  const vcOps: string[] = JSON.parse(credential.allowed_ops || "[]");
+  const { userId, vcOps } = await loadBoundCredential(vcJwt, walletDid);
 
   // --- 4. Client must be registered and active ----------------------------
   const client = await getClient(clientDid);
@@ -338,4 +367,97 @@ export async function recordMcpAudit(input: McpAuditInput): Promise<void> {
       new Date().toISOString(),
     ]
   );
+}
+
+// ---------------------------------------------------------------------------
+// Phase 21 — login-less merchant checkout via Verifiable Presentation.
+//
+// Instead of redirecting the customer to a hosted login, checkout asks the
+// customer's device to present a VC-backed VP. The VP proves the holder (→ their
+// Argus user) and is bound to ONE payment intent (the nonce carries intent_id), so
+// it authorizes paying that intent and nothing else. This reuses the exact same
+// signature-first verification, single-use nonce, replay guard, VC revocation and
+// holder-binding as the agent path — minus the agent client/grant/scope steps,
+// because the holder is authorizing their OWN payment (no third party delegate).
+// ---------------------------------------------------------------------------
+
+/** The relying party for a first-party checkout presentation (not an MCP agent). */
+export const CHECKOUT_VERIFIER_DID = "did:argus:checkout";
+const CHECKOUT_NONCE_TTL_SECS = 300;
+
+/** Issue a single-use challenge bound to a specific payment intent. */
+export async function issueCheckoutChallenge(
+  intentId: string,
+  ttlSecs = CHECKOUT_NONCE_TTL_SECS
+): Promise<PresentationChallenge> {
+  if (!intentId) throw new AppError(ErrorCode.VALIDATION, "intentId required");
+  const nonce = uuidv4().replace(/-/g, "") + uuidv4().replace(/-/g, "");
+  const expiresAt = new Date(Date.now() + ttlSecs * 1000).toISOString();
+  await getDb().execute(
+    "INSERT INTO presentation_nonces (nonce, client_did, scope, intent_id, expires_at, used, created_at) VALUES (?, ?, ?, ?, ?, 0, ?)",
+    [nonce, CHECKOUT_VERIFIER_DID, JSON.stringify(["pay:merchant"]), intentId, expiresAt, new Date().toISOString()]
+  );
+  return { nonce, aud: config.BASE_URL, scope: ["pay:merchant"], expiresAt };
+}
+
+export interface CheckoutPresentationResult {
+  userId: string;
+  walletDid: string;
+  nonce: string;
+}
+
+/**
+ * Verify a checkout VP and resolve the paying user — WITHOUT any session login.
+ * The nonce must have been issued for THIS intent. On success returns the holder's
+ * userId; the caller then pays the intent as that user. No scoped token is minted
+ * (first-party authorization, not delegation to an agent).
+ */
+export async function verifyCheckoutPresentation(input: {
+  vpJwt: string;
+  intentId: string;
+  ipAddress?: string;
+}): Promise<CheckoutPresentationResult> {
+  const ipAddress = input.ipAddress ?? "";
+
+  // 0. Signature-first verification (the shared crypto path / cardinal rule).
+  const { walletDid, nonce, vcJwt, vpHash } = await decodeAndVerifyVp(input.vpJwt);
+
+  // 1. Replay prevention (by VP hash) — same guard table as the agent path.
+  const db = getDb();
+  const seen = await db.queryOne<{ id: string }>("SELECT id FROM vp_presentations WHERE vp_hash = ?", [vpHash]);
+  if (seen) throw new AppError(ErrorCode.REPLAY_DETECTED, "Presentation already used");
+
+  // 2. Single-use nonce, bound to THIS intent (a VP for intent A can't pay intent B).
+  await db.transaction(async (tx) => {
+    const row = await tx.queryOne<{ intent_id: string | null; expires_at: string; used: number }>(
+      "SELECT intent_id, expires_at, used FROM presentation_nonces WHERE nonce = ?",
+      [nonce]
+    );
+    if (!row) throw new AppError(ErrorCode.NONCE_INVALID, "Unknown nonce");
+    if (row.used === 1) throw new AppError(ErrorCode.NONCE_INVALID, "Nonce already used");
+    if (new Date(row.expires_at).getTime() < Date.now()) throw new AppError(ErrorCode.NONCE_INVALID, "Nonce expired");
+    if (row.intent_id !== input.intentId) throw new AppError(ErrorCode.NONCE_INVALID, "Nonce not bound to this payment intent");
+    await tx.execute("UPDATE presentation_nonces SET used = 1 WHERE nonce = ?", [nonce]);
+  });
+
+  // 3. Credential: signature, revocation, holder binding → the paying user.
+  const { userId } = await loadBoundCredential(vcJwt, walletDid);
+
+  // Record the presentation (gives replay-by-hash + an append-only audit trail).
+  await db.execute(
+    `INSERT INTO vp_presentations (id, user_id, client_did, vp_hash, nonce, scope_issued, token_jti, ip_address, presented_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uuidv4(), userId, CHECKOUT_VERIFIER_DID, vpHash, nonce, JSON.stringify(["pay:merchant"]), null, ipAddress, new Date().toISOString()]
+  );
+  await recordMcpAudit({
+    userId,
+    agentDid: CHECKOUT_VERIFIER_DID,
+    toolName: "checkout_present",
+    scopeUsed: ["pay:merchant"],
+    args: { intentId: input.intentId },
+    ipAddress,
+    resultStatus: "success",
+  });
+
+  return { userId, walletDid, nonce };
 }

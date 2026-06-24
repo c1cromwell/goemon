@@ -17,6 +17,21 @@ import type { ModelRegistry } from "../models/registry";
 import type { EnrichedEvent } from "../features/enrichment";
 import type { Db } from "../db";
 import type { FraudAction, ModelOutput, ShadowResult, Reason, Contribution } from "../types";
+import { config } from "../config";
+import { getRuleEvaluator } from "../rules/celEvaluator";
+import { toActivation } from "../rules/activation";
+import { celActionFor } from "./decisionPolicy";
+
+/** A CEL cohort predicate gates whether a canary is active for this event. Null = always. */
+function cohortMatches(expr: string | null, ev: EnrichedEvent): boolean {
+  if (!expr) return true;
+  try {
+    const e = getRuleEvaluator();
+    return e.test(e.compile(expr), toActivation(ev));
+  } catch {
+    return false; // a bad cohort expression never activates a canary
+  }
+}
 
 export interface Thresholds {
   blockAt: number;
@@ -110,7 +125,7 @@ export class Router {
     for (const c of canaries) {
       if (!this.server.has(c.version)) continue;
       const out = await this.server.score(c.version, ev);
-      const active = bucket(ev.raw.userId, c.version) < c.canaryPct;
+      const active = bucket(ev.raw.userId, c.version) < c.canaryPct && cohortMatches(c.cohortExpr, ev);
       if (active) {
         effective = out;
       } else {
@@ -125,9 +140,23 @@ export class Router {
       shadowResults.push({ modelVersion: out.modelVersion, score: out.score, action: actionFor(out.score, t, mode) });
     }
 
+    let action = actionFor(effective.score, t, mode);
+
+    // CEL decision policy (opt-in). The highest-priority matching policy row wins;
+    // null falls back to the threshold ladder. The sync path still can't freeze.
+    if (config.ACTION_POLICY === "cel") {
+      const policyAction = await celActionFor(this.db, {
+        score: Math.round(effective.score * 1000),
+        mode,
+        amountMinor: Number(ev.raw.amountMinor ?? 0n),
+        reasonCodes: effective.reasons.map((r) => r.code),
+      });
+      if (policyAction) action = policyAction === "freeze" && mode !== "async" ? "block" : policyAction;
+    }
+
     return {
       output: effective,
-      action: actionFor(effective.score, t, mode),
+      action,
       shadow: shadowResults,
       effectiveModel: effective.modelVersion,
     };

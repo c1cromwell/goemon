@@ -12,6 +12,7 @@ import type { Response, NextFunction } from "express";
 import { requireAuth, type AuthRequest } from "../middleware/auth";
 import { idempotency } from "../middleware/idempotency";
 import { AppError, ErrorCode } from "../errors";
+import { currencySchema } from "../services/currencyRegistry";
 import { getUserBalances } from "../services/ledgerService";
 import { getTransactionHistory } from "../services/transferService";
 import { executeTransfer } from "../money/moneyEngine";
@@ -38,7 +39,7 @@ const transferBodySchema = z.object({
     z.string().regex(/^\d+$/, "amountMinor must be a positive integer string"),
     z.number().int().positive(),
   ]),
-  currency: z.enum(["USD", "USDC"]).default("USD"),
+  currency: currencySchema(),
   description: z.string().max(500).optional(),
 });
 

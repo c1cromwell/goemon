@@ -428,6 +428,84 @@ export interface HederaBalance {
   ledger: { usdcCash: string };
 }
 
+export interface CctpTransfer {
+  id: string;
+  direction: string;
+  source_chain: string;
+  dest_chain: string;
+  amount_micro: string;
+  status: string;
+  external_ref: string | null;
+}
+
+export interface PayMerchant {
+  id: string;
+  ownerUserId: string;
+  name: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface PaymentIntent {
+  id: string;
+  merchantId: string;
+  merchantName: string;
+  amountMinor: string;
+  currency: string;
+  memo: string | null;
+  status: string;
+  payerUserId: string | null;
+  escrowId: string | null;
+  expiresAt: string;
+  createdAt: string;
+}
+
+// FX (currency registry + quote + cross-currency settlement)
+export interface FxCurrency {
+  code: string;
+  decimals: number;
+  kind: "fiat" | "stablecoin";
+  enabled: boolean;
+  label: string;
+}
+export interface FxQuoteResult {
+  from: string;
+  to: string;
+  fromAmountMinor: string;
+  toAmountMinor: string;
+  rate: string;
+  ratePpm: string;
+  source: string;
+  asOf: string;
+  stale: boolean;
+}
+export interface FxConversion {
+  id: string;
+  from: string;
+  to: string;
+  fromAmountMinor: string;
+  grossToMinor: string;
+  feeMinor: string;
+  toAmountMinor: string;
+  rate: string;
+  spreadBps: number;
+  source: string;
+  journalId: string;
+}
+
+/** Login-less checkout challenge (POST /pay/intents/:id/checkout/challenge). */
+export interface CheckoutChallenge {
+  nonce: string;
+  aud: string;
+  scope: string[];
+  expiresAt: string;
+  intentId: string;
+  amountMinor: string;
+  currency: string;
+  merchantName: string;
+  memo: string | null;
+}
+
 // ============================================================================
 // User portal API
 // ============================================================================
@@ -593,6 +671,44 @@ export const userApi = {
     umoney<{ txId: string; journalId: string }>("/hedera/transfer", body, key),
   registerPushDevice: (body: { platform: "ios" | "android" | "web"; token: string }) =>
     upost<{ registered: boolean }>("/hedera/devices", body),
+  cctpTransfer: (
+    body: { direction: "in" | "out"; sourceChain: string; destChain?: string; amountMicro: string },
+    key: string
+  ) => umoney<{ id: string; status: string; externalRef: string }>("/hedera/cctp", body, key),
+  cctpTransfers: () => uget<{ transfers: CctpTransfer[] }>("/hedera/cctp"),
+  pollInbound: () => upost<{ newEvents: number }>("/hedera/poll-inbound"),
+
+  // --- Argus Pay (Phase 21 merchant wedge) ---
+  payMerchants: () => uget<PayMerchant[]>("/pay/merchants"),
+  createPayMerchant: (name: string) => upost<PayMerchant>("/pay/merchants", { name }),
+  payIntents: (role: "merchant" | "payer" = "merchant") => uget<PaymentIntent[]>(`/pay/intents?role=${role}`),
+  createPayIntent: (
+    body: { merchantId: string; amountMinor: string; currency?: string; memo?: string },
+    key: string
+  ) => umoney<PaymentIntent>("/pay/intents", body, key),
+  payIntent: (id: string, key: string) => umoney<PaymentIntent>(`/pay/intents/${id}/pay`, {}, key),
+  capturePayIntent: (id: string) => upost<PaymentIntent>(`/pay/intents/${id}/capture`),
+
+  // --- FX (currency exchange): quote is read-only, convert moves money ---
+  fxCurrencies: () => uget<{ currencies: FxCurrency[] }>("/fx/currencies"),
+  fxQuote: (from: string, to: string, amountMinor: string) =>
+    upost<FxQuoteResult>("/fx/quote", { from, to, amountMinor }),
+  fxConvert: (from: string, to: string, fromAmountMinor: string, key: string) =>
+    umoney<FxConversion>("/fx/convert", { from, to, fromAmountMinor }, key),
+  fxConversions: () => uget<{ conversions: FxConversion[] }>("/fx/conversions"),
+
+  // --- login-less checkout via Verifiable Credential (Phase 21) ---
+  // bindWallet uses the session (one-time device link); the two checkout calls
+  // deliberately send NO token — trust is the VP signature, not a login.
+  bindWallet: (walletDid: string) =>
+    upost<{ bound: boolean; walletDid: string }>("/credentials/bind-wallet", { walletDid }),
+  checkoutChallenge: (intentId: string) =>
+    http<CheckoutChallenge>(`/pay/intents/${intentId}/checkout/challenge`, { method: "POST", body: {} }),
+  payWithPresentation: (intentId: string, vpJwt: string) =>
+    http<{ intent: PaymentIntent; payer: { userId: string; walletDid: string }; authorizedVia: string }>(
+      `/pay/intents/${intentId}/pay-with-presentation`,
+      { method: "POST", body: { vpJwt } }
+    ),
 
   // --- bank rails (Phase 19) ---
   bankTransfers: () => uget<{ transfers: BankTransfer[] }>("/bank/transfers"),

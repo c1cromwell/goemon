@@ -30,6 +30,7 @@ import { executeTransfer as orchestrateTransfer } from "../money/moneyEngine";
 import { getIntent, payIntent } from "../services/paymentService";
 import { getUserBalances } from "../services/ledgerService";
 import { getProfile } from "../services/identityService";
+import { currencySchema } from "../services/currencyRegistry";
 
 export const mcpRouter = Router();
 
@@ -197,7 +198,7 @@ async function executeTransfer(
     .object({
       to: z.string().min(1),
       amountMinor: z.union([z.string(), z.number()]),
-      currency: z.enum(["USD", "USDC"]).default("USD"),
+      currency: currencySchema(),
     })
     .parse(args);
 

@@ -33,6 +33,13 @@ const schema = z.object({
   SQLITE_PATH: z.string().default("./data/fraud.db"),
 
   FRAUD_AUTO_REMEDIATE: boolishDefaultTrue,
+
+  // CEL seam — the rule/policy evaluator. `subset` is the in-process CEL-compatible
+  // subset (default); `celgo` is the spec-complete production swap (gRPC sidecar / WASM).
+  RULE_EVALUATOR: z.enum(["subset", "celgo"]).default("subset"),
+  // Decision policy source: `thresholds` (the routing_config ladder, default) or
+  // `cel` (the action_policy CEL table). Opt-in; the ladder stays the safe default.
+  ACTION_POLICY: z.enum(["thresholds", "cel"]).default("thresholds"),
 });
 
 const parsed = schema.parse(process.env);

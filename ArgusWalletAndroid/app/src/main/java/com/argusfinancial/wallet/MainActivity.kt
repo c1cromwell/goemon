@@ -22,13 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Column(modifier = Modifier.padding(24.dp)) {
-                        Text("Argus Wallet", style = MaterialTheme.typography.headlineMedium)
-                        Text(
-                            "Android scaffold — connect to ${BuildConfig.API_BASE_URL}",
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
+                    WalletScreen(apiBaseUrl = BuildConfig.API_BASE_URL)
                 }
             }
         }

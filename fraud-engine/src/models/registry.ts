@@ -16,6 +16,8 @@ export interface ModelRecord {
   kind: "rules" | "sequence";
   status: ModelStatus;
   canaryPct: number;
+  /** Optional CEL predicate; when set, a canary is active only when it evals true. */
+  cohortExpr: string | null;
   notes: string | null;
 }
 
@@ -24,6 +26,7 @@ interface ModelRow {
   kind: "rules" | "sequence";
   status: ModelStatus;
   canary_pct: number;
+  cohort_expr: string | null;
   notes: string | null;
 }
 
@@ -64,5 +67,12 @@ export class ModelRegistry {
 }
 
 function toRecord(r: ModelRow): ModelRecord {
-  return { version: r.version, kind: r.kind, status: r.status, canaryPct: Number(r.canary_pct), notes: r.notes };
+  return {
+    version: r.version,
+    kind: r.kind,
+    status: r.status,
+    canaryPct: Number(r.canary_pct),
+    cohortExpr: r.cohort_expr ?? null,
+    notes: r.notes,
+  };
 }

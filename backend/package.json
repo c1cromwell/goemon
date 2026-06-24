@@ -23,6 +23,7 @@
     "conductor:live-check": "tsx src/scripts/conductor-live-check.ts",
     "money:worker": "tsx src/money/worker.ts",
     "money:live-check": "tsx src/scripts/money-live-check.ts",
+    "demo:checkout-vp": "tsx src/scripts/demo-checkout-vp.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"

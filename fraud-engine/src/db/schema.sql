@@ -51,8 +51,34 @@ CREATE TABLE IF NOT EXISTS models (
   kind         TEXT NOT NULL,                 -- rules | sequence
   status       TEXT NOT NULL DEFAULT 'shadow',
   canary_pct   INTEGER NOT NULL DEFAULT 0,    -- 0..100, only meaningful when status=canary
+  cohort_expr  TEXT,                          -- optional CEL predicate; canary active only when it evals true
   notes        TEXT,
   created_at   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CEL rule sets — rules-as-DATA. Each row is a {code, CEL expr, weight} the
+-- CelRulesModel evaluates. Analysts add/tune rules here; a new set is promoted via
+-- the model registry (shadow → canary → prod), no redeploy. Append-friendly.
+CREATE TABLE IF NOT EXISTS rules (
+  id           TEXT PRIMARY KEY,
+  rule_set     TEXT NOT NULL,                 -- the model version this rule belongs to (e.g. rules-cel-v1)
+  code         TEXT NOT NULL,                 -- the Reason code emitted when it fires
+  expr         TEXT NOT NULL,                 -- CEL (subset) predicate over the event activation
+  weight       INTEGER NOT NULL,             -- contribution in milli-units (weight*1000), integer (no floats)
+  enabled      INTEGER NOT NULL DEFAULT 1,
+  updated_at   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_rules_set ON rules(rule_set, enabled);
+
+-- CEL action policy — the decision ladder (block/challenge/flag/freeze) as DATA.
+-- Highest-priority matching expr wins; falls back to the routing_config thresholds.
+CREATE TABLE IF NOT EXISTS action_policy (
+  id           TEXT PRIMARY KEY,
+  action       TEXT NOT NULL,                 -- allow | flag | challenge | block | freeze
+  expr         TEXT NOT NULL,                 -- CEL over {score, mode, amountMinor, reasonCodes}
+  priority     INTEGER NOT NULL DEFAULT 0,    -- higher wins
+  enabled      INTEGER NOT NULL DEFAULT 1,
   updated_at   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

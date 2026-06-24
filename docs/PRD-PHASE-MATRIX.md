@@ -26,20 +26,20 @@ Single reader guide reconciling [argus_prdv1/](argus_prdv1/) (full v1 bank PRD),
 | Intl corridors NG/PH/BR | ✅ | ❌ | simulated | corridor partners | expand |
 | Debit card | v2 | ❌ | simulated Marqeta | BIN sponsor | scale |
 | Bill pay | out of v1 PRD | ❌ | simulated | biller network | — |
-| Argus Pay merchant rail | not in PRD | ❌ | Phase 21 prototype | MSB + merchants | scale |
+| Argus Pay merchant rail | not in PRD | ❌ | Phase 21 prototype + `/pay` UI | MSB + merchants | scale |
 | Trading equities/options | out of v1 PRD | ❌ | Phase 17 simulated | — | BD partner |
 | Tokenized 1:1 equities | brief v2 mention | ❌ | Phase 18.6 seam | Dinari/Backed | BD+TA+ATS |
 | Argus Starter (teen/family) | not in PRD | ❌ | Phase 22 prototype | COPPA counsel | custodial BD |
 | Internal agent ops | Module 08 | ✅ draft-only support | Phase 15 built | real-time chat | scale |
 | Fraud platform | vendor TM | stage-1 seam | fraud-engine add-on | Kafka/Flink | lakehouse |
-| Identity Vault (Neo4j) | not in PRD | ❌ | designed | Neo4j Aura | prod graph |
+| Identity Vault (Neo4j) | not in PRD | ❌ | ✅ SQLite prototype (`031`) | Neo4j Aura | prod graph |
 | Data warehouse | not in PRD | ❌ | export seam | BigQuery/Snowflake | — |
 | CCTP bridge | Module 04 | optional | ✅ seam | Circle API | — |
 | HIP-583 EVM alias | REQ-RX-001 | ✅ | ✅ | ✅ | ✅ |
 | Push notifications | Module 02 | ✅ | ✅ seam | APNs/FCM | — |
 | Travel Rule $3k+ | Module 06 | ❌ | ✅ seam | Notabene/etc | — |
 | iOS wallet | ✅ | B1 verify | source + Hiero | App Store | — |
-| Android wallet | ✅ | fast-follow | scaffold | Play Store | — |
+| Android wallet | ✅ | fast-follow | scaffold + `WalletScreen` | Play Store | — |
 | Go backend / Next.js | ✅ | ❌ (TS/Vite OK Phase A) | TS prototype | migration | — |
 
 ## Docs added beyond PRD (fold into PRD supplement)

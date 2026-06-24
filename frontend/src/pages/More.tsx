@@ -12,6 +12,8 @@ const LINKS = [
   { to: "/console", label: "Console" },
   { to: "/trade", label: "Trade" },
   { to: "/escrow", label: "Escrow" },
+  { to: "/pay", label: "Argus Pay" },
+  { to: "/fx", label: "Currency exchange" },
   { to: "/onboarding", label: "Verification & tiers" },
   { to: "/credentials", label: "Credentials" },
   { to: "/agents", label: "Internal agents" },
