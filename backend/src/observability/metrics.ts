@@ -130,6 +130,13 @@ export const cardCashbackTotal = new client.Counter({
   registers: [registry],
 });
 
+// X-Money response F5 — creator drop claims (fans claim owned editions).
+export const creatorDropClaimTotal = new client.Counter({
+  name: "creator_drop_claim_total",
+  help: "Creator drop editions claimed",
+  registers: [registry],
+});
+
 // Phase 20 — ledger⇄chain reconciliation (invariant n).
 export const reconciliationRunTotal = new client.Counter({
   name: "reconciliation_run_total",

@@ -52,6 +52,7 @@ import { treasuryRouter, treasuryAdminRouter } from "./routes/treasury";
 import { seedTreasury } from "./services/treasuryService";
 import { selfCustodyRouter } from "./routes/selfCustody";
 import { paymentRequestsRouter } from "./routes/paymentRequests";
+import { dropsRouter } from "./routes/drops";
 import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
 import { warehouseAdminRouter } from "./routes/warehouseAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
@@ -225,6 +226,9 @@ async function bootstrap(): Promise<void> {
 
   // ---- X-Money response F3 — P2P money requests on the native rail ----
   app.use("/api/requests", paymentRequestsRouter);
+
+  // ---- X-Money response F5 — collector/creator drops (gated by CREATOR_DROPS_ENABLED) ----
+  app.use("/api/drops", dropsRouter);
 
   // ---- Phase 20 — ledger⇄chain reconciliation (RBAC admin surface) ----
   app.use("/api/admin", reconciliationAdminRouter);

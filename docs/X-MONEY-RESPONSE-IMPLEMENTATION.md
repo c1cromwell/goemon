@@ -17,7 +17,7 @@ Each feature is a prototype seam consistent with the repo (swappable provider, k
 | **2** | **Self-custody / anti-deplatforming proof** | The #1 wedge made real: self-custody report + signed attestation + portable export | A | ✅ **built** |
 | **3** | **P2P money requests on the native rail** | Differentiate table-stakes P2P (request-to-pay; no Visa/partner) | A→B | ✅ **built** |
 | **4** | **Visa-bridge card: native-rail funding + USDC cashback** | Match X's card, but *spend from USDC* + cashback as an asset you own | B · `CARDS_ENABLED` ⚖ | ✅ **built** (bridge) |
-| 5 | Collector / creator drops | Re-aim X's creator-payout hook to tokenized goods | A→B | planned |
+| **5** | **Collector / creator drops** | Re-aim X's creator-payout hook to tokenized goods the creator owns | B · `CREATOR_DROPS_ENABLED` ⚖ | ✅ **built** |
 | 6 | Global / cross-border packaging | Reach the audience X (US-only) can't serve | B/C · `FX_*` ⚖ | seam exists (RAILS-CURRENCY) |
 
 ---
@@ -116,12 +116,26 @@ card authorizes on the native rail.
 > (Corp B, BIN-sponsor + PCI ⚖), while every transaction that *can* settle on the native rail (USDC
 > funding, native P2P, Argus Pay) does — migrating volume off Visa over time toward the self-contained rail.
 
-## Features 5–6 (subsequent)
+## Feature 5 — Collector/creator drops (built)
 
-- **F5 — Collector/creator drops:** extend `sellerCollectibleService` for creator-issued authenticated
-  drops.
+**What:** re-aims X Money's creator-payout hook to tokenized **goods the creator owns**. A creator issues
+a **limited, authenticated tokenized edition** (`createDrop` → a `collectible` asset, supply = edition
+size minted to the asset treasury); fans **claim** editions they **own** (a token in their non-custodial
+position), paying the creator **directly** — no ad-revenue middleman, no platform that can deplatform the
+creator. **Scarcity is enforced at the ledger** (the asset treasury IS the cap → sold-out when it hits
+zero); each claim is a balanced, idempotent journal.
+
+`creatorDropService` + `/api/drops` (create · list · claims · get · claim); migration `039_creator_drops.sql`;
+`CREATOR_DROPS_ENABLED` (prod-fatal — marketplace-intermediary/MSB + collectible-as-goods counsel, like the
+collectibles escrow); `creator_drop_claim_total` metric. `creator-drops.test.ts` (4): create issues the
+edition, claim pays the creator + transfers an owned token, scarcity sells out, idempotent claim +
+self-claim + insufficient-funds + the gate/prod-fatal. Reuses `tokenizationService.createAsset`/`mint`
+and the ledger primitives (same pattern as the treasury).
+
+## Feature 6 (subsequent)
+
 - **F6 — Global packaging:** the FX/cross-border seam exists (`RAILS-CURRENCY-STRATEGY.md`); package for
-  the global/dollar-access audience.
+  the global/dollar-access audience X Money (US-only) can't serve.
 
 ---
 

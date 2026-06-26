@@ -170,6 +170,12 @@ const schema = z.object({
   // capture. Basis points of the captured amount; 0 = off, 300 = 3% (match X's card).
   CARD_CASHBACK_BPS: z.coerce.number().int().nonnegative().max(1_000).default(0),
 
+  // X-Money response F5 — collector/creator drops (prototype seam). Off by default; a
+  // kill-switch (prod-fatal — marketplace-intermediary + collectible-as-goods counsel + MSB,
+  // like the collectibles escrow). A creator issues a limited, authenticated tokenized
+  // edition; fans claim editions they OWN (non-custodial) and the creator is paid directly.
+  CREATOR_DROPS_ENABLED: boolish,
+
   // Phase 19.3 — bill pay (prototype seam). Off by default; a kill-switch gating payee
   // payments. Rides the BANK_RAIL_PROVIDER (bill pay is a directed payout to a biller).
   BILLPAY_ENABLED: boolish,
@@ -334,6 +340,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.BANK_RAILS_ENABLED) {
     fatal.push("BANK_RAILS_ENABLED must be false in production — the Phase-19 Stage-1 bank rails are simulated (BaaS/partner-bank + FinCEN MSB + KYC/AML vendor pending).");
+  }
+  if (c.CREATOR_DROPS_ENABLED) {
+    fatal.push("CREATOR_DROPS_ENABLED must be false in production — the creator-drops seam is a prototype (marketplace-intermediary/MSB + collectible-as-goods counsel pending).");
   }
   if (c.CARDS_ENABLED) {
     fatal.push("CARDS_ENABLED must be false in production — the Phase-19.4 cards seam is simulated (card processor + BIN sponsor + PCI scope pending).");
