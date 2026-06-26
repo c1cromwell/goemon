@@ -15,7 +15,7 @@ Each feature is a prototype seam consistent with the repo (swappable provider, k
 |---|---|---|---|---|
 | **1** | **Tokenized yield-bearing Treasury** | The anti-6%-APY: "own a yield-bearing **asset**, not a balance someone can freeze" | B/C · `TREASURY_ENABLED` ⚖ | ✅ **built** |
 | **2** | **Self-custody / anti-deplatforming proof** | The #1 wedge made real: self-custody report + signed attestation + portable export | A | ✅ **built** |
-| 3 | Non-custodial P2P + "X can freeze you, we can't" | Differentiate the table-stakes P2P (already built) | A→B | planned |
+| **3** | **P2P money requests on the native rail** | Differentiate table-stakes P2P (request-to-pay; no Visa/partner) | A→B | ✅ **built** |
 | 4 | Visa-bridge debit card | Match X's card, funded from the USDC balance | B · `CARDS_ENABLED` ⚖ | seam exists |
 | 5 | Collector / creator drops | Re-aim X's creator-payout hook to tokenized goods | A→B | planned |
 | 6 | Global / cross-border packaging | Reach the audience X (US-only) can't serve | B/C · `FX_*` ⚖ | seam exists (RAILS-CURRENCY) |
@@ -77,11 +77,30 @@ Phase-A safe (read-only, no money movement); always available (self-custody is t
 toggle). Reuses `vcService`, `hederaService`, `ledgerService`, `accountHoldService`, the token factory.
 `self-custody.test.ts` (4): report split, JWKS-verifiable attestation, signed export, on-chain branch.
 
-## Features 3–6 (subsequent)
+## Feature 3 — P2P money requests on the native rail (built)
 
-- **F3 — Non-custodial P2P + positioning:** P2P is built (Hedera USDC ~3s); add request-money + the
-  differentiated framing.
+**What:** "request $X from @user" (or an open request link), settled on **Argus's own rail** — the
+existing `executeTransfer` path (double-entry ledger / USDC on Hedera), idempotent at the ledger. **No
+Visa, no partner bank, no escrow:** the payer holds their funds until they choose to fulfill, then it
+settles as a direct peer transfer. The differentiator vs. X Money's P2P: instant, **non-custodial, your
+rail not a network's** — and it **advances the own-rail North Star** (see below).
+
+`paymentRequestService` + `/api/requests` (create · list?role · get · fulfill · decline · cancel); a
+lightweight state machine (requested → fulfilled/declined/canceled/expired); money moves **only on
+fulfill** and only as a balanced, idempotent journal; directed requests pay only by the named payer.
+Migration `037_payment_requests.sql`; `payment-requests.test.ts` (5): fulfill settles, idempotent (pays
+once), directed-payer guard, decline/cancel move no money, self-request + insufficient-funds rejected.
+
+> **North Star (recorded):** long-term, Argus should be **its own network rail for all payments / cards /
+> money movement — minimal partners, self-contained.** Treat Visa/BaaS/Circle as *bridges*, migrate
+> volume to the native USDC-on-Hedera + ledger + escrow + agent-auth rail (the Corp C "own the rails"
+> phase). Every money-movement feature should note its partner dependency and its path to the native rail.
+> F3 (P2P requests) is already 100% native. F4 (the Visa card) is an explicit *bridge*, not the destination.
+
+## Features 4–6 (subsequent)
+
 - **F4 — Visa-bridge card:** `CARDS_ENABLED` seam exists; turn on at Corp B with a BIN sponsor + PCI ⚖.
+  Per the North Star, this is a **bridge** for legacy acceptance — migrate volume to the native rail over time.
 - **F5 — Collector/creator drops:** extend `sellerCollectibleService` for creator-issued authenticated
   drops.
 - **F6 — Global packaging:** the FX/cross-border seam exists (`RAILS-CURRENCY-STRATEGY.md`); package for
