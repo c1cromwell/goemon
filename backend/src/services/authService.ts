@@ -93,6 +93,21 @@ export async function getUserById(id: string): Promise<UserRow | null> {
   return getDb().queryOne<UserRow>("SELECT * FROM users WHERE id = ?", [id]);
 }
 
+/**
+ * Resolve a user reference that may be an email OR a user id into the user id.
+ * Lets the UI accept a friendly email ("alex@demo.com") instead of an opaque id.
+ * Throws NOT_FOUND if neither matches.
+ */
+export async function resolveUserRef(ref: string): Promise<string> {
+  const trimmed = ref.trim();
+  const row = await getDb().queryOne<{ id: string }>(
+    "SELECT id FROM users WHERE email = ? OR id = ?",
+    [trimmed.toLowerCase(), trimmed]
+  );
+  if (!row) throw new AppError(ErrorCode.NOT_FOUND, `No user found for "${ref}"`);
+  return row.id;
+}
+
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
 }

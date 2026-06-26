@@ -39,7 +39,7 @@ export function Requests() {
   function create() {
     const minor = decimalToMinor(amt, 2);
     if (!minor || BigInt(minor) <= 0n) return toast.show("Enter an amount", "bad");
-    run(async () => { await userApi.createPayRequest({ fromUserId: from.trim() || undefined, amountMinor: minor, memo: memo.trim() || undefined }); setAmt(""); setMemo(""); setFrom(""); setTab("sent"); }, "Request sent");
+    run(async () => { await userApi.createPayRequest({ from: from.trim() || undefined, amountMinor: minor, memo: memo.trim() || undefined }); setAmt(""); setMemo(""); setFrom(""); setTab("sent"); }, "Request sent");
   }
 
   if (list === null) return <Loading />;
@@ -55,7 +55,7 @@ export function Requests() {
       <div className="card stack sm">
         <strong>Request money</strong>
         <input inputMode="decimal" placeholder="Amount (USD)" value={amt} onChange={(e) => setAmt(e.target.value)} aria-label="Amount" />
-        <input placeholder="From (user id) — leave blank for an open request" value={from} onChange={(e) => setFrom(e.target.value)} aria-label="From user" />
+        <input placeholder="From (email) — leave blank for an open request" value={from} onChange={(e) => setFrom(e.target.value)} aria-label="From email" />
         <input placeholder="What's it for? (optional)" value={memo} onChange={(e) => setMemo(e.target.value)} aria-label="Memo" maxLength={280} />
         <button disabled={busy} onClick={create}>Send request</button>
       </div>

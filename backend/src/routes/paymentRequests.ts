@@ -17,6 +17,7 @@ import type { Response, NextFunction } from "express";
 import { requireAuth, type AuthRequest } from "../middleware/auth";
 import { idempotency } from "../middleware/idempotency";
 import { currencySchema } from "../services/currencyRegistry";
+import { resolveUserRef } from "../services/authService";
 import { createRequest, listRequests, getRequest, fulfillRequest, declineRequest, cancelRequest } from "../services/paymentRequestService";
 
 export const paymentRequestsRouter = Router();
@@ -26,13 +27,15 @@ const amount = z.union([z.string().regex(/^\d+$/), z.number().int().positive()])
 paymentRequestsRouter.post("/", requireAuth, async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const body = z.object({
-      fromUserId: z.string().optional(),
+      // `from` may be an email or a user id (resolved server-side); blank = open request.
+      from: z.string().optional(),
       amountMinor: amount,
       currency: currencySchema(),
       memo: z.string().max(280).optional(),
       ttlSecs: z.number().int().positive().optional(),
     }).parse(req.body);
-    res.status(201).json(await createRequest({ requesterUserId: req.userId!, fromUserId: body.fromUserId, amountMinor: BigInt(body.amountMinor), currency: body.currency, memo: body.memo, ttlSecs: body.ttlSecs }));
+    const fromUserId = body.from?.trim() ? await resolveUserRef(body.from) : undefined;
+    res.status(201).json(await createRequest({ requesterUserId: req.userId!, fromUserId, amountMinor: BigInt(body.amountMinor), currency: body.currency, memo: body.memo, ttlSecs: body.ttlSecs }));
   } catch (e) {
     next(e);
   }

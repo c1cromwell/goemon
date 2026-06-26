@@ -57,7 +57,7 @@ export function SendAbroad() {
     if (!m || !recipient.trim() || from === to) return toast.show("Recipient + amount + two currencies", "bad");
     setBusy(true);
     try {
-      const r = await userApi.crossBorderSend({ recipientUserId: recipient.trim(), from, to, fromAmountMinor: m }, newIdempotencyKey());
+      const r = await userApi.crossBorderSend({ recipient: recipient.trim(), from, to, fromAmountMinor: m }, newIdempotencyKey());
       toast.show(`Sent — recipient receives ${formatUnits(r.toAmountMinor, dec(r.to))} ${r.to}`);
       setAmt(""); setRecipient(""); setQuote(null);
       await load();
@@ -76,7 +76,7 @@ export function SendAbroad() {
       </div>
 
       <div className="card stack sm">
-        <input placeholder="Recipient (user id)" value={recipient} onChange={(e) => setRecipient(e.target.value)} aria-label="Recipient" />
+        <input placeholder="Recipient (email)" value={recipient} onChange={(e) => setRecipient(e.target.value)} aria-label="Recipient email" />
         <div className="row" style={{ gap: 8 }}>
           <label className="stack xs grow"><span className="micro muted">You send</span>
             <select value={from} onChange={(e) => setFrom(e.target.value)} aria-label="From currency">

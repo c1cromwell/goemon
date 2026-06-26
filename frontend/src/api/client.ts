@@ -770,7 +770,7 @@ export const userApi = {
 
   // --- F3 — P2P money requests ---
   payRequests: (role: "sent" | "received") => uget<PaymentRequest[]>(`/requests?role=${role}`),
-  createPayRequest: (body: { fromUserId?: string; amountMinor: string; currency?: string; memo?: string }) => upost<PaymentRequest>("/requests", body),
+  createPayRequest: (body: { from?: string; amountMinor: string; currency?: string; memo?: string }) => upost<PaymentRequest>("/requests", body),
   fulfillPayRequest: (id: string, key: string) => umoney<PaymentRequest>(`/requests/${id}/fulfill`, {}, key),
   declinePayRequest: (id: string) => upost<PaymentRequest>(`/requests/${id}/decline`),
   cancelPayRequest: (id: string) => upost<PaymentRequest>(`/requests/${id}/cancel`),
@@ -784,7 +784,7 @@ export const userApi = {
 
   // --- F6 — cross-border send ---
   crossBorderQuote: (from: string, to: string, amountMinor: string) => upost<FxQuoteResult>("/cross-border/quote", { from, to, amountMinor }),
-  crossBorderSend: (body: { recipientUserId: string; from: string; to: string; fromAmountMinor: string }, key: string) => umoney<CrossBorderSend>("/cross-border/send", body, key),
+  crossBorderSend: (body: { recipient: string; from: string; to: string; fromAmountMinor: string }, key: string) => umoney<CrossBorderSend>("/cross-border/send", body, key),
   crossBorderSends: () => uget<{ sends: CrossBorderSend[] }>("/cross-border/sends"),
 
   // --- bill pay (Phase 19.3) ---

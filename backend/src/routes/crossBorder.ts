@@ -13,6 +13,7 @@ import { z } from "zod";
 import type { Response, NextFunction } from "express";
 import { requireAuth, type AuthRequest } from "../middleware/auth";
 import { idempotency } from "../middleware/idempotency";
+import { resolveUserRef } from "../services/authService";
 import { quoteCorridor, send, listSends } from "../services/crossBorderService";
 
 export const crossBorderRouter = Router();
@@ -30,8 +31,10 @@ crossBorderRouter.post("/quote", requireAuth, async (req: AuthRequest, res: Resp
 
 crossBorderRouter.post("/send", requireAuth, idempotency(), async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const body = z.object({ recipientUserId: z.string().min(1), from: z.string().min(1), to: z.string().min(1), fromAmountMinor: amount }).parse(req.body);
-    res.json(await send({ senderUserId: req.userId!, recipientUserId: body.recipientUserId, from: body.from, to: body.to, fromAmountMinor: BigInt(body.fromAmountMinor), idempotencyKey: req.header("Idempotency-Key")! }));
+    // `recipient` may be an email or a user id (resolved server-side).
+    const body = z.object({ recipient: z.string().min(1), from: z.string().min(1), to: z.string().min(1), fromAmountMinor: amount }).parse(req.body);
+    const recipientUserId = await resolveUserRef(body.recipient);
+    res.json(await send({ senderUserId: req.userId!, recipientUserId, from: body.from, to: body.to, fromAmountMinor: BigInt(body.fromAmountMinor), idempotencyKey: req.header("Idempotency-Key")! }));
   } catch (e) {
     next(e);
   }

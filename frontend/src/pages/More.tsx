@@ -1,29 +1,54 @@
-/** Mobile "More" — the secondary destinations + theme + sign out (sidebar on wide). */
+/** Mobile "More" — the secondary destinations, grouped, + theme + sign out (sidebar on wide). */
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 
-const LINKS = [
-  { to: "/activity", label: "Activity" },
-  { to: "/earn", label: "Earn" },
-  { to: "/requests", label: "Requests" },
-  { to: "/send-abroad", label: "Send abroad" },
-  { to: "/drops", label: "Drops" },
-  { to: "/self-custody", label: "Self-custody" },
-  { to: "/bank", label: "Bank" },
-  { to: "/cards", label: "Cards" },
-  { to: "/bills", label: "Bills" },
-  { to: "/starter", label: "Starter (guardian)" },
-  { to: "/starter/teen", label: "Starter (teen)" },
-  { to: "/console", label: "Console" },
-  { to: "/trade", label: "Trade" },
-  { to: "/escrow", label: "Escrow" },
-  { to: "/pay", label: "Argus Pay" },
-  { to: "/fx", label: "Currency exchange" },
-  { to: "/onboarding", label: "Verification & tiers" },
-  { to: "/credentials", label: "Credentials" },
-  { to: "/agents", label: "Internal agents" },
-  { to: "/permissions", label: "Connected agents" },
-  { to: "/wallet", label: "On-chain wallet" },
+const GROUPS: Array<{ title: string; links: Array<{ to: string; label: string }> }> = [
+  {
+    title: "Money",
+    links: [
+      { to: "/earn", label: "Earn" },
+      { to: "/bank", label: "Bank" },
+      { to: "/cards", label: "Cards" },
+      { to: "/bills", label: "Bills" },
+      { to: "/requests", label: "Requests" },
+      { to: "/send-abroad", label: "Send abroad" },
+      { to: "/fx", label: "Currency exchange" },
+      { to: "/pay", label: "Argus Pay" },
+      { to: "/escrow", label: "Escrow" },
+    ],
+  },
+  {
+    title: "Invest & collect",
+    links: [
+      { to: "/trade", label: "Trade" },
+      { to: "/drops", label: "Drops" },
+    ],
+  },
+  {
+    title: "Trust & identity",
+    links: [
+      { to: "/self-custody", label: "Self-custody" },
+      { to: "/wallet", label: "On-chain wallet" },
+      { to: "/credentials", label: "Credentials" },
+      { to: "/onboarding", label: "Verification & tiers" },
+      { to: "/permissions", label: "Connected agents" },
+      { to: "/agents", label: "Internal agents" },
+    ],
+  },
+  {
+    title: "Family",
+    links: [
+      { to: "/starter", label: "Starter (guardian)" },
+      { to: "/starter/teen", label: "Starter (teen)" },
+    ],
+  },
+  {
+    title: "Account",
+    links: [
+      { to: "/activity", label: "Activity" },
+      { to: "/console", label: "Console" },
+    ],
+  },
 ];
 
 export function More() {
@@ -43,11 +68,19 @@ export function More() {
         <h1>More</h1>
         <p className="muted small" style={{ margin: 0 }}>{me?.email}</p>
       </div>
+
+      {GROUPS.map((g) => (
+        <div key={g.title} className="stack sm">
+          <span className="muted micro" style={{ textTransform: "uppercase", letterSpacing: "0.04em" }}>{g.title}</span>
+          <div className="card">
+            {g.links.map((l) => (
+              <button key={l.to} className="menu-item" onClick={() => navigate(l.to)}>{l.label}</button>
+            ))}
+          </div>
+        </div>
+      ))}
+
       <div className="card">
-        {LINKS.map((l) => (
-          <button key={l.to} className="menu-item" onClick={() => navigate(l.to)}>{l.label}</button>
-        ))}
-        <hr className="hr" />
         <button className="menu-item" onClick={toggleTheme}>Toggle theme</button>
         <button className="menu-item danger" onClick={() => { logout(); navigate("/login"); }}>Sign out</button>
       </div>
