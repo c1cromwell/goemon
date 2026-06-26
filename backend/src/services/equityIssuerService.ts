@@ -99,6 +99,17 @@ export function assertEquitiesEnabled(): void {
   }
 }
 
+/**
+ * Corporate actions (dividends/distributions) are available when EITHER tokenized
+ * equities OR the tokenized treasury is enabled — both ride the same pro-rata
+ * distribution engine. Treasury yield is a recurring dividend distribution.
+ */
+export function assertCorporateActionsEnabled(): void {
+  if (!config.EQUITIES_ENABLED && !config.TREASURY_ENABLED) {
+    throw new AppError(ErrorCode.EQUITIES_DISABLED, "Corporate actions are currently unavailable");
+  }
+}
+
 let provider: EquityIssuer | null = null;
 
 /** Inject a provider (tests) or clear it (null → re-derive from config). */

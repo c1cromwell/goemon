@@ -48,6 +48,8 @@ import { payRouter } from "./routes/pay";
 import { fxRouter } from "./routes/fx";
 import { journeysRouter } from "./routes/journeys";
 import { seedDefaultJourneys } from "./journeys/onboardingJourney";
+import { treasuryRouter, treasuryAdminRouter } from "./routes/treasury";
+import { seedTreasury } from "./services/treasuryService";
 import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
 import { warehouseAdminRouter } from "./routes/warehouseAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
@@ -107,6 +109,11 @@ async function bootstrap(): Promise<void> {
   if (config.JOURNEYS_ENABLED) {
     await seedDefaultJourneys();
     logger.info("Journey orchestration ENABLED (prototype) — default journeys seeded");
+  }
+
+  if (config.TREASURY_ENABLED) {
+    await seedTreasury();
+    logger.warn("Tokenized Treasury ENABLED (prototype — not a registered security offering)");
   }
 
   const app = express();
@@ -206,6 +213,10 @@ async function bootstrap(): Promise<void> {
 
   // ---- Journey orchestration platform (prototype; gated by JOURNEYS_ENABLED) ----
   app.use("/api/journeys", journeysRouter);
+
+  // ---- X-Money response F1 — tokenized Treasury (gated by TREASURY_ENABLED) ----
+  app.use("/api/treasury", treasuryRouter);
+  app.use("/api/admin", treasuryAdminRouter);
 
   // ---- Phase 20 — ledger⇄chain reconciliation (RBAC admin surface) ----
   app.use("/api/admin", reconciliationAdminRouter);

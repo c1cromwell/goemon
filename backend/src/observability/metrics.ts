@@ -115,6 +115,14 @@ export const fxConversionTotal = new client.Counter({
   registers: [registry],
 });
 
+// X-Money response F1 — tokenized treasury yield accruals.
+export const treasuryAccrualTotal = new client.Counter({
+  name: "treasury_accrual_total",
+  help: "Tokenized treasury yield accruals distributed",
+  labelNames: ["asset"],
+  registers: [registry],
+});
+
 // Phase 20 — ledger⇄chain reconciliation (invariant n).
 export const reconciliationRunTotal = new client.Counter({
   name: "reconciliation_run_total",

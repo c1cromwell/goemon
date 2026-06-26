@@ -17,7 +17,7 @@ import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
 import { equityDividendTotal } from "../observability/metrics";
 import { requireAsset } from "./tokenizationService";
-import { assertEquitiesEnabled } from "./equityIssuerService";
+import { assertCorporateActionsEnabled } from "./equityIssuerService";
 import {
   assetLedgerCode,
   getBalance,
@@ -50,9 +50,11 @@ export interface CorporateActionRow {
 
 /** Declare a corporate action (append-only). */
 export async function declareCorporateAction(input: DeclareCorporateActionInput): Promise<CorporateActionRow> {
-  assertEquitiesEnabled();
+  assertCorporateActionsEnabled();
   const asset = await requireAsset(input.assetId);
-  if (asset.kind !== "equity") throw new AppError(ErrorCode.VALIDATION, "Corporate actions apply to equity assets only");
+  if (asset.kind !== "equity" && asset.kind !== "treasury") {
+    throw new AppError(ErrorCode.VALIDATION, "Corporate actions apply to equity/treasury assets only");
+  }
   const id = uuidv4();
   const currency = input.currency ?? "USD";
   await getDb().execute(
@@ -95,7 +97,7 @@ export interface DistributionResult {
  * re-invoke. Posts corporate_action(debit) → user_cash(credit) per holder.
  */
 export async function distributeDividend(corporateActionId: string): Promise<DistributionResult> {
-  assertEquitiesEnabled();
+  assertCorporateActionsEnabled();
   const ca = await getDb().queryOne<CorporateActionRow>("SELECT * FROM corporate_actions WHERE id = ?", [corporateActionId]);
   if (!ca) throw new AppError(ErrorCode.NOT_FOUND, "Corporate action not found");
   if (ca.type !== "dividend") throw new AppError(ErrorCode.VALIDATION, "Only dividend actions distribute cash");

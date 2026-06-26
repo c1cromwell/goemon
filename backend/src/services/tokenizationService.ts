@@ -26,7 +26,7 @@ import {
   postJournal,
 } from "./ledgerService";
 
-export type AssetKind = "security" | "collectible" | "gaming" | "equity";
+export type AssetKind = "security" | "collectible" | "gaming" | "equity" | "treasury";
 export type TokenStandard = "erc3643" | "hts";
 
 export interface AssetRow {

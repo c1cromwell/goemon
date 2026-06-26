@@ -149,6 +149,13 @@ const schema = z.object({
   EQUITIES_ENABLED: boolish,
   EQUITY_ISSUER: z.enum(["simulated", "dinari", "firstparty"]).default("simulated"),
 
+  // X-Money response F1 — tokenized yield-bearing Treasury (prototype seam). Off by default;
+  // a kill-switch (prod-fatal — it's a security; real launch needs issuer/transfer-agent/ATS +
+  // counsel). The competitive counter to a custodial 6% APY: own a yield-bearing ASSET whose
+  // yield is an automatic pro-rata distribution. TREASURY_APY_BPS is the annual rate (450 = 4.5%).
+  TREASURY_ENABLED: boolish,
+  TREASURY_APY_BPS: z.coerce.number().int().nonnegative().max(10_000).default(450),
+
   // Phase 19 Stage-1 — full-bank rails (fiat on/off-ramp + ACH/wire payouts). Off by
   // default; a kill-switch that gates deposits/withdrawals. BANK_RAIL_PROVIDER selects the
   // partner-bank provider (simulated stand-in; column/treasuryprime/unit are prod swaps).
@@ -315,6 +322,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.FX_SETTLEMENT_ENABLED && c.FX_RATE_PROVIDER === "simulated") {
     fatal.push("FX_SETTLEMENT_ENABLED with FX_RATE_PROVIDER=simulated must not run in production — cross-currency settlement at a simulated rate is a prototype.");
+  }
+  if (c.TREASURY_ENABLED) {
+    fatal.push("TREASURY_ENABLED must be false in production — the tokenized-treasury seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");
   }
   if (c.EQUITIES_ENABLED) {
     fatal.push("EQUITIES_ENABLED must be false in production — the Phase-18.6 tokenized-equities seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");
