@@ -13,8 +13,8 @@ Each feature is a prototype seam consistent with the repo (swappable provider, k
 
 | # | Feature | Competitive purpose | Phase / gate | Status |
 |---|---|---|---|---|
-| **1** | **Tokenized yield-bearing Treasury** | The anti-6%-APY: "own a yield-bearing **asset**, not a balance someone can freeze" | B/C · `TREASURY_ENABLED` ⚖ | **building now** |
-| 2 | Self-custody / anti-deplatforming proof | The #1 wedge made real: key backup/export + "no one can freeze this" | A | next |
+| **1** | **Tokenized yield-bearing Treasury** | The anti-6%-APY: "own a yield-bearing **asset**, not a balance someone can freeze" | B/C · `TREASURY_ENABLED` ⚖ | ✅ **built** |
+| **2** | **Self-custody / anti-deplatforming proof** | The #1 wedge made real: self-custody report + signed attestation + portable export | A | ✅ **built** |
 | 3 | Non-custodial P2P + "X can freeze you, we can't" | Differentiate the table-stakes P2P (already built) | A→B | planned |
 | 4 | Visa-bridge debit card | Match X's card, funded from the USDC balance | B · `CARDS_ENABLED` ⚖ | seam exists |
 | 5 | Collector / creator drops | Re-aim X's creator-payout hook to tokenized goods | A→B | planned |
@@ -60,11 +60,25 @@ reuses the existing ledger money path, posts only balanced journals.
 
 ---
 
-## Features 2–6 (subsequent)
+## Feature 2 — Self-custody & portability (built)
 
-- **F2 — Self-custody proof (Phase A):** key backup/export + a "you hold the keys; no platform can freeze
-  this" attestation surfaced in the wallet (the trust wedge made tangible). Mostly wallet/iOS + a backend
-  non-custodial attestation endpoint.
+**What:** make the non-custodial guarantee **tangible and verifiable** — the direct antidote to X's #1
+weakness (trust + deplatforming). `selfCustodyService` + `/api/self-custody`:
+- **report** — splits **self-custodied** (wallet `did:key`, server holds **no** signing key; on-chain
+  Hedera account with `serverHoldsKey` disclosed) from the **custodial** ledger balance (honestly
+  disclosed: can be held only for a fraud review under due process — *not* deplatforming), with the
+  guarantee statements.
+- **attestation** — the report wrapped in an **issuer-signed, JWKS-verifiable JWT** (`signIssuerJwt`) so
+  anyone can verify Argus's statement against `/.well-known/jwks.json`.
+- **export** — the portable **"right to exit"** manifest (wallet DID + credential + Hedera account +
+  holdings + instructions), signed — proving there's no lock-in.
+
+Phase-A safe (read-only, no money movement); always available (self-custody is the architecture, not a
+toggle). Reuses `vcService`, `hederaService`, `ledgerService`, `accountHoldService`, the token factory.
+`self-custody.test.ts` (4): report split, JWKS-verifiable attestation, signed export, on-chain branch.
+
+## Features 3–6 (subsequent)
+
 - **F3 — Non-custodial P2P + positioning:** P2P is built (Hedera USDC ~3s); add request-money + the
   differentiated framing.
 - **F4 — Visa-bridge card:** `CARDS_ENABLED` seam exists; turn on at Corp B with a BIN sponsor + PCI ⚖.

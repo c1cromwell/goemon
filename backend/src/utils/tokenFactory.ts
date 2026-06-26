@@ -67,6 +67,20 @@ export async function mintScopedToken(
     .sign(privateKey);
 }
 
+/**
+ * Sign an arbitrary claim set with the issuer key (RS256) — a tamper-evident,
+ * JWKS-verifiable attestation. Used by the self-custody attestation/export so a
+ * user (or anyone) can verify Argus's statement against /.well-known/jwks.json.
+ */
+export async function signIssuerJwt(claims: Record<string, unknown>, opts?: { subject?: string; ttlSecs?: number; type?: string }): Promise<string> {
+  const { kid, privateKey } = getActiveKey();
+  const now = Math.floor(Date.now() / 1000);
+  let jwt = new SignJWT(claims).setProtectedHeader({ alg: ALG, kid, typ: opts?.type ?? "JWT" }).setIssuedAt(now);
+  if (opts?.subject) jwt = jwt.setSubject(opts.subject);
+  if (opts?.ttlSecs) jwt = jwt.setExpirationTime(now + opts.ttlSecs);
+  return jwt.sign(privateKey);
+}
+
 export interface VerifiedToken {
   payload: {
     sub?: string;

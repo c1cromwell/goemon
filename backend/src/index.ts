@@ -50,6 +50,7 @@ import { journeysRouter } from "./routes/journeys";
 import { seedDefaultJourneys } from "./journeys/onboardingJourney";
 import { treasuryRouter, treasuryAdminRouter } from "./routes/treasury";
 import { seedTreasury } from "./services/treasuryService";
+import { selfCustodyRouter } from "./routes/selfCustody";
 import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
 import { warehouseAdminRouter } from "./routes/warehouseAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
@@ -217,6 +218,9 @@ async function bootstrap(): Promise<void> {
   // ---- X-Money response F1 — tokenized Treasury (gated by TREASURY_ENABLED) ----
   app.use("/api/treasury", treasuryRouter);
   app.use("/api/admin", treasuryAdminRouter);
+
+  // ---- X-Money response F2 — self-custody & portability (anti-deplatforming proof) ----
+  app.use("/api/self-custody", selfCustodyRouter);
 
   // ---- Phase 20 — ledger⇄chain reconciliation (RBAC admin surface) ----
   app.use("/api/admin", reconciliationAdminRouter);
