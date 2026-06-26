@@ -78,6 +78,7 @@ export function Dashboard() {
               Send or ask Argus Financial Partners
             </button>
           )}
+          <button className="ghost" onClick={() => navigate("/earn")}>Earn</button>
           <button className="ghost" onClick={() => navigate("/invest")}>Invest</button>
           <button className="ghost" onClick={() => navigate("/collect")}>Collect</button>
         </div>

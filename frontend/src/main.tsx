@@ -32,6 +32,11 @@ import { CollectSell } from "./pages/CollectSell";
 import { CollectPurchases } from "./pages/CollectPurchases";
 import { Pay } from "./pages/Pay";
 import { Fx } from "./pages/Fx";
+import { Earn } from "./pages/Earn";
+import { Requests } from "./pages/Requests";
+import { Drops } from "./pages/Drops";
+import { SendAbroad } from "./pages/SendAbroad";
+import { SelfCustody } from "./pages/SelfCustody";
 import "./styles.css";
 
 // Apply the persisted theme before first paint.
@@ -103,6 +108,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="/escrow" element={<Escrow />} />
               <Route path="/pay" element={<Pay />} />
               <Route path="/fx" element={<Fx />} />
+              <Route path="/earn" element={<Earn />} />
+              <Route path="/requests" element={<Requests />} />
+              <Route path="/drops" element={<Drops />} />
+              <Route path="/send-abroad" element={<SendAbroad />} />
+              <Route path="/self-custody" element={<SelfCustody />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/more" element={<More />} />
             </Route>

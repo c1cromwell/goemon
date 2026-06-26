@@ -4,6 +4,11 @@ import { useAuth } from "../auth/AuthContext";
 
 const LINKS = [
   { to: "/activity", label: "Activity" },
+  { to: "/earn", label: "Earn" },
+  { to: "/requests", label: "Requests" },
+  { to: "/send-abroad", label: "Send abroad" },
+  { to: "/drops", label: "Drops" },
+  { to: "/self-custody", label: "Self-custody" },
   { to: "/bank", label: "Bank" },
   { to: "/cards", label: "Cards" },
   { to: "/bills", label: "Bills" },

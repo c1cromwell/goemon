@@ -5,7 +5,7 @@
  */
 import { useEffect, useState } from "react";
 import { userApi, newIdempotencyKey, ApiError, type Card, type CardAuth } from "../api/client";
-import { formatMoney } from "../lib/money";
+import { formatMoney, formatUnits } from "../lib/money";
 import { Empty, Loading, Badge } from "../components/ui";
 import { useToast } from "../components/Toast";
 
@@ -27,13 +27,15 @@ export function Cards() {
   const [amt, setAmt] = useState("");
   const [merchant, setMerchant] = useState("");
   const [selected, setSelected] = useState<string>("");
+  const [rewards, setRewards] = useState<{ totalMinor: string; currency: string } | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function refresh() {
     try {
-      const [c, a] = await Promise.all([userApi.cards(), userApi.cardAuthorizations()]);
+      const [c, a, r] = await Promise.all([userApi.cards(), userApi.cardAuthorizations(), userApi.cardRewards().catch(() => null)]);
       setCards(c.cards);
       setAuths(a.authorizations);
+      setRewards(r);
       if (!selected && c.cards[0]) setSelected(c.cards[0].id);
     } catch {
       setCards([]);
@@ -90,6 +92,18 @@ export function Cards() {
           </div>
         )}
       </div>
+
+      {/* Cashback — earned as USDC, an asset you own */}
+      {rewards && BigInt(rewards.totalMinor) > 0n && (
+        <div className="card stack sm">
+          <div className="row" style={{ justifyContent: "space-between", alignItems: "baseline" }}>
+            <strong>Cashback earned</strong>
+            <span className="pill">USDC</span>
+          </div>
+          <div style={{ fontSize: 24, fontWeight: 600 }}>{formatUnits(rewards.totalMinor, 6)} {rewards.currency}</div>
+          <span className="muted micro">A real asset you own — not points locked in a platform.</span>
+        </div>
+      )}
 
       {/* Simulate a purchase */}
       {cards.length > 0 && (

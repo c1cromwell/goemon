@@ -506,6 +506,34 @@ export interface CheckoutChallenge {
   memo: string | null;
 }
 
+// X-Money response F1–F6 types
+export interface TreasuryPosition {
+  symbol: string;
+  qtyBase: string;
+  valueMinor: string;
+  apyBps: number;
+  recentAccruals: Array<{ per_unit_minor: string | number; holders_paid: number; total_minor: string | number; as_of: string }>;
+}
+export interface SelfCustodyReport {
+  selfCustodied: { walletDid: string | null; serverHoldsWalletKey: boolean; hedera: { accountId: string; evmAddress: string | null; publicKey: string | null; network: string; serverHoldsKey: boolean } | null };
+  custodial: { cashMinor: string; currency: string; note: string };
+  frozen: boolean;
+  guarantee: string[];
+}
+export interface PaymentRequest {
+  id: string; requesterUserId: string; fromUserId: string | null; amountMinor: string; currency: string;
+  memo: string | null; status: string; fulfilledBy: string | null; journalId: string | null; expiresAt: string; createdAt: string;
+}
+export interface Drop {
+  id: string; assetId: string; creatorUserId: string; name: string; editionSize: number; priceMinor: string;
+  currency: string; memo: string | null; certNumber: string | null; claimedCount: number; status: string; createdAt: string;
+}
+export interface CrossBorderSend {
+  id: string; senderUserId: string; recipientUserId: string; from: string; to: string;
+  fromAmountMinor: string; grossToMinor: string; feeMinor: string; toAmountMinor: string; rate: string; spreadBps: number; source: string; journalId: string;
+}
+export interface CardReward { id: string; auth_id: string; amount_minor: string; currency: string; created_at: string }
+
 // ============================================================================
 // User portal API
 // ============================================================================
@@ -729,6 +757,35 @@ export const userApi = {
   cardAuthorize: (cardId: string, amountMinor: string, key: string, merchant?: string) =>
     umoney<CardAuth>(`/cards/${cardId}/authorize`, { amountMinor, merchant }, key),
   cardVoid: (authId: string) => upost<{ voided: boolean }>(`/cards/authorizations/${authId}/void`),
+  cardRewards: () => uget<{ totalMinor: string; currency: string; rewards: CardReward[] }>("/cards/rewards"),
+
+  // --- X-Money response F1 — tokenized Treasury (Earn) ---
+  treasury: () => uget<TreasuryPosition>("/treasury"),
+  treasurySubscribe: (qtyBase: string, key: string) => umoney<{ assetId: string; qtyBase: string; costMinor: string }>("/treasury/subscribe", { qtyBase }, key),
+  treasuryRedeem: (qtyBase: string, key: string) => umoney<{ assetId: string; qtyBase: string; proceedsMinor: string }>("/treasury/redeem", { qtyBase }, key),
+
+  // --- F2 — self-custody & portability ---
+  selfCustody: () => uget<SelfCustodyReport>("/self-custody/report"),
+  selfCustodyExport: () => uget<{ manifest: Record<string, unknown>; signedManifestJwt: string }>("/self-custody/export"),
+
+  // --- F3 — P2P money requests ---
+  payRequests: (role: "sent" | "received") => uget<PaymentRequest[]>(`/requests?role=${role}`),
+  createPayRequest: (body: { fromUserId?: string; amountMinor: string; currency?: string; memo?: string }) => upost<PaymentRequest>("/requests", body),
+  fulfillPayRequest: (id: string, key: string) => umoney<PaymentRequest>(`/requests/${id}/fulfill`, {}, key),
+  declinePayRequest: (id: string) => upost<PaymentRequest>(`/requests/${id}/decline`),
+  cancelPayRequest: (id: string) => upost<PaymentRequest>(`/requests/${id}/cancel`),
+
+  // --- F5 — collector/creator drops ---
+  drops: (mine?: boolean) => uget<{ drops: Drop[] }>(`/drops${mine ? "?mine=1" : ""}`),
+  drop: (id: string) => uget<Drop>(`/drops/${id}`),
+  createDrop: (body: { name: string; symbol?: string; editionSize: number; priceMinor: string; currency?: string; memo?: string; certNumber?: string }) => upost<Drop>("/drops", body),
+  claimDrop: (id: string, key: string) => umoney<{ dropId: string; editionNumber: number; assetId: string; journalId: string; status: string }>(`/drops/${id}/claim`, {}, key),
+  myDropClaims: () => uget<{ claims: Array<{ drop_id: string; edition_number: number; name: string; asset_id: string; created_at: string }> }>("/drops/claims"),
+
+  // --- F6 — cross-border send ---
+  crossBorderQuote: (from: string, to: string, amountMinor: string) => upost<FxQuoteResult>("/cross-border/quote", { from, to, amountMinor }),
+  crossBorderSend: (body: { recipientUserId: string; from: string; to: string; fromAmountMinor: string }, key: string) => umoney<CrossBorderSend>("/cross-border/send", body, key),
+  crossBorderSends: () => uget<{ sends: CrossBorderSend[] }>("/cross-border/sends"),
 
   // --- bill pay (Phase 19.3) ---
   billPayees: () => uget<{ payees: BillPayee[] }>("/billpay/payees"),
