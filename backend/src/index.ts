@@ -53,6 +53,7 @@ import { seedTreasury } from "./services/treasuryService";
 import { selfCustodyRouter } from "./routes/selfCustody";
 import { paymentRequestsRouter } from "./routes/paymentRequests";
 import { dropsRouter } from "./routes/drops";
+import { crossBorderRouter } from "./routes/crossBorder";
 import { reconciliationAdminRouter } from "./routes/reconciliationAdmin";
 import { warehouseAdminRouter } from "./routes/warehouseAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
@@ -229,6 +230,9 @@ async function bootstrap(): Promise<void> {
 
   // ---- X-Money response F5 — collector/creator drops (gated by CREATOR_DROPS_ENABLED) ----
   app.use("/api/drops", dropsRouter);
+
+  // ---- X-Money response F6 — cross-border send (gated by FX_SETTLEMENT_ENABLED) ----
+  app.use("/api/cross-border", crossBorderRouter);
 
   // ---- Phase 20 — ledger⇄chain reconciliation (RBAC admin surface) ----
   app.use("/api/admin", reconciliationAdminRouter);

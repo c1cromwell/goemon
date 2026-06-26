@@ -18,7 +18,7 @@ Each feature is a prototype seam consistent with the repo (swappable provider, k
 | **3** | **P2P money requests on the native rail** | Differentiate table-stakes P2P (request-to-pay; no Visa/partner) | A→B | ✅ **built** |
 | **4** | **Visa-bridge card: native-rail funding + USDC cashback** | Match X's card, but *spend from USDC* + cashback as an asset you own | B · `CARDS_ENABLED` ⚖ | ✅ **built** (bridge) |
 | **5** | **Collector / creator drops** | Re-aim X's creator-payout hook to tokenized goods the creator owns | B · `CREATOR_DROPS_ENABLED` ⚖ | ✅ **built** |
-| 6 | Global / cross-border packaging | Reach the audience X (US-only) can't serve | B/C · `FX_*` ⚖ | seam exists (RAILS-CURRENCY) |
+| **6** | **Cross-border send (remittance)** | Reach the global / dollar-access audience X (US-only) can't serve | B/C · `FX_SETTLEMENT_ENABLED` ⚖ | ✅ **built** |
 
 ---
 
@@ -132,10 +132,36 @@ edition, claim pays the creator + transfers an owned token, scarcity sells out, 
 self-claim + insufficient-funds + the gate/prod-fatal. Reuses `tokenizationService.createAsset`/`mint`
 and the ledger primitives (same pattern as the treasury).
 
-## Feature 6 (subsequent)
+## Feature 6 — Cross-border send / remittance (built)
 
-- **F6 — Global packaging:** the FX/cross-border seam exists (`RAILS-CURRENCY-STRATEGY.md`); package for
-  the global/dollar-access audience X Money (US-only) can't serve.
+**What:** send money to **another user in a different currency/corridor** (e.g. USD/USDC → EURC), settled
+on **Argus's own rail** — no Visa, no US-only constraint. The global, **dollar-access** audience X Money
+(US-centric via Visa/Cross River/FDIC) **can't serve**. One balanced journal across two currency groups
+joined by the `fx_settlement` treasury, with the FX spread as an explicit fee; idempotent at the ledger.
+
+`crossBorderService` (`quoteCorridor` preview + `send`) + `/api/cross-border` (quote · send · sends);
+migration `040_cross_border.sql`; reuses the FX rate seam (`getFxProvider`/`convertAmountMinor`) and the
+ledger; gated by **`FX_SETTLEMENT_ENABLED`** (already prod-fatal while simulated); `cross_border_send_total`
+metric. `cross-border.test.ts` (5): corridor quote, send (debit FROM, credit recipient net TO, capture
+spread), idempotent, insufficient/same-currency/same-user rejected, gate off.
+
+---
+
+## ✅ The X Money response is complete (F1–F6)
+
+All six features built, tested, and shipped — **don't fight X head-on; win the segment X can't serve**:
+
+| # | Feature | The wedge vs. X Money |
+|---|---|---|
+| F1 | Tokenized Treasury | Own a yield-bearing **asset**, not a custodial 6% balance (no CLARITY-Act risk) |
+| F2 | Self-custody & portability | "X can freeze your money — we can't; you hold the keys" (verifiable) |
+| F3 | P2P money requests | Instant, **non-custodial**, native rail — your rail not a network's |
+| F4 | Visa-bridge card | Match the card, but **spend from USDC** + cashback **as an asset you own** |
+| F5 | Creator/collector drops | Re-aim the creator hook to **tokenized goods the creator owns** |
+| F6 | Cross-border send | Serve the **global / dollar-access** audience X (US-only) can't |
+
+Every money-moving feature settles on the **native rail** (own-rail North Star); the Visa card is the lone
+explicit **bridge**. Full backend suite: **361 pass / 3 todo (55 files)**.
 
 ---
 

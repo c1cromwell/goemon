@@ -137,6 +137,14 @@ export const creatorDropClaimTotal = new client.Counter({
   registers: [registry],
 });
 
+// X-Money response F6 — cross-border sends (remittance on the native rail).
+export const crossBorderSendTotal = new client.Counter({
+  name: "cross_border_send_total",
+  help: "Cross-border remittance sends settled on the native rail",
+  labelNames: ["pair"],
+  registers: [registry],
+});
+
 // Phase 20 — ledger⇄chain reconciliation (invariant n).
 export const reconciliationRunTotal = new client.Counter({
   name: "reconciliation_run_total",
