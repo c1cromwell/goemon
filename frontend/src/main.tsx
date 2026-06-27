@@ -34,6 +34,7 @@ import { Pay } from "./pages/Pay";
 import { Fx } from "./pages/Fx";
 import { Earn } from "./pages/Earn";
 import { AddCash } from "./pages/AddCash";
+import { Borrow } from "./pages/Borrow";
 import { Requests } from "./pages/Requests";
 import { Drops } from "./pages/Drops";
 import { SendAbroad } from "./pages/SendAbroad";
@@ -111,6 +112,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="/fx" element={<Fx />} />
               <Route path="/add-cash" element={<AddCash />} />
               <Route path="/earn" element={<Earn />} />
+              <Route path="/borrow" element={<Borrow />} />
               <Route path="/requests" element={<Requests />} />
               <Route path="/drops" element={<Drops />} />
               <Route path="/send-abroad" element={<SendAbroad />} />

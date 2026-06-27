@@ -58,6 +58,10 @@ export enum ErrorCode {
   // Fiat → USDC on-ramp
   ONRAMP_DISABLED = "ONRAMP_DISABLED",
 
+  // Collateralized lending (PRD v2 prototype)
+  LENDING_DISABLED = "LENDING_DISABLED",
+  LTV_EXCEEDED = "LTV_EXCEEDED",
+
   // Reconciliation (Phase 20 — ledger⇄chain drift gates on-chain settlement)
   RECONCILIATION_HOLD = "RECONCILIATION_HOLD",
 
@@ -124,6 +128,8 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.FX_DISABLED]: 503,
   [ErrorCode.CREATOR_DROPS_DISABLED]: 503,
   [ErrorCode.ONRAMP_DISABLED]: 503,
+  [ErrorCode.LENDING_DISABLED]: 503,
+  [ErrorCode.LTV_EXCEEDED]: 422,
   [ErrorCode.AGENT_DISABLED]: 503,
   [ErrorCode.EQUITIES_DISABLED]: 503,
   [ErrorCode.BANK_RAILS_DISABLED]: 503,

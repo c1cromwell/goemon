@@ -170,6 +170,16 @@ const schema = z.object({
   ONRAMP_PROVIDER: z.enum(["simulated", "moonpay", "stripe", "coinbase"]).default("simulated"),
   ONRAMP_FEE_BPS: z.coerce.number().int().nonnegative().max(1_000).default(100),
 
+  // Collateralized lending (prototype seam; PRD v2). Over-collateralized loans: pledge a
+  // tokenized holding (e.g. the Treasury ATB, valued at par) and borrow USD against it
+  // without selling. Off by default; prod-fatal (a real lending product needs a lender of
+  // record + licensing + a real liquidity source). MAX_LTV caps the borrow; LIQUIDATION_LTV
+  // is the seize threshold; APR is the simple annualized interest rate.
+  LENDING_ENABLED: boolish,
+  LENDING_MAX_LTV_BPS: z.coerce.number().int().positive().max(9_500).default(5_000),         // 50%
+  LENDING_LIQUIDATION_LTV_BPS: z.coerce.number().int().positive().max(9_900).default(7_500), // 75%
+  LENDING_APR_BPS: z.coerce.number().int().nonnegative().max(10_000).default(800),           // 8%
+
   // Phase 19.4 — debit cards (prototype seam). Off by default; a kill-switch gating card
   // issuance/auth. CARD_PROCESSOR selects the processor (simulated; marqeta/lithic/stripe stubs).
   CARDS_ENABLED: boolish,
@@ -348,6 +358,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.ONRAMP_ENABLED && c.ONRAMP_PROVIDER === "simulated") {
     fatal.push("ONRAMP_ENABLED with ONRAMP_PROVIDER=simulated must not run in production — wire a licensed on-ramp (moonpay/stripe/coinbase) that takes the fiat + KYC under its own license.");
+  }
+  if (c.LENDING_ENABLED) {
+    fatal.push("LENDING_ENABLED must be false in production — the collateralized-lending prototype has no lender of record, licensing, or real liquidity source.");
   }
   if (c.BANK_RAILS_ENABLED) {
     fatal.push("BANK_RAILS_ENABLED must be false in production — the Phase-19 Stage-1 bank rails are simulated (BaaS/partner-bank + FinCEN MSB + KYC/AML vendor pending).");

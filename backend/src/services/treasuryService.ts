@@ -162,10 +162,10 @@ export async function accrueYield(input: { assetId?: string; periodDays?: number
 }
 
 /** A user's treasury position + recent accruals. */
-export async function positions(userId: string): Promise<{ symbol: string; qtyBase: string; valueMinor: string; apyBps: number; recentAccruals: unknown[] }> {
+export async function positions(userId: string): Promise<{ assetId: string; symbol: string; qtyBase: string; valueMinor: string; apyBps: number; recentAccruals: unknown[] }> {
   const asset = await defaultTreasuryAsset();
   const holding = await getOrCreateUserAssetAccount(userId, asset.id);
   const qty = await getBalance(holding);
   const recent = await getDb().query("SELECT per_unit_minor, holders_paid, total_minor, as_of FROM treasury_accruals WHERE asset_id = ? ORDER BY created_at DESC LIMIT 10", [asset.id]);
-  return { symbol: TREASURY_SYMBOL, qtyBase: qty.toString(), valueMinor: (qty * PAR_MINOR).toString(), apyBps: config.TREASURY_APY_BPS, recentAccruals: recent };
+  return { assetId: asset.id, symbol: TREASURY_SYMBOL, qtyBase: qty.toString(), valueMinor: (qty * PAR_MINOR).toString(), apyBps: config.TREASURY_APY_BPS, recentAccruals: recent };
 }

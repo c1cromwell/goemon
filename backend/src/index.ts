@@ -59,6 +59,8 @@ import { warehouseAdminRouter } from "./routes/warehouseAdmin";
 import { agentOpsAdminRouter } from "./routes/agentOpsAdmin";
 import { bankRouter } from "./routes/bank";
 import { onrampRouter } from "./routes/onramp";
+import { lendingRouter } from "./routes/lending";
+import { lendingAdminRouter } from "./routes/lendingAdmin";
 import { bankAdminRouter } from "./routes/bankAdmin";
 import { cardsRouter } from "./routes/cards";
 import { billpayRouter } from "./routes/billpay";
@@ -250,6 +252,10 @@ async function bootstrap(): Promise<void> {
 
   // ---- Fiat → USDC on-ramp (buy USDC with fiat — the activation gap) ----
   app.use("/api/onramp", onrampRouter);
+
+  // ---- Collateralized lending (PRD v2 prototype) ----
+  app.use("/api/lending", lendingRouter);
+  app.use("/api/admin", lendingAdminRouter);
 
   // ---- Phase 19.4 — debit cards ----
   app.use("/api/cards", cardsRouter);

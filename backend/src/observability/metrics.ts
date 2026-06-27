@@ -212,6 +212,14 @@ export const onrampOrderTotal = new client.Counter({
   registers: [registry],
 });
 
+// Collateralized lending (PRD v2 prototype).
+export const lendingLoanTotal = new client.Counter({
+  name: "lending_loan_total",
+  help: "Collateralized loan lifecycle events",
+  labelNames: ["result"], // opened | repaid | liquidated
+  registers: [registry],
+});
+
 export const cardAuthTotal = new client.Counter({
   name: "card_auth_total",
   help: "Card authorization lifecycle events",

@@ -519,8 +519,21 @@ export interface OnRampOrder {
   createdAt: string; completedAt: string | null;
 }
 
+// Collateralized lending
+export interface BorrowingPower {
+  collateralValueMinor: string; maxBorrowMinor: string; aprBps: number; maxLtvBps: number;
+}
+export interface Loan {
+  id: string; userId: string; collateralAssetId: string; collateralQtyBase: string;
+  borrowCurrency: string; principalMinor: string; principalOutstandingMinor: string;
+  accruedInterestMinor: string; outstandingMinor: string; collateralValueMinor: string;
+  healthFactorBps: number; aprBps: number; maxLtvBps: number; liquidationLtvBps: number;
+  status: string; openedAt: string; closedAt: string | null;
+}
+
 // X-Money response F1–F6 types
 export interface TreasuryPosition {
+  assetId: string;
   symbol: string;
   qtyBase: string;
   valueMinor: string;
@@ -776,6 +789,15 @@ export const userApi = {
   onrampQuote: (fiatAmountMinor: string) => upost<OnRampQuote>("/onramp/quote", { fiatAmountMinor }),
   onrampOrder: (fiatAmountMinor: string, key: string) => umoney<OnRampOrder>("/onramp/order", { fiatAmountMinor }, key),
   onrampOrders: () => uget<OnRampOrder[]>("/onramp/orders"),
+
+  // --- Collateralized lending (borrow against holdings) ---
+  lendingQuote: (collateralAssetId: string, collateralQtyBase: string) =>
+    upost<BorrowingPower>("/lending/quote", { collateralAssetId, collateralQtyBase }),
+  openLoan: (collateralAssetId: string, collateralQtyBase: string, borrowMinor: string, key: string) =>
+    umoney<Loan>("/lending/loans", { collateralAssetId, collateralQtyBase, borrowMinor }, key),
+  loans: () => uget<Loan[]>("/lending/loans"),
+  repayLoan: (loanId: string, amountMinor: string, key: string) =>
+    umoney<Loan>(`/lending/loans/${loanId}/repay`, { amountMinor }, key),
 
   // --- X-Money response F1 — tokenized Treasury (Earn) ---
   treasury: () => uget<TreasuryPosition>("/treasury"),
