@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Argus Financial Partners — Argus Financial Partners</title>
+<style>/* Argus Financial Partners strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Argus Financial Partners</h1>
+  <p class="sub">End-to-End UX &amp; System Test Guide</p>
+  <div class="meta">Argus Financial Partners &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 27, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#0-the-stack-what-runs-where">0. The stack — what runs where</a></li><li class="lvl-2"><a href="#1-first-time-setup-test-data">1. First-time setup &amp; test data</a></li><li class="lvl-3"><a href="#11-env-flags-that-unlock-journeys">1.1 .env flags that unlock journeys</a></li><li class="lvl-3"><a href="#12-test-credentials-data-created-by-seede2e">1.2 Test credentials &amp; data created by seed:e2e</a></li><li class="lvl-2"><a href="#2-customer-portal-journeys-start-at-httplocalhost5173">2. Customer-portal journeys (start at http://localhost:5173)</a></li><li class="lvl-3"><a href="#j1-auth-passkey-first-registration">J1 — Auth (passkey-first) &amp; registration</a></li><li class="lvl-3"><a href="#j2-agentic-onboarding-the-tier-ladder">J2 — Agentic onboarding &amp; the tier ladder</a></li><li class="lvl-3"><a href="#j3-dashboard-money-transfer-now-on-temporal-capable-path">J3 — Dashboard &amp; money transfer (now on Temporal-capable path)</a></li><li class="lvl-3"><a href="#j4-invest-tokenized-rwa-securities">J4 — Invest (tokenized RWA / securities)</a></li><li class="lvl-3"><a href="#j5-collect-collectibles">J5 — Collect (collectibles)</a></li><li class="lvl-3"><a href="#j6-agent-smartchat-nl-90s-operation-token-mfa-gate">J6 — Agent / SmartChat (NL → 90s operation token → MFA gate)</a></li><li class="lvl-3"><a href="#j6b-console-terminal-style-agent-console-tier-2">J6b — Console (terminal-style agent; /console, Tier 2)</a></li><li class="lvl-3"><a href="#portal-money-app-pages-the-more-menu">Portal money-app pages &amp; the More menu</a></li><li class="lvl-3"><a href="#j7-trading-phase-17-simulated-broker-needs-trading_enabledtrue">J7 — Trading (Phase 17 simulated broker; needs TRADING_ENABLED=true)</a></li><li class="lvl-3"><a href="#j8-escrow-chargeback-substitute">J8 — Escrow (chargeback substitute)</a></li><li class="lvl-3"><a href="#j9-argus-pay-merchant-rail-needs-argus_pay_enabledtrue">J9 — Argus Pay (merchant rail; needs ARGUS_PAY_ENABLED=true)</a></li><li class="lvl-3"><a href="#j9b-bank-rails-deposit-withdraw-statement-needs-bank_rails_enabledtrue">J9b — Bank rails: deposit, withdraw, statement (needs BANK_RAILS_ENABLED=true)</a></li><li class="lvl-3"><a href="#j9c-debit-cards-issue-authorize-capturevoidrefund-needs-cards_enabledtrue">J9c — Debit cards: issue, authorize, capture/void/refund (needs CARDS_ENABLED=true)</a></li><li class="lvl-3"><a href="#j9d-bill-pay-payees-scheduledrecurring-payments-needs-billpay_enabledtrue">J9d — Bill pay: payees + scheduled/recurring payments (needs BILLPAY_ENABLED=true)</a></li><li class="lvl-2"><a href="#2a-money-inout-wealth-journeys-new-cluster-j14j23">2a. Money in/out &amp; wealth journeys (new cluster — J14–J23)</a></li><li class="lvl-3"><a href="#j14-add-cash-fiat-usdc-on-ramp-add-cash-needs-onramp_enabledtrue">J14 — Add cash (fiat → USDC on-ramp) — /add-cash (needs ONRAMP_ENABLED=true)</a></li><li class="lvl-3"><a href="#j15-cash-out-usdc-fiat-off-ramp-cash-out-needs-offramp_enabledtrue">J15 — Cash out (USDC → fiat off-ramp) — /cash-out (needs OFFRAMP_ENABLED=true)</a></li><li class="lvl-3"><a href="#j16-earn-tokenized-treasury-f1-earn-needs-treasury_enabledtrue">J16 — Earn (tokenized Treasury, F1) — /earn (needs TREASURY_ENABLED=true)</a></li><li class="lvl-3"><a href="#j17-borrow-collateralized-lending-borrow-needs-lending_enabledtrue-treasury">J17 — Borrow (collateralized lending) — /borrow (needs LENDING_ENABLED=true + Treasury)</a></li><li class="lvl-3"><a href="#j18-requests-p2p-money-requests-f3-requests">J18 — Requests (P2P money requests, F3) — /requests</a></li><li class="lvl-3"><a href="#j19-send-abroad-cross-border-f6-send-abroad-needs-fx_enabled-fx_settlement_enabled">J19 — Send abroad (cross-border, F6) — /send-abroad (needs FX_ENABLED + FX_SETTLEMENT_ENABLED)</a></li><li class="lvl-3"><a href="#j20-currency-exchange-fx-fx-needs-fx_enabledtrue">J20 — Currency exchange (FX) — /fx (needs FX_ENABLED=true)</a></li><li class="lvl-3"><a href="#j21-self-custody-portability-f2-self-custody">J21 — Self-custody &amp; portability (F2) — /self-custody</a></li><li class="lvl-3"><a href="#j22-drops-creator-drops-f5-drops-needs-creator_drops_enabledtrue">J22 — Drops (creator drops, F5) — /drops (needs CREATOR_DROPS_ENABLED=true)</a></li><li class="lvl-3"><a href="#j23-pay-with-argus-login-less-vc-checkout-pay-needs-argus_pay_enabled-checkout_vp_enabled">J23 — Pay with Argus + login-less VC checkout — /pay (needs ARGUS_PAY_ENABLED / CHECKOUT_VP_ENABLED)</a></li><li class="lvl-3"><a href="#j10-on-chain-wallet-only-with-hedera_enabledtrue">J10 — On-chain wallet (only with HEDERA_ENABLED=true)</a></li><li class="lvl-3"><a href="#j11-credentials-did-verifiable-credentials">J11 — Credentials (DID / Verifiable Credentials)</a></li><li class="lvl-3"><a href="#j12-connected-agents-grants-start-at-httplocalhost5174">J12 — Connected agents &amp; grants (start at http://localhost:5174)</a></li><li class="lvl-3"><a href="#j13-admin-console-rbac-start-at-httplocalhost5173adminlogin">J13 — Admin console (RBAC; start at http://localhost:5173/admin/login)</a></li><li class="lvl-2"><a href="#3-back-office-agent-operations-phase-15-api-admin">3. Back-office agent operations (Phase 15) — API + admin</a></li><li class="lvl-2"><a href="#4-the-fraud-system-how-it-works-logs-and-learns">4. The fraud system — how it works, logs, and learns</a></li><li class="lvl-3"><a href="#how-to-test-the-fraud-journey">How to test the fraud journey</a></li><li class="lvl-2"><a href="#5-backend-end-to-end-testing-build-start-stop-validate">5. Backend end-to-end testing (build · start · stop · validate)</a></li><li class="lvl-2"><a href="#6-optional-durable-orchestration-temporal-conductor">6. Optional: durable orchestration (Temporal + Conductor)</a></li><li class="lvl-2"><a href="#7-journey-channel-coverage-matrix">7. Journey × channel coverage matrix</a></li><li class="lvl-2"><a href="#8-where-to-add-agents-skills-mcp-services-expansion-review">8. Where to add agents, skills &amp; MCP services (expansion review)</a></li><li class="lvl-2"><a href="#9-troubleshooting">9. Troubleshooting</a></li></ol></nav>
+  <main class="content">
+<h1 id="argus-financial-partners-end-to-end-ux-system-test-guide">Argus Financial Partners — End-to-End UX &amp; System Test Guide</h1>
+<p>A hands-on guide to exercising <strong>every product, every channel, and the fraud platform</strong> as a
+real user/operator, plus how to build/run/validate the backend end-to-end. This is the manual,
+&quot;drive the actual apps&quot; companion to the automated runbook in
+<a href="./E2E-VALIDATION.md"><code>docs/E2E-VALIDATION.md</code></a> (deterministic vitest + the <code>e2e-validator</code> skill).</p>
+<ul>
+<li><strong>Use this doc</strong> to click through journeys, see the fraud system react, and demo the product.</li>
+<li><strong>Use <code>E2E-VALIDATION.md</code></strong> for the repeatable pass/fail gate (CI-style).</li>
+</ul>
+<hr>
+<h2 id="0-the-stack-what-runs-where">0. The stack — what runs where</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Service</th>
+<th>Start in</th>
+<th>URL / port</th>
+<th>Needed for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Backend API</strong></td>
+<td><code>backend/</code></td>
+<td><code>http://localhost:3001</code> (health: <code>/api/health</code>)</td>
+<td>everything</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Customer portal</strong> (React)</td>
+<td><code>frontend/</code></td>
+<td><code>http://localhost:5173</code></td>
+<td>all user journeys</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>External agent app</strong> (OID4VP + MCP)</td>
+<td><code>argus-agent/</code></td>
+<td><code>http://localhost:5174</code></td>
+<td>connected-agent journey</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Fraud engine</strong> (standalone)</td>
+<td><code>fraud-engine/</code></td>
+<td><code>http://localhost:4500</code> (health: <code>/health</code>)</td>
+<td>fraud journey, learning loop</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Temporal</strong> (optional)</td>
+<td><code>backend/</code> compose</td>
+<td>gRPC <code>localhost:7233</code>, UI <code>http://localhost:8233</code></td>
+<td>durable money + agent ops</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Conductor</strong> (optional)</td>
+<td><code>backend/</code> compose</td>
+<td>API <code>http://localhost:8080/api</code>, UI <code>http://localhost:5001</code></td>
+<td>agent-ops orchestration</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>iOS wallet</strong> (<code>ArgusWallet/</code>)</td>
+<td>Xcode</td>
+<td>simulator</td>
+<td>mobile (unverified source — needs macOS/Xcode)</td>
+</tr>
+</tbody></table>
+<p><strong>Primary starting URL for almost everything: <code>http://localhost:5173</code></strong> (the customer portal).
+Admin journeys start at <code>http://localhost:5173/admin/login</code>. The external-agent journey starts at
+<code>http://localhost:5174</code>.</p>
+<hr>
+<h2 id="1-first-time-setup-test-data">1. First-time setup &amp; test data</h2>
+<pre><code class="language-bash"># --- backend ---
+cd backend
+npm install
+cp .env.example .env            # then edit (see §1.1)
+npm run seed:e2e                # migrate + seed RBAC admin + register simulator MCP client
+                                #   + 5 demo users + marketplace assets (idempotent)
+npm run dev                     # API on :3001 (auto-migrates in dev)
+
+# --- customer portal (new terminal) ---
+cd frontend &amp;&amp; npm install &amp;&amp; npm run dev      # :5173
+
+# --- external agent app (new terminal) ---
+cd argus-agent &amp;&amp; npm install &amp;&amp; npm run dev    # :5174
+
+# --- fraud engine (new terminal) ---
+cd fraud-engine &amp;&amp; npm install &amp;&amp; cp .env.example .env &amp;&amp; npm run dev   # :4500
+</code></pre>
+<blockquote>
+<p>The money in/out &amp; wealth cluster (J14–J23: Add cash, Cash out, Earn, Borrow, FX, Send abroad, Drops,
+login-less checkout) adds <strong>no new service</strong> — it&#39;s all in the backend + portal. It only needs the
+§1.1 flags set (the dev <code>.env</code> already ships several on).</p>
+</blockquote>
+<h3 id="11-env-flags-that-unlock-journeys">1.1 <code>.env</code> flags that unlock journeys</h3>
+<p>Most products are behind kill-switches (off by default). For a full demo set these in <code>backend/.env</code>:</p>
+<pre><code class="language-bash">ALLOW_PASSWORD_AUTH=true          # lets you log in with the demo passwords (passkeys otherwise)
+TRADING_ENABLED=true              # /trade journey (Phase 17 simulated broker)
+ARGUS_PAY_ENABLED=true            # Argus Pay merchant journey (Phase 21)
+BANK_RAILS_ENABLED=true           # bank rails: deposit/withdraw/statement (Phase 19 Stage-1)
+CARDS_ENABLED=true                # debit cards: issue/authorize/capture (Phase 19.4)
+BILLPAY_ENABLED=true              # bill pay: payees + scheduled/recurring payments (Phase 19.3)
+# Money in/out &amp; wealth cluster (J14–J23):
+ONRAMP_ENABLED=true               # Add cash — fiat→USDC on-ramp (/add-cash)
+OFFRAMP_ENABLED=true              # Cash out — USDC→fiat off-ramp (/cash-out)
+TREASURY_ENABLED=true             # Earn — tokenized Treasury (/earn) — also the Borrow collateral
+LENDING_ENABLED=true              # Borrow — collateralized lending (/borrow); needs TREASURY_ENABLED
+FX_ENABLED=true                   # Currency exchange (/fx)
+FX_SETTLEMENT_ENABLED=true        # Send abroad — cross-currency settlement (/send-abroad)
+CREATOR_DROPS_ENABLED=true        # Drops — creator drops (/drops)
+CHECKOUT_VP_ENABLED=true          # login-less VC checkout on /pay
+JOURNEYS_ENABLED=true             # journey-orchestration platform (/api/journeys)
+# CARD_CASHBACK_BPS=150           # optional: card cashback % (USDC) paid on capture
+# Fraud engine wiring (both sides must share the key):
+FRAUD_ENGINE_URL=http://localhost:4500
+FRAUD_ENGINE_API_KEY=&lt;a-strong-shared-secret-32+chars&gt;
+# Optional orchestration (see §9):
+# TEMPORAL_MONEY_ENABLED=true     CONDUCTOR_ENABLED=true     TEMPORAL_ENABLED=true
+# Optional on-chain (else simulated):
+# HEDERA_ENABLED=true  HEDERA_OPERATOR_ID=…  HEDERA_OPERATOR_KEY=…  HEDERA_USDC_TOKEN_ID=…
+</code></pre>
+<p>In <code>fraud-engine/.env</code> set the <strong>same</strong> <code>FRAUD_ENGINE_API_KEY</code> (the engine validates it and reuses it
+for freeze callbacks).</p>
+<blockquote>
+<p>⚠️ These flags are <strong>prod-fatal</strong> — the server refuses to boot in <code>NODE_ENV=production</code> with
+<code>TRADING_ENABLED</code>/<code>ARGUS_PAY_ENABLED</code>/<code>ALLOW_PASSWORD_AUTH</code> on, with the simulated on/off-ramp
+(<code>ONRAMP_ENABLED</code>/<code>OFFRAMP_ENABLED</code> while <code>*_PROVIDER=simulated</code>), with <code>LENDING_ENABLED</code> or the
+simulated money/wealth seams, or with <code>KMS_PROVIDER=local</code>. They are for local/dev demoing only.
+The dev <code>.env</code> already ships the on-ramp, off-ramp, Treasury, and lending flags <strong>on</strong>.</p>
+</blockquote>
+<h3 id="12-test-credentials-data-created-by-seede2e">1.2 Test credentials &amp; data created by <code>seed:e2e</code></h3>
+<table>
+<thead>
+<tr>
+<th>Who</th>
+<th>Login</th>
+<th>Tier / state</th>
+<th>Use for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong><a href="mailto:admin@argusfinancial.com">admin@argusfinancial.com</a></strong> / <code>Admin1234!</code></td>
+<td><code>/admin/login</code></td>
+<td>RBAC <code>admin</code></td>
+<td>admin console, agent-ops, escrow mediation</td>
+</tr>
+<tr>
+<td><strong><a href="mailto:alex@demo.com">alex@demo.com</a></strong> / <code>Demo1234!</code></td>
+<td><code>/login</code></td>
+<td>Tier 2, $12,500</td>
+<td>transfers, SmartChat, escrow</td>
+</tr>
+<tr>
+<td><strong><a href="mailto:blair@demo.com">blair@demo.com</a></strong> / <code>Demo1234!</code></td>
+<td><code>/login</code></td>
+<td>Tier 2, $40,000</td>
+<td>marketplace Invest (accredited)</td>
+</tr>
+<tr>
+<td><strong><a href="mailto:casey@demo.com">casey@demo.com</a></strong> / <code>Demo1234!</code></td>
+<td><code>/login</code></td>
+<td>Tier 1, $3,000</td>
+<td>KYC step-up; rejection demo (expired doc #1)</td>
+</tr>
+<tr>
+<td><strong><a href="mailto:drew@demo.com">drew@demo.com</a></strong> / <code>Demo1234!</code></td>
+<td><code>/login</code></td>
+<td>Tier 0, $750</td>
+<td>fresh signup; rejection demo (tampered doc #2)</td>
+</tr>
+<tr>
+<td><strong><a href="mailto:erin@demo.com">erin@demo.com</a></strong> / <code>Demo1234!</code></td>
+<td><code>/login</code></td>
+<td>Tier 0, $250</td>
+<td>fresh signup; rejection demo (low-quality doc #3)</td>
+</tr>
+</tbody></table>
+<p>Plus: marketplace Invest/Collect assets, and the simulator MCP client <code>did:simulator:agent-app</code>
+(used by the external-agent app, $500 ceiling).</p>
+<p>Extra data created inline per journey below (a merchant for Argus Pay, an agent-ops review) via <code>curl</code>.</p>
+<hr>
+<h2 id="2-customer-portal-journeys-start-at-httplocalhost5173">2. Customer-portal journeys (start at <code>http://localhost:5173</code>)</h2>
+<p>Each journey lists the <strong>start URL</strong>, steps, and <strong>what to verify</strong>. Log in as the noted demo user.</p>
+<h3 id="j1-auth-passkey-first-registration">J1 — Auth (passkey-first) &amp; registration</h3>
+<ul>
+<li><strong>Start:</strong> <code>/register</code> → <code>/login</code>.</li>
+<li>Register a new user (passkey if your browser supports WebAuthn; password form appears only when
+<code>ALLOW_PASSWORD_AUTH=true</code>). Then log in.</li>
+<li><strong>Verify:</strong> session persists; <code>Idempotency-Key</code> is auto-attached to money POSTs (Network tab);
+5 failed password attempts → <code>ACCOUNT_LOCKED</code> (reset with <code>npm run reset:auth</code>).</li>
+</ul>
+<h3 id="j2-agentic-onboarding-the-tier-ladder">J2 — Agentic onboarding &amp; the tier ladder</h3>
+<ul>
+<li><strong>Start:</strong> <code>/onboarding</code> (log in as <strong>drew</strong> or <strong>erin</strong>, Tier 0).</li>
+<li>Submit signals/document. The risk orchestrator scores signals → may require step-up
+(document/possession). Low confidence or a &quot;weak&quot; doc number routes to <strong>manual review</strong>.</li>
+<li><strong>Verify:</strong> the tier-ladder dots advance; a clean flow grants Tier 2; <strong>drew/erin/casey</strong> (seeded
+with rejection doc numbers 1/2/3) land in the admin review queue (see J13).</li>
+</ul>
+<h3 id="j3-dashboard-money-transfer-now-on-temporal-capable-path">J3 — Dashboard &amp; money transfer (now on Temporal-capable path)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/</code> as <strong>alex</strong>.</li>
+<li>Send a transfer to <strong>blair</strong> (by email). Amounts render only from integer minor units.</li>
+<li><strong>Verify:</strong> balance updates; <code>/activity</code> shows <code>transfer_out</code> + matching <code>transfer_in</code>; a <strong>replay
+with the same Idempotency-Key posts no second journal</strong> (exactly-once). With <code>TEMPORAL_MONEY_ENABLED</code>
+the transfer runs as a durable Temporal workflow (see the worker logs / Temporal UI :8233) — same
+result, because the ledger is the source of truth.</li>
+</ul>
+<h3 id="j4-invest-tokenized-rwa-securities">J4 — Invest (tokenized RWA / securities)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/invest</code> as <strong>blair</strong> (accredited, Tier 2).</li>
+<li>Open an asset (<code>/asset/:id</code>) → <strong>quote</strong> (see fee/source/as-of/staleness) → <strong>TradeSheet</strong> confirm.</li>
+<li><strong>Verify:</strong> a single atomic cash+asset+fee journal; holdings appear; a Tier-1 user (<strong>casey</strong>) is
+compliance-gated (<code>COMPLIANCE_BLOCKED</code> / <code>TIER_REQUIRED</code>).</li>
+</ul>
+<h3 id="j5-collect-collectibles">J5 — Collect (collectibles)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/collect</code>. Buy/sell a collectible; same quote→confirm flow.</li>
+<li><strong>Verify:</strong> holding reflects in the ledger; secondary sell posts the atomic journal.</li>
+</ul>
+<h3 id="j6-agent-smartchat-nl-90s-operation-token-mfa-gate">J6 — Agent / SmartChat (NL → 90s operation token → MFA gate)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/agent</code> as <strong>alex</strong> (Tier 2 required).</li>
+<li>Type &quot;send $50 to <a href="mailto:blair@demo.com">blair@demo.com</a>&quot;. Watch the <strong>90-second token countdown</strong>. Try &quot;&gt;$500&quot; to trigger
+the <strong>MFA gate</strong>.</li>
+<li><strong>Verify:</strong> intent classified → scoped 90s RS256 operation token → transfer posts idempotently on the
+token id; an expired token is rejected; MFA required above $500.</li>
+<li><strong>SmartChat now also drives the money rails</strong> (Phase 19): try &quot;deposit $50&quot;, &quot;withdraw $20 to my bank&quot;,
+and <code>pay &quot;City Power&quot; $90</code> (add the biller on the Bills page first). Deposits are money-in → never
+MFA-gated; a &gt;$500 withdrawal/bill prompts for MFA.</li>
+</ul>
+<h3 id="j6b-console-terminal-style-agent-console-tier-2">J6b — Console (terminal-style agent; <code>/console</code>, Tier 2)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/console</code>. Type <code>help</code>, then commands like <code>balance</code>, <code>deposit $50</code>, <code>pay &quot;City Power&quot; $90</code>,
+<code>send $20 to blair@demo.com</code>. It routes each line through the SmartChat agent (same 90s token + MFA);
+an MFA-gated command flips the prompt to <code>mfa&gt;</code> for the code.</li>
+</ul>
+<h3 id="portal-money-app-pages-the-more-menu">Portal money-app pages &amp; the More menu</h3>
+<p>The customer portal surfaces every product through a flat top nav (Home · Invest · Collect · Agent) plus
+a <strong>grouped More menu</strong> — <strong>Money</strong> (Add cash · Cash out · Earn · Borrow · Bank · Cards · Bills · Requests ·
+Send abroad · Currency exchange · Argus Pay · Escrow), <strong>Invest &amp; collect</strong> (Trade · Drops), <strong>Trust &amp;
+identity</strong> (Self-custody · On-chain wallet · Credentials · Verification &amp; tiers · Connected agents ·
+Internal agents), <strong>Family</strong> (Starter guardian/teen), and <strong>Account</strong> (Activity · Console). On wide
+screens these appear in the sidebar. Each gated page needs its matching <code>*_ENABLED</code> flag (§1.1).</p>
+<h3 id="j7-trading-phase-17-simulated-broker-needs-trading_enabledtrue">J7 — Trading (Phase 17 simulated broker; needs <code>TRADING_ENABLED=true</code>)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/trade</code> as <strong>alex</strong>.</li>
+<li>Place a simulated equity/crypto order.</li>
+<li><strong>Verify:</strong> order accepted on the hot path; settlement posts into the ledger <strong>asynchronously</strong> and
+idempotently; trading is bulkheaded — a broker stall doesn&#39;t block J3 transfers (SLA isolation).</li>
+</ul>
+<h3 id="j8-escrow-chargeback-substitute">J8 — Escrow (chargeback substitute)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/escrow</code> as <strong>alex</strong> (payer) → hold funds for <strong>blair</strong>.</li>
+<li><strong>Verify:</strong> hold debits payer to the <code>escrow</code> system account; release→credits recipient; refund→back to
+payer; dispute → mediated by admin (J13). Each step is an idempotent ledger journal.</li>
+</ul>
+<h3 id="j9-argus-pay-merchant-rail-needs-argus_pay_enabledtrue">J9 — Argus Pay (merchant rail; needs <code>ARGUS_PAY_ENABLED=true</code>)</h3>
+<p>Create a merchant first (as <strong>blair</strong>, Tier 2). Get a session token by logging in via the portal and
+copying the Bearer from the Network tab, or use the API:</p>
+<pre><code class="language-bash"># register merchant (blair is the settlement account)
+curl -sX POST localhost:3001/api/pay/merchants -H &quot;Authorization: Bearer $BLAIR&quot; \
+  -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;name&quot;:&quot;Acme Coffee&quot;}&#39;
+# merchant requests money (idempotent)
+curl -sX POST localhost:3001/api/pay/intents -H &quot;Authorization: Bearer $BLAIR&quot; \
+  -H &#39;Idempotency-Key: pay-1&#39; -H &#39;Content-Type: application/json&#39; \
+  -d &#39;{&quot;merchantId&quot;:&quot;&lt;id&gt;&quot;,&quot;amountMinor&quot;:&quot;500&quot;,&quot;currency&quot;:&quot;USD&quot;}&#39;
+</code></pre>
+<ul>
+<li>Pay the intent as <strong>alex</strong>, then capture as <strong>blair</strong>; try a refund and a payer dispute.</li>
+<li><strong>Verify:</strong> every payment is <strong>escrow-protected</strong> (status derives from the escrow row); zero rail fee;
+agents can pay via the <code>pay_merchant</code> MCP tool (scope <code>pay:merchant</code>).</li>
+</ul>
+<h3 id="j9b-bank-rails-deposit-withdraw-statement-needs-bank_rails_enabledtrue">J9b — Bank rails: deposit, withdraw, statement (needs <code>BANK_RAILS_ENABLED=true</code>)</h3>
+<ul>
+<li><strong>API</strong> (Tier 2; get <code>$ALEX</code> Bearer from the portal Network tab). The simulated partner bank settles
+instantly into the ledger via <code>external_clearing</code>.</li>
+</ul>
+<pre><code class="language-bash"># on-ramp (deposit) — Idempotency-Key required
+curl -sX POST localhost:3001/api/bank/deposit -H &quot;Authorization: Bearer $ALEX&quot; \
+  -H &#39;Idempotency-Key: dep-1&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;amountMinor&quot;:&quot;50000&quot;}&#39;
+# off-ramp (ACH payout)
+curl -sX POST localhost:3001/api/bank/withdraw -H &quot;Authorization: Bearer $ALEX&quot; \
+  -H &#39;Idempotency-Key: wd-1&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;amountMinor&quot;:&quot;20000&quot;,&quot;method&quot;:&quot;ach&quot;,&quot;destination&quot;:&quot;ext-1&quot;}&#39;
+curl -s &quot;localhost:3001/api/bank/statement?from=1970-01-01T00:00:00Z&amp;to=2999-01-01T00:00:00Z&quot; -H &quot;Authorization: Bearer $ALEX&quot;
+# admin: ACH return reversal + FBO coverage (compliance/admin)
+curl -sX POST localhost:3001/api/admin/bank/transfers/&lt;id&gt;/return -H &quot;Authorization: Bearer $ADMIN&quot;
+curl -s localhost:3001/api/admin/bank/fbo?currency=USD -H &quot;Authorization: Bearer $ADMIN&quot;
+</code></pre>
+<ul>
+<li><strong>Verify:</strong> deposit credits / withdraw debits <code>user_cash</code> (visible in <code>/activity</code>); replaying an
+Idempotency-Key posts no second journal; an over-balance withdrawal → <code>INSUFFICIENT_FUNDS</code>; a frozen
+account (fraud, J§4) → <code>ACCOUNT_FROZEN</code>; the statement&#39;s closing balance reconciles to the ledger; FBO
+coverage shows the partner bank backing customer cash 1:1; a return reverses the journal.</li>
+</ul>
+<h3 id="j9c-debit-cards-issue-authorize-capturevoidrefund-needs-cards_enabledtrue">J9c — Debit cards: issue, authorize, capture/void/refund (needs <code>CARDS_ENABLED=true</code>)</h3>
+<pre><code class="language-bash"># issue a card (Tier 2)
+curl -sX POST localhost:3001/api/cards -H &quot;Authorization: Bearer $ALEX&quot;
+# simulate a purchase — places a hold on funds (Idempotency-Key required)
+curl -sX POST localhost:3001/api/cards/&lt;cardId&gt;/authorize -H &quot;Authorization: Bearer $ALEX&quot; \
+  -H &#39;Idempotency-Key: auth-1&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;amountMinor&quot;:&quot;7500&quot;,&quot;merchant&quot;:&quot;Acme&quot;}&#39;
+# cardholder cancels before capture
+curl -sX POST localhost:3001/api/cards/authorizations/&lt;authId&gt;/void -H &quot;Authorization: Bearer $ALEX&quot;
+# merchant/processor side (admin): capture or refund
+curl -sX POST localhost:3001/api/admin/cards/authorizations/&lt;authId&gt;/capture -H &quot;Authorization: Bearer $ADMIN&quot;
+curl -sX POST localhost:3001/api/admin/cards/authorizations/&lt;authId&gt;/refund  -H &quot;Authorization: Bearer $ADMIN&quot;
+</code></pre>
+<ul>
+<li><strong>Verify:</strong> only a masked PAN (••••last4) is returned; authorize <strong>holds</strong> funds (spendable cash drops
+into <code>card_holds</code>); capture settles out via <code>external_clearing</code> (money gone); void releases the hold
+back; refund returns a captured amount; replaying the auth Idempotency-Key places no second hold;
+over-balance → <code>INSUFFICIENT_FUNDS</code>; a frozen account → <code>ACCOUNT_FROZEN</code>.</li>
+<li><strong>Cashback (F4):</strong> with <code>CARD_CASHBACK_BPS</code> set, <strong>capture pays USDC cashback</strong> from a <code>card_rewards</code>
+system account (idempotent), viewable on <code>/cards</code> (<code>GET /api/cards/rewards</code>) — spend on the native rail.</li>
+</ul>
+<h3 id="j9d-bill-pay-payees-scheduledrecurring-payments-needs-billpay_enabledtrue">J9d — Bill pay: payees + scheduled/recurring payments (needs <code>BILLPAY_ENABLED=true</code>)</h3>
+<pre><code class="language-bash"># save a biller
+curl -sX POST localhost:3001/api/billpay/payees -H &quot;Authorization: Bearer $ALEX&quot; \
+  -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;name&quot;:&quot;City Power&quot;,&quot;category&quot;:&quot;utility&quot;,&quot;last4&quot;:&quot;4321&quot;}&#39;
+# pay now (Idempotency-Key); or schedule with &quot;scheduledFor&quot;:&quot;2026-07-01T00:00:00Z&quot; + &quot;recurrence&quot;:&quot;monthly&quot;
+curl -sX POST localhost:3001/api/billpay/pay -H &quot;Authorization: Bearer $ALEX&quot; \
+  -H &#39;Idempotency-Key: bp-1&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;payeeId&quot;:&quot;&lt;id&gt;&quot;,&quot;amountMinor&quot;:&quot;9000&quot;}&#39;
+curl -sX POST localhost:3001/api/billpay/payments/&lt;id&gt;/cancel -H &quot;Authorization: Bearer $ALEX&quot;  # cancel a scheduled one
+# ops due-loop (admin): settle all due scheduled payments
+curl -sX POST localhost:3001/api/admin/billpay/process -H &quot;Authorization: Bearer $ADMIN&quot;
+</code></pre>
+<ul>
+<li><strong>Verify:</strong> pay-now debits <code>user_cash</code> via <code>external_clearing</code> (visible in <code>/activity</code>); replaying the
+Idempotency-Key pays once; over-balance → <code>INSUFFICIENT_FUNDS</code>; frozen → <code>ACCOUNT_FROZEN</code>; a future-dated
+payment stays <code>scheduled</code> until the due-loop settles it; a recurring payment seeds its next instance on send.</li>
+</ul>
+<hr>
+<h2 id="2a-money-inout-wealth-journeys-new-cluster-j14j23">2a. Money in/out &amp; wealth journeys (new cluster — J14–J23)</h2>
+<p>Get money onto the rail, off it, grow it, and borrow against it — all on the own USDC-on-Hedera +
+double-entry-ledger rail. Each rides a balanced, idempotent ledger journal (money is integer minor
+units). Set the §1.1 flags; they&#39;re all in the <strong>More → Money</strong> menu (and the wide sidebar). Log in as
+<strong>alex</strong> unless noted.</p>
+<h3 id="j14-add-cash-fiat-usdc-on-ramp-add-cash-needs-onramp_enabledtrue">J14 — Add cash (fiat → USDC on-ramp) — <code>/add-cash</code> (needs <code>ONRAMP_ENABLED=true</code>)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/add-cash</code>. Enter a USD amount → the <strong>live quote</strong> shows the on-ramp fee and the USDC
+you&#39;ll receive → <strong>Buy USDC</strong>.</li>
+<li><strong>Verify:</strong> USDC lands in your balance; the journal is <code>onramp_settlement → user_cash</code> (net) + <code>fee</code>;
+replaying the Idempotency-Key credits once; a frozen account → <code>ACCOUNT_FROZEN</code>. The simulated provider
+delivers instantly; a real provider (MoonPay/Stripe/Coinbase) returns a hosted-widget redirect and
+credits on its webhook. API: <code>POST /api/onramp/quote</code>, <code>POST /api/onramp/order</code> (Idempotency-Key).</li>
+</ul>
+<h3 id="j15-cash-out-usdc-fiat-off-ramp-cash-out-needs-offramp_enabledtrue">J15 — Cash out (USDC → fiat off-ramp) — <code>/cash-out</code> (needs <code>OFFRAMP_ENABLED=true</code>)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/cash-out</code>. Enter a USDC amount → quote shows the fee and the fiat you&#39;ll receive →
+<strong>Cash out</strong> (optional linked destination).</li>
+<li><strong>Verify:</strong> debits <code>user_cash(USDC)</code> → <code>offramp_settlement</code> (net) + <code>fee</code>; the <strong>money-leaving guards</strong>
+apply (account-freeze, fraud-screen, authoritative balance check) so an over-sell → <code>INSUFFICIENT_FUNDS</code>
+and a frozen account → <code>ACCOUNT_FROZEN</code>; idempotent on replay. Closes the loop with J14.
+API: <code>POST /api/offramp/quote</code>, <code>POST /api/offramp/order</code> (Idempotency-Key).</li>
+</ul>
+<h3 id="j16-earn-tokenized-treasury-f1-earn-needs-treasury_enabledtrue">J16 — Earn (tokenized Treasury, F1) — <code>/earn</code> (needs <code>TREASURY_ENABLED=true</code>)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/earn</code>. Buy ATB ($1 par) with USD cash; see your position. Accrue the period&#39;s yield from
+the admin/ops side (<code>POST /api/admin/...</code> or the daily loop).</li>
+<li><strong>Verify:</strong> subscribe/redeem post a balanced par cash↔token journal; <strong>yield distributes pro-rata to
+holders</strong> automatically (the anti-6%-APY — you <em>own</em> a yield-bearing asset, not a freezable balance).</li>
+</ul>
+<h3 id="j17-borrow-collateralized-lending-borrow-needs-lending_enabledtrue-treasury">J17 — Borrow (collateralized lending) — <code>/borrow</code> (needs <code>LENDING_ENABLED=true</code> + Treasury)</h3>
+<ul>
+<li><strong>Start:</strong> buy some ATB on <code>/earn</code> first, then <code>/borrow</code>. Set tokens to pledge → <strong>live borrowing
+power</strong> (≤ 50% LTV at par) → enter an amount → <strong>Borrow</strong>. Repay inline from the loan row.</li>
+<li><strong>Verify:</strong> opening locks the asset (<code>user_asset → loan_collateral</code>) and disburses
+(<code>lending_pool → user_cash</code>); a borrow over the cap → <code>LTV_EXCEEDED</code>; the health bar warns before
+liquidation; <strong>full repayment releases the collateral</strong> back to your holding. Admin/ops:
+<code>POST /api/admin/lending/loans/:id/accrue</code> advances interest, <code>POST /api/admin/lending/loans/:id/liquidate</code>
+seizes when debt breaches the 75% liquidation LTV (returns any surplus to the user).</li>
+</ul>
+<h3 id="j18-requests-p2p-money-requests-f3-requests">J18 — Requests (P2P money requests, F3) — <code>/requests</code></h3>
+<ul>
+<li><strong>Start:</strong> <code>/requests</code>. Request money <strong>from blair</strong>; switch to <strong>blair</strong> to <strong>pay</strong> (or <strong>decline</strong>)
+the received request; cancel one you sent.</li>
+<li><strong>Verify:</strong> fulfilling rides the shared <code>executeTransfer</code> (idempotent key <code>p2p:req:&lt;id&gt;</code>) and posts a
+balanced <code>transfer_out</code>/<code>transfer_in</code> journal — visible in both users&#39; <code>/activity</code>.</li>
+</ul>
+<h3 id="j19-send-abroad-cross-border-f6-send-abroad-needs-fx_enabled-fx_settlement_enabled">J19 — Send abroad (cross-border, F6) — <code>/send-abroad</code> (needs <code>FX_ENABLED</code> + <code>FX_SETTLEMENT_ENABLED</code>)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/send-abroad</code>. Quote a corridor (e.g. USD → EURC) → send to another user in a different
+currency.</li>
+<li><strong>Verify:</strong> one <strong>balanced cross-currency journal</strong> joined by the <code>fx_settlement</code> treasury account, with
+the FX spread booked explicitly as a <code>fee</code> — the recipient is credited net in the target currency.</li>
+</ul>
+<h3 id="j20-currency-exchange-fx-fx-needs-fx_enabledtrue">J20 — Currency exchange (FX) — <code>/fx</code> (needs <code>FX_ENABLED=true</code>)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/fx</code>. Convert between supported currencies (USD ↔ USDC/USDT/EURC); see the ppm rate +
+spread before confirming.</li>
+<li><strong>Verify:</strong> the currency <strong>registry allowlist</strong> rejects an unsupported/disabled currency; a conversion
+posts a balanced two-currency journal (spread → <code>fee</code>). API: <code>GET /api/fx/currencies</code>,
+<code>POST /api/fx/quote</code>, <code>POST /api/fx/convert</code>.</li>
+</ul>
+<h3 id="j21-self-custody-portability-f2-self-custody">J21 — Self-custody &amp; portability (F2) — <code>/self-custody</code></h3>
+<ul>
+<li><strong>Start:</strong> <code>/self-custody</code>. View the self-custody report, the <strong>signed attestation</strong>, and the export
+manifest.</li>
+<li><strong>Verify:</strong> the report shows the server holds <strong>no</strong> wallet/Hedera private key (non-custodial); the
+attestation JWT is RS256-signed by the issuer and <strong>verifies against the issuer JWKS</strong> — proof you can
+walk away with your keys + credentials.</li>
+</ul>
+<h3 id="j22-drops-creator-drops-f5-drops-needs-creator_drops_enabledtrue">J22 — Drops (creator drops, F5) — <code>/drops</code> (needs <code>CREATOR_DROPS_ENABLED=true</code>)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/drops</code>. Create a limited-edition drop (as a creator); <strong>claim</strong> an edition (as a buyer).</li>
+<li><strong>Verify:</strong> scarcity is enforced <strong>at the ledger</strong> — <code>treasury → buyer</code> token + <code>buyer → creator</code> cash
+in one atomic journal; the claim is idempotent; the edition count can&#39;t be oversold.</li>
+</ul>
+<h3 id="j23-pay-with-argus-login-less-vc-checkout-pay-needs-argus_pay_enabled-checkout_vp_enabled">J23 — Pay with Argus + login-less VC checkout — <code>/pay</code> (needs <code>ARGUS_PAY_ENABLED</code> / <code>CHECKOUT_VP_ENABLED</code>)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/pay</code>. Register a merchant, create a payment intent, and <strong>pay with a device Verifiable
+Credential — no login, no redirect to a card site</strong> (the browser holds an ES256 <code>did:key</code>; see
+<code>frontend/src/lib/deviceWallet.ts</code>).</li>
+<li><strong>Verify:</strong> the device VC is presented and verified, then the payment posts <strong>escrow-protected</strong> (status
+derives from the escrow row — same model as J9). Ties together the Argus Pay rail (J9) and the OID4VP
+presentation path (J12) for a frictionless, self-sovereign checkout.</li>
+</ul>
+<hr>
+<h3 id="j10-on-chain-wallet-only-with-hedera_enabledtrue">J10 — On-chain wallet (only with <code>HEDERA_ENABLED=true</code>)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/wallet</code>. Provision a Hedera account → Receive (QR) → Send USDC.</li>
+<li><strong>Verify:</strong> on-chain transfer posts a matching ledger journal; balances reconcile; settlement is gated
+by the daily reconciliation (<code>RECONCILIATION_HOLD</code>) and the signer custody mode (<code>HEDERA_SIGNER</code>).
+Without Hedera creds this journey is simulated/skipped.</li>
+</ul>
+<h3 id="j11-credentials-did-verifiable-credentials">J11 — Credentials (DID / Verifiable Credentials)</h3>
+<ul>
+<li><strong>Start:</strong> <code>/credentials</code>. View your issued VC; check JWKS at <code>GET /api/credentials/.well-known/...</code>.</li>
+<li><strong>Verify:</strong> VC is RS256-signed by the issuer; revocation flips status (BitstringStatusList) and a
+revoked VC is rejected at the MCP gate (J12).</li>
+</ul>
+<h3 id="j12-connected-agents-grants-start-at-httplocalhost5174">J12 — Connected agents &amp; grants (start at <code>http://localhost:5174</code>)</h3>
+<ul>
+<li><strong>Start:</strong> the <strong>external agent app</strong> <code>http://localhost:5174</code>.</li>
+<li>Link your account (issues a VC + binds the wallet <code>did:key</code> + grant), then chat: the app does
+<code>detectIntent → present/challenge → wallet-signed VP → 90s scoped token → mcp/call</code>.</li>
+<li>In the portal, <strong>start at <code>/permissions</code></strong> to see/revoke the grant.</li>
+<li><strong>Verify:</strong> VP signature verified before access; <code>SCOPE_DENIED</code> when out of scope; a transfer posts a
+balanced journal; <code>REPLAY_DETECTED</code> on a reused nonce/VP; revoking the grant blocks further calls.</li>
+</ul>
+<h3 id="j13-admin-console-rbac-start-at-httplocalhost5173adminlogin">J13 — Admin console (RBAC; start at <code>http://localhost:5173/admin/login</code>)</h3>
+<ul>
+<li>Log in as <strong><a href="mailto:admin@argusfinancial.com">admin@argusfinancial.com</a></strong>.</li>
+<li><strong>Verify:</strong> onboarding <strong>review queue</strong> (approve/reject drew/erin/casey), escrow <strong>dispute mediation</strong>,
+MCP-client <strong>suspend</strong>, <strong>reconciliation</strong> view, and the back-office <strong>agent-ops</strong> surface (§3).
+Sensitive actions require <code>compliance</code>/<code>admin</code> and are written to <code>audit_logs</code> with the actor id.</li>
+</ul>
+<hr>
+<h2 id="3-back-office-agent-operations-phase-15-api-admin">3. Back-office agent operations (Phase 15) — API + admin</h2>
+<p>The internal AI agents run on the operations runner. <strong>Invariant: agents recommend; a deterministic,
+RBAC-checked, audited gate executes; humans approve anything material.</strong> Drive them via the admin API
+(get <code>$ADMIN</code> Bearer by logging into <code>/admin/login</code> and copying the token, or via <code>/api/admin/...</code>).</p>
+<pre><code class="language-bash">ADMIN=&lt;admin bearer&gt;
+# KYC review (drafts a recommendation, queues for compliance)
+curl -sX POST localhost:3001/api/admin/agent-ops/kyc-review -H &quot;Authorization: Bearer $ADMIN&quot; \
+  -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;userId&quot;:&quot;&lt;casey-id&gt;&quot;,&quot;fullName&quot;:&quot;Casey Morgan&quot;,&quot;documentNumber&quot;:&quot;DOC-9&quot;}&#39;
+# generic trigger for any registered skill:
+curl -sX POST localhost:3001/api/admin/agent-ops/run -H &quot;Authorization: Bearer $ADMIN&quot; \
+  -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;skill&quot;:&quot;sanctions-rescreen&quot;,&quot;input&quot;:{&quot;userId&quot;:&quot;&lt;id&gt;&quot;,&quot;fullName&quot;:&quot;Blocked Person&quot;}}&#39;
+curl -sX POST localhost:3001/api/admin/agent-ops/run -H &quot;Authorization: Bearer $ADMIN&quot; \
+  -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;skill&quot;:&quot;compliance-filing&quot;,&quot;input&quot;:{&quot;filingType&quot;:&quot;SAR&quot;,&quot;subjectRef&quot;:&quot;acct-1&quot;,&quot;summary&quot;:&quot;structuring&quot;}}&#39;
+# review queue + overdue (SLA breaches) + the append-only run trail:
+curl -s localhost:3001/api/admin/agent-ops/reviews -H &quot;Authorization: Bearer $ADMIN&quot;
+curl -s localhost:3001/api/admin/agent-ops/reviews/overdue -H &quot;Authorization: Bearer $ADMIN&quot;
+curl -s localhost:3001/api/admin/agent-ops/runs/&lt;workflowRun&gt; -H &quot;Authorization: Bearer $ADMIN&quot;
+# a human (compliance) resolves a queued review:
+curl -sX POST localhost:3001/api/admin/agent-ops/reviews/&lt;id&gt;/decision -H &quot;Authorization: Bearer $ADMIN&quot; \
+  -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;decision&quot;:&quot;approve&quot;,&quot;reason&quot;:&quot;verified&quot;}&#39;
+</code></pre>
+<p><strong>Skills to exercise:</strong> <code>kyc-review</code> (human-gated tier grant), <code>sanctions-rescreen</code> (clean auto-passes;
+&quot;Blocked Person&quot; → escalate + 10-day OFAC deadline + human-approved freeze), <code>compliance-filing</code>
+(SAR 30d / OFAC 10d / CTR 15d, agent-drafted/human-filed), <code>support-response</code>, <code>incident-summary</code> (SRE),
+<code>marketing-draft</code> (auto &lt; 1,000 recipients, admin gate ≥ 1,000), <code>marketplace-dd</code>.</p>
+<p><strong>Verify:</strong> a queued item appears in the review queue with a <code>due_at</code> for compliance items; only
+<code>compliance</code>/<code>admin</code> can resolve sanctions/filing items (support is <code>FORBIDDEN</code>); approving a KYC review
+grants Tier 2 via the deterministic <code>completeKycDecision</code> (the agent never grants); <code>agent_runs</code> is
+append-only. With <code>CONDUCTOR_ENABLED</code>/<code>TEMPORAL_ENABLED</code> the same flow runs through that orchestrator
+(see §9) and <strong>degrades to in-process</strong> if the server is down.</p>
+<hr>
+<h2 id="4-the-fraud-system-how-it-works-logs-and-learns">4. The fraud system — how it works, logs, and learns</h2>
+<p><strong>Architecture (hybrid):</strong> the backend&#39;s in-app triage (<code>fraudService</code>) classifies each money event and
+routes it:</p>
+<ul>
+<li><strong>Blocking</strong> (<code>fraudClient.scoreSync</code> → <code>POST :4500/v1/events?mode=score</code>) — waits for an advisory
+score, merges it, then applies a <strong>local deterministic gate</strong> (the engine is advisory; Argus decides).
+Degrades <strong>open</strong> unless <code>FRAUD_REMOTE_REQUIRED=true</code>.</li>
+<li><strong>Fire-and-forget</strong> (<code>emitAsync</code> → <code>POST :4500/v1/events?mode=async</code>) — no wait. On a <strong>severe</strong> async
+decision the engine calls back <code>POST :3001/api/internal/remediation/freeze</code> (service-bearer auth) to
+<strong>freeze</strong> the account → append-only <code>account_holds</code> → derived <code>isAccountFrozen</code> → new transfers/pays
+hit the <code>ACCOUNT_FROZEN</code> gate. Idempotent on <code>decisionId</code>.</li>
+</ul>
+<p><strong>Inside the engine (<code>:4500</code>):</strong> event bus + schema registry → per-user <strong>feature store</strong> + enrichment →
+ensemble (<code>rules-v1</code>) + sequence model (<code>seq-v0</code>) via a model <strong>registry + serving</strong> with <strong>config-driven
+routing + shadow/canary</strong> → append-only <strong>decision</strong> topic → analyst <strong>case queue</strong> → async
+<strong>remediation</strong> → <strong>label → retrain</strong> loop that registers shadow candidates.</p>
+<h3 id="how-to-test-the-fraud-journey">How to test the fraud journey</h3>
+<ol>
+<li>Wire the engine (§1.1) and start it (<code>:4500</code>). Confirm <code>curl localhost:4500/health</code>.</li>
+<li>Trigger scored events by doing <strong>transfers</strong> in the portal (J3) / SmartChat (J6) — <code>fraudService</code>
+screens new, fundable transfers.</li>
+<li><strong>Inspect what it logged</strong> (service-bearer = <code>FRAUD_ENGINE_API_KEY</code>):<pre><code class="language-bash">FK=&lt;FRAUD_ENGINE_API_KEY&gt;
+curl -s localhost:4500/v1/decisions -H &quot;Authorization: Bearer $FK&quot;        # recent decisions
+curl -s localhost:4500/v1/cases     -H &quot;Authorization: Bearer $FK&quot;        # analyst case queue
+curl -s localhost:4500/v1/cases/&lt;id&gt; -H &quot;Authorization: Bearer $FK&quot;
+</code></pre>
+Backend side: the append-only <code>fraud_decisions</code> table + <code>fraud_decision_total</code> / <code>fraud_remote_call_total</code>
+/ <code>account_hold_total</code> metrics at <code>localhost:3001/metrics</code>.</li>
+<li><strong>See it freeze:</strong> push a severe async event (large/structured velocity) → engine calls back → the
+payer&#39;s next transfer returns <code>ACCOUNT_FROZEN</code>. Inspect <code>account_holds</code>; unfreeze via the engine&#39;s
+<code>/v1/cases/:id/action</code> or <code>POST :3001/api/internal/remediation/unfreeze</code>.</li>
+<li><strong>See it learn:</strong> label a decision and retrain:<pre><code class="language-bash">curl -sX POST localhost:4500/v1/labels  -H &quot;Authorization: Bearer $FK&quot; \
+  -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;decisionId&quot;:&quot;&lt;id&gt;&quot;,&quot;label&quot;:&quot;fraud&quot;}&#39;
+curl -sX POST localhost:4500/v1/retrain -H &quot;Authorization: Bearer $FK&quot;      # registers a shadow candidate
+curl -s   localhost:4500/v1/models      -H &quot;Authorization: Bearer $FK&quot;      # see versions + shadow/canary
+curl -s   localhost:4500/v1/routing     -H &quot;Authorization: Bearer $FK&quot;      # current routing
+curl -sX PUT localhost:4500/v1/routing  -H &quot;Authorization: Bearer $FK&quot; \
+  -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;primary&quot;:&quot;rules-v1&quot;,&quot;shadow&quot;:&quot;seq-v0&quot;,&quot;canaryPct&quot;:10}&#39;
+# promote a candidate once it earns trust:
+curl -sX POST localhost:4500/v1/models/&lt;version&gt;/promote -H &quot;Authorization: Bearer $FK&quot;
+</code></pre>
+<strong>Verify the learning loop:</strong> label → retrain registers a new shadow model → routing can canary it →
+promotion makes it primary. The decision topic, cases, and <code>fraud_decisions</code> are append-only (audit).</li>
+</ol>
+<blockquote>
+<p>The real Kafka/Flink/Triton/MLflow/lakehouse are the production swap; the interfaces map 1:1. See
+<code>docs/business/FraudEngine-GapAnalysis.md</code>.</p>
+</blockquote>
+<hr>
+<h2 id="5-backend-end-to-end-testing-build-start-stop-validate">5. Backend end-to-end testing (build · start · stop · validate)</h2>
+<pre><code class="language-bash">cd backend
+# Build / typecheck
+npm run typecheck            # tsc --noEmit (run after every change)
+npm run build                # compile to dist/ (+ copies SQL migrations)
+
+# Start / stop
+npm run dev                  # dev server :3001 (auto-migrates); Ctrl-C to stop
+npm start                    # run compiled dist/ (after build)
+npm run migrate              # apply migrations explicitly
+
+# Validate — deterministic suite (the money/security invariants + per-phase suites)
+npm test                     # vitest run (full suite — currently 381 pass / 3 todo)
+npx vitest run e2e           # just the e2e journey suite
+npx vitest run test/invariants.test.ts        # money no-float, balanced journals, idempotent replay
+npx vitest run test/kms.test.ts test/signer.test.ts   # custody / HSM-signer seam
+npx vitest run test/operations.test.ts test/compliance.test.ts test/backoffice-skills.test.ts  # agent ops
+# money in/out &amp; wealth cluster (J14–J23):
+npx vitest run test/onramp.test.ts test/offramp.test.ts test/lending.test.ts test/treasury.test.ts
+npx vitest run test/fx.test.ts test/cross-border.test.ts test/payment-requests.test.ts \
+  test/creator-drops.test.ts test/self-custody.test.ts test/checkout-vp.test.ts test/journeys.test.ts
+
+# Validate — live orchestration (need the matching server up; see §9)
+npm run temporal:live-check  # ops KYC review → Tier 2 through a real Temporal server
+npm run conductor:live-check # same through a real Conductor server
+npm run money:live-check     # exactly-once transfer through a real Temporal money workflow
+
+# Validate — agent/MCP journeys as a real client (the hybrid layer)
+#   invoke the `e2e-validator` skill (scope: through-phase-8 | full) — see docs/E2E-VALIDATION.md
+#   it drives SmartChat + external-agent (OID4VP+MCP) and asserts token TTL / MFA / scope / replay.
+
+# Other services
+cd ../fraud-engine &amp;&amp; npm test        # fraud-engine suite (27 tests)
+</code></pre>
+<p><strong>Stop everything:</strong> Ctrl-C each <code>npm run dev</code>; for orchestration containers
+<code>docker rm -f argus-temporal argus-conductor</code>.</p>
+<p><strong>A clean validation pass (copy/paste):</strong></p>
+<pre><code class="language-bash">cd backend &amp;&amp; npm install &amp;&amp; npm run typecheck &amp;&amp; npm test &amp;&amp; \
+cd ../fraud-engine &amp;&amp; npm install &amp;&amp; npm run typecheck &amp;&amp; npm test &amp;&amp; \
+cd ../frontend &amp;&amp; npm install &amp;&amp; npm run typecheck
+</code></pre>
+<hr>
+<h2 id="6-optional-durable-orchestration-temporal-conductor">6. Optional: durable orchestration (Temporal + Conductor)</h2>
+<pre><code class="language-bash">cd backend
+docker compose -f docker-compose.temporal.yml  up -d    # Temporal  (UI :8233)
+docker compose -f docker-compose.conductor.yml up -d    # Conductor (UI :5001 — wait ~1 min for ES)
+npm run money:worker          # money transfers durable (TEMPORAL_MONEY_ENABLED=true)
+npm run conductor:worker      # agent ops via Conductor (CONDUCTOR_ENABLED=true)  [or temporal:worker]
+</code></pre>
+<p>With these on, J3/J6 transfers and the §3 agent-ops flows run as durable workflows you can watch in the
+Temporal/Conductor UIs. Both <strong>degrade to in-process</strong> if the server is unavailable — the runner never
+fails closed. Tear down: <code>docker rm -f argus-temporal argus-conductor</code>.</p>
+<hr>
+<h2 id="7-journey-channel-coverage-matrix">7. Journey × channel coverage matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Journey</th>
+<th>Web (:5173)</th>
+<th>SmartChat (:5173 /agent)</th>
+<th>External agent (:5174)</th>
+<th>Admin (:5173 /admin)</th>
+<th>API/MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Auth / onboarding</td>
+<td>✅ J1/J2</td>
+<td>—</td>
+<td>link step</td>
+<td>review J13</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Transfer (money)</td>
+<td>✅ J3</td>
+<td>✅ J6</td>
+<td>✅ J12</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>On/off-ramp (cash in/out)</td>
+<td>✅ J14/J15</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Earn / Lending</td>
+<td>✅ J16/J17</td>
+<td>—</td>
+<td>—</td>
+<td>accrue/liquidate</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>P2P / FX / Cross-border</td>
+<td>✅ J18/J19/J20</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Self-custody / Drops</td>
+<td>✅ J21/J22</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Login-less VC checkout</td>
+<td>✅ J23</td>
+<td>—</td>
+<td>device VC</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Invest / Collect</td>
+<td>✅ J4/J5</td>
+<td>—</td>
+<td>—</td>
+<td>listing lifecycle</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Trading</td>
+<td>✅ J7</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Escrow</td>
+<td>✅ J8</td>
+<td>—</td>
+<td>—</td>
+<td>mediation J13</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Argus Pay</td>
+<td>via API J9</td>
+<td>—</td>
+<td><code>pay_merchant</code> tool</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>On-chain wallet</td>
+<td>✅ J10</td>
+<td>—</td>
+<td>—</td>
+<td>reconciliation</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Credentials/VC</td>
+<td>✅ J11</td>
+<td>—</td>
+<td>consumes VC</td>
+<td>revoke</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Agent ops (Phase 15)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅ §3</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Fraud</td>
+<td>(triggered by money journeys)</td>
+<td>✅</td>
+<td>✅</td>
+<td>freeze/cases</td>
+<td>✅ §4</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="8-where-to-add-agents-skills-mcp-services-expansion-review">8. Where to add agents, skills &amp; MCP services (expansion review)</h2>
+<p>The runner + scoped-skill + MCP scaffolding makes new capabilities cheap. High-value additions:</p>
+<p><strong>New operations skills</strong> (<code>backend/src/operations/skills/</code>, register in <code>skills/index.ts</code>) — read/recommend/draft only:</p>
+<ul>
+<li><strong>Collections / dunning</strong> — drafts outreach for negative balances / failed pays → human send (reuse the support pattern).</li>
+<li><strong>Dispute/chargeback analyst</strong> — gathers escrow + payment context, recommends a mediation outcome → <code>compliance</code> gate (feeds J8/J13).</li>
+<li><strong>Transaction-monitoring triage</strong> — turns fraud-engine cases into structured dispositions (clear / RFI / freeze / SAR) → routes to <code>compliance-filing</code>. (Closes the §6 design item that&#39;s currently only sanctions+filing.)</li>
+<li><strong>Marketplace re-screening</strong> — periodic issuer DD refresh feeding the Phase 8 listing lifecycle.</li>
+<li><strong>Reconciliation analyst</strong> — drafts an incident from <code>reconciliation_findings</code> drift → SRE/compliance.</li>
+</ul>
+<p><strong>New MCP tools for external agents</strong> (<code>backend/src/routes/mcp.ts</code>, gated by scope ∩ client ∩ grant):</p>
+<ul>
+<li><code>quote_asset</code> / <code>subscribe_asset</code> (read + escrow-gated invest) under a <code>marketplace:*</code> scope.</li>
+<li><code>escrow_status</code> / <code>open_dispute</code> under <code>escrow:read</code> / <code>escrow:dispute</code>.</li>
+<li><code>statement_export</code> under <code>statement:read</code> (already a tier op) — a common agent ask.</li>
+<li>A <strong>read-only <code>pay_status</code></strong> companion to the existing <code>pay_merchant</code>.</li>
+</ul>
+<p><strong>New MCP <em>servers</em></strong> (beyond the in-app tools):</p>
+<ul>
+<li>Wrap each <strong>operations skill</strong> as an internal MCP server so the same scoped toolset is reusable by
+Conductor/Temporal workers and external compliance tooling (the design&#39;s &quot;internal skill servers&quot;).</li>
+<li>A <strong>fraud-analytics MCP</strong> exposing read-only <code>get_case</code> / <code>get_decision</code> / <code>query_blockchain_analytics</code>
+to analyst agents (maps to the §6 Fraud &amp; AML skill).</li>
+</ul>
+<p><strong>SmartChat intents</strong> (<code>smartchatService</code>): add <code>escrow.hold</code>, <code>pay.merchant</code>, <code>invest.quote</code> as
+classified intents → operation-token → existing services (mirrors <code>transfer.send</code>).</p>
+<p><strong>Orchestration:</strong> add a money <strong>saga</strong> workflow (ledger debit → on-chain settle → reconcile) on the
+Temporal money queue — the <code>src/money/</code> seam already supports multi-activity workflows.</p>
+<p>Each addition should keep the invariants: <strong>money/state via deterministic idempotent services; agents
+only recommend/draft; humans gate material actions; every tool scoped + audited.</strong></p>
+<hr>
+<h2 id="9-troubleshooting">9. Troubleshooting</h2>
+<ul>
+<li><strong>Can&#39;t log in with a password</strong> → set <code>ALLOW_PASSWORD_AUTH=true</code> and restart; or use a passkey.</li>
+<li><strong><code>ACCOUNT_LOCKED</code></strong> → <code>npm run reset:auth</code>.</li>
+<li><strong>A product page returns 503 (<code>*_DISABLED</code>)</strong> → set the matching <code>*_ENABLED</code> flag: <code>TRADING_ENABLED</code> / <code>ARGUS_PAY_ENABLED</code> / <code>BANK_RAILS_ENABLED</code> / <code>CARDS_ENABLED</code> / <code>BILLPAY_ENABLED</code>, and for the J14–J23 cluster <code>ONRAMP_ENABLED</code> / <code>OFFRAMP_ENABLED</code> / <code>TREASURY_ENABLED</code> / <code>LENDING_ENABLED</code> / <code>FX_ENABLED</code> / <code>FX_SETTLEMENT_ENABLED</code> / <code>CREATOR_DROPS_ENABLED</code> / <code>CHECKOUT_VP_ENABLED</code>.</li>
+<li><strong>Borrow (<code>/borrow</code>) shows &quot;no collateral&quot;</strong> → buy Treasury (ATB) on <code>/earn</code> first (needs <code>TREASURY_ENABLED</code>); the loan pledges that holding.</li>
+<li><strong>Fraud engine &quot;unreachable, degrading open&quot;</strong> → engine not running or <code>FRAUD_ENGINE_URL</code>/key mismatch.</li>
+<li><strong>Temporal/Conductor &quot;falling back to in-process&quot;</strong> → server not up; start the compose file (§6).</li>
+<li><strong>CORS errors from :5174</strong> → ensure <code>CORS_ORIGIN</code> allows the agent app origin.</li>
+<li><strong>On-chain journeys skipped</strong> → no Hedera creds; set <code>HEDERA_*</code> or accept simulated mode.</li>
+</ul>
+<pre><code>
+</code></pre>
+
+  </main>
+</div>
+</body></html>

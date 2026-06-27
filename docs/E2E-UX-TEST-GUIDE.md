@@ -49,6 +49,10 @@ cd argus-agent && npm install && npm run dev    # :5174
 cd fraud-engine && npm install && cp .env.example .env && npm run dev   # :4500
 ```
 
+> The money in/out & wealth cluster (J14–J23: Add cash, Cash out, Earn, Borrow, FX, Send abroad, Drops,
+> login-less checkout) adds **no new service** — it's all in the backend + portal. It only needs the
+> §1.1 flags set (the dev `.env` already ships several on).
+
 ### 1.1 `.env` flags that unlock journeys
 
 Most products are behind kill-switches (off by default). For a full demo set these in `backend/.env`:
@@ -60,6 +64,17 @@ ARGUS_PAY_ENABLED=true            # Argus Pay merchant journey (Phase 21)
 BANK_RAILS_ENABLED=true           # bank rails: deposit/withdraw/statement (Phase 19 Stage-1)
 CARDS_ENABLED=true                # debit cards: issue/authorize/capture (Phase 19.4)
 BILLPAY_ENABLED=true              # bill pay: payees + scheduled/recurring payments (Phase 19.3)
+# Money in/out & wealth cluster (J14–J23):
+ONRAMP_ENABLED=true               # Add cash — fiat→USDC on-ramp (/add-cash)
+OFFRAMP_ENABLED=true              # Cash out — USDC→fiat off-ramp (/cash-out)
+TREASURY_ENABLED=true             # Earn — tokenized Treasury (/earn) — also the Borrow collateral
+LENDING_ENABLED=true              # Borrow — collateralized lending (/borrow); needs TREASURY_ENABLED
+FX_ENABLED=true                   # Currency exchange (/fx)
+FX_SETTLEMENT_ENABLED=true        # Send abroad — cross-currency settlement (/send-abroad)
+CREATOR_DROPS_ENABLED=true        # Drops — creator drops (/drops)
+CHECKOUT_VP_ENABLED=true          # login-less VC checkout on /pay
+JOURNEYS_ENABLED=true             # journey-orchestration platform (/api/journeys)
+# CARD_CASHBACK_BPS=150           # optional: card cashback % (USDC) paid on capture
 # Fraud engine wiring (both sides must share the key):
 FRAUD_ENGINE_URL=http://localhost:4500
 FRAUD_ENGINE_API_KEY=<a-strong-shared-secret-32+chars>
@@ -73,8 +88,10 @@ In `fraud-engine/.env` set the **same** `FRAUD_ENGINE_API_KEY` (the engine valid
 for freeze callbacks).
 
 > ⚠️ These flags are **prod-fatal** — the server refuses to boot in `NODE_ENV=production` with
-> `TRADING_ENABLED`/`ARGUS_PAY_ENABLED`/`ALLOW_PASSWORD_AUTH` on, or `KMS_PROVIDER=local`. They are for
-> local/dev demoing only.
+> `TRADING_ENABLED`/`ARGUS_PAY_ENABLED`/`ALLOW_PASSWORD_AUTH` on, with the simulated on/off-ramp
+> (`ONRAMP_ENABLED`/`OFFRAMP_ENABLED` while `*_PROVIDER=simulated`), with `LENDING_ENABLED` or the
+> simulated money/wealth seams, or with `KMS_PROVIDER=local`. They are for local/dev demoing only.
+> The dev `.env` already ships the on-ramp, off-ramp, Treasury, and lending flags **on**.
 
 ### 1.2 Test credentials & data created by `seed:e2e`
 
@@ -145,10 +162,13 @@ Each journey lists the **start URL**, steps, and **what to verify**. Log in as t
   `send $20 to blair@demo.com`. It routes each line through the SmartChat agent (same 90s token + MFA);
   an MFA-gated command flips the prompt to `mfa>` for the code.
 
-### Portal money-app pages (Phase 19 UI)
-The customer portal now has **Bank** (deposit/withdraw/statement/linked accounts), **Cards**
-(issue/authorize/void), **Bills** (payees/pay/schedule/cancel), and **Console** — in the sidebar (wide)
-and the **More** menu (mobile). They need the matching `*_ENABLED` flag set (§1.1).
+### Portal money-app pages & the More menu
+The customer portal surfaces every product through a flat top nav (Home · Invest · Collect · Agent) plus
+a **grouped More menu** — **Money** (Add cash · Cash out · Earn · Borrow · Bank · Cards · Bills · Requests ·
+Send abroad · Currency exchange · Argus Pay · Escrow), **Invest & collect** (Trade · Drops), **Trust &
+identity** (Self-custody · On-chain wallet · Credentials · Verification & tiers · Connected agents ·
+Internal agents), **Family** (Starter guardian/teen), and **Account** (Activity · Console). On wide
+screens these appear in the sidebar. Each gated page needs its matching `*_ENABLED` flag (§1.1).
 
 ### J7 — Trading (Phase 17 simulated broker; needs `TRADING_ENABLED=true`)
 - **Start:** `/trade` as **alex**.
@@ -214,6 +234,8 @@ curl -sX POST localhost:3001/api/admin/cards/authorizations/<authId>/refund  -H 
   into `card_holds`); capture settles out via `external_clearing` (money gone); void releases the hold
   back; refund returns a captured amount; replaying the auth Idempotency-Key places no second hold;
   over-balance → `INSUFFICIENT_FUNDS`; a frozen account → `ACCOUNT_FROZEN`.
+- **Cashback (F4):** with `CARD_CASHBACK_BPS` set, **capture pays USDC cashback** from a `card_rewards`
+  system account (idempotent), viewable on `/cards` (`GET /api/cards/rewards`) — spend on the native rail.
 
 ### J9d — Bill pay: payees + scheduled/recurring payments (needs `BILLPAY_ENABLED=true`)
 ```bash
@@ -230,6 +252,87 @@ curl -sX POST localhost:3001/api/admin/billpay/process -H "Authorization: Bearer
 - **Verify:** pay-now debits `user_cash` via `external_clearing` (visible in `/activity`); replaying the
   Idempotency-Key pays once; over-balance → `INSUFFICIENT_FUNDS`; frozen → `ACCOUNT_FROZEN`; a future-dated
   payment stays `scheduled` until the due-loop settles it; a recurring payment seeds its next instance on send.
+
+---
+
+## 2a. Money in/out & wealth journeys (new cluster — J14–J23)
+
+Get money onto the rail, off it, grow it, and borrow against it — all on the own USDC-on-Hedera +
+double-entry-ledger rail. Each rides a balanced, idempotent ledger journal (money is integer minor
+units). Set the §1.1 flags; they're all in the **More → Money** menu (and the wide sidebar). Log in as
+**alex** unless noted.
+
+### J14 — Add cash (fiat → USDC on-ramp) — `/add-cash` (needs `ONRAMP_ENABLED=true`)
+- **Start:** `/add-cash`. Enter a USD amount → the **live quote** shows the on-ramp fee and the USDC
+  you'll receive → **Buy USDC**.
+- **Verify:** USDC lands in your balance; the journal is `onramp_settlement → user_cash` (net) + `fee`;
+  replaying the Idempotency-Key credits once; a frozen account → `ACCOUNT_FROZEN`. The simulated provider
+  delivers instantly; a real provider (MoonPay/Stripe/Coinbase) returns a hosted-widget redirect and
+  credits on its webhook. API: `POST /api/onramp/quote`, `POST /api/onramp/order` (Idempotency-Key).
+
+### J15 — Cash out (USDC → fiat off-ramp) — `/cash-out` (needs `OFFRAMP_ENABLED=true`)
+- **Start:** `/cash-out`. Enter a USDC amount → quote shows the fee and the fiat you'll receive →
+  **Cash out** (optional linked destination).
+- **Verify:** debits `user_cash(USDC)` → `offramp_settlement` (net) + `fee`; the **money-leaving guards**
+  apply (account-freeze, fraud-screen, authoritative balance check) so an over-sell → `INSUFFICIENT_FUNDS`
+  and a frozen account → `ACCOUNT_FROZEN`; idempotent on replay. Closes the loop with J14.
+  API: `POST /api/offramp/quote`, `POST /api/offramp/order` (Idempotency-Key).
+
+### J16 — Earn (tokenized Treasury, F1) — `/earn` (needs `TREASURY_ENABLED=true`)
+- **Start:** `/earn`. Buy ATB ($1 par) with USD cash; see your position. Accrue the period's yield from
+  the admin/ops side (`POST /api/admin/...` or the daily loop).
+- **Verify:** subscribe/redeem post a balanced par cash↔token journal; **yield distributes pro-rata to
+  holders** automatically (the anti-6%-APY — you *own* a yield-bearing asset, not a freezable balance).
+
+### J17 — Borrow (collateralized lending) — `/borrow` (needs `LENDING_ENABLED=true` + Treasury)
+- **Start:** buy some ATB on `/earn` first, then `/borrow`. Set tokens to pledge → **live borrowing
+  power** (≤ 50% LTV at par) → enter an amount → **Borrow**. Repay inline from the loan row.
+- **Verify:** opening locks the asset (`user_asset → loan_collateral`) and disburses
+  (`lending_pool → user_cash`); a borrow over the cap → `LTV_EXCEEDED`; the health bar warns before
+  liquidation; **full repayment releases the collateral** back to your holding. Admin/ops:
+  `POST /api/admin/lending/loans/:id/accrue` advances interest, `POST /api/admin/lending/loans/:id/liquidate`
+  seizes when debt breaches the 75% liquidation LTV (returns any surplus to the user).
+
+### J18 — Requests (P2P money requests, F3) — `/requests`
+- **Start:** `/requests`. Request money **from blair**; switch to **blair** to **pay** (or **decline**)
+  the received request; cancel one you sent.
+- **Verify:** fulfilling rides the shared `executeTransfer` (idempotent key `p2p:req:<id>`) and posts a
+  balanced `transfer_out`/`transfer_in` journal — visible in both users' `/activity`.
+
+### J19 — Send abroad (cross-border, F6) — `/send-abroad` (needs `FX_ENABLED` + `FX_SETTLEMENT_ENABLED`)
+- **Start:** `/send-abroad`. Quote a corridor (e.g. USD → EURC) → send to another user in a different
+  currency.
+- **Verify:** one **balanced cross-currency journal** joined by the `fx_settlement` treasury account, with
+  the FX spread booked explicitly as a `fee` — the recipient is credited net in the target currency.
+
+### J20 — Currency exchange (FX) — `/fx` (needs `FX_ENABLED=true`)
+- **Start:** `/fx`. Convert between supported currencies (USD ↔ USDC/USDT/EURC); see the ppm rate +
+  spread before confirming.
+- **Verify:** the currency **registry allowlist** rejects an unsupported/disabled currency; a conversion
+  posts a balanced two-currency journal (spread → `fee`). API: `GET /api/fx/currencies`,
+  `POST /api/fx/quote`, `POST /api/fx/convert`.
+
+### J21 — Self-custody & portability (F2) — `/self-custody`
+- **Start:** `/self-custody`. View the self-custody report, the **signed attestation**, and the export
+  manifest.
+- **Verify:** the report shows the server holds **no** wallet/Hedera private key (non-custodial); the
+  attestation JWT is RS256-signed by the issuer and **verifies against the issuer JWKS** — proof you can
+  walk away with your keys + credentials.
+
+### J22 — Drops (creator drops, F5) — `/drops` (needs `CREATOR_DROPS_ENABLED=true`)
+- **Start:** `/drops`. Create a limited-edition drop (as a creator); **claim** an edition (as a buyer).
+- **Verify:** scarcity is enforced **at the ledger** — `treasury → buyer` token + `buyer → creator` cash
+  in one atomic journal; the claim is idempotent; the edition count can't be oversold.
+
+### J23 — Pay with Argus + login-less VC checkout — `/pay` (needs `ARGUS_PAY_ENABLED` / `CHECKOUT_VP_ENABLED`)
+- **Start:** `/pay`. Register a merchant, create a payment intent, and **pay with a device Verifiable
+  Credential — no login, no redirect to a card site** (the browser holds an ES256 `did:key`; see
+  `frontend/src/lib/deviceWallet.ts`).
+- **Verify:** the device VC is presented and verified, then the payment posts **escrow-protected** (status
+  derives from the escrow row — same model as J9). Ties together the Argus Pay rail (J9) and the OID4VP
+  presentation path (J12) for a frictionless, self-sovereign checkout.
+
+---
 
 ### J10 — On-chain wallet (only with `HEDERA_ENABLED=true`)
 - **Start:** `/wallet`. Provision a Hedera account → Receive (QR) → Send USDC.
@@ -363,11 +466,15 @@ npm start                    # run compiled dist/ (after build)
 npm run migrate              # apply migrations explicitly
 
 # Validate — deterministic suite (the money/security invariants + per-phase suites)
-npm test                     # vitest run (full suite — currently 223 pass / 3 todo)
+npm test                     # vitest run (full suite — currently 381 pass / 3 todo)
 npx vitest run e2e           # just the e2e journey suite
 npx vitest run test/invariants.test.ts        # money no-float, balanced journals, idempotent replay
 npx vitest run test/kms.test.ts test/signer.test.ts   # custody / HSM-signer seam
 npx vitest run test/operations.test.ts test/compliance.test.ts test/backoffice-skills.test.ts  # agent ops
+# money in/out & wealth cluster (J14–J23):
+npx vitest run test/onramp.test.ts test/offramp.test.ts test/lending.test.ts test/treasury.test.ts
+npx vitest run test/fx.test.ts test/cross-border.test.ts test/payment-requests.test.ts \
+  test/creator-drops.test.ts test/self-custody.test.ts test/checkout-vp.test.ts test/journeys.test.ts
 
 # Validate — live orchestration (need the matching server up; see §9)
 npm run temporal:live-check  # ops KYC review → Tier 2 through a real Temporal server
@@ -415,6 +522,11 @@ fails closed. Tear down: `docker rm -f argus-temporal argus-conductor`.
 |---|---|---|---|---|---|
 | Auth / onboarding | ✅ J1/J2 | — | link step | review J13 | ✅ |
 | Transfer (money) | ✅ J3 | ✅ J6 | ✅ J12 | — | ✅ |
+| On/off-ramp (cash in/out) | ✅ J14/J15 | — | — | — | ✅ |
+| Earn / Lending | ✅ J16/J17 | — | — | accrue/liquidate | ✅ |
+| P2P / FX / Cross-border | ✅ J18/J19/J20 | — | — | — | ✅ |
+| Self-custody / Drops | ✅ J21/J22 | — | — | — | ✅ |
+| Login-less VC checkout | ✅ J23 | — | device VC | — | ✅ |
 | Invest / Collect | ✅ J4/J5 | — | — | listing lifecycle | ✅ |
 | Trading | ✅ J7 | — | — | — | ✅ |
 | Escrow | ✅ J8 | — | — | mediation J13 | ✅ |
@@ -464,7 +576,8 @@ only recommend/draft; humans gate material actions; every tool scoped + audited.
 
 - **Can't log in with a password** → set `ALLOW_PASSWORD_AUTH=true` and restart; or use a passkey.
 - **`ACCOUNT_LOCKED`** → `npm run reset:auth`.
-- **`/trade`, Pay, bank, cards, or bill-pay 503** → set the matching `*_ENABLED` flag (`TRADING_ENABLED` / `ARGUS_PAY_ENABLED` / `BANK_RAILS_ENABLED` / `CARDS_ENABLED` / `BILLPAY_ENABLED`).
+- **A product page returns 503 (`*_DISABLED`)** → set the matching `*_ENABLED` flag: `TRADING_ENABLED` / `ARGUS_PAY_ENABLED` / `BANK_RAILS_ENABLED` / `CARDS_ENABLED` / `BILLPAY_ENABLED`, and for the J14–J23 cluster `ONRAMP_ENABLED` / `OFFRAMP_ENABLED` / `TREASURY_ENABLED` / `LENDING_ENABLED` / `FX_ENABLED` / `FX_SETTLEMENT_ENABLED` / `CREATOR_DROPS_ENABLED` / `CHECKOUT_VP_ENABLED`.
+- **Borrow (`/borrow`) shows "no collateral"** → buy Treasury (ATB) on `/earn` first (needs `TREASURY_ENABLED`); the loan pledges that holding.
 - **Fraud engine "unreachable, degrading open"** → engine not running or `FRAUD_ENGINE_URL`/key mismatch.
 - **Temporal/Conductor "falling back to in-process"** → server not up; start the compose file (§6).
 - **CORS errors from :5174** → ensure `CORS_ORIGIN` allows the agent app origin.
