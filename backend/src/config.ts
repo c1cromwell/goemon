@@ -170,6 +170,14 @@ const schema = z.object({
   ONRAMP_PROVIDER: z.enum(["simulated", "moonpay", "stripe", "coinbase"]).default("simulated"),
   ONRAMP_FEE_BPS: z.coerce.number().int().nonnegative().max(1_000).default(100),
 
+  // USDC → fiat off-ramp (prototype seam). The symmetric exit to the on-ramp: sell USDC
+  // and receive fiat in a linked bank/card. Off by default; prod-fatal while simulated.
+  // The real providers (MoonPay/Stripe/Coinbase) take the USDC + deliver fiat under THEIR
+  // license. OFFRAMP_FEE_BPS is the off-ramp spread/fee (100 = 1%).
+  OFFRAMP_ENABLED: boolish,
+  OFFRAMP_PROVIDER: z.enum(["simulated", "moonpay", "stripe", "coinbase"]).default("simulated"),
+  OFFRAMP_FEE_BPS: z.coerce.number().int().nonnegative().max(1_000).default(100),
+
   // Collateralized lending (prototype seam; PRD v2). Over-collateralized loans: pledge a
   // tokenized holding (e.g. the Treasury ATB, valued at par) and borrow USD against it
   // without selling. Off by default; prod-fatal (a real lending product needs a lender of
@@ -358,6 +366,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.ONRAMP_ENABLED && c.ONRAMP_PROVIDER === "simulated") {
     fatal.push("ONRAMP_ENABLED with ONRAMP_PROVIDER=simulated must not run in production — wire a licensed on-ramp (moonpay/stripe/coinbase) that takes the fiat + KYC under its own license.");
+  }
+  if (c.OFFRAMP_ENABLED && c.OFFRAMP_PROVIDER === "simulated") {
+    fatal.push("OFFRAMP_ENABLED with OFFRAMP_PROVIDER=simulated must not run in production — wire a licensed off-ramp (moonpay/stripe/coinbase) that takes the USDC + delivers fiat under its own license.");
   }
   if (c.LENDING_ENABLED) {
     fatal.push("LENDING_ENABLED must be false in production — the collateralized-lending prototype has no lender of record, licensing, or real liquidity source.");

@@ -7,6 +7,7 @@ const GROUPS: Array<{ title: string; links: Array<{ to: string; label: string }>
     title: "Money",
     links: [
       { to: "/add-cash", label: "Add cash" },
+      { to: "/cash-out", label: "Cash out" },
       { to: "/earn", label: "Earn" },
       { to: "/borrow", label: "Borrow" },
       { to: "/bank", label: "Bank" },

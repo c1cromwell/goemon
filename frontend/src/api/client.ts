@@ -506,6 +506,19 @@ export interface CheckoutChallenge {
   memo: string | null;
 }
 
+// USDC → fiat off-ramp
+export interface OffRampQuote {
+  provider: string; usdcAmountMinor: string; feeMinor: string; usdcNetMinor: string;
+  fiatAmountMinor: string; fiatCurrency: string; asset: string; ratePpm: number; feeBps: number;
+}
+export interface OffRampOrder {
+  id: string; provider: string; status: string;
+  usdcAmountMinor: string; feeMinor: string; usdcNetMinor: string;
+  fiatAmountMinor: string; fiatCurrency: string; asset: string; ratePpm: string;
+  destination: string | null; externalRef: string | null; journalId: string | null;
+  createdAt: string; completedAt: string | null;
+}
+
 // Fiat → USDC on-ramp
 export interface OnRampQuote {
   provider: string; fiatAmountMinor: string; fiatCurrency: string; asset: string;
@@ -789,6 +802,12 @@ export const userApi = {
   onrampQuote: (fiatAmountMinor: string) => upost<OnRampQuote>("/onramp/quote", { fiatAmountMinor }),
   onrampOrder: (fiatAmountMinor: string, key: string) => umoney<OnRampOrder>("/onramp/order", { fiatAmountMinor }, key),
   onrampOrders: () => uget<OnRampOrder[]>("/onramp/orders"),
+
+  // --- USDC → fiat off-ramp (cash out — the exit door) ---
+  offrampQuote: (usdcAmountMinor: string) => upost<OffRampQuote>("/offramp/quote", { usdcAmountMinor }),
+  offrampOrder: (usdcAmountMinor: string, destination: string | undefined, key: string) =>
+    umoney<OffRampOrder>("/offramp/order", { usdcAmountMinor, destination }, key),
+  offrampOrders: () => uget<OffRampOrder[]>("/offramp/orders"),
 
   // --- Collateralized lending (borrow against holdings) ---
   lendingQuote: (collateralAssetId: string, collateralQtyBase: string) =>

@@ -212,6 +212,14 @@ export const onrampOrderTotal = new client.Counter({
   registers: [registry],
 });
 
+// USDC → fiat off-ramp (sell USDC for fiat — the exit door).
+export const offrampOrderTotal = new client.Counter({
+  name: "offramp_order_total",
+  help: "USDC→fiat off-ramp orders",
+  labelNames: ["provider", "result"], // result: completed | pending | failed
+  registers: [registry],
+});
+
 // Collateralized lending (PRD v2 prototype).
 export const lendingLoanTotal = new client.Counter({
   name: "lending_loan_total",
