@@ -16,6 +16,7 @@ import { newIdempotencyKey } from "../lib/idempotency";
 const API_BASE = import.meta.env.VITE_API_BASE ?? "http://localhost:3001/api";
 
 const ADMIN_TOKEN_KEY = "argus_admin_token";
+const ADMIN_ROLE_KEY = "argus_admin_role";
 const USER_TOKEN_KEY = "argus_user_token";
 
 // ---- Admin token (unchanged surface used by AdminLogin/AdminConsole) --------
@@ -25,8 +26,15 @@ export function getToken(): string | null {
 export function setToken(token: string): void {
   localStorage.setItem(ADMIN_TOKEN_KEY, token);
 }
+export function setAdminRole(role: string): void {
+  localStorage.setItem(ADMIN_ROLE_KEY, role);
+}
+export function getAdminRole(): string | null {
+  return localStorage.getItem(ADMIN_ROLE_KEY);
+}
 export function clearToken(): void {
   localStorage.removeItem(ADMIN_TOKEN_KEY);
+  localStorage.removeItem(ADMIN_ROLE_KEY);
 }
 
 // ---- User session token -----------------------------------------------------
@@ -1005,7 +1013,12 @@ export interface ReviewItem {
 export const api = {
   login: (email: string, password: string) =>
     adminRequest<{ token: string; role: string }>("/admin/login", { method: "POST", body: JSON.stringify({ email, password }) }),
-  seed: () => adminRequest<{ created: boolean; email: string }>("/admin/seed", { method: "POST" }),
+  seed: () => adminRequest<{
+    admin: { created: boolean; email: string };
+    ceo: { created: boolean; email: string };
+    cs: { created: boolean; email: string };
+    accounts: Array<{ email: string; password: string; role: string }>;
+  }>("/admin/seed", { method: "POST" }),
   identities: () => adminRequest<IdentitySummary[]>("/admin/identities"),
   identityDetail: (userId: string) => adminRequest<Record<string, unknown>>(`/admin/identities/${userId}`),
   reviewQueue: () => adminRequest<ReviewItem[]>("/admin/onboarding/sessions?status=review_required"),
@@ -1031,4 +1044,40 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ reason }),
     }),
+
+  // --- M2 Agentic OS CEO approvals ---
+  agentApprovals: () => adminRequest<{ reviews: AgentReviewRow[] }>("/admin/agent-ops/approvals"),
+  agentReviewDecision: (id: string, decision: "approve" | "reject", reason?: string) =>
+    adminRequest(`/admin/agent-ops/reviews/${id}/decision`, {
+      method: "POST",
+      body: JSON.stringify({ decision, reason: reason || undefined }),
+    }),
+  milestones: () => adminRequest<{ milestones: MilestoneStatus[] }>("/admin/agent-ops/milestones"),
+  signMilestone: (id: string, note?: string) =>
+    adminRequest<{ milestone: MilestoneStatus }>(`/admin/agent-ops/milestones/${id}/signoff`, {
+      method: "POST",
+      body: JSON.stringify({ note: note || undefined }),
+    }),
 };
+
+export interface AgentReviewRow {
+  id: string;
+  skill: string;
+  status: string;
+  requires_role: string;
+  reason: string | null;
+  gate_category: string | null;
+  output_class: string | null;
+  created_at: string;
+  recommendation: string;
+}
+
+export interface MilestoneStatus {
+  id: string;
+  title: string;
+  description: string;
+  signed: boolean;
+  signedAt: string | null;
+  approverRole: string | null;
+  note: string | null;
+}

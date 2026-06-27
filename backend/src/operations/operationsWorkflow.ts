@@ -27,6 +27,12 @@ import type { AdminRole } from "../middleware/rbac";
 import { createScopedClient, type Skill, type ScopedSkillClient, type ToolCallRecord } from "./skillRegistry";
 import { type WorkflowEngine, getEngine, setDefaultEngine } from "./engine";
 import { applyMechanicalGovernance } from "../integrations/mechGovService";
+import {
+  applyCeoGatePolicy,
+  actorCanResolveReview,
+  GATE_CATEGORY_LABELS,
+  type GateOutputClass,
+} from "./gatePolicy";
 
 export type SupervisionTier = "auto_approve" | "auto_approve_audit" | "human_required" | "human_led";
 
@@ -42,6 +48,8 @@ export interface GateDecision {
   requiresRole?: AdminRole[];
   /** Phase 15.3 — regulatory SLA: hours until the human gate must be resolved. */
   dueInHours?: number;
+  /** M2 — CEO-gated output class (financial / launch / legal). */
+  outputClass?: GateOutputClass;
 }
 
 export interface AgentReviewRow {
@@ -59,6 +67,8 @@ export interface AgentReviewRow {
   created_at: string;
   decided_at: string | null;
   due_at: string | null;
+  output_class: string | null;
+  gate_category: string | null;
 }
 
 /**
@@ -72,6 +82,8 @@ export interface WorkflowDef<Ctx = unknown, Rec = unknown> {
   /** Scopes granted to this run's scoped skill client. */
   scopes: string[];
   skillDef: Skill;
+  /** M2 — when set (or inferred from skill), routes to CEO/CS gate policy. */
+  outputClass?: GateOutputClass;
   gather: (input: unknown) => Promise<{ ctx: Ctx; subjectUserId?: string }>;
   invoke: (ctx: Ctx, client: ScopedSkillClient) => Promise<{ rec: Rec; confidence: number }>;
   gate: (ctx: Ctx, rec: Rec | null, confidence: number) => GateDecision;
@@ -180,6 +192,7 @@ export async function executeInProcess<Ctx, Rec>(
 
   let decision = def.gate(ctx, rec, confidence);
   decision = applyMechanicalGovernance({ skill: def.skill, confidence, gate: decision }).gate;
+  decision = applyCeoGatePolicy(def.skill, def.outputClass, decision);
   // Supervision: human_* workflows never auto-execute; an approve becomes an escalation.
   const humanSupervised = def.supervision === "human_required" || def.supervision === "human_led";
   if (forcedEscalation) {
@@ -200,13 +213,17 @@ export async function executeInProcess<Ctx, Rec>(
     const dueAt = decision.dueInHours
       ? new Date(Date.now() + decision.dueInHours * 3_600_000).toISOString()
       : null;
+    const outputClass = decision.outputClass ?? def.outputClass ?? null;
+    const gateCategory = outputClass ? GATE_CATEGORY_LABELS[outputClass] : null;
     await getDb().execute(
       `INSERT INTO agent_reviews
-         (id, run_id, workflow_run, skill, subject_user_id, status, requires_role, recommendation, reason, created_at, due_at)
-       VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)`,
+         (id, run_id, workflow_run, skill, subject_user_id, status, requires_role, recommendation, reason,
+          created_at, due_at, output_class, gate_category)
+       VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?)`,
       [
         reviewId, runId, workflowRun, def.skill, subjectUserId ?? null,
         defaultRoles(decision).join(","), JSON.stringify(rec ?? {}), decision.reason, new Date().toISOString(), dueAt,
+        outputClass, gateCategory,
       ]
     );
     agentRunTotal.inc({ skill: def.skill, outcome: "queued" });
@@ -247,6 +264,15 @@ export async function executeInProcess<Ctx, Rec>(
     details: { skill: def.skill, reason: decision.reason, confidence },
   });
   return { runId, workflowRun, outcome: "executed" };
+}
+
+/** List queued reviews the actor is allowed to resolve. */
+export async function listReviewsForActor(
+  actorRole: AdminRole,
+  status: AgentReviewRow["status"] = "pending"
+): Promise<AgentReviewRow[]> {
+  const all = await listReviews(status);
+  return all.filter((r) => actorCanResolveReview(actorRole, r.requires_role));
 }
 
 /** List queued (or otherwise filtered) human-review items. */
@@ -295,7 +321,7 @@ export async function resolveInProcess(
   if (review.status !== "pending") throw new AppError(ErrorCode.CONFLICT, "Review already resolved");
 
   const allowed = review.requires_role.split(",").map((r) => r.trim());
-  if (!allowed.includes(actor.role)) {
+  if (!actorCanResolveReview(actor.role, review.requires_role)) {
     throw new AppError(ErrorCode.FORBIDDEN, `Requires role: ${allowed.join(" or ")}`);
   }
 

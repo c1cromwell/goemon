@@ -16,7 +16,7 @@ import { closeDb, getDb } from "../db";
 import { runMigrations } from "../db/migrate";
 import { initTokenFactory } from "../utils/tokenFactory";
 import { bootstrapSystemAccounts } from "../services/ledgerService";
-import { seedAdmin } from "../services/adminService";
+import { seedAllAdminAccounts, printAdminAccountManifest } from "../services/adminService";
 import { getClient, registerClient } from "../services/mcpClientRegistry";
 import { seedDemoUsers, printDemoManifest } from "./seed-demo-users";
 
@@ -42,9 +42,12 @@ async function main(): Promise<void> {
   await bootstrapSystemAccounts();
   console.log("[1/4] migrations + token factory + system accounts ✓");
 
-  // 2. RBAC admin (idempotent).
-  const admin = await seedAdmin();
-  console.log(`[2/4] admin ${admin.email} ${admin.created ? "created" : "already present"} (password: Admin1234!)`);
+  // 2. RBAC admin + CEO/CS approvers (idempotent).
+  const seeded = await seedAllAdminAccounts();
+  console.log(`[2/4] admin ${seeded.admin.email} ${seeded.admin.created ? "created" : "already present"}`);
+  console.log(`[2/4] CEO ${seeded.ceo.email} ${seeded.ceo.created ? "created" : "already present"}`);
+  console.log(`[2/4] CS  ${seeded.cs.email} ${seeded.cs.created ? "created" : "already present"}`);
+  printAdminAccountManifest();
 
   // 3. Simulator MCP client (idempotent; repairs stale allowedFunctions on re-run).
   const existing = await getClient(SIMULATOR_AGENT.clientDid);

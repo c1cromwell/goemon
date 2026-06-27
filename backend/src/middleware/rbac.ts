@@ -15,7 +15,7 @@ import jwt from "jsonwebtoken";
 import { config } from "../config";
 import { AppError, ErrorCode } from "../errors";
 
-export type AdminRole = "support" | "compliance" | "admin";
+export type AdminRole = "support" | "compliance" | "admin" | "ceo" | "chief_of_staff";
 
 export interface AdminRequest extends Request {
   adminId?: string;

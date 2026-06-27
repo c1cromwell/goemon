@@ -25,7 +25,7 @@ export const adminRouter = Router();
 
 adminRouter.post("/seed", async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await adminService.seedAdmin();
+    const result = await adminService.seedAllAdminAccounts();
     res.json(result);
   } catch (e) {
     next(e);

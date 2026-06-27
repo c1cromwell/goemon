@@ -87,6 +87,7 @@ export function AdminConsole() {
       <header className="bar">
         <h1>Argus Financial Partners Admin · Identities</h1>
         <div>
+          <Link to="/admin/approvals" className="ghost sm" style={{ marginRight: 8 }}>CEO Approvals</Link>
           <Link to="/admin/collectibles" className="ghost sm" style={{ marginRight: 8 }}>Collectibles review</Link>
           <button className="ghost" onClick={simulate} disabled={busy}>
             {busy ? "Generating…" : "Generate simulated identities"}

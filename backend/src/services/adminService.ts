@@ -29,6 +29,25 @@ import type { AdminRole } from "../middleware/rbac";
 
 const SEED_ADMIN_EMAIL = "admin@argusfinancial.com";
 const SEED_ADMIN_PASSWORD = "Admin1234!";
+const SEED_CEO_EMAIL = "ceo@argusfinancial.com";
+const SEED_CEO_PASSWORD = "Ceo1234!";
+const SEED_CS_EMAIL = "cos@argusfinancial.com";
+const SEED_CS_PASSWORD = "Cos1234!";
+
+/** Dev-only manifest — printed by `npm run setup` and returned from POST /admin/seed. */
+export const DEV_ADMIN_ACCOUNTS: ReadonlyArray<{ email: string; password: string; role: AdminRole }> = [
+  { email: SEED_ADMIN_EMAIL, password: SEED_ADMIN_PASSWORD, role: "admin" },
+  { email: SEED_CEO_EMAIL, password: SEED_CEO_PASSWORD, role: "ceo" },
+  { email: SEED_CS_EMAIL, password: SEED_CS_PASSWORD, role: "chief_of_staff" },
+];
+
+export function printAdminAccountManifest(): void {
+  console.log("\n== Admin / CEO approver accounts (dev) ==");
+  for (const a of DEV_ADMIN_ACCOUNTS) {
+    console.log(`  ${a.role.padEnd(16)} ${a.email} / ${a.password}`);
+  }
+  console.log("  Login: http://localhost:5173/admin/login\n");
+}
 
 interface AdminRow {
   id: string;
@@ -50,6 +69,40 @@ export async function seedAdmin(): Promise<{ created: boolean; email: string }> 
   ]);
   await logAudit({ action: "admin.seed", resource: SEED_ADMIN_EMAIL });
   return { created: true, email: SEED_ADMIN_EMAIL };
+}
+
+async function seedRoleAccount(email: string, password: string, role: AdminRole): Promise<{ created: boolean; email: string }> {
+  const db = getDb();
+  const existing = await db.queryOne<AdminRow>("SELECT * FROM admins WHERE email = ?", [email]);
+  if (existing) return { created: false, email };
+  const hash = await hashPassword(password);
+  await db.execute("INSERT INTO admins (id, email, password_hash, role) VALUES (?, ?, ?, ?)", [
+    uuidv4(),
+    email,
+    hash,
+    role,
+  ]);
+  await logAudit({ action: "admin.seed", resource: email, details: { role } });
+  return { created: true, email };
+}
+
+/** M2 — idempotent CEO + Chief of Staff approver accounts. */
+export async function seedCeoApprovers(): Promise<{ ceo: { created: boolean; email: string }; cs: { created: boolean; email: string } }> {
+  const ceo = await seedRoleAccount(SEED_CEO_EMAIL, SEED_CEO_PASSWORD, "ceo");
+  const cs = await seedRoleAccount(SEED_CS_EMAIL, SEED_CS_PASSWORD, "chief_of_staff");
+  return { ceo, cs };
+}
+
+/** Seed admin + CEO + CS (idempotent). Used by setup and POST /admin/seed. */
+export async function seedAllAdminAccounts(): Promise<{
+  admin: { created: boolean; email: string };
+  ceo: { created: boolean; email: string };
+  cs: { created: boolean; email: string };
+  accounts: typeof DEV_ADMIN_ACCOUNTS;
+}> {
+  const admin = await seedAdmin();
+  const { ceo, cs } = await seedCeoApprovers();
+  return { admin, ceo, cs, accounts: DEV_ADMIN_ACCOUNTS };
 }
 
 export async function authenticateAdmin(email: string, password: string): Promise<{ adminId: string; role: AdminRole }> {

@@ -1,24 +1,29 @@
 /**
- * Phase 15 — Internal agent operations (RBAC admin surface). Mounted at /api/admin.
- *
- * POST /api/admin/agent-ops/kyc-review        — run the KYC-review workflow for a user
- * GET  /api/admin/agent-ops/reviews?status=   — the human-review queue
- * GET  /api/admin/agent-ops/runs/:workflowRun — the append-only run trail
- * POST /api/admin/agent-ops/reviews/:id/decision — resolve a queued review (RBAC gate)
- *
- * Any admin may trigger a review or read the queue; only compliance/admin may decide
- * (also enforced inside resolveReview against the review's requires_role).
+ * Phase 15 + M2 — Internal agent operations & CEO approvals (RBAC admin surface).
  */
 
 import { Router } from "express";
 import type { Response, NextFunction } from "express";
 import { requireAdmin, requireRole, type AdminRequest } from "../middleware/rbac";
 import { AppError, ErrorCode } from "../errors";
-import { runOperation, listReviews, listOverdueReviews, getRunTrail, resolveReview, getWorkflow, type AgentReviewRow, type WorkflowDef } from "../operations/operationsWorkflow";
+import {
+  runOperation,
+  listReviews,
+  listReviewsForActor,
+  listOverdueReviews,
+  getRunTrail,
+  resolveReview,
+  getWorkflow,
+  type AgentReviewRow,
+  type WorkflowDef,
+} from "../operations/operationsWorkflow";
 import { kycReviewWorkflow } from "../operations/skills/kycReviewSkill";
-import "../operations/skills"; // register all skills (kyc, compliance, …)
+import { listMilestoneStatuses, signMilestone } from "../services/milestoneSignoffService";
+import "../operations/skills";
 
 export const agentOpsAdminRouter = Router();
+
+const APPROVER_ROLES = ["compliance", "admin", "ceo", "chief_of_staff"] as const;
 
 agentOpsAdminRouter.post(
   "/agent-ops/kyc-review",
@@ -37,7 +42,6 @@ agentOpsAdminRouter.post(
   }
 );
 
-// Generic trigger for any registered workflow (KYC, sanctions-rescreen, compliance-filing, …).
 agentOpsAdminRouter.post(
   "/agent-ops/run",
   requireAdmin,
@@ -54,24 +58,42 @@ agentOpsAdminRouter.post(
   }
 );
 
+/** Pending human gates — optional ?mine=1 filters to reviews this actor may resolve. */
 agentOpsAdminRouter.get(
   "/agent-ops/reviews",
   requireAdmin,
   async (req: AdminRequest, res: Response, next: NextFunction) => {
     try {
       const status = (req.query.status as AgentReviewRow["status"]) || "pending";
-      res.json({ reviews: await listReviews(status) });
+      const mine = req.query.mine === "1" || req.query.mine === "true";
+      const reviews = mine
+        ? await listReviewsForActor(req.adminRole!, status)
+        : await listReviews(status);
+      res.json({ reviews });
     } catch (e) {
       next(e);
     }
   }
 );
 
-// Phase 15.3 — reviews past their regulatory deadline (SLA breach).
+/** CEO Approvals queue alias — pending reviews the signed-in actor can resolve. */
+agentOpsAdminRouter.get(
+  "/agent-ops/approvals",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const status = (req.query.status as AgentReviewRow["status"]) || "pending";
+      res.json({ reviews: await listReviewsForActor(req.adminRole!, status) });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
 agentOpsAdminRouter.get(
   "/agent-ops/reviews/overdue",
   requireAdmin,
-  requireRole("compliance", "admin"),
+  requireRole("compliance", "admin", "ceo", "chief_of_staff"),
   async (_req: AdminRequest, res: Response, next: NextFunction) => {
     try {
       res.json({ overdue: await listOverdueReviews() });
@@ -96,7 +118,7 @@ agentOpsAdminRouter.get(
 agentOpsAdminRouter.post(
   "/agent-ops/reviews/:id/decision",
   requireAdmin,
-  requireRole("compliance", "admin"),
+  requireRole(...APPROVER_ROLES),
   async (req: AdminRequest, res: Response, next: NextFunction) => {
     try {
       const { decision, reason } = (req.body ?? {}) as { decision?: "approve" | "reject"; reason?: string };
@@ -110,6 +132,34 @@ agentOpsAdminRouter.post(
         reason
       );
       res.json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+/** M2 — milestone deploy sign-off status (M1–M6). */
+agentOpsAdminRouter.get(
+  "/agent-ops/milestones",
+  requireAdmin,
+  async (_req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      res.json({ milestones: await listMilestoneStatuses() });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.post(
+  "/agent-ops/milestones/:id/signoff",
+  requireAdmin,
+  requireRole("ceo", "chief_of_staff", "admin"),
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const { note } = (req.body ?? {}) as { note?: string };
+      const milestone = await signMilestone(req.params.id!, { adminId: req.adminId!, role: req.adminRole! }, note);
+      res.json({ milestone });
     } catch (e) {
       next(e);
     }

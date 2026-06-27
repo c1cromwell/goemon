@@ -1,6 +1,6 @@
 # Argus Agentic OS — Corporate Brain Design
 
-**Status:** M1 — design + branding + webview (CEO sign-off gate)  
+**Status:** M2 — governance core **BUILT** (CEO sign-off gate for deploy)  
 **Authoritative webview:** [`agentic-os/index.html`](agentic-os/index.html)  
 **Related:** [`agenticos_argus.rtf`](agenticos_argus.rtf) (CEO brief)
 
