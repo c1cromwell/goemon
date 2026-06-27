@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Argus Agentic OS — Corporate Brain</title>
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --surface: #15181d;
+      --surface-2: #1b1f26;
+      --line: #262b33;
+      --text: #f3f5f8;
+      --text-2: #9aa3b0;
+      --text-3: #6b7480;
+      --accent: #2dd4a7;
+      --accent-weak: rgba(45, 212, 167, 0.13);
+      --warn: #e3b341;
+      --r-md: 12px;
+      --r-lg: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    a { color: var(--accent); }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    header {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem;
+      padding-bottom: 2rem; border-bottom: 1px solid var(--line); margin-bottom: 2rem;
+    }
+    header img.logo { height: 56px; width: auto; }
+    .hero h1 { font-family: Georgia, serif; font-size: 1.75rem; font-weight: 600; }
+    .hero p { color: var(--text-2); margin-top: 0.35rem; max-width: 52ch; }
+    .badge {
+      display: inline-block; font-size: 0.7rem; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 999px;
+      background: var(--accent-weak); color: var(--accent); border: 1px solid rgba(45,212,167,0.25);
+    }
+    section { margin-bottom: 3rem; }
+    h2 {
+      font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem;
+      padding-bottom: 0.5rem; border-bottom: 1px solid var(--line);
+    }
+    h3 { font-size: 0.95rem; color: var(--text-2); margin: 1.25rem 0 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+    .panel {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--r-lg); padding: 1.25rem; margin-bottom: 1rem;
+    }
+    .panel-accent { border-color: rgba(45,212,167,0.35); background: var(--accent-weak); }
+    .org-img { width: 100%; height: auto; border-radius: var(--r-md); border: 1px solid var(--line); }
+    .flow {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+      font-size: 0.85rem; color: var(--text-2); margin: 1rem 0;
+    }
+    .flow span.step {
+      background: var(--surface-2); border: 1px solid var(--line);
+      padding: 0.35rem 0.65rem; border-radius: var(--r-md);
+    }
+    .flow span.gate { border-color: var(--accent); color: var(--accent); background: var(--accent-weak); }
+    .flow span.arrow { color: var(--text-3); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+    .card {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--r-lg); padding: 1.1rem; display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .card.gated { border-color: rgba(45,212,167,0.4); }
+    .card h4 { font-size: 1rem; font-weight: 600; }
+    .card .charter { font-size: 0.88rem; color: var(--text-2); font-style: italic; }
+    .card dl { font-size: 0.82rem; }
+    .card dt { color: var(--text-3); margin-top: 0.35rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.68rem; }
+    .card dd { color: var(--text-2); margin-left: 0; }
+    .tier {
+      display: inline-block; font-size: 0.68rem; padding: 0.15rem 0.45rem;
+      border-radius: 4px; background: var(--surface-2); color: var(--text-2); font-family: ui-monospace, monospace;
+    }
+    .tier.human { background: rgba(227,179,65,0.15); color: var(--warn); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { text-align: left; padding: 0.5rem 0.65rem; border-bottom: 1px solid var(--line); }
+    th { color: var(--text-3); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .milestones { list-style: none; }
+    .milestones li {
+      padding: 0.75rem 1rem; margin-bottom: 0.5rem;
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md);
+    }
+    .milestones li.current { border-color: var(--accent); background: var(--accent-weak); }
+    .milestones strong { color: var(--accent); }
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--text-3); }
+    pre.diagram {
+      background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-md);
+      padding: 1rem; overflow-x: auto; font-size: 0.75rem; line-height: 1.45; color: var(--text-2);
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img class="logo" src="logo.svg" alt="Argus Financial Partners"/>
+    <div class="hero">
+      <span class="badge">M1 — CEO sign-off gate</span>
+      <h1>Argus Agentic OS</h1>
+      <p>Run the corporation with AI agents at corporate and product levels. Humans gate only financial outputs, first production launches, and final legal sign-offs.</p>
+    </div>
+  </header>
+
+  <section id="mission">
+    <h2>Mission &amp; framing</h2>
+    <div class="panel panel-accent">
+      <p><strong>Mission:</strong> Operate Argus Financial Partners with the smallest possible human staff — an auditable, agent-native corporation where every material decision is logged and the CEO retains final authority on money, launches, and legal posture.</p>
+      <p style="margin-top:0.75rem;color:var(--text-2)"><strong>Phase A framing:</strong> Tokenization-first, non-custodial, agentic finance. Keys on-device; agents under scoped credentials; append-only audit. Not a bank — the all-seeing guardian of your money.</p>
+    </div>
+  </section>
+
+  <section id="org">
+    <h2>Organization overview</h2>
+    <img class="org-img" src="org.svg" alt="Argus Agentic OS org chart"/>
+    <p style="margin-top:0.75rem;font-size:0.85rem;color:var(--text-3)">Inspired by the Company OS ontology (function → category → task + skill files). Argus maps this onto <code>runOperation</code> skills, RBAC gates, and a decision knowledge graph.</p>
+  </section>
+
+  <section id="gates">
+    <h2>Human gates — CEO → Chief of Staff backup</h2>
+    <table>
+      <thead><tr><th>Output class</th><th>Owning agent</th><th>Gate</th><th>Backup</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Financial outputs</strong></td><td>CFO</td><td>CEO</td><td>Chief of Staff</td></tr>
+        <tr><td><strong>New product — first prod launch</strong></td><td>CPO + PDLC Orchestrator</td><td>CEO</td><td>Chief of Staff</td></tr>
+        <tr><td><strong>Final legal signoff</strong></td><td>CLO</td><td>CEO</td><td>Chief of Staff</td></tr>
+      </tbody>
+    </table>
+    <h3>Approval workflow</h3>
+    <div class="flow">
+      <span class="step">gather</span><span class="arrow">→</span>
+      <span class="step">invoke (LLM)</span><span class="arrow">→</span>
+      <span class="step">gate()</span><span class="arrow">→</span>
+      <span class="step gate">agent_reviews</span><span class="arrow">→</span>
+      <span class="step gate">CEO approve</span><span class="arrow">→</span>
+      <span class="step">execute</span><span class="arrow">→</span>
+      <span class="step">audit + KG</span>
+    </div>
+    <pre class="diagram">Agent invoke → gate() → escalate?
+                              │
+                    no ───────┴─────── yes → agent_reviews (requires_role: ceo)
+                              │                      │
+                         execute               CEO approves / rejects
+                              │                      │
+                              │               CEO unavailable? → CS (chief_of_staff)
+                              ▼
+                    audit_log + decision KG write (M3)</pre>
+    <p style="font-size:0.85rem;color:var(--text-2)">Rides existing engine: <code>backend/src/operations/operationsWorkflow.ts</code> — <code>SupervisionTier</code>, confidence floor, kill-switch, circuit breaker. M2 adds <code>ceo</code> / <code>chief_of_staff</code> RBAC roles + gate-policy map.</p>
+  </section>
+
+  <section id="corporate">
+    <h2>Corporate agents (C-suite brain)</h2>
+    <div class="grid" id="corp-cards"></div>
+  </section>
+
+  <section id="product">
+    <h2>Product squad agents</h2>
+    <div class="grid" id="product-cards"></div>
+  </section>
+
+  <section id="kg">
+    <h2>Decision knowledge graph (M3)</h2>
+    <div class="panel">
+      <p>Append-only store — corporate decisions + product engineering, launches, strategies, support issues and fixes.</p>
+      <table style="margin-top:1rem">
+        <thead><tr><th>Nodes</th><th>Edges</th><th>Write points</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Decision, Strategy, Product, Launch, Incident, SupportIssue, Fix, Agent, Approval, Filing</td>
+            <td>decided_by, rationale_for, gated_by, supersedes, relates_to, resulted_in</td>
+            <td><code>runOperation</code>, <code>resolveReview</code>, launch events, support fixes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="router">
+    <h2>Model router (M4) — Claude now, vendor seam later</h2>
+    <div class="panel">
+      <table>
+        <thead><tr><th>Tier</th><th>Class</th><th>Use when</th></tr></thead>
+        <tbody>
+          <tr><td>High</td><td>Opus-class</td><td>Legal drafts, launch decisions, complex reasoning</td></tr>
+          <tr><td>Standard</td><td>Sonnet-class</td><td>Specs, code review, compliance analysis</td></tr>
+          <tr><td>Fast</td><td>Haiku-class</td><td>Triage, summaries, high-volume reads</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:1rem;font-size:0.88rem;color:var(--text-2)">Registry + routing policy: task class → capability + token budget → cheapest qualifying model + fallback chain. Providers: Anthropic (live) · OpenAI · Google · Local (stubs). Telemetry in <code>model_invocations</code> replaces direct <code>ANTHROPIC_MODEL</code> calls in skills.</p>
+    </div>
+  </section>
+
+  <section id="milestones">
+    <h2>Milestone roadmap — CEO signs each production deploy</h2>
+    <ul class="milestones">
+      <li class="current"><strong>M1</strong> — Design + branding + this webview (no backend code) ← <em>you are here</em></li>
+      <li><strong>M2</strong> — Governance core: <code>ceo</code>/<code>chief_of_staff</code> RBAC, gate-policy, Approvals admin UI</li>
+      <li><strong>M3</strong> — Decision KG: <code>kg_nodes</code>/<code>kg_edges</code>, <code>decisionGraph</code> service, graph API</li>
+      <li><strong>M4</strong> — Model router + <code>model_invocations</code>; refactor skills to task classes</li>
+      <li><strong>M5</strong> — Corporate agent fleet (CFO/CLO/CISO/CPO/CMO/Compliance/SRE skills)</li>
+      <li><strong>M6</strong> — Product squad + PDLC orchestrator + product KG + Agentic Builder loop</li>
+    </ul>
+  </section>
+
+  <section id="reuse">
+    <h2>Already built (reuse — do not rebuild)</h2>
+    <table>
+      <thead><tr><th>Capability</th><th>Location</th></tr></thead>
+      <tbody>
+        <tr><td>Human-gate engine</td><td><code>operationsWorkflow.ts</code></td></tr>
+        <tr><td>Skill registry + skills</td><td><code>skillRegistry.ts</code>, <code>operations/skills/*</code></td></tr>
+        <tr><td>Workflow engine</td><td>in-process / Temporal / Conductor</td></tr>
+        <tr><td>Audit</td><td><code>auditService.ts</code>, append-only <code>audit_logs</code></td></tr>
+        <tr><td>Admin agent-ops</td><td><code>/api/admin/agent-ops</code></td></tr>
+        <tr><td>RBAC (today)</td><td><code>support | compliance | admin</code> — M2 adds CEO/CS</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <p>Authoritative design: <a href="../AGENTIC-OS.md">docs/AGENTIC-OS.md</a> · CEO brief: <a href="../agenticos_argus.rtf">agenticos_argus.rtf</a></p>
+    <p style="margin-top:0.5rem">Strategic guidance only — not legal advice. M1 verification: open this file locally, confirm all cards and gates, CEO sign-off → deploy M1 → plan M2.</p>
+  </footer>
+</div>
+
+<script>
+const AGENTS = {
+  corporate: [
+    { name: "Argus Brain", charter: "Office of CEO / Orchestrator — routes work, convenes agents, owns the CEO/CS approval queue and corporate decision log.", responsibilities: "Triage incoming work · Assign to C-suite agents · Surface pending human gates · Maintain corporate decision log", interacts: "All corporate agents · CEO/CS approval queue · Argus Brain dashboard (M2)", tools: "runOperation · agent-ops API · mechGovService", tier: "human_led", gate: "Owns queue — does not bypass CEO gates" },
+    { name: "CFO", charter: "Budgets, treasury, revenue and spend reporting.", responsibilities: "Cash projections · Spend approvals · Revenue recognition drafts · FBO coverage reports", interacts: "CRO (compliance) · COO (infra spend) · Argus Brain", tools: "Ledger read · bank-rail reports · statementService", tier: "human_required", gate: "CEO — financial outputs", gated: true },
+    { name: "CLO (General Counsel)", charter: "Legal and regulatory posture for Phase A non-custodial software.", responsibilities: "Memo drafts (B4–B6) · Regulatory mapping · Filing prep · Launch legal review", interacts: "CRO · CPO · CEO gate", tools: "complianceSkill (legal) · doc templates in docs/legal/", tier: "human_required", gate: "CEO — final legal signoff", gated: true },
+    { name: "CISO", charter: "Corporate security posture; peer to product Cyber Specialist.", responsibilities: "Threat landscape · Wallet audit coordination (Trail of Bits) · Security invariant tracking", interacts: "Cyber Specialist · COO/SRE · CLO", tools: "phase14-security tests · kms/signer seams", tier: "auto_approve_audit", gate: "—" },
+    { name: "CPO", charter: "Product portfolio and roadmap; owns launch readiness.", responsibilities: "Roadmap prioritization · Launch checklist · Feature scope vs Phase A posture", interacts: "CMO · Product squads · CEO launch gate", tools: "PRD-PHASE-MATRIX · LAUNCH.md", tier: "human_required", gate: "CEO — first production launch", gated: true },
+    { name: "CMO", charter: "Brand, positioning, go-to-market.", responsibilities: "Messaging compliance (no 'bank') · Campaign drafts · GTM for collectibles-first", interacts: "CPO · CLO (messaging review) · marketing skill", tools: "backOfficeSkills marketing · LAUNCH.md §1", tier: "auto_approve_audit", gate: "Admin gate ≥1k audience" },
+    { name: "CRO / Compliance", charter: "Risk, audit, regulatory filings.", responsibilities: "KYC review queue · SAR/OFAC/CTR drafts · Sanctions rescreen · Account holds", interacts: "CLO · CFO · compliance admin", tools: "complianceSkill · kycReviewSkill · accountHoldService", tier: "human_required", gate: "Compliance/admin (not CEO unless legal final)" },
+    { name: "COO / SRE", charter: "Infrastructure, vendors, reliability.", responsibilities: "Incident summaries · Vendor eval · SLO tracking · Temporal/Conductor health", interacts: "CISO · CFO · SRE product agent", tools: "backOfficeSkills SRE · metrics · launch-gate.sh", tier: "auto_approve_audit", gate: "—" },
+    { name: "Chief of Staff", charter: "Backup human gate when CEO is unavailable.", responsibilities: "Approve/reject queued reviews · Escalation routing · Executive briefings", interacts: "Argus Brain · CEO · all gated output classes", tools: "agent_reviews · resolveReview (M2 RBAC)", tier: "human_led", gate: "Backup for all three CEO gate classes" }
+  ],
+  product: [
+    { name: "AI Product Strategist", charter: "The why — market, positioning, strategy documents.", responsibilities: "PRD alignment · Competitive analysis · Strategy docs with rationale", interacts: "PDLC Orchestrator · CPO · CMO", tools: "Read-only skill tools · docs/argus_prdv1/", tier: "auto_approve_audit", gate: "—" },
+    { name: "AI Engineer", charter: "Implementation — code, migrations, APIs.", responsibilities: "Feature build · Typecheck/test green · Idempotent money paths", interacts: "PDLC Orchestrator · Cyber · QA", tools: "Scoped write (M6) · existing backend services", tier: "auto_approve_audit", gate: "—" },
+    { name: "AI Spec / PDLC Orchestrator", charter: "Drives spec → design → build → test → launch; enforces gates.", responsibilities: "Milestone tracking · Gate enforcement · Launch proposal to CEO", interacts: "All product agents · CPO · CEO launch gate", tools: "WorkflowEngine · runOperation · LAUNCH.md checklist", tier: "human_required", gate: "CEO — first prod launch", gated: true },
+    { name: "AI Cyber Specialist", charter: "Per-product threat modeling and security review.", responsibilities: "STRIDE reviews · VP/MCP scope audit · Pre-launch security sign-off", interacts: "CISO · Engineer · PDLC Orchestrator", tools: "presentation tests · phase14-security · wallet audit docs", tier: "human_required", gate: "Material findings → human_required" },
+    { name: "AI Agentic Builder", charter: "Continuously updates agents, skills, and MCP servers.", responsibilities: "Skill registry updates · MCP client registration · Agent charter sync", interacts: "PDLC Orchestrator · Argus Brain · all agents", tools: "skillRegistry · skills/index.ts · argus-agent MCP", tier: "auto_approve_audit", gate: "—" },
+    { name: "AI QA / Test", charter: "Test plans, regression, e2e gates.", responsibilities: "Vitest · Playwright · e2e-validator · launch-gate.sh", interacts: "Engineer · PDLC Orchestrator · COO/SRE", tools: "npm test · test:e2e · e2e-validator skill", tier: "auto_approve_audit", gate: "—" },
+    { name: "AI SRE / Reliability", charter: "Product SLOs and incident response.", responsibilities: "On-call summaries · Performance · Degradation paths", interacts: "COO/SRE · Engineer · Cyber", tools: "metrics · temporal/conductor seams", tier: "auto_approve_audit", gate: "—" },
+    { name: "AI Support", charter: "Support issues and fixes feed the product knowledge graph.", responsibilities: "Ticket triage · Root-cause drafts · Fix verification", interacts: "Engineer · Strategist · product KG (M3)", tools: "backOfficeSkills support · decision KG", tier: "human_required", gate: "Customer-facing fixes" },
+    { name: "AI Designer / UX", charter: "Quiet Premium UI — type-led, jade accent, accessible.", responsibilities: "Component patterns · Mobile nav · TradeSheet/Wallet UX", interacts: "Strategist · Engineer · CMO", tools: "frontend/styles.css · Phase 9 design system", tier: "auto_approve_audit", gate: "—" }
+  ]
+};
+
+function renderCard(a) {
+  const tierClass = a.tier.includes("human") ? "tier human" : "tier";
+  return `<article class="card${a.gated ? " gated" : ""}">
+    <h4>${a.name}${a.gated ? ' <span class="badge" style="font-size:0.6rem;margin-left:0.25rem">CEO gate</span>' : ""}</h4>
+    <p class="charter">${a.charter}</p>
+    <dl>
+      <dt>Responsibilities</dt><dd>${a.responsibilities}</dd>
+      <dt>Interacts with</dt><dd>${a.interacts}</dd>
+      <dt>Tools / skills</dt><dd>${a.tools}</dd>
+      <dt>Supervision tier</dt><dd><span class="${tierClass}">${a.tier}</span></dd>
+      <dt>Human gate</dt><dd>${a.gate}</dd>
+    </dl>
+  </article>`;
+}
+
+document.getElementById("corp-cards").innerHTML = AGENTS.corporate.map(renderCard).join("");
+document.getElementById("product-cards").innerHTML = AGENTS.product.map(renderCard).join("");
+</script>
+</body>
+</html>

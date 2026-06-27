@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-label="Argus Agentic OS organization">
+  <defs>
+    <style>
+      .box { fill: #15181d; stroke: #262b33; stroke-width: 1.5; rx: 8; }
+      .box-accent { fill: #101317; stroke: #2dd4a7; stroke-width: 2; rx: 8; }
+      .box-gate { fill: rgba(45,212,167,0.08); stroke: #2dd4a7; stroke-width: 1.5; rx: 8; stroke-dasharray: 4 3; }
+      .title { font: 600 13px system-ui, sans-serif; fill: #f3f5f8; }
+      .sub { font: 400 10px system-ui, sans-serif; fill: #9aa3b0; }
+      .label { font: 600 11px system-ui, sans-serif; fill: #6b7480; letter-spacing: 0.08em; }
+      .line { stroke: #333a45; stroke-width: 1.5; fill: none; }
+      .line-accent { stroke: #2dd4a7; stroke-width: 1.5; fill: none; opacity: 0.6; }
+    </style>
+  </defs>
+  <rect width="900" height="620" fill="#0b0d10"/>
+
+  <!-- Human gates -->
+  <text x="450" y="28" text-anchor="middle" class="label">HUMAN GATES (CEO ’ CS BACKUP)</text>
+  <rect x="120" y="40" width="200" height="44" class="box-gate"/>
+  <text x="220" y="58" text-anchor="middle" class="title">Financial outputs</text>
+  <text x="220" y="72" text-anchor="middle" class="sub">CFO ’ CEO</text>
+  <rect x="350" y="40" width="200" height="44" class="box-gate"/>
+  <text x="450" y="58" text-anchor="middle" class="title">First prod launch</text>
+  <text x="450" y="72" text-anchor="middle" class="sub">CPO / PDLC ’ CEO</text>
+  <rect x="580" y="40" width="200" height="44" class="box-gate"/>
+  <text x="680" y="58" text-anchor="middle" class="title">Legal signoff</text>
+  <text x="680" y="72" text-anchor="middle" class="sub">CLO ’ CEO</text>
+
+  <!-- CEO -->
+  <line x1="220" y1="84" x2="220" y2="110" class="line"/>
+  <line x1="450" y1="84" x2="450" y2="110" class="line"/>
+  <line x1="680" y1="84" x2="680" y2="110" class="line"/>
+  <line x1="220" y1="110" x2="680" y2="110" class="line"/>
+  <line x1="450" y1="110" x2="450" y2="130" class="line-accent"/>
+
+  <rect x="325" y="130" width="250" height="52" class="box-accent"/>
+  <text x="450" y="152" text-anchor="middle" class="title">CEO + Chief of Staff</text>
+  <text x="450" y="168" text-anchor="middle" class="sub">Primary · backup approvers</text>
+
+  <!-- Argus Brain -->
+  <line x1="450" y1="182" x2="450" y2="210" class="line-accent"/>
+  <rect x="300" y="210" width="300" height="52" class="box-accent"/>
+  <text x="450" y="232" text-anchor="middle" class="title">Argus Brain (Office of CEO)</text>
+  <text x="450" y="248" text-anchor="middle" class="sub">Orchestrator · approval queue · decision log</text>
+
+  <!-- Corporate row -->
+  <text x="40" y="290" class="label">CORPORATE AGENTS</text>
+  <line x1="450" y1="262" x2="450" y2="300" class="line"/>
+  <line x1="110" y1="300" x2="790" y2="300" class="line"/>
+
+  <rect x="30" y="310" width="95" height="48" class="box"/><text x="77" y="332" text-anchor="middle" class="title">CFO</text><text x="77" y="346" text-anchor="middle" class="sub">Treasury</text>
+  <rect x="135" y="310" width="95" height="48" class="box"/><text x="182" y="332" text-anchor="middle" class="title">CLO</text><text x="182" y="346" text-anchor="middle" class="sub">Legal</text>
+  <rect x="240" y="310" width="95" height="48" class="box"/><text x="287" y="332" text-anchor="middle" class="title">CISO</text><text x="287" y="346" text-anchor="middle" class="sub">Security</text>
+  <rect x="345" y="310" width="95" height="48" class="box"/><text x="392" y="332" text-anchor="middle" class="title">CPO</text><text x="392" y="346" text-anchor="middle" class="sub">Product</text>
+  <rect x="450" y="310" width="95" height="48" class="box"/><text x="497" y="332" text-anchor="middle" class="title">CMO</text><text x="497" y="346" text-anchor="middle" class="sub">Brand/GTM</text>
+  <rect x="555" y="310" width="95" height="48" class="box"/><text x="602" y="332" text-anchor="middle" class="title">CRO</text><text x="602" y="346" text-anchor="middle" class="sub">Compliance</text>
+  <rect x="660" y="310" width="95" height="48" class="box"/><text x="707" y="332" text-anchor="middle" class="title">COO</text><text x="707" y="346" text-anchor="middle" class="sub">SRE/Ops</text>
+  <rect x="765" y="310" width="95" height="48" class="box"/><text x="812" y="332" text-anchor="middle" class="title">CS</text><text x="812" y="346" text-anchor="middle" class="sub">Backup gate</text>
+
+  <!-- Product squad -->
+  <text x="40" y="400" class="label">PRODUCT SQUAD (PER PRODUCT)</text>
+  <line x1="450" y1="358" x2="450" y2="410" class="line-accent"/>
+
+  <rect x="60" y="420" width="120" height="48" class="box"/><text x="120" y="442" text-anchor="middle" class="title">Strategist</text><text x="120" y="456" text-anchor="middle" class="sub">Why / market</text>
+  <rect x="195" y="420" width="120" height="48" class="box"/><text x="255" y="442" text-anchor="middle" class="title">Engineer</text><text x="255" y="456" text-anchor="middle" class="sub">Build</text>
+  <rect x="330" y="420" width="120" height="48" class="box"/><text x="390" y="442" text-anchor="middle" class="title">PDLC Orch</text><text x="390" y="456" text-anchor="middle" class="sub">Spec’launch</text>
+  <rect x="465" y="420" width="120" height="48" class="box"/><text x="525" y="442" text-anchor="middle" class="title">Cyber</text><text x="525" y="456" text-anchor="middle" class="sub">Threat model</text>
+  <rect x="600" y="420" width="120" height="48" class="box"/><text x="660" y="442" text-anchor="middle" class="title">Agentic Builder</text><text x="660" y="456" text-anchor="middle" class="sub">Skills/MCP</text>
+  <rect x="735" y="420" width="120" height="48" class="box"/><text x="795" y="442" text-anchor="middle" class="title">QA · Support · UX</text><text x="795" y="456" text-anchor="middle" class="sub">Recommended</text>
+
+  <!-- Infrastructure layer -->
+  <text x="40" y="510" class="label">SHARED SUBSTRATE (ALREADY BUILT)</text>
+  <rect x="80" y="525" width="740" height="70" class="box"/>
+  <text x="450" y="548" text-anchor="middle" class="title">runOperation ’ resolveReview · agent_runs · agent_reviews</text>
+  <text x="450" y="564" text-anchor="middle" class="sub">Skill registry · Temporal/Conductor · audit_logs · RBAC (M2: ceo/chief_of_staff)</text>
+  <text x="450" y="582" text-anchor="middle" class="sub">M3: Decision KG · M4: Model router · M5M6: Agent fleet + PDLC</text>
+</svg>

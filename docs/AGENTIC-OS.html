@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Argus Agentic OS — Argus Financial Partners</title>
+<style>/* Argus Financial Partners strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Argus Agentic OS</h1>
+  <p class="sub">Corporate Brain Design — M1</p>
+  <div class="meta">Argus Financial Partners &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 27, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#mission-framing">Mission &amp; framing</a></li><li class="lvl-2"><a href="#design-principles">Design principles</a></li><li class="lvl-2"><a href="#human-gates-ceo-cs-backup">Human gates (CEO → CS backup)</a></li><li class="lvl-2"><a href="#approval-workflow">Approval workflow</a></li><li class="lvl-2"><a href="#corporate-agents-c-suite-brain">Corporate agents (C-suite brain)</a></li><li class="lvl-2"><a href="#product-squad-agents">Product squad agents</a></li><li class="lvl-2"><a href="#agent-interaction-map-corporate-product">Agent interaction map (corporate ↔ product)</a></li><li class="lvl-2"><a href="#decision-knowledge-graph-m3">Decision knowledge graph (M3)</a></li><li class="lvl-2"><a href="#model-router-m4">Model router (M4)</a></li><li class="lvl-2"><a href="#reuse-map-do-not-rebuild">Reuse map (do NOT rebuild)</a></li><li class="lvl-2"><a href="#milestone-roadmap-ceo-sign-off-each-deploy">Milestone roadmap (CEO sign-off each deploy)</a></li><li class="lvl-2"><a href="#m1-verification-checklist">M1 verification checklist</a></li></ol></nav>
+  <main class="content">
+<h1 id="argus-agentic-os-corporate-brain-design">Argus Agentic OS — Corporate Brain Design</h1>
+<p><strong>Status:</strong> M1 — design + branding + webview (CEO sign-off gate)<br><strong>Authoritative webview:</strong> <a href="agentic-os/index.html"><code>agentic-os/index.html</code></a><br><strong>Related:</strong> <a href="agenticos_argus.rtf"><code>agenticos_argus.rtf</code></a> (CEO brief)</p>
+<hr>
+<h2 id="mission-framing">Mission &amp; framing</h2>
+<p><strong>Mission:</strong> Run Argus Financial Partners with the smallest possible human staff — an auditable, agent-native corporation where AI agents hold real jobs, every material decision is logged, and humans gate only what must never run unattended: money out, first production launches, and final legal sign-offs.</p>
+<p><strong>Positioning (Phase A):</strong> Tokenization-first, non-custodial, agentic finance. We are <em>not</em> a bank — we are the all-seeing guardian of your money: keys in your device, decisions in an append-only ledger, agents that operate under scoped credentials, and a CEO who remains the final authority on financial outputs, launches, and legal posture.</p>
+<p><strong>Brand motif:</strong> Argus — the many-eyed sentinel. Jade accent (<code>#2dd4a7</code>) on dark surfaces; type-led hierarchy; no hype.</p>
+<hr>
+<h2 id="design-principles">Design principles</h2>
+<ol>
+<li><strong>Agents decide; deterministic code executes; humans gate material outcomes</strong> — already encoded in <code>runOperation</code> → <code>resolveReview</code> (<code>backend/src/operations/operationsWorkflow.ts</code>).</li>
+<li><strong>Corporate brain + product squads</strong> — C-suite agents route portfolio work; per-product squads run PDLC.</li>
+<li><strong>Append-only audit everywhere</strong> — corporate decision log + product KG; no silent overwrites.</li>
+<li><strong>Model-agnostic PDLC</strong> — Claude-tiered router now; vendor seam for OpenAI/Google/local later (M4).</li>
+<li><strong>CEO primary, Chief of Staff backup</strong> — three gated output classes only escalate to humans when required.</li>
+</ol>
+<hr>
+<h2 id="human-gates-ceo-cs-backup">Human gates (CEO → CS backup)</h2>
+<table>
+<thead>
+<tr>
+<th>Output class</th>
+<th>Primary gate</th>
+<th>Backup</th>
+<th>Maps to</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Financial outputs</strong></td>
+<td>CEO</td>
+<td>Chief of Staff</td>
+<td>CFO agent outputs; treasury, spend, revenue recognition</td>
+</tr>
+<tr>
+<td><strong>New product — first production launch</strong></td>
+<td>CEO</td>
+<td>Chief of Staff</td>
+<td>CPO + PDLC Orchestrator launch gate</td>
+</tr>
+<tr>
+<td><strong>Final legal signoff</strong></td>
+<td>CEO</td>
+<td>Chief of Staff</td>
+<td>CLO agent; counsel memos B4–B6</td>
+</tr>
+</tbody></table>
+<p><strong>Implementation (M2):</strong> gate-policy map <code>(agent, output-class) → required role</code> feeding <code>runOperation</code> escalation → <code>agent_reviews.requires_role</code>. Existing <code>SupervisionTier</code> values:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>auto_approve</code></td>
+<td>Execute immediately; audit only</td>
+</tr>
+<tr>
+<td><code>auto_approve_audit</code></td>
+<td>Execute + flagged audit trail</td>
+</tr>
+<tr>
+<td><code>human_required</code></td>
+<td>Queue to <code>agent_reviews</code>; human must approve</td>
+</tr>
+<tr>
+<td><code>human_led</code></td>
+<td>Agent drafts; human decides</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="approval-workflow">Approval workflow</h2>
+<pre><code>Agent invoke → gate() → escalate?
+                              │
+                    no ───────┴─────── yes → agent_reviews (requires_role: ceo)
+                              │                      │
+                         execute               CEO approves / rejects
+                              │                      │
+                              │               CEO unavailable?
+                              │                      │
+                              │               CS backup (chief_of_staff)
+                              ▼
+                    audit_log + KG write (M3)
+</code></pre>
+<hr>
+<h2 id="corporate-agents-c-suite-brain">Corporate agents (C-suite brain)</h2>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Charter</th>
+<th>Supervision</th>
+<th>CEO gate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Argus Brain</strong> (Office of CEO / Orchestrator)</td>
+<td>Routes work, convenes agents, owns CEO/CS approval queue and corporate decision log</td>
+<td><code>human_led</code></td>
+<td>Owns queue</td>
+</tr>
+<tr>
+<td><strong>CFO</strong></td>
+<td>Budgets, treasury, revenue/spend reporting</td>
+<td><code>human_required</code> on financial outputs</td>
+<td><strong>Financial outputs</strong></td>
+</tr>
+<tr>
+<td><strong>CLO</strong> (General Counsel)</td>
+<td>Legal/regulatory posture, memo drafts, filing prep</td>
+<td><code>human_required</code> on final signoff</td>
+<td><strong>Legal signoff</strong></td>
+</tr>
+<tr>
+<td><strong>CISO</strong></td>
+<td>Corporate security posture; peers with product Cyber Specialist</td>
+<td><code>auto_approve_audit</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>CPO</strong></td>
+<td>Product portfolio, roadmap, launch readiness</td>
+<td><code>human_required</code> on first prod launch</td>
+<td><strong>Launch gate</strong></td>
+</tr>
+<tr>
+<td><strong>CMO</strong></td>
+<td>Brand, positioning, GTM (uses marketing skill)</td>
+<td><code>auto_approve_audit</code> (≥1k audience → admin)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>CRO / Compliance</strong></td>
+<td>Risk, audit, regulatory filings</td>
+<td><code>human_required</code> (reuses <code>complianceSkill</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>COO / SRE</strong></td>
+<td>Infra, vendors, reliability</td>
+<td><code>auto_approve_audit</code> (reuses SRE skill)</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p><strong>Reuse today:</strong> <code>complianceSkill</code>, back-office SRE/marketing skills in <code>backend/src/operations/skills/</code>.</p>
+<hr>
+<h2 id="product-squad-agents">Product squad agents</h2>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Charter</th>
+<th>Supervision</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>AI Product Strategist</strong></td>
+<td>The <em>why</em> — market, positioning, strategy docs</td>
+<td><code>auto_approve_audit</code></td>
+</tr>
+<tr>
+<td><strong>AI Engineer</strong></td>
+<td>Implementation, PRs, migrations</td>
+<td><code>auto_approve_audit</code></td>
+</tr>
+<tr>
+<td><strong>AI Spec / PDLC Orchestrator</strong></td>
+<td>Spec → design → build → test → launch; enforces gates</td>
+<td><code>human_required</code> at launch</td>
+</tr>
+<tr>
+<td><strong>AI Cyber Specialist</strong></td>
+<td>Per-product threat modeling, security review</td>
+<td><code>human_required</code> on material findings</td>
+</tr>
+<tr>
+<td><strong>AI Agentic Builder</strong></td>
+<td>Updates agents, skills, MCP servers continuously</td>
+<td><code>auto_approve_audit</code></td>
+</tr>
+<tr>
+<td><strong>AI QA / Test</strong> <em>(recommended)</em></td>
+<td>Test plans, regression, e2e gates</td>
+<td><code>auto_approve_audit</code></td>
+</tr>
+<tr>
+<td><strong>AI SRE / Reliability</strong> <em>(recommended)</em></td>
+<td>SLOs, incident summaries</td>
+<td><code>auto_approve_audit</code></td>
+</tr>
+<tr>
+<td><strong>AI Support</strong> <em>(recommended)</em></td>
+<td>Support issues → product KG</td>
+<td><code>human_required</code> on customer-facing fixes</td>
+</tr>
+<tr>
+<td><strong>AI Designer / UX</strong> <em>(recommended)</em></td>
+<td>Quiet Premium UI, accessibility</td>
+<td><code>auto_approve_audit</code></td>
+</tr>
+</tbody></table>
+<p><strong>PDLC flow (M6):</strong> Strategist → Engineer + Cyber (parallel) → QA → Orchestrator launch proposal → <strong>CEO gate</strong> → production.</p>
+<hr>
+<h2 id="agent-interaction-map-corporate-product">Agent interaction map (corporate ↔ product)</h2>
+<pre><code>                    ┌─────────────┐
+                    │ Argus Brain │
+                    └──────┬──────┘
+           ┌───────────────┼───────────────┐
+           ▼               ▼               ▼
+        CFO/CLO         CPO/CMO      CRO/COO/CISO
+           │               │               │
+           └───────────────┼───────────────┘
+                           ▼
+                  Product squad (PDLC)
+                           │
+              Strategist → Engineer → QA
+                     ↘ Cyber ↗
+                  Agentic Builder (skills/MCP)
+                           │
+                    CEO launch gate
+</code></pre>
+<hr>
+<h2 id="decision-knowledge-graph-m3">Decision knowledge graph (M3)</h2>
+<p>Append-only, in-DB (reuse append-only trigger pattern).</p>
+<p><strong>Nodes:</strong> <code>Decision</code>, <code>Strategy</code>, <code>Product</code>, <code>Launch</code>, <code>Incident</code>, <code>SupportIssue</code>, <code>Fix</code>, <code>Agent</code>, <code>Approval</code>, <code>Filing</code></p>
+<p><strong>Edges:</strong> <code>decided_by</code>, <code>rationale_for</code>, <code>gated_by</code>, <code>supersedes</code>, <code>relates_to</code>, <code>resulted_in</code></p>
+<p><strong>Write points:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>KG action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>runOperation</code> completes</td>
+<td><code>Decision</code> node + <code>Agent</code> edge + rationale</td>
+</tr>
+<tr>
+<td><code>resolveReview</code> (human gate)</td>
+<td><code>Approval</code> node + <code>gated_by</code> edge</td>
+</tr>
+<tr>
+<td>Product launch (M6)</td>
+<td><code>Launch</code> + <code>Product</code> + <code>Strategy</code></td>
+</tr>
+<tr>
+<td>Support fix (M6)</td>
+<td><code>SupportIssue</code> → <code>Fix</code> → <code>Product</code></td>
+</tr>
+</tbody></table>
+<p><strong>Scope:</strong> Corporate KG = all decisions. Product KG = engineering, launches, strategies, support issues + fixes.</p>
+<hr>
+<h2 id="model-router-m4">Model router (M4)</h2>
+<p><strong>Registry fields:</strong> id, vendor, capability tier, context window, $/token in+out, latency class</p>
+<p><strong>Routing policy:</strong> task class → required capability + token budget → cheapest qualifying model + fallback chain</p>
+<p><strong>Claude tiers (now):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Model class</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>High</td>
+<td>Opus-class</td>
+<td>Legal drafts, launch decisions, complex reasoning</td>
+</tr>
+<tr>
+<td>Standard</td>
+<td>Sonnet-class</td>
+<td>Specs, code review, compliance analysis</td>
+</tr>
+<tr>
+<td>Fast</td>
+<td>Haiku-class</td>
+<td>Triage, summaries, high-volume reads</td>
+</tr>
+</tbody></table>
+<p><strong>Provider seam:</strong> <code>AnthropicProvider</code> (live) · <code>OpenAIProvider</code> (stub) · <code>GoogleProvider</code> (stub) · <code>LocalProvider</code> (stub)</p>
+<p><strong>Telemetry:</strong> <code>model_invocations</code> table — tokens, cost, task class → powers swap-by-usage policy.</p>
+<p><strong>Replaces:</strong> direct <code>ANTHROPIC_MODEL</code> calls in <code>skills/kycReviewSkill.ts</code> and peers.</p>
+<hr>
+<h2 id="reuse-map-do-not-rebuild">Reuse map (do NOT rebuild)</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Human-gate engine</td>
+<td><code>operationsWorkflow.ts</code> — <code>runOperation</code>, <code>resolveReview</code>, <code>SupervisionTier</code></td>
+</tr>
+<tr>
+<td>Skill registry</td>
+<td><code>skillRegistry.ts</code>, <code>operations/skills/*</code></td>
+</tr>
+<tr>
+<td>Workflow engine</td>
+<td><code>engine.ts</code>, Temporal, Conductor</td>
+</tr>
+<tr>
+<td>Audit</td>
+<td><code>auditService.ts</code>, append-only <code>audit_logs</code></td>
+</tr>
+<tr>
+<td>Admin agent-ops</td>
+<td><code>/api/admin/agent-ops</code> — extend for CEO/CS (M2)</td>
+</tr>
+<tr>
+<td>RBAC</td>
+<td><code>middleware/rbac.ts</code> — add <code>ceo</code>, <code>chief_of_staff</code> (M2)</td>
+</tr>
+<tr>
+<td>Doc render</td>
+<td><code>docs/build/render.mjs</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="milestone-roadmap-ceo-sign-off-each-deploy">Milestone roadmap (CEO sign-off each deploy)</h2>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverable</th>
+<th>Backend code?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>M1</strong></td>
+<td>This doc + branding + webview</td>
+<td><strong>No</strong></td>
+</tr>
+<tr>
+<td><strong>M2</strong></td>
+<td><code>ceo</code>/<code>chief_of_staff</code> RBAC, gate-policy, Approvals admin UI</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>M3</strong></td>
+<td><code>kg_nodes</code>/<code>kg_edges</code>, <code>decisionGraph</code> service, graph API</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>M4</strong></td>
+<td><code>modelRouter</code>, <code>model_invocations</code>, skill refactor</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>M5</strong></td>
+<td>Corporate agent fleet as runner skills</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>M6</strong></td>
+<td>Product squad + PDLC orchestrator + product KG</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="m1-verification-checklist">M1 verification checklist</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Open <code>docs/agentic-os/index.html</code> in a browser (no server)</li>
+<li><input disabled="" type="checkbox"> Every corporate + product agent has a card (charter · responsibilities · interactions · tools · tier · gate)</li>
+<li><input disabled="" type="checkbox"> Three CEO-gated categories + CEO → CS backup flow visible</li>
+<li><input disabled="" type="checkbox"> SVG org diagram + logo render; Argus branding</li>
+<li><input disabled="" type="checkbox"> Knowledge graph + model router overviews present</li>
+<li><input disabled="" type="checkbox"> Render <code>AGENTIC-OS.html</code> / <code>.pdf</code> via <code>docs/build/render.mjs</code></li>
+<li><input disabled="" type="checkbox"> CEO reviews webview + doc → signs off → M1 deployed → plan M2</li>
+</ul>
+<hr>
+<p><em>Strategic guidance only — not legal advice. Financial and legal gates require human CEO/CS approval regardless of agent recommendation.</em></p>
+
+  </main>
+</div>
+</body></html>

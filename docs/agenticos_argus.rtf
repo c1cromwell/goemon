@@ -1,0 +1,936 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 Menlo-Bold;
+\f3\fnil\fcharset0 Menlo-Italic;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue0;\red162\green168\blue247;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\csgray\c0;\cssrgb\c69412\c72549\c97647;
+}
+\margl1440\margr1440\vieww30040\viewh16140\viewkind0
+\deftab720
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 /plan This is very important, need your full attention to details and resources, I want to run Argus with as few human resources as possible, that means I need an Agentic Brain for this corporation. I do want human gates, all financial outputs must be gated by the CEO, all new Products that launch into Production the first time must be gated by the CEO, all final legal approvals if unavailable, that is another human gate Chief of Staff (CS). Review image docs/company_os.jpeg can you make sure I have my own agentic structure that each agent has a job at the corporate level, also at the Product level, Product should consist of the following (but feel free to recommend): AI Product Strategist, AI Engineer, AI Spec PDLC Orchestrator, AI Cyber Specialist and AI Agentic Builder (this continues to update agents, skills and mcp servers as needed). All work done at the corporate level should have an audit log and knowledge graph off all decisions, at the Product level all product engineering and product launches, decisions on the why with documented strategies and including all support issues and fixes, etc...plan first with a full set of milestones to achieve this plan and at each step of the plan that is implement, I (as the CEO) will sign off as each gets production deployed. I would like a full local webview (html) overview of each agent, the responsibility of the agent, how it interacts with other agents and how the approval workflow ask for the human gate, and include an overview image like the docs/company_os.jpeg (brand as argus, which I still need a logo, mission statement and framing). Last note: for the PDLC i don\'92t' want to reply on 1 LLM model either, we should build the ability to easily swap models based on token usage, the work that is required and what the agent needs to produce as an outcome.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf3 \kerning1\expnd0\expndtw0 \CocoaLigature0 \outl0\strokewidth0  - 
+\f2\b The human-gate engine already exists
+\f1\b0  \'97 \cf4 runOperation\cf3 /\cf4 resolveReview\cf3  with\
+  \cf4 SupervisionTier\cf3  (auto_approve \'b7 auto_approve_audit \'b7 human_required \'b7\
+  human_led), a confidence floor, kill-switch, circuit breaker, RBAC\
+  \cf4 requiresRole\cf3  allow-list, and append-only \cf4 agent_runs\cf3  + \cf4 agent_reviews\cf3 . Your\
+  CEO/CS gates can ride this.\
+\
+  - 
+\f2\b RBAC roles today are only \cf4 support | compliance | admin
+\f1\b0 \cf3  \'97 no\
+  \cf4 ceo\cf3 /\cf4 chief_of_staff\cf3  yet.\
+\
+  - 
+\f2\b No knowledge graph / decision-record store exists
+\f1\b0  \'97 greenfield.\
+\
+  - 
+\f2\b The model layer is hardcoded to a single \cf4 ANTHROPIC_MODEL
+\f1\b0 \cf3  called directly in\
+  skills \'97 the "swap models by token/work/outcome" requirement needs a new\
+  model-router abstraction.\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \outl0\strokewidth0 \strokec2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f2\b\fs22 \cf3 \kerning1\expnd0\expndtw0 \CocoaLigature0 \outl0\strokewidth0 Context
+\f1\b0 \
+\
+The CEO wants to run Argus with the fewest possible human staff by standing up\
+an 
+\f2\b agentic
+\f1\b0  
+\f2\b corporation
+\f1\b0 : named AI agents that hold real jobs at the 
+\f2\b corporate
+\f1\b0  level and the 
+\f2\b product
+\f1\b0  level, every material decision audited and captured in a 
+\f2\b decision
+\f1\b0  
+\f2\b knowledge
+\f1\b0  
+\f2\b graph
+\f1\b0 , a 
+\f2\b model-agnostic
+\f1\b0  PDLC (swap models by token usage / work / required outcome), and 
+\f2\b human
+\f1\b0  
+\f2\b gates
+\f1\b0  kept only where they matter \'97 the 
+\f2\b CEO
+\f1\b0  (primary) with a 
+\f2\b Chief
+\f1\b0  
+\f2\b of
+\f1\b0  
+\f2\b Staff
+\f1\b0  
+\f2\b (CS)
+\f1\b0  backup must approve:\
+\
+1. all 
+\f2\b financial
+\f1\b0  
+\f2\b outputs
+\f1\b0 ,\'a0\
+2. all 
+\f2\b new-product
+\f1\b0  
+\f2\b first
+\f1\b0  
+\f2\b production
+\f1\b0  
+\f2\b launches
+\f1\b0 ,\'a0\
+3. all 
+\f2\b final
+\f1\b0  
+\f2\b legal
+\f1\b0  
+\f2\b signoffs
+\f1\b0 . \
+\
+The deliverable also includes a 
+\f2\b local
+\f1\b0  
+\f2\b HTML
+\f1\b0  
+\f2\b webview
+\f1\b0  that explains every agent (its responsibilities, how it interacts with other agents, how its approval workflow asks the human gate)\
+plus an Argus-branded 
+\f2\b org
+\f1\b0  
+\f2\b overview
+\f1\b0  
+\f2\b image
+\f1\b0 , and Argus 
+\f2\b branding
+\f1\b0  (logo, mission, framing).\
+\
+This is a multi-milestone program. The CEO signs off 
+\f2\b each
+\f1\b0  
+\f2\b milestone
+\f1\b0  
+\f2\b as
+\f1\b0  
+\f2\b it
+\f1\b0  
+\f2\b is
+\f1\b0  
+\f2\b production-deployed
+\f1\b0 .\
+\
+
+\f2\b Decided
+\f1\b0  
+\f2\b for
+\f1\b0  
+\f2\b the
+\f1\b0  
+\f2\b first
+\f1\b0  
+\f2\b deploy
+\f1\b0  
+\f2\b (M1):
+\f1\b0  
+\f2\b design
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b branding
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b webview
+\f1\b0  
+\f2\b only
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b no
+\f1\b0  
+\f2\b backend
+\f1\b0  
+\f2\b code.
+\f1\b0  \
+All code(gates, knowledge graph, model router, agent fleet, PDLC) lands in later, separately-signed milestones. Decided also: the org visual is an 
+\f2\b Argus-branded
+\f1\b0  
+\f2\b SVG
+\f1\b0  (versionable, embeds in the webview); \
+the model router is 
+\f2\b Claude-tiered
+\f1\b0  
+\f2\b now
+\f1\b0  
+\f2\b with
+\f1\b0  
+\f2\b a
+\f1\b0  
+\f2\b provider
+\f1\b0  
+\f2\b seam
+\f1\b0  (OpenAI/Google/local drop in later).
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \outl0\strokewidth0 \strokec2 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f2\b\fs22 \cf3 \kerning1\expnd0\expndtw0 \CocoaLigature0 \outl0\strokewidth0 What
+\f1\b0  
+\f2\b already
+\f1\b0  
+\f2\b exists
+\f1\b0  
+\f2\b (reuse
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b do
+\f1\b0  
+\f2\b NOT
+\f1\b0  
+\f2\b rebuild)
+\f1\b0 \
+\
+ - 
+\f2\b The
+\f1\b0  
+\f2\b human-gate
+\f1\b0  
+\f2\b engine
+\f1\b0 : \cf4 runOperation\cf3  (gather\uc0\u8594 invoke\u8594 gate\u8594 execute|queue\u8594 audit)\
+ + \cf4 resolveReview\cf3 ,\
+ \cf4 SupervisionTier\cf3  (\cf4 auto_approve\cf3 \'b7\cf4 auto_approve_audit\cf3 \'b7\cf4 human_required\cf3 \'b7\cf4 human_led\cf3 ),\
+ confidence floor,\
+ kill-switch, circuit breaker, RBAC \cf4 requiresRole\cf3  allow-list, append-only\
+ \cf4 agent_runs\cf3  + mutable\
+ \cf4 agent_reviews\cf3  queue \'97 \cf4 backend/src/operations/operationsWorkflow.ts\cf3 . The CEO/CS\
+ gates ride this.\
+\
+ - 
+\f2\b Skill
+\f1\b0  
+\f2\b registry
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b skills
+\f1\b0  (read/recommend/draft, scope intersection) \'97\
+ \cf4 operations/skillRegistry.ts\cf3 ,\
+ \cf4 operations/skills/\{kycReviewSkill,backOfficeSkills,complianceSkill\}.ts\cf3 , barrel\
+ \cf4 skills/index.ts\cf3 .\
+\
+ - 
+\f2\b Swappable
+\f1\b0  
+\f2\b WorkflowEngine
+\f1\b0  (in-process / Temporal / Conductor) \'97\
+ \cf4 operations/engine.ts\cf3 ,\
+ \cf4 selectEngine.ts\cf3 , \cf4 operations/\{temporal,conductor\}/\cf3 .\
+\
+ - 
+\f2\b Audit
+\f1\b0  (append-only \cf4 audit_logs\cf3 , agent_id/agent_name/action/resource/details)\
+ \'97 \cf4 services/auditService.ts\cf3 .\
+ - 
+\f2\b RBAC
+\f1\b0  roles \cf4 support|compliance|admin\cf3  \'97 \cf4 middleware/rbac.ts\cf3  (no\
+ \cf4 ceo\cf3 /\cf4 chief_of_staff\cf3  yet).\
+\
+ - 
+\f2\b Model
+\f1\b0  
+\f2\b config
+\f1\b0 :\
+ \cf4 OPERATIONS_ORCHESTRATOR\cf3 /\cf4 SMARTCHAT_ORCHESTRATOR\cf3 /\cf4 ONBOARDING_ORCHESTRATOR\cf3 \
+ (simulated|anthropic) + single \cf4 ANTHROPIC_MODEL\cf3 ; LLM called directly in\
+ \cf4 skills/kycReviewSkill.ts\cf3 \
+ via \cf4 @anthropic-ai/sdk\cf3 . The model router replaces this direct call.\
+\
+ - 
+\f2\b Admin
+\f1\b0  
+\f2\b agent-ops
+\f1\b0  
+\f2\b surface
+\f1\b0  (\cf4 /api/admin/agent-ops\cf3 :\
+ trigger\'b7reviews\'b7run-trail\'b7decide) \'97 extend for CEO/CS.\
+\
+ - 
+\f2\b Doc
+\f1\b0  
+\f2\b render
+\f1\b0  
+\f2\b pipeline
+\f1\b0  \'97 \cf4 docs/build/render.mjs\cf3  (md \uc0\u8594  .html/.pdf), used for the\
+ webview companions.\
+\
+
+\f2\b The
+\f1\b0  
+\f2\b Argus
+\f1\b0  
+\f2\b Agentic
+\f1\b0  
+\f2\b Org
+\f1\b0  
+\f2\b (the
+\f1\b0  
+\f2\b design
+\f1\b0  
+\f2\b the
+\f1\b0  
+\f2\b webview
+\f1\b0  
+\f2\b documents)
+\f1\b0 \
+\
+
+\f2\b Branding
+\f1\b0  
+\f2\b (drafts
+\f1\b0  
+\f2\b the
+\f1\b0  
+\f2\b CEO
+\f1\b0  
+\f2\b approves
+\f1\b0  
+\f2\b in
+\f1\b0  
+\f2\b M1):
+\f1\b0  an Argus 
+\f2\b mission
+\f1\b0  
+\f2\b statement
+\f1\b0 ,
+\f2\b framing/positioning
+\f1\b0 ,\
+and an 
+\f2\b SVG
+\f1\b0  
+\f2\b wordmark
+\f1\b0  built on the "Argus" all-seeing-guardian motif (an eye/sentinel \'97 ties to the\
+auditable, non-custodial, "we watch your money so no one else can seize it" thesis).\
+\
+
+\f2\b Human
+\f1\b0  
+\f2\b gates
+\f1\b0  
+\f2\b (CEO
+\f1\b0  
+\f2\b primary,
+\f1\b0  
+\f2\b CS
+\f1\b0  
+\f2\b backup):
+\f1\b0  three CEO-gated output classes route to human role \cf4 ceo\cf3  (primary) \uc0\u8594  \cf4 chief_of_staff\cf3  (backup if CEO unavailable): 
+\f2\b financial
+\f1\b0  
+\f2\b outputs
+\f1\b0 ,\
+
+\f2\b new-product
+\f1\b0  
+\f2\b first
+\f1\b0  
+\f2\b production
+\f1\b0  
+\f2\b launch
+\f1\b0 , 
+\f2\b final
+\f1\b0  
+\f2\b legal
+\f1\b0  
+\f2\b signoff
+\f1\b0 . \
+Implemented (M2) as a gate-policy map \cf4 (agent,\cf3  \cf4 output-class)\cf3  \cf4 \uc0\u8594 \cf3  \cf4 required\cf3  \cf4 role\cf3  feeding the existing \cf4 runOperation\cf3  escalation \uc0\u8594  \cf4 agent_reviews.requiresRole\cf3 .\
+\
+
+\f2\b Corporate
+\f1\b0  
+\f2\b agents
+\f1\b0  
+\f2\b (the
+\f1\b0  
+\f2\b C-suite
+\f1\b0  
+\f2\b "brain")
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b recommended
+\f1\b0  
+\f2\b roster
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b one-line
+\f1\b0  
+\f2\b charters:
+\f1\b0 \
+- 
+\f2\b Office
+\f1\b0  
+\f2\b of
+\f1\b0  
+\f2\b the
+\f1\b0  
+\f2\b CEO
+\f1\b0  
+\f2\b /
+\f1\b0  
+\f2\b Orchestrator
+\f1\b0  
+\f2\b ("Argus
+\f1\b0  
+\f2\b Brain")
+\f1\b0  \'97 routes work, convenes agents, owns the CEO/CS approval queue and the corporate decision log.\
+- 
+\f2\b CFO
+\f1\b0  
+\f2\b agent
+\f1\b0  \'97 budgets, treasury, revenue/spend; 
+\f2\b financial
+\f1\b0  
+\f2\b outputs
+\f1\b0  
+\f2\b are
+\f1\b0  
+\f2\b CEO-gated
+\f1\b0 .\
+- 
+\f2\b CLO
+\f1\b0  
+\f2\b /
+\f1\b0  
+\f2\b General
+\f1\b0  
+\f2\b Counsel
+\f1\b0  
+\f2\b agent
+\f1\b0  \'97 legal/regulatory; 
+\f2\b final
+\f1\b0  
+\f2\b legal
+\f1\b0  
+\f2\b signoffs
+\f1\b0  
+\f2\b are
+\f1\b0  
+\f2\b CEO-gated
+\f1\b0 .\
+- 
+\f2\b CISO
+\f1\b0  
+\f2\b agent
+\f1\b0  \'97 corporate security posture (the product Cyber Specialist's corporate peer).\
+- 
+\f2\b CPO
+\f1\b0  
+\f2\b agent
+\f1\b0  \'97 product portfolio & roadmap; 
+\f2\b new-product
+\f1\b0  
+\f2\b first
+\f1\b0  
+\f2\b prod
+\f1\b0  
+\f2\b launches
+\f1\b0  
+\f2\b are
+\f1\b0  
+\f2\b CEO-gated
+\f1\b0 .\
+- 
+\f2\b CMO
+\f1\b0  
+\f2\b agent
+\f1\b0  \'97 brand, positioning, GTM.\
+- 
+\f2\b CRO
+\f1\b0  
+\f2\b /
+\f1\b0  
+\f2\b Compliance
+\f1\b0  
+\f2\b agent
+\f1\b0  \'97 risk, audit, regulatory filings (reuses \cf4 complianceSkill\cf3 ).\
+- 
+\f2\b COO
+\f1\b0  
+\f2\b /
+\f1\b0  
+\f2\b SRE-People
+\f1\b0  
+\f2\b agent
+\f1\b0  \'97 infra, vendors, reliability (reuses the back-office SRE skill).\
+\
+
+\f2\b Product
+\f1\b0  
+\f2\b agents
+\f1\b0  
+\f2\b (per
+\f1\b0  
+\f2\b product
+\f1\b0  
+\f2\b squad)
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b the
+\f1\b0  
+\f2\b CEO's
+\f1\b0  
+\f2\b list
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b recommendations:
+\f1\b0 \
+- 
+\f2\b AI
+\f1\b0  
+\f2\b Product
+\f1\b0  
+\f2\b Strategist
+\f1\b0  (the 
+\f3\i why
+\f1\i0  \'97 strategy, market, positioning docs)\
+- 
+\f2\b AI
+\f1\b0  
+\f2\b Engineer
+\f1\b0  (implementation)\
+- 
+\f2\b AI
+\f1\b0  
+\f2\b Spec
+\f1\b0  
+\f2\b /
+\f1\b0  
+\f2\b PDLC
+\f1\b0  
+\f2\b Orchestrator
+\f1\b0  (drives spec\uc0\u8594 design\u8594 build\u8594 test\u8594 launch,enforces gates)\
+- 
+\f2\b AI
+\f1\b0  
+\f2\b Cyber
+\f1\b0  
+\f2\b Specialist
+\f1\b0  (per-product threat modeling/review), 
+\f2\b AI
+\f1\b0 \
+- 
+\f2\b Agentic
+\f1\b0  
+\f2\b Builder
+\f1\b0 (continuously updates agents, skills, MCP servers). \
+
+\f2\b Recommend
+\f1\b0  
+\f2\b adding:
+\f1\b0  
+\f2\b AI
+\f1\b0  
+\f2\b QA/Test
+\f1\b0 , 
+\f2\b AI
+\f1\b0  
+\f2\b SRE/Reliability
+\f1\b0 , 
+\f2\b AI
+\f1\b0  
+\f2\b Support
+\f1\b0  (support issues + fixes feed the product KG), 
+\f2\b AI
+\f1\b0  
+\f2\b Designer/UX
+\f1\b0 .\
+\
+
+\f2\b Decision
+\f1\b0  
+\f2\b knowledge
+\f1\b0  
+\f2\b graph
+\f1\b0  
+\f2\b (corporate
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b product):
+\f1\b0  append-only, in-DB (reuse the append-only-trigger pattern). \
+Nodes: \cf4 Decision,\cf3  \cf4 Strategy,\cf3  \cf4 Product,\cf3  \cf4 Launch,\cf3  \cf4 Incident/SupportIssue,\cf3 \
+ \cf4 Fix,\cf3  \cf4 Agent,\cf3  \cf4 Approval,\cf3  \cf4 Filing\cf3 . \
+Edges: \cf4 decided_by,\cf3  \cf4 rationale_for,\cf3  \cf4 gated_by,\cf3 \
+ \cf4 supersedes,\cf3  \cf4 relates_to,\cf3  \cf4 resulted_in\cf3 . \
+Every \cf4 runOperation\cf3  + \cf4 resolveReview\cf3  writes a decision record + edges. Corporate = all decisions; product = engineering decisions, launches, the 
+\f3\i why
+\f1\i0  + strategies, and support issues + fixes.\
+\
+
+\f2\b Model
+\f1\b0  
+\f2\b router
+\f1\b0  
+\f2\b ("Claude
+\f1\b0  
+\f2\b now,
+\f1\b0  
+\f2\b vendor
+\f1\b0  
+\f2\b seam"):
+\f1\b0  \
+a 
+\f2\b model
+\f1\b0  
+\f2\b registry
+\f1\b0  (id, vendor, capability tier, context window, $/token in+out, latency class) + a 
+\f2\b routing
+\f1\b0  
+\f2\b policy
+\f1\b0  (task class \uc0\u8594  required capability + token budget \u8594  cheapest qualifying model, with a fallback chain). \
+A 
+\f2\b provider
+\f1\b0  
+\f2\b interface
+\f1\b0  wraps Anthropic now (Opus 4.8 / Sonnet 4.6 / Haiku 4.5 tiers) with OpenAI/Google/local stubs.\
+ \
+Usage (tokens, cost) is logged to a \cf4 model_invocations\cf3  table + the KG \'97 that telemetry is what powers "swap based on token usage." Replaces the direct \cf4 ANTHROPIC_MODEL\cf3  call in skills.\
+\
+
+\f2\b Milestones
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b each
+\f1\b0  
+\f2\b a
+\f1\b0  
+\f2\b separate,
+\f1\b0  
+\f2\b CEO-signed
+\f1\b0  
+\f2\b production
+\f1\b0  
+\f2\b deploy
+\f1\b0 \
+\
+- 
+\f2\b M1
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b Design
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b branding
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b webview
+\f1\b0  
+\f2\b (THIS
+\f1\b0  
+\f2\b deploy;
+\f1\b0  
+\f2\b NO
+\f1\b0  
+\f2\b backend
+\f1\b0  
+\f2\b code).\
+
+\f1\b0 \
+- Branding: mission statement, framing, 
+\f2\b SVG
+\f1\b0  
+\f2\b wordmark
+\f1\b0  
+\f2\b logo
+\f1\b0 .\
+- 
+\f2\b Authoritative
+\f1\b0  
+\f2\b design
+\f1\b0  
+\f2\b doc
+\f1\b0  \cf4 docs/AGENTIC-OS.md\cf3 : org, every agent charter, agent-to-agent interactions, the 3 CEO-gated categories + CEO\uc0\u8594 CS backup flow, the KG model, the model-router design, and the milestone roadmap.\
+- 
+\f2\b Argus-branded
+\f1\b0  
+\f2\b SVG
+\f1\b0  
+\f2\b org
+\f1\b0  
+\f2\b diagram
+\f1\b0  (the "company OS" overview image).\
+- 
+\f2\b Self-contained
+\f1\b0  
+\f2\b local
+\f1\b0  
+\f2\b HTML
+\f1\b0  
+\f2\b webview
+\f1\b0  \cf4 docs/agentic-os/index.html\cf3 : per-agent cards (charter \'b7 responsibilities \'b7 interacts-with \'b7 tools/skills \'b7 supervision tier \'b7 which human gate), \
+the 
+\f2\b approval-workflow
+\f1\b0  
+\f2\b diagram
+\f1\b0  (how a gate asks CEO \uc0\u8594  CS), the inline SVG org chart + logo, and the KG + model-router overviews. Rendered companions via \cf4 docs/build/render.mjs\cf3 .\
+ - 
+\f2\b CEO
+\f1\b0  
+\f2\b sign-off
+\f1\b0  
+\f2\b \uc0\u8594 
+\f1\b0  
+\f2\b deploy
+\f1\b0  
+\f2\b \uc0\u8594 
+\f1\b0  
+\f2\b proceed
+\f1\b0  
+\f2\b to
+\f1\b0  
+\f2\b M2.\
+
+\f1\b0 \
+ - 
+\f2\b M2
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b Governance
+\f1\b0  
+\f2\b core
+\f1\b0  
+\f2\b (code).
+\f1\b0  \
+Add \cf4 ceo\cf3 /\cf4 chief_of_staff\cf3  RBAC roles (\cf4 middleware/rbac.ts\cf3 ) + seed approver accounts; a 
+\f2\b gate-policy
+\f1\b0  module mapping \cf4 (agent,\cf3  \cf4 output-class)\cf3  \cf4 \uc0\u8594 \cf3  \cf4 required\cf3  \cf4 human\cf3  \cf4 role\cf3 , wired into \cf4 runOperation\cf3  escalation; \
+an 
+\f2\b Approvals
+\f1\b0  
+\f2\b admin
+\f1\b0  
+\f2\b surface
+\f1\b0  (list/approve/reject with CS backup); migration. Tests + webview update. CEO sign-off.\
+\
+- 
+\f2\b M3
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b Decision
+\f1\b0  
+\f2\b knowledge
+\f1\b0  
+\f2\b graph
+\f1\b0  
+\f2\b (code).
+\f1\b0  \
+\cf4 kg_nodes\cf3 /\cf4 kg_edges\cf3  (append-only) + a \cf4 decisionGraph\cf3  service writing on every \cf4 runOperation\cf3 /\cf4 resolveReview\cf3 ; query + export API; a graph view in the webview/admin. Tests + webview update. CEO sign-off.\
+\
+- 
+\f2\b M4
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b Model
+\f1\b0  
+\f2\b router
+\f1\b0  
+\f2\b (code).
+\f1\b0  \
+\cf4 modelRouter\cf3  (registry + policy + provider seam: Anthropic live, others stub) + \cf4 model_invocations\cf3  usage log; refactor skills to declare a task class + route through it. Tests + webview update. CEO sign-off.\
+\
+- 
+\f2\b M5
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b Corporate
+\f1\b0  
+\f2\b agent
+\f1\b0  
+\f2\b fleet
+\f1\b0  
+\f2\b (code).
+\f1\b0  CFO/CLO/CISO/CPO/CMO/Compliance/SRE charters as runner skills with the right \cf4 SupervisionTier\cf3  + CEO/CS gate wiring; corporate decisions flow to the KG. Tests. Sign-off.\
+\
+- 
+\f2\b M6
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b Product
+\f1\b0  
+\f2\b squad
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b PDLC
+\f1\b0  
+\f2\b (code).
+\f1\b0  PDLC Orchestrator + Strategist/Engineer/Cyber/Agentic-Builder/QA/Support skills; a product moves spec\uc0\u8594 build\u8594 test\u8594 launch with the 
+\f2\b launch
+\f1\b0  
+\f2\b gate
+\f1\b0  
+\f2\b to
+\f1\b0  
+\f2\b the
+\f1\b0  
+\f2\b CEO
+\f1\b0 ; \
+support issues + fixes + strategies write to the product KG; the Agentic-Builderupdates skills/MCP. Tests. Sign-off.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f2\b Files
+\f1\b0  
+\f2\b (M1
+\f1\b0  
+\f2\b \'97
+\f1\b0  
+\f2\b the
+\f1\b0  
+\f2\b only
+\f1\b0  
+\f2\b files
+\f1\b0  
+\f2\b this
+\f1\b0  
+\f2\b deploy
+\f1\b0  
+\f2\b touches)
+\f1\b0 \
+\
+ - \cf4 docs/AGENTIC-OS.md\cf3  \'97 the authoritative agentic-org design (+ \cf4 .html\cf3 /\cf4 .pdf\cf3  via\
+ \cf4 docs/build/render.mjs\cf3 ).\
+ - \cf4 docs/agentic-os/index.html\cf3  \'97 the self-contained local webview (inline SVG +\
+ agent cards + approval flow + branding).\
+ - \cf4 docs/agentic-os/org.svg\cf3 , \cf4 docs/agentic-os/logo.svg\cf3  \'97 the Argus-branded org\
+ diagram + wordmark.\
+ - \cf4 CLAUDE.md\cf3  \'97 add an "Argus Agentic OS" build-status entry; add a MEMORY\
+ pointer.\
+ - (M2\'96M6 will touch \cf4 backend/src/operations/*\cf3 , \cf4 middleware/rbac.ts\cf3 , \cf4 config.ts\cf3 ,\
+ new migrations, and the\
+ React admin console \'97 detailed when each milestone is planned.)\
+\
+
+\f2\b Verification
+\f1\b0  
+\f2\b (M1)
+\f1\b0 \
+\
+ - Open \cf4 docs/agentic-os/index.html\cf3  directly in a browser (no server). Confirm:\
+ every corporate 
+\f2\b and
+\f1\b0 \
+ product agent has a card with charter \'b7 responsibilities \'b7 interactions \'b7\
+ tools \'b7 supervision tier \'b7\
+ human gate; the 
+\f2\b three
+\f1\b0  
+\f2\b CEO-gated
+\f1\b0  
+\f2\b categories
+\f1\b0  and the 
+\f2\b CEO
+\f1\b0  
+\f2\b \uc0\u8594 
+\f1\b0  
+\f2\b CS
+\f1\b0  
+\f2\b backup
+\f1\b0  flow are\
+ clearly shown; the\
+ SVG org diagram + logo render and are branded Argus; the 
+\f2\b knowledge-graph
+\f1\b0  and\
+ 
+\f2\b model-router
+\f1\b0 \
+ overviews are present and the model-router shows the Claude-tiered +\
+ vendor-seam design.\
+ - Render the \cf4 .html\cf3 /\cf4 .pdf\cf3  companions of \cf4 docs/AGENTIC-OS.md\cf3 ; check internal links\
+     clearly shown; the\
+     SVG org diagram + logo render and are branded Argus; the 
+\f2\b knowledge-graph
+\f1\b0 \
+     and 
+\f2\b model-router
+\f1\b0 \
+     overviews are present and the model-router shows the Claude-tiered +\
+     vendor-seam design.\
+     - Render the \cf4 .html\cf3 /\cf4 .pdf\cf3  companions of \cf4 docs/AGENTIC-OS.md\cf3 ; check internal\
+     links resolve.\
+     - Sanity-check the design against the existing engine: every gate maps onto\
+     \cf4 SupervisionTier\cf3  +\
+     \cf4 requiresRole\cf3 , and every "decision" has a clear KG write-point in\
+     \cf4 runOperation\cf3 /\cf4 resolveReview\cf3 .\
+     - 
+\f2\b CEO
+\f1\b0  
+\f2\b reviews
+\f1\b0  
+\f2\b the
+\f1\b0  
+\f2\b webview
+\f1\b0  
+\f2\b +
+\f1\b0  
+\f2\b doc
+\f1\b0  
+\f2\b \uc0\u8594 
+\f1\b0  
+\f2\b signs
+\f1\b0  
+\f2\b off
+\f1\b0  
+\f2\b \uc0\u8594 
+\f1\b0  
+\f2\b M1
+\f1\b0  
+\f2\b is
+\f1\b0  
+\f2\b deployed
+\f1\b0  
+\f2\b \uc0\u8594 
+\f1\b0  
+\f2\b we
+\f1\b0  
+\f2\b plan
+\f1\b0  
+\f2\b &
+\f1\b0 \
+     
+\f2\b build
+\f1\b0  
+\f2\b M2.
+\f1\b0 \
+     - Each later milestone adds \cf4 npm\cf3  \cf4 run\cf3  \cf4 typecheck\cf3  \cf4 &&\cf3  \cf4 npm\cf3  \cf4 test\cf3  (green + new\
+     tests) and a webview update\
+     before its own CEO sign-off.\
+\
+}

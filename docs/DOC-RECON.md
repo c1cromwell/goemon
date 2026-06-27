@@ -41,6 +41,7 @@ Tracks PRD vs prototype vs launch posture after competitive-gap + Tier 1/2 imple
 | Identity Vault | PRODUCTION-STRATEGY §4 | `identityVaultService.ts`, migration `031`, admin sync |
 | Argus Pay wedge | PAYMENT-NETWORK-STRATEGY | `paymentService` + `/pay` + `Pay.tsx` UI |
 | Doc recon | this file | PRD-PHASE-MATRIX, LAUNCH, open-questions synced |
+| Agentic OS M1 | `AGENTIC-OS.md`, `agentic-os/index.html` | Corporate brain design + webview; M2–M6 code pending CEO sign-off |
 
 ## Still open (not stale — genuinely pending)
 

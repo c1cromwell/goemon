@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 72" role="img" aria-label="Argus Financial Partners">
+  <defs>
+    <linearGradient id="eyeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34e0b1"/>
+      <stop offset="100%" stop-color="#2dd4a7"/>
+    </linearGradient>
+  </defs>
+  <!-- Sentinel eye mark -->
+  <g transform="translate(8,8)">
+    <ellipse cx="28" cy="28" rx="26" ry="18" fill="none" stroke="url(#eyeGrad)" stroke-width="2.5"/>
+    <circle cx="28" cy="28" r="10" fill="url(#eyeGrad)" opacity="0.25"/>
+    <circle cx="28" cy="28" r="6" fill="url(#eyeGrad)"/>
+    <path d="M 4 28 Q 28 4 52 28 Q 28 52 4 28" fill="none" stroke="#2dd4a7" stroke-width="1.2" opacity="0.5"/>
+    <circle cx="14" cy="18" r="2" fill="#2dd4a7" opacity="0.6"/>
+    <circle cx="42" cy="18" r="2" fill="#2dd4a7" opacity="0.6"/>
+    <circle cx="14" cy="38" r="2" fill="#2dd4a7" opacity="0.4"/>
+    <circle cx="42" cy="38" r="2" fill="#2dd4a7" opacity="0.4"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="72" y="38" font-family="Georgia, 'Times New Roman', serif" font-size="28" font-weight="600" fill="#f3f5f8">Argus</text>
+  <text x="72" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="11" letter-spacing="0.12em" fill="#9aa3b0">FINANCIAL PARTNERS</text>
+  <text x="158" y="38" font-family="system-ui, sans-serif" font-size="10" fill="#2dd4a7" opacity="0.8">Agentic OS</text>
+</svg>
