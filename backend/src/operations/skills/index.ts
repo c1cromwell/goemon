@@ -6,3 +6,4 @@
 import "./kycReviewSkill";
 import "./complianceSkill";
 import "./backOfficeSkills";
+import "./corporateAgentSkills";

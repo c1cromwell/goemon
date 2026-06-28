@@ -1,6 +1,6 @@
 # Argus Agentic OS — Corporate Brain Design
 
-**Status:** M4 — model router **BUILT** (CEO sign-off gate for deploy)  
+**Status:** M5 — corporate agent fleet **BUILT** (CEO sign-off gate for deploy)  
 **Authoritative webview:** [`agentic-os/index.html`](agentic-os/index.html)  
 **Related:** [`agenticos_argus.rtf`](agenticos_argus.rtf) (CEO brief)
 
@@ -218,7 +218,7 @@ Manual for M1 (you review webview + doc). M2 adds optional **`ceo_milestone_sign
 | **M2** | `ceo`/`chief_of_staff` RBAC, gate-policy, Approvals admin UI | Yes |
 | **M3** | `kg_nodes`/`kg_edges`, `decisionGraph` service, graph API | Yes |
 | **M4** | `modelRouter`, `model_invocations`, skill refactor | Yes — **built** (CEO sign-off pending) |
-| **M5** | Corporate agent fleet as runner skills | Yes |
+| **M5** | Corporate agent fleet as runner skills | Yes — **built** (CEO sign-off pending) |
 | **M6** | Product squad + PDLC orchestrator + product KG | Yes |
 
 ---

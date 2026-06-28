@@ -31,6 +31,7 @@ import {
   listInvocations,
   routingPreview,
 } from "../operations/modelRouter/router";
+import { CORPORATE_AGENTS, getCorporateAgent, resolveCorporateIntent } from "../operations/corporateAgentCatalog";
 import "../operations/skills";
 
 export const agentOpsAdminRouter = Router();
@@ -263,6 +264,70 @@ agentOpsAdminRouter.get(
   async (_req: AdminRequest, res: Response, next: NextFunction) => {
     try {
       res.json(await invocationStats());
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+/** M5 — corporate agent fleet catalog + routing preview + direct run. */
+agentOpsAdminRouter.get(
+  "/agent-ops/corporate/agents",
+  requireAdmin,
+  async (_req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      res.json({ agents: CORPORATE_AGENTS });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.post(
+  "/agent-ops/corporate/preview-route",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const { intent, payload } = (req.body ?? {}) as { intent?: string; payload?: Record<string, unknown> };
+      if (!intent?.trim()) throw new AppError(ErrorCode.VALIDATION, "intent required");
+      res.json({ route: resolveCorporateIntent(intent, payload ?? {}) });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.post(
+  "/agent-ops/corporate/run",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const { agentId, skill, input } = (req.body ?? {}) as {
+        agentId?: string;
+        skill?: string;
+        input?: unknown;
+      };
+      const skillName = skill ?? (agentId ? getCorporateAgent(agentId)?.skill : undefined);
+      if (!skillName) throw new AppError(ErrorCode.VALIDATION, "agentId or skill required");
+      const def = getWorkflow(skillName);
+      if (!def) throw new AppError(ErrorCode.NOT_FOUND, `No registered workflow for skill ${skillName}`);
+      res.json(await runOperation(def, input ?? {}));
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.post(
+  "/agent-ops/corporate/route",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const { intent, payload } = (req.body ?? {}) as { intent?: string; payload?: Record<string, unknown> };
+      if (!intent?.trim()) throw new AppError(ErrorCode.VALIDATION, "intent required");
+      const brain = getWorkflow("argus-brain-route");
+      if (!brain) throw new AppError(ErrorCode.INTERNAL, "argus-brain-route workflow not registered");
+      res.json(await runOperation(brain, { intent, payload: payload ?? {} }));
     } catch (e) {
       next(e);
     }

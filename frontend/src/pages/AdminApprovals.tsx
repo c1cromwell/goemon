@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api, clearToken, getToken, getAdminRole, type AgentReviewRow, type MilestoneStatus, type KgGraph, type KgNode, type ModelRegistryEntry, type ModelRoutingPreview, type ModelInvocationRow, type ModelInvocationStats } from "../api/client";
+import { api, clearToken, getToken, getAdminRole, type AgentReviewRow, type MilestoneStatus, type KgGraph, type KgNode, type ModelRegistryEntry, type ModelRoutingPreview, type ModelInvocationRow, type ModelInvocationStats, type CorporateAgentDef, type CorporateRoutePlan } from "../api/client";
 
 export function AdminApprovals() {
   const nav = useNavigate();
@@ -12,6 +12,9 @@ export function AdminApprovals() {
   const [modelRouting, setModelRouting] = useState<ModelRoutingPreview[]>([]);
   const [modelInvocations, setModelInvocations] = useState<ModelInvocationRow[]>([]);
   const [modelStats, setModelStats] = useState<ModelInvocationStats | null>(null);
+  const [corporateAgents, setCorporateAgents] = useState<CorporateAgentDef[]>([]);
+  const [routePreview, setRoutePreview] = useState<CorporateRoutePlan | null>(null);
+  const [routeIntent, setRouteIntent] = useState("monthly treasury report");
   const [role, setRole] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -25,13 +28,14 @@ export function AdminApprovals() {
   const refresh = useCallback(async () => {
     setError(null);
     try {
-      const [a, m, kg, models, inv, stats] = await Promise.all([
+      const [a, m, kg, models, inv, stats, corp] = await Promise.all([
         api.agentApprovals(),
         api.milestones(),
         api.kgRecent(15),
         api.modelRegistry(),
         api.modelInvocations(20),
         api.modelStats(),
+        api.corporateAgents(),
       ]);
       setReviews(a.reviews);
       setMilestones(m.milestones);
@@ -40,6 +44,7 @@ export function AdminApprovals() {
       setModelRouting(models.routing);
       setModelInvocations(inv.invocations);
       setModelStats(stats);
+      setCorporateAgents(corp.agents);
     } catch (err) {
       const msg = (err as Error).message;
       if (msg.includes("UNAUTHENTICATED") || msg.includes("FORBIDDEN")) logout();
@@ -72,6 +77,42 @@ export function AdminApprovals() {
     setBusy(id);
     try {
       await api.signMilestone(id, note[`m-${id}`]);
+      await refresh();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function previewRoute() {
+    setBusy("route-preview");
+    try {
+      const { route } = await api.corporatePreviewRoute(routeIntent);
+      setRoutePreview(route);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function runCorporateAgent(agentId: string) {
+    setBusy(`corp-${agentId}`);
+    try {
+      await api.corporateRun(agentId, {});
+      await refresh();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function routeViaBrain() {
+    setBusy("brain-route");
+    try {
+      await api.corporateRoute(routeIntent);
       await refresh();
     } catch (err) {
       setError((err as Error).message);
@@ -303,6 +344,70 @@ export function AdminApprovals() {
               ))}
             </tbody>
           </table>
+        )}
+      </section>
+
+      <section className="card">
+        <h2>Corporate agent fleet (M5)</h2>
+        <p className="muted">C-suite agents on the operations runner — CEO gates on CFO, CLO, and CPO outputs.</p>
+        {corporateAgents.length === 0 ? (
+          <p className="muted">Loading corporate agents…</p>
+        ) : (
+          <table style={{ marginBottom: "1rem" }}>
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Skill</th>
+                <th>Supervision</th>
+                <th>CEO gate</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {corporateAgents.map((agent) => (
+                <tr key={agent.id}>
+                  <td>
+                    <div><strong>{agent.name}</strong>{agent.reused ? " (reused)" : ""}</div>
+                    <div className="muted" style={{ fontSize: "0.85rem" }}>{agent.charter}</div>
+                  </td>
+                  <td><code>{agent.skill}</code></td>
+                  <td>{agent.supervision}</td>
+                  <td>{agent.ceoGate ?? "—"}</td>
+                  <td>
+                    {agent.id !== "argus-brain" && (
+                      <button
+                        type="button"
+                        className="ghost sm"
+                        disabled={busy === `corp-${agent.id}`}
+                        onClick={() => void runCorporateAgent(agent.id)}
+                      >
+                        Run
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          <input
+            style={{ flex: 1, minWidth: 240 }}
+            value={routeIntent}
+            onChange={(e) => setRouteIntent(e.target.value)}
+            placeholder="Intent for Argus Brain (e.g. ship Collect v2)"
+          />
+          <button type="button" className="ghost sm" disabled={busy === "route-preview"} onClick={() => void previewRoute()}>
+            Preview route
+          </button>
+          <button type="button" className="sm" disabled={busy === "brain-route"} onClick={() => void routeViaBrain()}>
+            Route via Brain
+          </button>
+        </div>
+        {routePreview && (
+          <p className="muted" style={{ marginTop: "0.75rem", fontSize: "0.85rem" }}>
+            → <strong>{routePreview.targetSkill}</strong> ({routePreview.agentId}) — {routePreview.rationale}
+          </p>
         )}
       </section>
     </div>

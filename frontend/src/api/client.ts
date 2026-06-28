@@ -1068,6 +1068,23 @@ export const api = {
   modelInvocations: (limit = 25) =>
     adminRequest<{ invocations: ModelInvocationRow[] }>(`/admin/agent-ops/models/invocations?limit=${limit}`),
   modelStats: () => adminRequest<ModelInvocationStats>("/admin/agent-ops/models/stats"),
+
+  corporateAgents: () => adminRequest<{ agents: CorporateAgentDef[] }>("/admin/agent-ops/corporate/agents"),
+  corporatePreviewRoute: (intent: string, payload?: Record<string, unknown>) =>
+    adminRequest<{ route: CorporateRoutePlan }>("/admin/agent-ops/corporate/preview-route", {
+      method: "POST",
+      body: JSON.stringify({ intent, payload }),
+    }),
+  corporateRun: (agentId: string, input?: Record<string, unknown>) =>
+    adminRequest<AgentRunResult>("/admin/agent-ops/corporate/run", {
+      method: "POST",
+      body: JSON.stringify({ agentId, input }),
+    }),
+  corporateRoute: (intent: string, payload?: Record<string, unknown>) =>
+    adminRequest<AgentRunResult>("/admin/agent-ops/corporate/route", {
+      method: "POST",
+      body: JSON.stringify({ intent, payload }),
+    }),
 };
 
 export interface KgNode {
@@ -1158,4 +1175,29 @@ export interface ModelInvocationStats {
   totalInvocations: number;
   totalCostMicroUsd: number;
   byTaskClass: Record<string, { count: number; costMicroUsd: number }>;
+}
+
+export interface CorporateAgentDef {
+  id: string;
+  name: string;
+  charter: string;
+  skill: string;
+  supervision: string;
+  ceoGate?: string;
+  reused?: boolean;
+}
+
+export interface CorporateRoutePlan {
+  targetSkill: string;
+  targetInput: Record<string, unknown>;
+  rationale: string;
+  agentId: string;
+  confidence: number;
+}
+
+export interface AgentRunResult {
+  runId: string;
+  workflowRun: string;
+  outcome: "executed" | "queued" | "rejected";
+  reviewId?: string;
 }
