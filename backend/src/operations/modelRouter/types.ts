@@ -4,7 +4,7 @@
 
 export type CapabilityTier = "high" | "standard" | "fast";
 
-export type ModelVendor = "anthropic" | "openai" | "google" | "local";
+export type ModelVendor = "anthropic" | "openai" | "google" | "local" | "cursor";
 
 export type TaskClass =
   | "legal_draft"

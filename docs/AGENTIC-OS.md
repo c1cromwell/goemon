@@ -156,11 +156,39 @@ Append-only, in-DB (reuse append-only trigger pattern).
 | Standard | Sonnet-class | Specs, code review, compliance analysis |
 | Fast | Haiku-class | Triage, summaries, high-volume reads |
 
-**Provider seam:** `AnthropicProvider` (live) · `OpenAIProvider` (stub) · `GoogleProvider` (stub) · `LocalProvider` (stub)
+**Provider seam:** `AnthropicProvider` (live) · `OpenAIProvider` (live) · `CursorProvider` (Composer via `@cursor/sdk`) · `GoogleProvider` (stub) · `LocalProvider` (stub)
 
 **Telemetry:** `model_invocations` table — tokens, cost, task class → powers swap-by-usage policy.
 
 **Replaces:** direct `ANTHROPIC_MODEL` calls in `skills/kycReviewSkill.ts` and peers.
+
+---
+
+## Model router — multi-vendor (M4.1) **BUILT**
+
+**Confirmed policy:**
+
+| Decision | Choice |
+|---|---|
+| Composer | **Cursor Composer** via `CURSOR_API_KEY` + optional `@cursor/sdk` |
+| Second vendor | **OpenAI** (`OPENAI_API_KEY`) alongside Anthropic |
+| Compliance pinning | KYC, compliance analysis, legal draft, launch decision → **Anthropic only** (`MODEL_ROUTER_COMPLIANCE_ANTHROPIC_ONLY`, default on) |
+| Code / builder tasks | **`code_review`** prefers **Cursor Composer** → Anthropic → OpenAI fallback chain |
+| Fallback | Full vendor chain on error (not anthropic-only abort) |
+
+**Config:**
+
+| Env | Purpose |
+|---|---|
+| `OPENAI_API_KEY` | Enables OpenAI models in registry |
+| `OPENAI_MODEL` / `OPENAI_FAST_MODEL` | Standard / fast tier (default `gpt-4o` / `gpt-4o-mini`) |
+| `CURSOR_API_KEY` | Enables Cursor Composer |
+| `CURSOR_MODEL` | Default `composer-2.5` |
+| `MODEL_ROUTER_COMPLIANCE_ANTHROPIC_ONLY` | Pin regulated task classes to Anthropic (default on) |
+
+**Registry additions:** `gpt-4o`, `gpt-4o-mini`, `composer-2.5`, `composer-2.5-fast`
+
+**Deferred (M4.1c):** Route `smartchatModel` + `orchestratorModel` through `invokeModel`.
 
 ---
 

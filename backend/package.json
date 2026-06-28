@@ -47,6 +47,7 @@
     "zod": "^3.23.8"
   },
   "optionalDependencies": {
+    "@cursor/sdk": "^1.0.22",
     "@temporalio/client": "^1.18.1",
     "@temporalio/worker": "^1.18.1",
     "@temporalio/workflow": "^1.18.1"

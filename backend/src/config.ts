@@ -33,6 +33,11 @@ const schema = z.object({
   CORS_ORIGIN: z.string().default("http://localhost:5173"),
 
   ANTHROPIC_API_KEY: z.string().optional(),
+  OPENAI_API_KEY: z.string().optional(),
+  OPENAI_MODEL: z.string().default("gpt-4o"),
+  OPENAI_FAST_MODEL: z.string().default("gpt-4o-mini"),
+  CURSOR_API_KEY: z.string().optional(),
+  CURSOR_MODEL: z.string().default("composer-2.5"),
   JWT_SECRET: z.string().min(1),
 
   DATABASE_URL: z.string().optional(),
@@ -285,6 +290,8 @@ const schema = z.object({
   DECISION_KG_ENABLED: boolishDefaultTrue,
   /** M4 — task-class model router + append-only model_invocations telemetry. */
   MODEL_ROUTER_ENABLED: boolishDefaultTrue,
+  /** M4.1 — KYC/compliance/legal/launch tasks use Anthropic only (default on). */
+  MODEL_ROUTER_COMPLIANCE_ANTHROPIC_ONLY: boolishDefaultTrue,
   OPERATIONS_ORCHESTRATOR: z.enum(["simulated", "anthropic"]).default("simulated"),
   OPERATIONS_REVIEW_FLOOR: z.coerce.number().min(0).max(1).default(0.3),
 

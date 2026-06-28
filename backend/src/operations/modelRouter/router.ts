@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getDb } from "../../db";
 import { config } from "../../config";
 import { AppError, ErrorCode } from "../../errors";
-import { MODEL_REGISTRY, TASK_TIER, registryForTier, routingPreview } from "./registry";
+import { MODEL_REGISTRY, TASK_TIER, registryForTier, routingPreview, isVendorConfigured, COMPLIANCE_PINNED_TASKS, allowedVendorsForTask, TASK_VENDOR_PREFERENCE } from "./registry";
 import { invokeProvider } from "./providers";
 import type {
   ModelInvokeRequest,
@@ -16,7 +16,7 @@ import type {
   TaskClass,
 } from "./types";
 
-export { MODEL_REGISTRY, TASK_TIER, routingPreview };
+export { MODEL_REGISTRY, TASK_TIER, routingPreview, isVendorConfigured, COMPLIANCE_PINNED_TASKS, allowedVendorsForTask, TASK_VENDOR_PREFERENCE };
 export type { TaskClass, ModelInvokeRequest, ModelInvokeResult, RegistryEntry, ModelInvocationRow };
 
 export function assertModelRouterEnabled(): void {
@@ -25,14 +25,18 @@ export function assertModelRouterEnabled(): void {
   }
 }
 
-/** Select primary + fallback models for a task class (cheapest enabled in tier, then next tiers). */
+/** Select primary + fallback models for a task class (vendor preference + cheapest in tier). */
 export function selectModels(taskClass: TaskClass): RegistryEntry[] {
   const tier = TASK_TIER[taskClass] ?? "fast";
   const chain: RegistryEntry[] = [];
-  const tiers = tier === "high" ? (["high", "standard", "fast"] as const) : tier === "standard" ? (["standard", "fast"] as const) : (["fast"] as const);
+  const tiers =
+    tier === "high"
+      ? (["high", "standard", "fast"] as const)
+      : tier === "standard"
+        ? (["standard", "fast"] as const)
+        : (["fast"] as const);
   for (const t of tiers) {
-    const sorted = registryForTier(t).sort((a, b) => a.inputMicroUsdPer1k - b.inputMicroUsdPer1k);
-    for (const e of sorted) {
+    for (const e of registryForTier(t, taskClass)) {
       if (!chain.some((x) => x.id === e.id)) chain.push(e);
     }
   }
@@ -116,8 +120,6 @@ export async function invokeModel(req: ModelInvokeRequest): Promise<ModelInvokeR
         status: "error",
         errorCode: code,
       });
-      if (entry.vendor !== "anthropic") continue;
-      throw e;
     }
   }
   throw lastErr instanceof Error ? lastErr : new AppError(ErrorCode.INTERNAL, "Model invocation failed");

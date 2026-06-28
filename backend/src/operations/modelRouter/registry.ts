@@ -1,9 +1,10 @@
 /**
- * M4 — Claude-tiered model registry (+ vendor stubs for OpenAI/Google/local).
+ * M4 — Claude-tiered model registry (+ OpenAI + Cursor Composer vendors).
  */
 
 import { config } from "../../config";
 import type { CapabilityTier, RegistryEntry, TaskClass } from "./types";
+import { allowedVendorsForTask, isVendorConfigured } from "./vendorConfig";
 
 export const TASK_TIER: Record<TaskClass, CapabilityTier> = {
   legal_draft: "high",
@@ -16,7 +17,7 @@ export const TASK_TIER: Record<TaskClass, CapabilityTier> = {
   general: "fast",
 };
 
-/** Default registry — Anthropic live; other vendors are routing placeholders. */
+/** Default registry — vendors enabled when API keys (+ @cursor/sdk for cursor) are present. */
 export const MODEL_REGISTRY: RegistryEntry[] = [
   {
     id: "claude-opus-4",
@@ -52,15 +53,48 @@ export const MODEL_REGISTRY: RegistryEntry[] = [
     enabled: true,
   },
   {
-    id: "gpt-4o-stub",
+    id: "gpt-4o",
     vendor: "openai",
     tier: "standard",
-    model: "gpt-4o",
+    model: config.OPENAI_MODEL,
     contextWindow: 128_000,
     inputMicroUsdPer1k: 2_500,
     outputMicroUsdPer1k: 10_000,
     latencyClass: "normal",
-    enabled: false,
+    enabled: true,
+  },
+  {
+    id: "gpt-4o-mini",
+    vendor: "openai",
+    tier: "fast",
+    model: config.OPENAI_FAST_MODEL,
+    contextWindow: 128_000,
+    inputMicroUsdPer1k: 150,
+    outputMicroUsdPer1k: 600,
+    latencyClass: "fast",
+    enabled: true,
+  },
+  {
+    id: "composer-2.5",
+    vendor: "cursor",
+    tier: "standard",
+    model: config.CURSOR_MODEL,
+    contextWindow: 200_000,
+    inputMicroUsdPer1k: 500,
+    outputMicroUsdPer1k: 2_500,
+    latencyClass: "normal",
+    enabled: true,
+  },
+  {
+    id: "composer-2.5-fast",
+    vendor: "cursor",
+    tier: "fast",
+    model: config.CURSOR_MODEL,
+    contextWindow: 200_000,
+    inputMicroUsdPer1k: 500,
+    outputMicroUsdPer1k: 2_500,
+    latencyClass: "fast",
+    enabled: true,
   },
   {
     id: "gemini-pro-stub",
@@ -86,8 +120,19 @@ export const MODEL_REGISTRY: RegistryEntry[] = [
   },
 ];
 
-export function registryForTier(tier: CapabilityTier): RegistryEntry[] {
-  return MODEL_REGISTRY.filter((e) => e.tier === tier && e.enabled);
+export function registryForTier(tier: CapabilityTier, taskClass?: TaskClass): RegistryEntry[] {
+  const pref = taskClass ? allowedVendorsForTask(taskClass) : null;
+  let entries = MODEL_REGISTRY.filter((e) => e.tier === tier && e.enabled && isVendorConfigured(e.vendor));
+  if (pref) {
+    entries = entries.filter((e) => pref.includes(e.vendor));
+    entries.sort(
+      (a, b) =>
+        pref.indexOf(a.vendor) - pref.indexOf(b.vendor) || a.inputMicroUsdPer1k - b.inputMicroUsdPer1k
+    );
+  } else {
+    entries.sort((a, b) => a.inputMicroUsdPer1k - b.inputMicroUsdPer1k);
+  }
+  return entries;
 }
 
 export function getRegistryEntry(id: string): RegistryEntry | undefined {
@@ -97,12 +142,14 @@ export function getRegistryEntry(id: string): RegistryEntry | undefined {
 export function routingPreview(): Array<{ taskClass: TaskClass; tier: CapabilityTier; primaryModel: string; vendor: string }> {
   return (Object.keys(TASK_TIER) as TaskClass[]).map((taskClass) => {
     const tier = TASK_TIER[taskClass];
-    const primary = registryForTier(tier).sort((a, b) => a.inputMicroUsdPer1k - b.inputMicroUsdPer1k)[0];
+    const primary = registryForTier(tier, taskClass)[0];
     return {
       taskClass,
       tier,
       primaryModel: primary?.id ?? "none",
-      vendor: primary?.vendor ?? "anthropic",
+      vendor: primary?.vendor ?? "none",
     };
   });
 }
+
+export { allowedVendorsForTask, isVendorConfigured, COMPLIANCE_PINNED_TASKS, TASK_VENDOR_PREFERENCE } from "./vendorConfig";

@@ -30,6 +30,8 @@ import {
   invocationStats,
   listInvocations,
   routingPreview,
+  isVendorConfigured,
+  COMPLIANCE_PINNED_TASKS,
 } from "../operations/modelRouter/router";
 import { CORPORATE_AGENTS, getCorporateAgent, resolveCorporateIntent } from "../operations/corporateAgentCatalog";
 import { PRODUCT_SQUAD_AGENTS, getProductSquadAgent } from "../operations/productSquadCatalog";
@@ -239,7 +241,16 @@ agentOpsAdminRouter.get(
   requireAdmin,
   async (_req: AdminRequest, res: Response, next: NextFunction) => {
     try {
-      res.json({ registry: MODEL_REGISTRY, routing: routingPreview() });
+      res.json({
+        registry: MODEL_REGISTRY,
+        routing: routingPreview(),
+        vendors: {
+          anthropic: isVendorConfigured("anthropic"),
+          openai: isVendorConfigured("openai"),
+          cursor: isVendorConfigured("cursor"),
+        },
+        compliancePinnedTasks: COMPLIANCE_PINNED_TASKS,
+      });
     } catch (e) {
       next(e);
     }
