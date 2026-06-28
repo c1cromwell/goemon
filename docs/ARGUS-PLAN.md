@@ -42,6 +42,7 @@
 - [ ] **Phase 19** — Full-bank rails (fiat on/off-ramp, FBO accounts, ACH/wire, cards, statements, partner-bank deposits) → **Corp B** (BaaS partner + FinCEN MSB)
 - [~] **Phase 20** — Production hardening & scale (KMS/HSM custody, ledger⇄chain reconciliation, fraud Stages 2–4, Temporal/Conductor orchestration, data warehouse) → **Corp B/C**. **Reconciliation BUILT** (closes Phase-14 invariant *n*): `reconciliationService` compares the ledger USDC projection vs on-chain balances (Hedera Mirror Node provider, injectable for tests) per-user plus an escrow-custodian coverage check; drift → append-only `reconciliation_runs`/`reconciliation_findings` (migration 011) and **gates on-chain settlement** (`RECONCILIATION_HOLD` in `hederaService`); daily loop + RBAC admin surface (`/api/admin/reconciliation`); `reconciliation.test.ts` (6). **Fraud Stages 2–4 BUILT** as a standalone add-on (`fraud-engine/`, Node/TS :4500 — imports nothing from `backend/`): full FraudEngine.md architecture at prototype scale (event backbone + schema registry, feature store, `rules-v1`+`seq-v0` models, registry/serving + shadow/canary routing, case queue, async remediation, retrain loop). Hybrid HTTP integration: in-Argus triage routes blocking vs fire-and-forget; severe async decisions call back to `/api/internal/remediation` to freeze (`ACCOUNT_FROZEN`, append-only `account_holds`, migration 012) or flag. **KMS custody BUILT** (closes invariant *m* / audit C-1): `keyVaultService` wraps at-rest secrets — per-user Hedera keys (`hedera_accounts.private_key_enc`, migration 013) + the issuer JWK (`did_keys.private_jwk`) — via a pluggable provider (local AES-256-GCM dev stand-in; AWS/GCP KMS stubs for prod), AAD-bound to the row id, plaintext nulled with lazy migration of legacy rows; `npm run encrypt-keys` backfills; the operator key is vault-aware too (`HEDERA_OPERATOR_KEY` raw in dev or `gcm.v1.`-wrapped, `npm run wrap-secret`); `KMS_PROVIDER=local` and a raw operator key are prod-fatal; `kms.test.ts` (12). HSM/on-device signing + orchestration remain.
 - [~] **Phase 21** — "Argus Pay": native stablecoin-settled, agent-native payment rail (`docs/business/PAYMENT-NETWORK-STRATEGY.md` §4/§8) → **Corp B/C** (money transmission + stablecoin regime). **Stage-1 prototype BUILT**: merchants + payment intents (migration 010), every payment **escrow-protected** (hold→capture/refund/dispute via the escrow layer — the chargeback substitute; USDC settles on Hedera through the same primitives), zero rail fee (no interchange), `pay_merchant` MCP tool under scope `pay:merchant` with client+grant ceilings (agent-to-merchant commerce), `ARGUS_PAY_ENABLED` kill-switch (off by default, prod-fatal; held funds always resolvable when shed), `/api/pay` surface, `payments.test.ts` (7). Real merchant acquiring/licensing remains Corp B/C.
+- [ ] **Phase 23** — Internal Ops Command Center (CEO/SRE/SOC/compliance dashboards) → **Corp A/B**. **Design: `docs/PHASE-23-OPS-COMMAND-CENTER.md`** — extend `/admin/command/*`; `opsMetricsService` + read-only `/api/admin/command/*`; not built.
 
 ---
 
@@ -1349,6 +1350,28 @@ A full-suite **starter product for the 13+ age group**: teen **debit card**, a *
   22.5 custodial investing (broker/transfer-agent). 22.0–22.3 buildable now; 22.4/22.5 partner/counsel-gated.
 - **Hard dependency:** consumer-finance/securities counsel + COPPA/UGMA posture; BaaS bank, card issuer,
   bureau-reporting partner, custodial broker/transfer agent, KYC vendor.
+
+## Phase 23 — Internal Ops Command Center → **Corp A/B** (DESIGN)
+
+Role-gated **read-only** admin dashboards so leadership and operators can see financial health, system
+stability, security/fraud posture, and tokenization performance without ad-hoc SQL and curl.
+
+**Design: `docs/PHASE-23-OPS-COMMAND-CENTER.md`.**
+
+- **Problem:** ~15 `/api/admin/*` route modules + Prometheus `/metrics`, but only three admin UI pages
+  (identities, Agentic OS approvals, collectibles). No unified “how is the company doing?” view.
+- **Solution:** Extend `frontend/` `/admin/command/*` — **Argus Command Center** — backed by a new
+  `opsMetricsService` and `/api/admin/command/*` aggregation API (ledger-derived money, integer minor units only).
+- **Dashboards:** CEO business pulse (accounts, onboarding abandonment, money flows, cards, tokenization,
+  agent activity); SRE stability (latency, ledger/Hedera/reconciliation gates, kill-switches); SOC/fraud
+  (VP/MCP metrics, fraud-engine case queue proxy, holds); compliance/money integrity (FBO, drift, SLAs);
+  marketplace/tokenization analytics.
+- **Principles:** Read-only tiles; RBAC per section; agents (CFO/CISO) may narrate API JSON but never invent
+  metrics; degrade gracefully if fraud-engine or Prometheus unavailable.
+- **Staged build:** 23.0 nav shell → 23.1 aggregation seam → 23.2 CEO pulse → 23.3 SRE → 23.4 SOC →
+  23.5 compliance/marketplace → 23.6 warehouse trends (optional 23.7 agent summarize skill).
+- **Not in scope:** Replacing Grafana/SIEM; second admin app; dashboard actions that bypass human gates.
+- **Launch note:** Optional for Phase A prototype ops; **recommended before Corp B** real-money go-live.
 
 ---
 
