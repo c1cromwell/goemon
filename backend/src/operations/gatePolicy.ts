@@ -29,7 +29,7 @@ const SKILL_OUTPUT_CLASS: Record<string, GateOutputClass> = {
   "legal-signoff": "legal_signoff",
   "compliance-filing": "legal_signoff",
   "cpo-launch": "product_launch",
-  "pdlc-launch": "product_launch",
+  "pdlc-orchestrator": "product_launch",
   "product-launch": "product_launch",
 };
 

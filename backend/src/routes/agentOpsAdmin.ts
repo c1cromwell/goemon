@@ -32,6 +32,7 @@ import {
   routingPreview,
 } from "../operations/modelRouter/router";
 import { CORPORATE_AGENTS, getCorporateAgent, resolveCorporateIntent } from "../operations/corporateAgentCatalog";
+import { PRODUCT_SQUAD_AGENTS, getProductSquadAgent } from "../operations/productSquadCatalog";
 import "../operations/skills";
 
 export const agentOpsAdminRouter = Router();
@@ -328,6 +329,73 @@ agentOpsAdminRouter.post(
       const brain = getWorkflow("argus-brain-route");
       if (!brain) throw new AppError(ErrorCode.INTERNAL, "argus-brain-route workflow not registered");
       res.json(await runOperation(brain, { intent, payload: payload ?? {} }));
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+/** M6 — product squad catalog + PDLC orchestrator + product KG export. */
+agentOpsAdminRouter.get(
+  "/agent-ops/product/agents",
+  requireAdmin,
+  async (_req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      res.json({ agents: PRODUCT_SQUAD_AGENTS });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.post(
+  "/agent-ops/product/pdlc",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const { product, version, summary } = (req.body ?? {}) as {
+        product?: string;
+        version?: string;
+        summary?: string;
+      };
+      if (!product?.trim()) throw new AppError(ErrorCode.VALIDATION, "product required");
+      const def = getWorkflow("pdlc-orchestrator");
+      if (!def) throw new AppError(ErrorCode.INTERNAL, "pdlc-orchestrator not registered");
+      res.json(await runOperation(def, { product, version, summary }));
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.post(
+  "/agent-ops/product/run",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const { agentId, skill, input } = (req.body ?? {}) as {
+        agentId?: string;
+        skill?: string;
+        input?: unknown;
+      };
+      const skillName = skill ?? (agentId ? getProductSquadAgent(agentId)?.skill : undefined);
+      if (!skillName) throw new AppError(ErrorCode.VALIDATION, "agentId or skill required");
+      const def = getWorkflow(skillName);
+      if (!def) throw new AppError(ErrorCode.NOT_FOUND, `No registered workflow for skill ${skillName}`);
+      res.json(await runOperation(def, input ?? {}));
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.get(
+  "/agent-ops/kg/product",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const limit = req.query.limit ? Number(req.query.limit) : 100;
+      res.json(await exportGraph({ scope: "product", limit }));
     } catch (e) {
       next(e);
     }

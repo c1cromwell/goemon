@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api, clearToken, getToken, getAdminRole, type AgentReviewRow, type MilestoneStatus, type KgGraph, type KgNode, type ModelRegistryEntry, type ModelRoutingPreview, type ModelInvocationRow, type ModelInvocationStats, type CorporateAgentDef, type CorporateRoutePlan } from "../api/client";
+import { api, clearToken, getToken, getAdminRole, type AgentReviewRow, type MilestoneStatus, type KgGraph, type KgNode, type ModelRegistryEntry, type ModelRoutingPreview, type ModelInvocationRow, type ModelInvocationStats, type CorporateAgentDef, type CorporateRoutePlan, type ProductSquadAgentDef } from "../api/client";
 
 export function AdminApprovals() {
   const nav = useNavigate();
@@ -15,6 +15,10 @@ export function AdminApprovals() {
   const [corporateAgents, setCorporateAgents] = useState<CorporateAgentDef[]>([]);
   const [routePreview, setRoutePreview] = useState<CorporateRoutePlan | null>(null);
   const [routeIntent, setRouteIntent] = useState("monthly treasury report");
+  const [productAgents, setProductAgents] = useState<ProductSquadAgentDef[]>([]);
+  const [productKg, setProductKg] = useState<KgGraph | null>(null);
+  const [pdlcProduct, setPdlcProduct] = useState("Collect");
+  const [pdlcVersion, setPdlcVersion] = useState("2.0");
   const [role, setRole] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -28,7 +32,7 @@ export function AdminApprovals() {
   const refresh = useCallback(async () => {
     setError(null);
     try {
-      const [a, m, kg, models, inv, stats, corp] = await Promise.all([
+      const [a, m, kg, models, inv, stats, corp, prod, pkg] = await Promise.all([
         api.agentApprovals(),
         api.milestones(),
         api.kgRecent(15),
@@ -36,6 +40,8 @@ export function AdminApprovals() {
         api.modelInvocations(20),
         api.modelStats(),
         api.corporateAgents(),
+        api.productSquadAgents(),
+        api.kgProduct(30),
       ]);
       setReviews(a.reviews);
       setMilestones(m.milestones);
@@ -45,6 +51,8 @@ export function AdminApprovals() {
       setModelInvocations(inv.invocations);
       setModelStats(stats);
       setCorporateAgents(corp.agents);
+      setProductAgents(prod.agents);
+      setProductKg(pkg);
     } catch (err) {
       const msg = (err as Error).message;
       if (msg.includes("UNAUTHENTICATED") || msg.includes("FORBIDDEN")) logout();
@@ -113,6 +121,30 @@ export function AdminApprovals() {
     setBusy("brain-route");
     try {
       await api.corporateRoute(routeIntent);
+      await refresh();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function runPdlc() {
+    setBusy("pdlc-run");
+    try {
+      await api.productPdlcRun(pdlcProduct, pdlcVersion);
+      await refresh();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function runProductAgent(agentId: string) {
+    setBusy(`prod-${agentId}`);
+    try {
+      await api.productSquadRun(agentId, { product: pdlcProduct, version: pdlcVersion });
       await refresh();
     } catch (err) {
       setError((err as Error).message);
@@ -408,6 +440,69 @@ export function AdminApprovals() {
           <p className="muted" style={{ marginTop: "0.75rem", fontSize: "0.85rem" }}>
             → <strong>{routePreview.targetSkill}</strong> ({routePreview.agentId}) — {routePreview.rationale}
           </p>
+        )}
+      </section>
+
+      <section className="card">
+        <h2>Product squad + PDLC (M6)</h2>
+        <p className="muted">
+          Strategist → Engineer + Cyber → QA → Orchestrator launch → CEO gate. Product KG tracks launches, strategies, and support fixes.
+          {productKg && <> · <strong>{productKg.nodes.length}</strong> product-scoped nodes</>}
+        </p>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: "1rem", alignItems: "center" }}>
+          <input value={pdlcProduct} onChange={(e) => setPdlcProduct(e.target.value)} placeholder="Product name" />
+          <input value={pdlcVersion} onChange={(e) => setPdlcVersion(e.target.value)} placeholder="Version" style={{ width: 80 }} />
+          <button type="button" className="sm" disabled={busy === "pdlc-run"} onClick={() => void runPdlc()}>
+            Run full PDLC
+          </button>
+        </div>
+        {productAgents.length > 0 && (
+          <table style={{ marginBottom: "1rem" }}>
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Phase</th>
+                <th>Skill</th>
+                <th>Gate</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {productAgents.map((agent) => (
+                <tr key={agent.id}>
+                  <td>
+                    <div><strong>{agent.name}</strong>{agent.reused ? " (reused)" : ""}</div>
+                    <div className="muted" style={{ fontSize: "0.85rem" }}>{agent.charter}</div>
+                  </td>
+                  <td>{agent.pdlcPhase ?? "—"}</td>
+                  <td><code>{agent.skill}</code></td>
+                  <td>{agent.ceoGate ?? agent.supervision}</td>
+                  <td>
+                    {agent.id !== "orchestrator" && (
+                      <button
+                        type="button"
+                        className="ghost sm"
+                        disabled={busy === `prod-${agent.id}`}
+                        onClick={() => void runProductAgent(agent.id)}
+                      >
+                        Run
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {productKg && productKg.nodes.length > 0 && (
+          <div style={{ fontSize: "0.85rem" }}>
+            <h3>Product KG ({productKg.nodes.length} nodes)</h3>
+            <ul className="muted">
+              {productKg.nodes.slice(0, 12).map((n) => (
+                <li key={n.id}><strong>{n.nodeType}</strong> — {n.title}</li>
+              ))}
+            </ul>
+          </div>
         )}
       </section>
     </div>

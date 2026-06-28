@@ -1085,6 +1085,19 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ intent, payload }),
     }),
+
+  productSquadAgents: () => adminRequest<{ agents: ProductSquadAgentDef[] }>("/admin/agent-ops/product/agents"),
+  productPdlcRun: (product: string, version?: string, summary?: string) =>
+    adminRequest<AgentRunResult>("/admin/agent-ops/product/pdlc", {
+      method: "POST",
+      body: JSON.stringify({ product, version, summary }),
+    }),
+  productSquadRun: (agentId: string, input?: Record<string, unknown>) =>
+    adminRequest<AgentRunResult>("/admin/agent-ops/product/run", {
+      method: "POST",
+      body: JSON.stringify({ agentId, input }),
+    }),
+  kgProduct: (limit = 100) => adminRequest<KgGraph>(`/admin/agent-ops/kg/product?limit=${limit}`),
 };
 
 export interface KgNode {
@@ -1200,4 +1213,15 @@ export interface AgentRunResult {
   workflowRun: string;
   outcome: "executed" | "queued" | "rejected";
   reviewId?: string;
+}
+
+export interface ProductSquadAgentDef {
+  id: string;
+  name: string;
+  charter: string;
+  skill: string;
+  supervision: string;
+  ceoGate?: string;
+  pdlcPhase?: string;
+  reused?: boolean;
 }

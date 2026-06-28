@@ -85,8 +85,17 @@ interface RawEdge {
 const PRODUCT_SKILLS = new Set([
   "product-launch",
   "pdlc-launch",
+  "pdlc-orchestrator",
   "cpo-launch",
+  "product-strategy",
+  "product-engineer",
+  "product-cyber-review",
+  "product-qa",
+  "product-design",
+  "product-agentic-builder",
+  "product-support-fix",
   "marketplace-dd",
+  "support-response",
 ]);
 
 function mapNode(r: RawNode): KgNode {
@@ -482,4 +491,110 @@ export async function listRecentDecisions(limit = 25): Promise<KgNode[]> {
       [limit]
     )
   ).map(mapNode);
+}
+
+/** M6 — Record PDLC launch in product KG (Product + Strategy + Launch nodes). */
+export async function recordPdlcLaunch(input: {
+  workflowRun: string;
+  product: string;
+  version: string;
+  strategy: string;
+  proposal: string;
+  approverAdminId: string;
+}): Promise<{ productNodeId: string; launchNodeId: string } | null> {
+  if (!config.DECISION_KG_ENABLED) return null;
+
+  const productNode = await insertNode({
+    nodeType: "Product",
+    title: input.product,
+    scope: "product",
+    refType: "product",
+    refId: `${input.product}:${input.version}`,
+    body: { product: input.product, version: input.version, workflowRun: input.workflowRun },
+  });
+
+  const strategyNode = await insertNode({
+    nodeType: "Strategy",
+    title: `${input.product} strategy`,
+    scope: "product",
+    refType: "pdlc",
+    refId: input.workflowRun,
+    body: { strategy: input.strategy, workflowRun: input.workflowRun },
+  });
+
+  const launchNode = await insertNode({
+    nodeType: "Launch",
+    title: `${input.product} v${input.version} launch`,
+    scope: "product",
+    refType: "pdlc_launch",
+    refId: input.workflowRun,
+    body: { proposal: input.proposal, approverAdminId: input.approverAdminId, workflowRun: input.workflowRun },
+  });
+
+  await insertEdge({
+    fromNodeId: launchNode.id,
+    toNodeId: productNode.id,
+    edgeType: "resulted_in",
+    metadata: { version: input.version },
+  });
+  await insertEdge({
+    fromNodeId: launchNode.id,
+    toNodeId: strategyNode.id,
+    edgeType: "relates_to",
+    metadata: { kind: "strategy" },
+  });
+  await insertEdge({
+    fromNodeId: strategyNode.id,
+    toNodeId: productNode.id,
+    edgeType: "relates_to",
+    metadata: { kind: "product" },
+  });
+
+  return { productNodeId: productNode.id, launchNodeId: launchNode.id };
+}
+
+/** M6 — Record support fix chain in product KG (SupportIssue → Fix → Product). */
+export async function recordSupportFix(input: {
+  workflowRun: string;
+  product: string;
+  issue: string;
+  fix: string;
+  approverAdminId: string;
+}): Promise<{ issueNodeId: string; fixNodeId: string } | null> {
+  if (!config.DECISION_KG_ENABLED) return null;
+
+  const productId = `product:${input.product}`;
+  if (!(await nodeExists(productId))) {
+    await insertNode({
+      id: productId,
+      nodeType: "Product",
+      title: input.product,
+      scope: "product",
+      body: { product: input.product },
+    });
+  }
+
+  const issueNode = await insertNode({
+    nodeType: "SupportIssue",
+    title: input.issue.slice(0, 80),
+    scope: "product",
+    refType: "support_issue",
+    refId: input.workflowRun,
+    body: { issue: input.issue, workflowRun: input.workflowRun },
+  });
+
+  const fixNode = await insertNode({
+    nodeType: "Fix",
+    title: input.fix.slice(0, 80),
+    scope: "product",
+    refType: "support_fix",
+    refId: input.workflowRun,
+    body: { fix: input.fix, approverAdminId: input.approverAdminId, workflowRun: input.workflowRun },
+  });
+
+  await insertEdge({ fromNodeId: issueNode.id, toNodeId: fixNode.id, edgeType: "resulted_in" });
+  await insertEdge({ fromNodeId: fixNode.id, toNodeId: productId, edgeType: "relates_to", metadata: { kind: "product" } });
+  await insertEdge({ fromNodeId: issueNode.id, toNodeId: productId, edgeType: "relates_to", metadata: { kind: "product" } });
+
+  return { issueNodeId: issueNode.id, fixNodeId: fixNode.id };
 }
