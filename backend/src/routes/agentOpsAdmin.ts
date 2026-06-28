@@ -19,6 +19,12 @@ import {
 } from "../operations/operationsWorkflow";
 import { kycReviewWorkflow } from "../operations/skills/kycReviewSkill";
 import { listMilestoneStatuses, signMilestone } from "../services/milestoneSignoffService";
+import {
+  exportGraph,
+  getGraphByWorkflowRun,
+  getNeighborhood,
+  listRecentDecisions,
+} from "../services/decisionGraphService";
 import "../operations/skills";
 
 export const agentOpsAdminRouter = Router();
@@ -160,6 +166,59 @@ agentOpsAdminRouter.post(
       const { note } = (req.body ?? {}) as { note?: string };
       const milestone = await signMilestone(req.params.id!, { adminId: req.adminId!, role: req.adminRole! }, note);
       res.json({ milestone });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+/** M3 — decision knowledge graph export (corporate | product | all). */
+agentOpsAdminRouter.get(
+  "/agent-ops/kg/export",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const scope = req.query.scope as "corporate" | "product" | undefined;
+      const limit = req.query.limit ? Number(req.query.limit) : 500;
+      res.json(await exportGraph({ scope, limit }));
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.get(
+  "/agent-ops/kg/recent",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const limit = req.query.limit ? Number(req.query.limit) : 25;
+      res.json({ decisions: await listRecentDecisions(limit) });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.get(
+  "/agent-ops/kg/workflow/:workflowRun",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      res.json(await getGraphByWorkflowRun(req.params.workflowRun!));
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+agentOpsAdminRouter.get(
+  "/agent-ops/kg/nodes/:id/neighborhood",
+  requireAdmin,
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const hops = req.query.hops ? Number(req.query.hops) : 2;
+      res.json(await getNeighborhood(req.params.id!, hops));
     } catch (e) {
       next(e);
     }

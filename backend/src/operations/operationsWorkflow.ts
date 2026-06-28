@@ -33,6 +33,7 @@ import {
   GATE_CATEGORY_LABELS,
   type GateOutputClass,
 } from "./gatePolicy";
+import { recordAgentRunDecision, recordHumanApproval } from "../services/decisionGraphService";
 
 export type SupervisionTier = "auto_approve" | "auto_approve_audit" | "human_required" | "human_led";
 
@@ -232,6 +233,17 @@ export async function executeInProcess<Ctx, Rec>(
       userId: subjectUserId ?? null, action: "agent.run.queued", resource: workflowRun,
       details: { skill: def.skill, reason: decision.reason, confidence },
     });
+    await recordAgentRunDecision({
+      runId,
+      workflowRun,
+      skill: def.skill,
+      outcome: "queued",
+      gateDecision: decision,
+      recommendation: rec,
+      confidence,
+      reviewId,
+      outputClass: outputClass as GateOutputClass | null,
+    });
     return { runId, workflowRun, outcome: "queued", reviewId };
   }
 
@@ -245,6 +257,16 @@ export async function executeInProcess<Ctx, Rec>(
     await logAudit({
       userId: subjectUserId ?? null, action: "agent.run.rejected", resource: workflowRun,
       status: "blocked", details: { skill: def.skill, reason: decision.reason },
+    });
+    await recordAgentRunDecision({
+      runId,
+      workflowRun,
+      skill: def.skill,
+      outcome: "rejected",
+      gateDecision: decision,
+      recommendation: rec,
+      confidence,
+      outputClass: (decision.outputClass ?? def.outputClass ?? null) as GateOutputClass | null,
     });
     return { runId, workflowRun, outcome: "rejected" };
   }
@@ -262,6 +284,16 @@ export async function executeInProcess<Ctx, Rec>(
   await logAudit({
     userId: subjectUserId ?? null, action: "agent.run.executed", resource: workflowRun,
     details: { skill: def.skill, reason: decision.reason, confidence },
+  });
+  await recordAgentRunDecision({
+    runId,
+    workflowRun,
+    skill: def.skill,
+    outcome: "executed",
+    gateDecision: decision,
+    recommendation: rec,
+    confidence,
+    outputClass: (decision.outputClass ?? def.outputClass ?? null) as GateOutputClass | null,
   });
   return { runId, workflowRun, outcome: "executed" };
 }
@@ -356,6 +388,18 @@ export async function resolveInProcess(
     userId: review.subject_user_id, action: `agent.review.${humanDecision}`, resource: review.workflow_run,
     status: humanDecision === "approve" ? "success" : "blocked",
     details: { skill: review.skill, actorAdminId: actor.adminId, reviewId },
+  });
+
+  await recordHumanApproval({
+    reviewId,
+    runId: review.run_id,
+    workflowRun: review.workflow_run,
+    skill: review.skill,
+    actorAdminId: actor.adminId,
+    actorRole: actor.role,
+    humanDecision,
+    reason,
+    outputClass: review.output_class,
   });
 
   return {

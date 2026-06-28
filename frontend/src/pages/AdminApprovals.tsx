@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api, clearToken, getToken, getAdminRole, type AgentReviewRow, type MilestoneStatus } from "../api/client";
+import { api, clearToken, getToken, getAdminRole, type AgentReviewRow, type MilestoneStatus, type KgGraph, type KgNode } from "../api/client";
 
 export function AdminApprovals() {
   const nav = useNavigate();
   const [reviews, setReviews] = useState<AgentReviewRow[]>([]);
   const [milestones, setMilestones] = useState<MilestoneStatus[]>([]);
+  const [recentKg, setRecentKg] = useState<KgNode[]>([]);
+  const [kgGraph, setKgGraph] = useState<KgGraph | null>(null);
   const [role, setRole] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -19,9 +21,10 @@ export function AdminApprovals() {
   const refresh = useCallback(async () => {
     setError(null);
     try {
-      const [a, m] = await Promise.all([api.agentApprovals(), api.milestones()]);
+      const [a, m, kg] = await Promise.all([api.agentApprovals(), api.milestones(), api.kgRecent(15)]);
       setReviews(a.reviews);
       setMilestones(m.milestones);
+      setRecentKg(kg.decisions);
     } catch (err) {
       const msg = (err as Error).message;
       if (msg.includes("UNAUTHENTICATED") || msg.includes("FORBIDDEN")) logout();
@@ -55,6 +58,17 @@ export function AdminApprovals() {
     try {
       await api.signMilestone(id, note[`m-${id}`]);
       await refresh();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function loadWorkflowGraph(workflowRun: string) {
+    setBusy(`kg-${workflowRun}`);
+    try {
+      setKgGraph(await api.kgWorkflow(workflowRun));
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -158,6 +172,59 @@ export function AdminApprovals() {
             ))}
           </tbody>
         </table>
+      </section>
+
+      <section className="card">
+        <h2>Decision knowledge graph (M3)</h2>
+        <p className="muted">Append-only audit of agent decisions, human gates, and milestone sign-offs.</p>
+        {recentKg.length === 0 ? (
+          <p className="muted">No decisions recorded yet — run an agent workflow to populate the graph.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Scope</th>
+                <th>When</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {recentKg.map((n) => (
+                <tr key={n.id}>
+                  <td>{n.nodeType}</td>
+                  <td>{n.title}</td>
+                  <td>{n.scope}</td>
+                  <td>{new Date(n.createdAt).toLocaleString()}</td>
+                  <td>
+                    {typeof n.body.workflowRun === "string" && (
+                      <button
+                        type="button"
+                        className="ghost sm"
+                        disabled={busy === `kg-${n.body.workflowRun}`}
+                        onClick={() => void loadWorkflowGraph(String(n.body.workflowRun))}
+                      >
+                        View graph
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {kgGraph && (
+          <div style={{ marginTop: "1rem", fontSize: "0.85rem" }}>
+            <h3>Workflow subgraph ({kgGraph.nodes.length} nodes · {kgGraph.edges.length} edges)</h3>
+            <ul className="muted">
+              {kgGraph.nodes.map((n) => (
+                <li key={n.id}><strong>{n.nodeType}</strong> — {n.title} <span>({n.scope})</span></li>
+              ))}
+            </ul>
+            <p className="muted">Edges: {kgGraph.edges.map((e) => `${e.edgeType}`).join(" · ") || "none"}</p>
+          </div>
+        )}
       </section>
     </div>
   );

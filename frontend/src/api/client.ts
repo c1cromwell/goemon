@@ -1058,7 +1058,37 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ note: note || undefined }),
     }),
+  kgRecent: (limit = 25) => adminRequest<{ decisions: KgNode[] }>(`/admin/agent-ops/kg/recent?limit=${limit}`),
+  kgWorkflow: (workflowRun: string) => adminRequest<KgGraph>(`/admin/agent-ops/kg/workflow/${workflowRun}`),
+  kgExport: (scope?: "corporate" | "product") =>
+    adminRequest<KgGraph>(`/admin/agent-ops/kg/export${scope ? `?scope=${scope}` : ""}`),
 };
+
+export interface KgNode {
+  id: string;
+  nodeType: string;
+  title: string;
+  body: Record<string, unknown>;
+  scope: string;
+  refType: string | null;
+  refId: string | null;
+  createdAt: string;
+}
+
+export interface KgEdge {
+  id: string;
+  fromNodeId: string;
+  toNodeId: string;
+  edgeType: string;
+  metadata: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface KgGraph {
+  nodes: KgNode[];
+  edges: KgEdge[];
+  exportedAt: string;
+}
 
 export interface AgentReviewRow {
   id: string;
@@ -1068,6 +1098,7 @@ export interface AgentReviewRow {
   reason: string | null;
   gate_category: string | null;
   output_class: string | null;
+  workflow_run: string;
   created_at: string;
   recommendation: string;
 }

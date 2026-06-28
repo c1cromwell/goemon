@@ -7,6 +7,7 @@ import { getDb } from "../db";
 import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
 import type { AdminRole } from "../middleware/rbac";
+import { recordMilestoneSignoff } from "./decisionGraphService";
 
 export interface MilestoneDef {
   id: string;
@@ -78,6 +79,14 @@ export async function signMilestone(
     action: "ceo.milestone.signoff",
     resource: milestoneId,
     details: { approverAdminId: actor.adminId, role: actor.role, note: note ?? null },
+  });
+
+  await recordMilestoneSignoff({
+    milestoneId,
+    title: def.title,
+    approverAdminId: actor.adminId,
+    approverRole: actor.role,
+    note,
   });
 
   const statuses = await listMilestoneStatuses();
