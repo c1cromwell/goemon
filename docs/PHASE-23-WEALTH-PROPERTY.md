@@ -4,7 +4,7 @@ Extends Module 05 (tokenized fractions) into a **full wealth and property owners
 
 ## Property ownership lifecycle
 
-| Stage | User expectation | Argus seam | Partner / build |
+| Stage | User expectation | Goeman seam | Partner / build |
 |---|---|---|---|
 | Discover | Browse fractions, yield, lock-up | Marketplace Invest | Issuer APIs (RealT, Lofty) |
 | Subscribe | Primary issuance escrow | Phase 8 escrow | transfer agent |
@@ -18,13 +18,13 @@ Extends Module 05 (tokenized fractions) into a **full wealth and property owners
 
 ### Regulatory notes
 
-- US RE tokens: Reg D/S via issuer; Argus = software + order router until Corp C
+- US RE tokens: Reg D/S via issuer; Goeman = software + order router until Corp C
 - International RE: jurisdiction matrix per Module 09 — thin today; expand per market
 - On-chain title (Propy-style): optional v3; not v1 wedge
 
 ## Wealth management lifecycle
 
-| Stage | User expectation | Argus today | Gap |
+| Stage | User expectation | Goeman today | Gap |
 |---|---|---|---|
 | Net worth | Fiat + crypto + RWAs unified | Dashboard cash + holdings | off-platform aggregation |
 | Goals | House, retirement, education | Phase 9 gamification dots | formal goals engine |
@@ -35,7 +35,7 @@ Extends Module 05 (tokenized fractions) into a **full wealth and property owners
 
 ## Product lines that cover gaps
 
-- **Argus Starter (Phase 22)** — teen/family wealth, custodial investing, credit-builder
+- **Goeman Starter (Phase 22)** — teen/family wealth, custodial investing, credit-builder
 - **Phase 18.6 equities** — 1099-DIV, dividends, on-chain redemption
 - **Collateralized lending (PRD v2)** — borrow against marketplace holdings
 

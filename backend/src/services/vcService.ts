@@ -7,8 +7,8 @@
  * and Phase 7 (MCP VP gate) can consume it without schema changes.
  *
  * VC structure (per PRD Module 03 and W3C VC 1.1):
- *   issuer:               did:web:argusfinancial.com#<kid>
- *   credentialSubject.id: did:web:argusfinancial.com:users:<userId>
+ *   issuer:               did:web:goemanglobal.com#<kid>
+ *   credentialSubject.id: did:web:goemanglobal.com:users:<userId>
  *   credentialSubject:    { kycStatus, tier, allowedOps }
  *   credentialStatus:     BitstringStatusListEntry pointing to /api/credentials/status/:year
  */
@@ -85,7 +85,7 @@ export async function issueCredential(
         "https://www.w3.org/2018/credentials/v1",
         "https://w3id.org/vc/status-list/2021/v1",
       ],
-      type: ["VerifiableCredential", "ArgusKYCCredential"],
+      type: ["VerifiableCredential", "GoemanKYCCredential"],
       id: `${config.CREDENTIAL_BASE_URL}/api/credentials/${credId}`,
       issuer: `${issuerDid}#${key.kid}`,
       credentialSubject: {
@@ -174,7 +174,7 @@ export async function getCredential(userId: string): Promise<CredentialRow | nul
   );
 }
 
-/** Fetch a credential by its subject DID (did:web:argusfinancial.com:users:<id>). */
+/** Fetch a credential by its subject DID (did:web:goemanglobal.com:users:<id>). */
 export async function getCredentialBySubject(didSubject: string): Promise<CredentialRow | null> {
   return getDb().queryOne<CredentialRow>(
     "SELECT * FROM credentials WHERE did_subject = ?",

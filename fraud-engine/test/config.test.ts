@@ -4,10 +4,13 @@ import { productionFatals } from "../src/config";
 const base = {
   NODE_ENV: "production",
   PORT: 4500,
-  ARGUS_BASE_URL: "https://argus.example.com",
-  ARGUS_SERVICE_KEY: "x".repeat(40),
+  GOEMAN_BASE_URL: "https://goeman.example.com",
+  GOEMAN_SERVICE_KEY: "x".repeat(40),
   SQLITE_PATH: "./data/fraud.db",
   FRAUD_AUTO_REMEDIATE: true,
+  FRAUD_ENGINE_API_KEY: "k".repeat(40),
+  RULE_EVALUATOR: "subset" as const,
+  ACTION_POLICY: "thresholds" as const,
 };
 
 describe("productionFatals", () => {

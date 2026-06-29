@@ -41,7 +41,7 @@
 - [ ] **Phase 18** — Tokenization production (real-estate + securities for real money; audited ERC-3643, real HTS, transfer agent, **ATS** resale) → **Corp B/C**
 - [ ] **Phase 19** — Full-bank rails (fiat on/off-ramp, FBO accounts, ACH/wire, cards, statements, partner-bank deposits) → **Corp B** (BaaS partner + FinCEN MSB)
 - [~] **Phase 20** — Production hardening & scale (KMS/HSM custody, ledger⇄chain reconciliation, fraud Stages 2–4, Temporal/Conductor orchestration, data warehouse) → **Corp B/C**. **Reconciliation BUILT** (closes Phase-14 invariant *n*): `reconciliationService` compares the ledger USDC projection vs on-chain balances (Hedera Mirror Node provider, injectable for tests) per-user plus an escrow-custodian coverage check; drift → append-only `reconciliation_runs`/`reconciliation_findings` (migration 011) and **gates on-chain settlement** (`RECONCILIATION_HOLD` in `hederaService`); daily loop + RBAC admin surface (`/api/admin/reconciliation`); `reconciliation.test.ts` (6). **Fraud Stages 2–4 BUILT** as a standalone add-on (`fraud-engine/`, Node/TS :4500 — imports nothing from `backend/`): full FraudEngine.md architecture at prototype scale (event backbone + schema registry, feature store, `rules-v1`+`seq-v0` models, registry/serving + shadow/canary routing, case queue, async remediation, retrain loop). Hybrid HTTP integration: in-Goeman triage routes blocking vs fire-and-forget; severe async decisions call back to `/api/internal/remediation` to freeze (`ACCOUNT_FROZEN`, append-only `account_holds`, migration 012) or flag. **KMS custody BUILT** (closes invariant *m* / audit C-1): `keyVaultService` wraps at-rest secrets — per-user Hedera keys (`hedera_accounts.private_key_enc`, migration 013) + the issuer JWK (`did_keys.private_jwk`) — via a pluggable provider (local AES-256-GCM dev stand-in; AWS/GCP KMS stubs for prod), AAD-bound to the row id, plaintext nulled with lazy migration of legacy rows; `npm run encrypt-keys` backfills; the operator key is vault-aware too (`HEDERA_OPERATOR_KEY` raw in dev or `gcm.v1.`-wrapped, `npm run wrap-secret`); `KMS_PROVIDER=local` and a raw operator key are prod-fatal; `kms.test.ts` (12). HSM/on-device signing + orchestration remain.
-- [~] **Phase 21** — "Goeman Pay": native stablecoin-settled, agent-native payment rail (`docs/business/PAYMENT-NETWORK-STRATEGY.md` §4/§8) → **Corp B/C** (money transmission + stablecoin regime). **Stage-1 prototype BUILT**: merchants + payment intents (migration 010), every payment **escrow-protected** (hold→capture/refund/dispute via the escrow layer — the chargeback substitute; USDC settles on Hedera through the same primitives), zero rail fee (no interchange), `pay_merchant` MCP tool under scope `pay:merchant` with client+grant ceilings (agent-to-merchant commerce), `ARGUS_PAY_ENABLED` kill-switch (off by default, prod-fatal; held funds always resolvable when shed), `/api/pay` surface, `payments.test.ts` (7). Real merchant acquiring/licensing remains Corp B/C.
+- [~] **Phase 21** — "Goeman Pay": native stablecoin-settled, agent-native payment rail (`docs/business/PAYMENT-NETWORK-STRATEGY.md` §4/§8) → **Corp B/C** (money transmission + stablecoin regime). **Stage-1 prototype BUILT**: merchants + payment intents (migration 010), every payment **escrow-protected** (hold→capture/refund/dispute via the escrow layer — the chargeback substitute; USDC settles on Hedera through the same primitives), zero rail fee (no interchange), `pay_merchant` MCP tool under scope `pay:merchant` with client+grant ceilings (agent-to-merchant commerce), `GOEMAN_PAY_ENABLED` kill-switch (off by default, prod-fatal; held funds always resolvable when shed), `/api/pay` surface, `payments.test.ts` (7). Real merchant acquiring/licensing remains Corp B/C.
 - [ ] **Phase 23** — Internal Ops Command Center (CEO/SRE/SOC/compliance dashboards) → **Corp A/B**. **Design: `docs/PHASE-23-OPS-COMMAND-CENTER.md`** — extend `/admin/command/*`; `opsMetricsService` + read-only `/api/admin/command/*`; not built.
 
 ---
@@ -164,12 +164,12 @@ argus/
 ├── frontend/                                # (structure unchanged from v1, pages updated)
 │   └── ...                                   #   + Passkey enrollment UI, Tier badges
 │
-├── argus-agent/                            # (unchanged from v1)
+├── goeman-agent/                            # (unchanged from v1)
 │   └── ...
 │
-└── ArgusWallet/
-    └── ArgusWallet/
-        ├── ArgusWalletApp.swift
+└── GoemanWallet/
+    └── GoemanWallet/
+        ├── GoemanWalletApp.swift
         ├── ContentView.swift
         ├── Views/
         │   ├── SetupView.swift
@@ -246,7 +246,7 @@ Setup:
 DATABASE — support both Postgres (prod) and SQLite (dev) behind one interface:
 - Create /backend/src/db/index.ts:
   - getDb() returns a thin query wrapper. If DATABASE_URL is set → Postgres (pg Pool). Else → better-sqlite3 at
-    ./data/argus.db with WAL + foreign_keys ON.
+    ./data/goeman.db with WAL + foreign_keys ON.
   - All money columns are INTEGER minor units with a sibling currency column. NO REAL columns anywhere.
 - Use versioned migrations (node-pg-migrate for Postgres; for SQLite dev, run the same SQL via a simple runner).
 
@@ -772,7 +772,7 @@ Phase 10.
       Phase 0–8 user journeys (onboarding/tiers, DID/VC, cash+USDC, SmartChat, marketplace subscribe/
       trade/transfer) plus the cross-cutting invariants must pass before the marketplace is considered
       demo-ready. Deterministic floor = backend/test/e2e.test.ts (vitest+supertest); NL/SmartChat and
-      external-agent paths driven via the argus-mcp-test-harness skill.
+      external-agent paths driven via the goeman-mcp-test-harness skill.
 ```
 
 **Out of scope (PRD-05/10 production/v2 items, noted not built):** first-party Goeman Global Finance token issuance;
@@ -855,7 +855,7 @@ HederaService.swift (NEW):
 
 WalletView.swift (NEW): a tab showing Hedera account id / EVM alias, USDC balance, Receive (QR), and Send.
 
-ArgusWalletApp.swift: TabView with Setup, Credential, Wallet, Activity. Keep onOpenURL for argus-wallet:// (consent)
+GoemanWalletApp.swift: TabView with Setup, Credential, Wallet, Activity. Keep onOpenURL for argus-wallet:// (consent)
 and openid-credential-offer:// (VCI). Consent flow unchanged from v1 but the VP is now signed by the Secure-Enclave key.
 ```
 
@@ -866,7 +866,7 @@ and openid-credential-offer:// (VCI). Consent flow unchanged from v1 but the VP 
 **Prompt for Claude Code:**
 
 ```
-Build argus-agent exactly as in v1 (intentDetector, mcpClient, walletBridge, MessageBubble, TokenIndicator,
+Build goeman-agent exactly as in v1 (intentDetector, mcpClient, walletBridge, MessageBubble, TokenIndicator,
 ToolCallLog, ChatPage). One change:
 - The agent's MCP transfer calls send integer minor-unit amounts and surface the formatted amount in the UI.
 Everything else (challenge → trigger-wallet → poll token-status, immediate denial handling, 90s token countdown)
@@ -936,7 +936,7 @@ HEDERA_USDC_TOKEN_ID=               # testnet USDC token id
 
 2. Run migrations: cd backend && npm run migrate
 
-3. Start services: backend (npm run dev), frontend (5173), argus-agent (5174),
+3. Start services: backend (npm run dev), frontend (5173), goeman-agent (5174),
    iOS Wallet (Xcode, iPhone 15 sim).
 
 4. Seed admin (RBAC): POST /api/admin/seed → admin@goemanglobal.com / Admin1234! with role 'admin'.
@@ -1168,12 +1168,12 @@ scope) and this **comprehensive pass after the last phase** (`full` scope).
 16.2  Agent/MCP-driven coverage — the journeys that are genuinely NL- or client-driven:
       SmartChat NL intent → 90s operation token → transfer (incl. the >$500 MFA gate), the external-agent
       OID4VP → VP-verify → MCP scoped-operation path (security-critical), and the full demo walkthrough.
-      Driven via the argus-mcp-test-harness skill acting as a real client.
+      Driven via the goeman-mcp-test-harness skill acting as a real client.
 
 16.3  Skills (built under .claude/skills/):
       - e2e-validator — orchestrates a pass: runs 16.1, then drives 16.2, emits a pass/fail report mapped
         to docs/E2E-VALIDATION.md. Scope arg: `through-phase-8` | `full`.
-      - argus-mcp-test-harness — thin MCP/HTTP client exercising SmartChat, the operation-token exchange,
+      - goeman-mcp-test-harness — thin MCP/HTTP client exercising SmartChat, the operation-token exchange,
         and the external-agent OID4VP+MCP path; asserts token TTL / MFA-gate / compliance behaviors.
 
 16.4  Channel × journey matrix — Web (responsive), Mobile (iOS wallet), Agentic CLI/headless, and the
@@ -1398,8 +1398,8 @@ cd argus/backend && npm run migrate && npm run dev
 # Terminal 2: Frontend
 cd argus/frontend && npm run dev
 # Terminal 3: External Agent
-cd argus/argus-agent && npm run dev
-# Xcode: open ArgusWallet/ArgusWallet.xcodeproj, run on iPhone 15 simulator
+cd argus/goeman-agent && npm run dev
+# Xcode: open GoemanWallet/GoemanWallet.xcodeproj, run on iPhone 15 simulator
 
 # Seed admin
 curl -X POST http://localhost:3001/api/admin/seed

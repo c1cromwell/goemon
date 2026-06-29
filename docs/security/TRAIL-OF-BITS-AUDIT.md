@@ -8,15 +8,15 @@
 |---|---|
 | **Firm** | Trail of Bits |
 | **Rationale** | Prior Hedera ecosystem work; strong mobile + cryptography practice |
-| **Scope** | Phase 10 iOS wallet (`ArgusWallet/`), Android fast-follow (`ArgusWalletAndroid/`), Hedera build/sign/submit, OID4VP VP signing, key backup posture |
+| **Scope** | Phase 10 iOS wallet (`GoemanWallet/`), Android fast-follow (`GoemanWalletAndroid/`), Hedera build/sign/submit, OID4VP VP signing, key backup posture |
 | **Second opinion** | Cure53 or NCC Group (optional second pass before broad beta) |
 
 ## In-scope artifacts
 
-- `ArgusWallet/` — Secure Enclave P-256, VP JWT, Hedera non-custodial send
+- `GoemanWallet/` — Secure Enclave P-256, VP JWT, Hedera non-custodial send
 - `backend/src/routes/hedera.ts` — transfer build/submit, device pubkey acceptance
 - `backend/src/services/keyVaultService.ts` — operator key wrap (not user keys)
-- `ArgusWalletAndroid/` — Keystore signing scaffold
+- `GoemanWalletAndroid/` — Keystore signing scaffold
 
 ## Out of scope (Phase A)
 

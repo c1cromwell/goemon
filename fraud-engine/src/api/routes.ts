@@ -8,7 +8,7 @@ import { Router as ExpressRouter, type Request, type Response } from "express";
 import type { Context } from "../context";
 import { parseEvent, SCHEMA_VERSION } from "../bus/schemaRegistry";
 import { requireServiceAuth } from "./serviceAuth";
-import { getArgusClient } from "../remediation/argusClient";
+import { getGoemanClient } from "../remediation/goemanClient";
 import type { Decision } from "../types";
 import { logger } from "../observability/logger";
 
@@ -84,7 +84,7 @@ export function buildRoutes(ctx: Context): ExpressRouter {
     })
   );
 
-  // Analyst action on a case: freeze/unfreeze the user (calls Argus back).
+  // Analyst action on a case: freeze/unfreeze the user (calls Goeman back).
   r.post(
     "/v1/cases/:id/action",
     asyncH(async (req, res) => {
@@ -97,10 +97,10 @@ export function buildRoutes(ctx: Context): ExpressRouter {
       const actor = (req.body?.actor as string) ?? "analyst";
       if (action === "freeze") {
         await ctx.cases.recordAction(c.id, "freeze_requested", actor, req.body?.reason);
-        await getArgusClient().freeze({ userId: c.userId, reason: req.body?.reason ?? "analyst freeze", decisionId: c.decisionId ?? c.id });
+        await getGoemanClient().freeze({ userId: c.userId, reason: req.body?.reason ?? "analyst freeze", decisionId: c.decisionId ?? c.id });
       } else if (action === "unfreeze") {
         await ctx.cases.recordAction(c.id, "unfreeze_requested", actor, req.body?.reason);
-        await getArgusClient().unfreeze({ userId: c.userId, reason: req.body?.reason ?? "analyst unfreeze", decisionId: c.decisionId ?? c.id });
+        await getGoemanClient().unfreeze({ userId: c.userId, reason: req.body?.reason ?? "analyst unfreeze", decisionId: c.decisionId ?? c.id });
       } else if (action === "dismiss") {
         await ctx.cases.resolve(c.id, actor, "dismissed", req.body?.reason);
       } else {

@@ -123,8 +123,8 @@ describe("milestone sign-offs", () => {
   it("seeds CEO/CS accounts idempotently", async () => {
     const { seedCeoApprovers } = await import("../src/services/adminService");
     const a = await seedCeoApprovers();
-    expect(a.ceo.email).toBe("ceo@argusfinancial.com");
-    expect(a.cs.email).toBe("cos@argusfinancial.com");
+    expect(a.ceo.email).toBe("ceo@goemanglobal.com");
+    expect(a.cs.email).toBe("cos@goemanglobal.com");
     const b = await seedCeoApprovers();
     expect(b.ceo.created).toBe(false);
   });

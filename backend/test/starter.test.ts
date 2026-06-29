@@ -1,5 +1,5 @@
 /**
- * Phase 22.0 — Argus Starter households + guardian↔teen linkage + minor TIER_OPS.
+ * Phase 22.0 — Goeman Starter households + guardian↔teen linkage + minor TIER_OPS.
  *
  *   - TEEN_ENABLED gates everything; productionFatals refuses it in prod;
  *   - guardian must be Tier 2 to create a household and link teens;

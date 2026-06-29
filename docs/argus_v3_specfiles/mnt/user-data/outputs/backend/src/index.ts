@@ -81,11 +81,11 @@ async function bootstrap(): Promise<void> {
   app.use(errorHandler);
 
   app.listen(config.PORT, () => {
-    logger.info({ port: config.PORT, dialect: getDb().dialect, env: config.NODE_ENV }, "Argus Financial Partners backend listening");
+    logger.info({ port: config.PORT, dialect: getDb().dialect, env: config.NODE_ENV }, "Goeman Global Finance backend listening");
   });
 }
 
 bootstrap().catch((e) => {
-  logger.error(e, "Failed to start Argus Financial Partners backend");
+  logger.error(e, "Failed to start Goeman Global Finance backend");
   process.exit(1);
 });

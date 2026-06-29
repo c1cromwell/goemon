@@ -1,4 +1,4 @@
-# Argus Financial Partners Backend — Conventions
+# Goeman Global Finance Backend — Conventions
 
 These rules are enforced across the codebase. Read before contributing.
 

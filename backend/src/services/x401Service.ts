@@ -1,8 +1,8 @@
 /**
- * Phase 24.1 — x401 HTTP Proof Requirement (Argus-native, issuer-neutral).
+ * Phase 24.1 — x401 HTTP Proof Requirement (Goeman-native, issuer-neutral).
  *
  * Maps Proof's x401 header flow onto the existing OID4VP gate (presentationService).
- * Default issuer: Argus W3C VC + wallet did:key — no Proof.com dependency required.
+ * Default issuer: Goeman W3C VC + wallet did:key — no Proof.com dependency required.
  */
 
 import { createHash, randomBytes } from "crypto";

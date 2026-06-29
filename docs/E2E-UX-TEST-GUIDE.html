@@ -2,8 +2,8 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Argus Financial Partners — Argus Financial Partners</title>
-<style>/* Argus Financial Partners strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+<title>Goeman Global Finance — Goeman Global Finance</title>
+<style>/* Goeman Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
    single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
 
 :root {
@@ -158,15 +158,15 @@ tbody tr:nth-child(even) td { background: var(--line-2); }
 <body>
 <section class="cover">
   <div class="mark">B</div>
-  <h1>Argus Financial Partners</h1>
+  <h1>Goeman Global Finance</h1>
   <p class="sub">End-to-End UX &amp; System Test Guide</p>
-  <div class="meta">Argus Financial Partners &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 27, 2026</b></div>
+  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 27, 2026</b></div>
   <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
 </section>
 <div class="wrap">
-  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#0-the-stack-what-runs-where">0. The stack — what runs where</a></li><li class="lvl-2"><a href="#1-first-time-setup-test-data">1. First-time setup &amp; test data</a></li><li class="lvl-3"><a href="#11-env-flags-that-unlock-journeys">1.1 .env flags that unlock journeys</a></li><li class="lvl-3"><a href="#12-test-credentials-data-created-by-seede2e">1.2 Test credentials &amp; data created by seed:e2e</a></li><li class="lvl-2"><a href="#2-customer-portal-journeys-start-at-httplocalhost5173">2. Customer-portal journeys (start at http://localhost:5173)</a></li><li class="lvl-3"><a href="#j1-auth-passkey-first-registration">J1 — Auth (passkey-first) &amp; registration</a></li><li class="lvl-3"><a href="#j2-agentic-onboarding-the-tier-ladder">J2 — Agentic onboarding &amp; the tier ladder</a></li><li class="lvl-3"><a href="#j3-dashboard-money-transfer-now-on-temporal-capable-path">J3 — Dashboard &amp; money transfer (now on Temporal-capable path)</a></li><li class="lvl-3"><a href="#j4-invest-tokenized-rwa-securities">J4 — Invest (tokenized RWA / securities)</a></li><li class="lvl-3"><a href="#j5-collect-collectibles">J5 — Collect (collectibles)</a></li><li class="lvl-3"><a href="#j6-agent-smartchat-nl-90s-operation-token-mfa-gate">J6 — Agent / SmartChat (NL → 90s operation token → MFA gate)</a></li><li class="lvl-3"><a href="#j6b-console-terminal-style-agent-console-tier-2">J6b — Console (terminal-style agent; /console, Tier 2)</a></li><li class="lvl-3"><a href="#portal-money-app-pages-the-more-menu">Portal money-app pages &amp; the More menu</a></li><li class="lvl-3"><a href="#j7-trading-phase-17-simulated-broker-needs-trading_enabledtrue">J7 — Trading (Phase 17 simulated broker; needs TRADING_ENABLED=true)</a></li><li class="lvl-3"><a href="#j8-escrow-chargeback-substitute">J8 — Escrow (chargeback substitute)</a></li><li class="lvl-3"><a href="#j9-argus-pay-merchant-rail-needs-argus_pay_enabledtrue">J9 — Argus Pay (merchant rail; needs ARGUS_PAY_ENABLED=true)</a></li><li class="lvl-3"><a href="#j9b-bank-rails-deposit-withdraw-statement-needs-bank_rails_enabledtrue">J9b — Bank rails: deposit, withdraw, statement (needs BANK_RAILS_ENABLED=true)</a></li><li class="lvl-3"><a href="#j9c-debit-cards-issue-authorize-capturevoidrefund-needs-cards_enabledtrue">J9c — Debit cards: issue, authorize, capture/void/refund (needs CARDS_ENABLED=true)</a></li><li class="lvl-3"><a href="#j9d-bill-pay-payees-scheduledrecurring-payments-needs-billpay_enabledtrue">J9d — Bill pay: payees + scheduled/recurring payments (needs BILLPAY_ENABLED=true)</a></li><li class="lvl-2"><a href="#2a-money-inout-wealth-journeys-new-cluster-j14j23">2a. Money in/out &amp; wealth journeys (new cluster — J14–J23)</a></li><li class="lvl-3"><a href="#j14-add-cash-fiat-usdc-on-ramp-add-cash-needs-onramp_enabledtrue">J14 — Add cash (fiat → USDC on-ramp) — /add-cash (needs ONRAMP_ENABLED=true)</a></li><li class="lvl-3"><a href="#j15-cash-out-usdc-fiat-off-ramp-cash-out-needs-offramp_enabledtrue">J15 — Cash out (USDC → fiat off-ramp) — /cash-out (needs OFFRAMP_ENABLED=true)</a></li><li class="lvl-3"><a href="#j16-earn-tokenized-treasury-f1-earn-needs-treasury_enabledtrue">J16 — Earn (tokenized Treasury, F1) — /earn (needs TREASURY_ENABLED=true)</a></li><li class="lvl-3"><a href="#j17-borrow-collateralized-lending-borrow-needs-lending_enabledtrue-treasury">J17 — Borrow (collateralized lending) — /borrow (needs LENDING_ENABLED=true + Treasury)</a></li><li class="lvl-3"><a href="#j18-requests-p2p-money-requests-f3-requests">J18 — Requests (P2P money requests, F3) — /requests</a></li><li class="lvl-3"><a href="#j19-send-abroad-cross-border-f6-send-abroad-needs-fx_enabled-fx_settlement_enabled">J19 — Send abroad (cross-border, F6) — /send-abroad (needs FX_ENABLED + FX_SETTLEMENT_ENABLED)</a></li><li class="lvl-3"><a href="#j20-currency-exchange-fx-fx-needs-fx_enabledtrue">J20 — Currency exchange (FX) — /fx (needs FX_ENABLED=true)</a></li><li class="lvl-3"><a href="#j21-self-custody-portability-f2-self-custody">J21 — Self-custody &amp; portability (F2) — /self-custody</a></li><li class="lvl-3"><a href="#j22-drops-creator-drops-f5-drops-needs-creator_drops_enabledtrue">J22 — Drops (creator drops, F5) — /drops (needs CREATOR_DROPS_ENABLED=true)</a></li><li class="lvl-3"><a href="#j23-pay-with-argus-login-less-vc-checkout-pay-needs-argus_pay_enabled-checkout_vp_enabled">J23 — Pay with Argus + login-less VC checkout — /pay (needs ARGUS_PAY_ENABLED / CHECKOUT_VP_ENABLED)</a></li><li class="lvl-3"><a href="#j10-on-chain-wallet-only-with-hedera_enabledtrue">J10 — On-chain wallet (only with HEDERA_ENABLED=true)</a></li><li class="lvl-3"><a href="#j11-credentials-did-verifiable-credentials">J11 — Credentials (DID / Verifiable Credentials)</a></li><li class="lvl-3"><a href="#j12-connected-agents-grants-start-at-httplocalhost5174">J12 — Connected agents &amp; grants (start at http://localhost:5174)</a></li><li class="lvl-3"><a href="#j13-admin-console-rbac-start-at-httplocalhost5173adminlogin">J13 — Admin console (RBAC; start at http://localhost:5173/admin/login)</a></li><li class="lvl-2"><a href="#3-back-office-agent-operations-phase-15-api-admin">3. Back-office agent operations (Phase 15) — API + admin</a></li><li class="lvl-2"><a href="#4-the-fraud-system-how-it-works-logs-and-learns">4. The fraud system — how it works, logs, and learns</a></li><li class="lvl-3"><a href="#how-to-test-the-fraud-journey">How to test the fraud journey</a></li><li class="lvl-2"><a href="#5-backend-end-to-end-testing-build-start-stop-validate">5. Backend end-to-end testing (build · start · stop · validate)</a></li><li class="lvl-2"><a href="#6-optional-durable-orchestration-temporal-conductor">6. Optional: durable orchestration (Temporal + Conductor)</a></li><li class="lvl-2"><a href="#7-journey-channel-coverage-matrix">7. Journey × channel coverage matrix</a></li><li class="lvl-2"><a href="#8-where-to-add-agents-skills-mcp-services-expansion-review">8. Where to add agents, skills &amp; MCP services (expansion review)</a></li><li class="lvl-2"><a href="#9-troubleshooting">9. Troubleshooting</a></li></ol></nav>
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#0-the-stack-what-runs-where">0. The stack — what runs where</a></li><li class="lvl-2"><a href="#1-first-time-setup-test-data">1. First-time setup &amp; test data</a></li><li class="lvl-3"><a href="#11-env-flags-that-unlock-journeys">1.1 .env flags that unlock journeys</a></li><li class="lvl-3"><a href="#12-test-credentials-data-created-by-seede2e">1.2 Test credentials &amp; data created by seed:e2e</a></li><li class="lvl-2"><a href="#2-customer-portal-journeys-start-at-httplocalhost5173">2. Customer-portal journeys (start at http://localhost:5173)</a></li><li class="lvl-3"><a href="#j1-auth-passkey-first-registration">J1 — Auth (passkey-first) &amp; registration</a></li><li class="lvl-3"><a href="#j2-agentic-onboarding-the-tier-ladder">J2 — Agentic onboarding &amp; the tier ladder</a></li><li class="lvl-3"><a href="#j3-dashboard-money-transfer-now-on-temporal-capable-path">J3 — Dashboard &amp; money transfer (now on Temporal-capable path)</a></li><li class="lvl-3"><a href="#j4-invest-tokenized-rwa-securities">J4 — Invest (tokenized RWA / securities)</a></li><li class="lvl-3"><a href="#j5-collect-collectibles">J5 — Collect (collectibles)</a></li><li class="lvl-3"><a href="#j6-agent-smartchat-nl-90s-operation-token-mfa-gate">J6 — Agent / SmartChat (NL → 90s operation token → MFA gate)</a></li><li class="lvl-3"><a href="#j6b-console-terminal-style-agent-console-tier-2">J6b — Console (terminal-style agent; /console, Tier 2)</a></li><li class="lvl-3"><a href="#portal-money-app-pages-the-more-menu">Portal money-app pages &amp; the More menu</a></li><li class="lvl-3"><a href="#j7-trading-phase-17-simulated-broker-needs-trading_enabledtrue">J7 — Trading (Phase 17 simulated broker; needs TRADING_ENABLED=true)</a></li><li class="lvl-3"><a href="#j8-escrow-chargeback-substitute">J8 — Escrow (chargeback substitute)</a></li><li class="lvl-3"><a href="#j9-argus-pay-merchant-rail-needs-argus_pay_enabledtrue">J9 — Goeman Pay (merchant rail; needs GOEMAN_PAY_ENABLED=true)</a></li><li class="lvl-3"><a href="#j9b-bank-rails-deposit-withdraw-statement-needs-bank_rails_enabledtrue">J9b — Bank rails: deposit, withdraw, statement (needs BANK_RAILS_ENABLED=true)</a></li><li class="lvl-3"><a href="#j9c-debit-cards-issue-authorize-capturevoidrefund-needs-cards_enabledtrue">J9c — Debit cards: issue, authorize, capture/void/refund (needs CARDS_ENABLED=true)</a></li><li class="lvl-3"><a href="#j9d-bill-pay-payees-scheduledrecurring-payments-needs-billpay_enabledtrue">J9d — Bill pay: payees + scheduled/recurring payments (needs BILLPAY_ENABLED=true)</a></li><li class="lvl-2"><a href="#2a-money-inout-wealth-journeys-new-cluster-j14j23">2a. Money in/out &amp; wealth journeys (new cluster — J14–J23)</a></li><li class="lvl-3"><a href="#j14-add-cash-fiat-usdc-on-ramp-add-cash-needs-onramp_enabledtrue">J14 — Add cash (fiat → USDC on-ramp) — /add-cash (needs ONRAMP_ENABLED=true)</a></li><li class="lvl-3"><a href="#j15-cash-out-usdc-fiat-off-ramp-cash-out-needs-offramp_enabledtrue">J15 — Cash out (USDC → fiat off-ramp) — /cash-out (needs OFFRAMP_ENABLED=true)</a></li><li class="lvl-3"><a href="#j16-earn-tokenized-treasury-f1-earn-needs-treasury_enabledtrue">J16 — Earn (tokenized Treasury, F1) — /earn (needs TREASURY_ENABLED=true)</a></li><li class="lvl-3"><a href="#j17-borrow-collateralized-lending-borrow-needs-lending_enabledtrue-treasury">J17 — Borrow (collateralized lending) — /borrow (needs LENDING_ENABLED=true + Treasury)</a></li><li class="lvl-3"><a href="#j18-requests-p2p-money-requests-f3-requests">J18 — Requests (P2P money requests, F3) — /requests</a></li><li class="lvl-3"><a href="#j19-send-abroad-cross-border-f6-send-abroad-needs-fx_enabled-fx_settlement_enabled">J19 — Send abroad (cross-border, F6) — /send-abroad (needs FX_ENABLED + FX_SETTLEMENT_ENABLED)</a></li><li class="lvl-3"><a href="#j20-currency-exchange-fx-fx-needs-fx_enabledtrue">J20 — Currency exchange (FX) — /fx (needs FX_ENABLED=true)</a></li><li class="lvl-3"><a href="#j21-self-custody-portability-f2-self-custody">J21 — Self-custody &amp; portability (F2) — /self-custody</a></li><li class="lvl-3"><a href="#j22-drops-creator-drops-f5-drops-needs-creator_drops_enabledtrue">J22 — Drops (creator drops, F5) — /drops (needs CREATOR_DROPS_ENABLED=true)</a></li><li class="lvl-3"><a href="#j23-pay-with-argus-login-less-vc-checkout-pay-needs-argus_pay_enabled-checkout_vp_enabled">J23 — Pay with Argus + login-less VC checkout — /pay (needs GOEMAN_PAY_ENABLED / CHECKOUT_VP_ENABLED)</a></li><li class="lvl-3"><a href="#j10-on-chain-wallet-only-with-hedera_enabledtrue">J10 — On-chain wallet (only with HEDERA_ENABLED=true)</a></li><li class="lvl-3"><a href="#j11-credentials-did-verifiable-credentials">J11 — Credentials (DID / Verifiable Credentials)</a></li><li class="lvl-3"><a href="#j12-connected-agents-grants-start-at-httplocalhost5174">J12 — Connected agents &amp; grants (start at http://localhost:5174)</a></li><li class="lvl-3"><a href="#j13-admin-console-rbac-start-at-httplocalhost5173adminlogin">J13 — Admin console (RBAC; start at http://localhost:5173/admin/login)</a></li><li class="lvl-2"><a href="#3-back-office-agent-operations-phase-15-api-admin">3. Back-office agent operations (Phase 15) — API + admin</a></li><li class="lvl-2"><a href="#4-the-fraud-system-how-it-works-logs-and-learns">4. The fraud system — how it works, logs, and learns</a></li><li class="lvl-3"><a href="#how-to-test-the-fraud-journey">How to test the fraud journey</a></li><li class="lvl-2"><a href="#5-backend-end-to-end-testing-build-start-stop-validate">5. Backend end-to-end testing (build · start · stop · validate)</a></li><li class="lvl-2"><a href="#6-optional-durable-orchestration-temporal-conductor">6. Optional: durable orchestration (Temporal + Conductor)</a></li><li class="lvl-2"><a href="#7-journey-channel-coverage-matrix">7. Journey × channel coverage matrix</a></li><li class="lvl-2"><a href="#8-where-to-add-agents-skills-mcp-services-expansion-review">8. Where to add agents, skills &amp; MCP services (expansion review)</a></li><li class="lvl-2"><a href="#9-troubleshooting">9. Troubleshooting</a></li></ol></nav>
   <main class="content">
-<h1 id="argus-financial-partners-end-to-end-ux-system-test-guide">Argus Financial Partners — End-to-End UX &amp; System Test Guide</h1>
+<h1 id="argus-financial-partners-end-to-end-ux-system-test-guide">Goeman Global Finance — End-to-End UX &amp; System Test Guide</h1>
 <p>A hands-on guide to exercising <strong>every product, every channel, and the fraud platform</strong> as a
 real user/operator, plus how to build/run/validate the backend end-to-end. This is the manual,
 &quot;drive the actual apps&quot; companion to the automated runbook in
@@ -204,7 +204,7 @@ real user/operator, plus how to build/run/validate the backend end-to-end. This 
 <tr>
 <td>3</td>
 <td><strong>External agent app</strong> (OID4VP + MCP)</td>
-<td><code>argus-agent/</code></td>
+<td><code>goeman-agent/</code></td>
 <td><code>http://localhost:5174</code></td>
 <td>connected-agent journey</td>
 </tr>
@@ -231,7 +231,7 @@ real user/operator, plus how to build/run/validate the backend end-to-end. This 
 </tr>
 <tr>
 <td>7</td>
-<td><strong>iOS wallet</strong> (<code>ArgusWallet/</code>)</td>
+<td><strong>iOS wallet</strong> (<code>GoemanWallet/</code>)</td>
 <td>Xcode</td>
 <td>simulator</td>
 <td>mobile (unverified source — needs macOS/Xcode)</td>
@@ -254,7 +254,7 @@ npm run dev                     # API on :3001 (auto-migrates in dev)
 cd frontend &amp;&amp; npm install &amp;&amp; npm run dev      # :5173
 
 # --- external agent app (new terminal) ---
-cd argus-agent &amp;&amp; npm install &amp;&amp; npm run dev    # :5174
+cd goeman-agent &amp;&amp; npm install &amp;&amp; npm run dev    # :5174
 
 # --- fraud engine (new terminal) ---
 cd fraud-engine &amp;&amp; npm install &amp;&amp; cp .env.example .env &amp;&amp; npm run dev   # :4500
@@ -268,7 +268,7 @@ login-less checkout) adds <strong>no new service</strong> — it&#39;s all in th
 <p>Most products are behind kill-switches (off by default). For a full demo set these in <code>backend/.env</code>:</p>
 <pre><code class="language-bash">ALLOW_PASSWORD_AUTH=true          # lets you log in with the demo passwords (passkeys otherwise)
 TRADING_ENABLED=true              # /trade journey (Phase 17 simulated broker)
-ARGUS_PAY_ENABLED=true            # Argus Pay merchant journey (Phase 21)
+GOEMAN_PAY_ENABLED=true            # Goeman Pay merchant journey (Phase 21)
 BANK_RAILS_ENABLED=true           # bank rails: deposit/withdraw/statement (Phase 19 Stage-1)
 CARDS_ENABLED=true                # debit cards: issue/authorize/capture (Phase 19.4)
 BILLPAY_ENABLED=true              # bill pay: payees + scheduled/recurring payments (Phase 19.3)
@@ -295,7 +295,7 @@ FRAUD_ENGINE_API_KEY=&lt;a-strong-shared-secret-32+chars&gt;
 for freeze callbacks).</p>
 <blockquote>
 <p>⚠️ These flags are <strong>prod-fatal</strong> — the server refuses to boot in <code>NODE_ENV=production</code> with
-<code>TRADING_ENABLED</code>/<code>ARGUS_PAY_ENABLED</code>/<code>ALLOW_PASSWORD_AUTH</code> on, with the simulated on/off-ramp
+<code>TRADING_ENABLED</code>/<code>GOEMAN_PAY_ENABLED</code>/<code>ALLOW_PASSWORD_AUTH</code> on, with the simulated on/off-ramp
 (<code>ONRAMP_ENABLED</code>/<code>OFFRAMP_ENABLED</code> while <code>*_PROVIDER=simulated</code>), with <code>LENDING_ENABLED</code> or the
 simulated money/wealth seams, or with <code>KMS_PROVIDER=local</code>. They are for local/dev demoing only.
 The dev <code>.env</code> already ships the on-ramp, off-ramp, Treasury, and lending flags <strong>on</strong>.</p>
@@ -311,7 +311,7 @@ The dev <code>.env</code> already ships the on-ramp, off-ramp, Treasury, and len
 </tr>
 </thead>
 <tbody><tr>
-<td><strong><a href="mailto:admin@argusfinancial.com">admin@argusfinancial.com</a></strong> / <code>Admin1234!</code></td>
+<td><strong><a href="mailto:admin@goemanglobal.com">admin@goemanglobal.com</a></strong> / <code>Admin1234!</code></td>
 <td><code>/admin/login</code></td>
 <td>RBAC <code>admin</code></td>
 <td>admin console, agent-ops, escrow mediation</td>
@@ -349,7 +349,7 @@ The dev <code>.env</code> already ships the on-ramp, off-ramp, Treasury, and len
 </tbody></table>
 <p>Plus: marketplace Invest/Collect assets, and the simulator MCP client <code>did:simulator:agent-app</code>
 (used by the external-agent app, $500 ceiling).</p>
-<p>Extra data created inline per journey below (a merchant for Argus Pay, an agent-ops review) via <code>curl</code>.</p>
+<p>Extra data created inline per journey below (a merchant for Goeman Pay, an agent-ops review) via <code>curl</code>.</p>
 <hr>
 <h2 id="2-customer-portal-journeys-start-at-httplocalhost5173">2. Customer-portal journeys (start at <code>http://localhost:5173</code>)</h2>
 <p>Each journey lists the <strong>start URL</strong>, steps, and <strong>what to verify</strong>. Log in as the noted demo user.</p>
@@ -410,7 +410,7 @@ an MFA-gated command flips the prompt to <code>mfa&gt;</code> for the code.</li>
 <h3 id="portal-money-app-pages-the-more-menu">Portal money-app pages &amp; the More menu</h3>
 <p>The customer portal surfaces every product through a flat top nav (Home · Invest · Collect · Agent) plus
 a <strong>grouped More menu</strong> — <strong>Money</strong> (Add cash · Cash out · Earn · Borrow · Bank · Cards · Bills · Requests ·
-Send abroad · Currency exchange · Argus Pay · Escrow), <strong>Invest &amp; collect</strong> (Trade · Drops), <strong>Trust &amp;
+Send abroad · Currency exchange · Goeman Pay · Escrow), <strong>Invest &amp; collect</strong> (Trade · Drops), <strong>Trust &amp;
 identity</strong> (Self-custody · On-chain wallet · Credentials · Verification &amp; tiers · Connected agents ·
 Internal agents), <strong>Family</strong> (Starter guardian/teen), and <strong>Account</strong> (Activity · Console). On wide
 screens these appear in the sidebar. Each gated page needs its matching <code>*_ENABLED</code> flag (§1.1).</p>
@@ -427,7 +427,7 @@ idempotently; trading is bulkheaded — a broker stall doesn&#39;t block J3 tran
 <li><strong>Verify:</strong> hold debits payer to the <code>escrow</code> system account; release→credits recipient; refund→back to
 payer; dispute → mediated by admin (J13). Each step is an idempotent ledger journal.</li>
 </ul>
-<h3 id="j9-argus-pay-merchant-rail-needs-argus_pay_enabledtrue">J9 — Argus Pay (merchant rail; needs <code>ARGUS_PAY_ENABLED=true</code>)</h3>
+<h3 id="j9-argus-pay-merchant-rail-needs-argus_pay_enabledtrue">J9 — Goeman Pay (merchant rail; needs <code>GOEMAN_PAY_ENABLED=true</code>)</h3>
 <p>Create a merchant first (as <strong>blair</strong>, Tier 2). Get a session token by logging in via the portal and
 copying the Bearer from the Network tab, or use the API:</p>
 <pre><code class="language-bash"># register merchant (blair is the settlement account)
@@ -578,13 +578,13 @@ walk away with your keys + credentials.</li>
 <li><strong>Verify:</strong> scarcity is enforced <strong>at the ledger</strong> — <code>treasury → buyer</code> token + <code>buyer → creator</code> cash
 in one atomic journal; the claim is idempotent; the edition count can&#39;t be oversold.</li>
 </ul>
-<h3 id="j23-pay-with-argus-login-less-vc-checkout-pay-needs-argus_pay_enabled-checkout_vp_enabled">J23 — Pay with Argus + login-less VC checkout — <code>/pay</code> (needs <code>ARGUS_PAY_ENABLED</code> / <code>CHECKOUT_VP_ENABLED</code>)</h3>
+<h3 id="j23-pay-with-argus-login-less-vc-checkout-pay-needs-argus_pay_enabled-checkout_vp_enabled">J23 — Pay with Argus + login-less VC checkout — <code>/pay</code> (needs <code>GOEMAN_PAY_ENABLED</code> / <code>CHECKOUT_VP_ENABLED</code>)</h3>
 <ul>
 <li><strong>Start:</strong> <code>/pay</code>. Register a merchant, create a payment intent, and <strong>pay with a device Verifiable
 Credential — no login, no redirect to a card site</strong> (the browser holds an ES256 <code>did:key</code>; see
 <code>frontend/src/lib/deviceWallet.ts</code>).</li>
 <li><strong>Verify:</strong> the device VC is presented and verified, then the payment posts <strong>escrow-protected</strong> (status
-derives from the escrow row — same model as J9). Ties together the Argus Pay rail (J9) and the OID4VP
+derives from the escrow row — same model as J9). Ties together the Goeman Pay rail (J9) and the OID4VP
 presentation path (J12) for a frictionless, self-sovereign checkout.</li>
 </ul>
 <hr>
@@ -612,7 +612,7 @@ balanced journal; <code>REPLAY_DETECTED</code> on a reused nonce/VP; revoking th
 </ul>
 <h3 id="j13-admin-console-rbac-start-at-httplocalhost5173adminlogin">J13 — Admin console (RBAC; start at <code>http://localhost:5173/admin/login</code>)</h3>
 <ul>
-<li>Log in as <strong><a href="mailto:admin@argusfinancial.com">admin@argusfinancial.com</a></strong>.</li>
+<li>Log in as <strong><a href="mailto:admin@goemanglobal.com">admin@goemanglobal.com</a></strong>.</li>
 <li><strong>Verify:</strong> onboarding <strong>review queue</strong> (approve/reject drew/erin/casey), escrow <strong>dispute mediation</strong>,
 MCP-client <strong>suspend</strong>, <strong>reconciliation</strong> view, and the back-office <strong>agent-ops</strong> surface (§3).
 Sensitive actions require <code>compliance</code>/<code>admin</code> and are written to <code>audit_logs</code> with the actor id.</li>
@@ -654,7 +654,7 @@ append-only. With <code>CONDUCTOR_ENABLED</code>/<code>TEMPORAL_ENABLED</code> t
 routes it:</p>
 <ul>
 <li><strong>Blocking</strong> (<code>fraudClient.scoreSync</code> → <code>POST :4500/v1/events?mode=score</code>) — waits for an advisory
-score, merges it, then applies a <strong>local deterministic gate</strong> (the engine is advisory; Argus decides).
+score, merges it, then applies a <strong>local deterministic gate</strong> (the engine is advisory; Goeman decides).
 Degrades <strong>open</strong> unless <code>FRAUD_REMOTE_REQUIRED=true</code>.</li>
 <li><strong>Fire-and-forget</strong> (<code>emitAsync</code> → <code>POST :4500/v1/events?mode=async</code>) — no wait. On a <strong>severe</strong> async
 decision the engine calls back <code>POST :3001/api/internal/remediation/freeze</code> (service-bearer auth) to
@@ -844,7 +844,7 @@ fails closed. Tear down: <code>docker rm -f argus-temporal argus-conductor</code
 <td>✅</td>
 </tr>
 <tr>
-<td>Argus Pay</td>
+<td>Goeman Pay</td>
 <td>via API J9</td>
 <td>—</td>
 <td><code>pay_merchant</code> tool</td>
@@ -920,7 +920,7 @@ only recommend/draft; humans gate material actions; every tool scoped + audited.
 <ul>
 <li><strong>Can&#39;t log in with a password</strong> → set <code>ALLOW_PASSWORD_AUTH=true</code> and restart; or use a passkey.</li>
 <li><strong><code>ACCOUNT_LOCKED</code></strong> → <code>npm run reset:auth</code>.</li>
-<li><strong>A product page returns 503 (<code>*_DISABLED</code>)</strong> → set the matching <code>*_ENABLED</code> flag: <code>TRADING_ENABLED</code> / <code>ARGUS_PAY_ENABLED</code> / <code>BANK_RAILS_ENABLED</code> / <code>CARDS_ENABLED</code> / <code>BILLPAY_ENABLED</code>, and for the J14–J23 cluster <code>ONRAMP_ENABLED</code> / <code>OFFRAMP_ENABLED</code> / <code>TREASURY_ENABLED</code> / <code>LENDING_ENABLED</code> / <code>FX_ENABLED</code> / <code>FX_SETTLEMENT_ENABLED</code> / <code>CREATOR_DROPS_ENABLED</code> / <code>CHECKOUT_VP_ENABLED</code>.</li>
+<li><strong>A product page returns 503 (<code>*_DISABLED</code>)</strong> → set the matching <code>*_ENABLED</code> flag: <code>TRADING_ENABLED</code> / <code>GOEMAN_PAY_ENABLED</code> / <code>BANK_RAILS_ENABLED</code> / <code>CARDS_ENABLED</code> / <code>BILLPAY_ENABLED</code>, and for the J14–J23 cluster <code>ONRAMP_ENABLED</code> / <code>OFFRAMP_ENABLED</code> / <code>TREASURY_ENABLED</code> / <code>LENDING_ENABLED</code> / <code>FX_ENABLED</code> / <code>FX_SETTLEMENT_ENABLED</code> / <code>CREATOR_DROPS_ENABLED</code> / <code>CHECKOUT_VP_ENABLED</code>.</li>
 <li><strong>Borrow (<code>/borrow</code>) shows &quot;no collateral&quot;</strong> → buy Treasury (ATB) on <code>/earn</code> first (needs <code>TREASURY_ENABLED</code>); the loan pledges that holding.</li>
 <li><strong>Fraud engine &quot;unreachable, degrading open&quot;</strong> → engine not running or <code>FRAUD_ENGINE_URL</code>/key mismatch.</li>
 <li><strong>Temporal/Conductor &quot;falling back to in-process&quot;</strong> → server not up; start the compose file (§6).</li>

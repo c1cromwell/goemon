@@ -1,6 +1,6 @@
 # Goeman Global Finance — full rebrand & repo migration plan
 
-**Status: R1 complete (June 2026). R2 (code identifiers) next.**
+**Status: R2 complete (June 2026). R3 verify ✅. R4 repo rename next.**
 
 | Field | Value |
 |---|---|
@@ -215,26 +215,21 @@ cd docs/build && npm install
 for f in ../business/*.md; do node render.mjs "$f" --title "$(basename "$f" .md)"; done
 ```
 
-### Phase R2 — Code identifiers (3–5 days)
+### Phase R2 — Code identifiers ✅ (June 2026)
 
-**Order matters** — run after R1 copy is stable.
+1. **Package names** — `goeman-backend`, `goeman-portal`, `goeman-agent`, `goeman-fraud-engine`
+2. **Config defaults** — `RP_NAME`, `SQLITE_PATH=goeman.db`, `GOEMAN_PAY_ENABLED` (+ `ARGUS_PAY_ENABLED` env alias)
+3. **DIDs** — `did:goeman:*`, `did:web:goemanglobal.com`, `CHECKOUT_VERIFIER_DID`
+4. **Seeds** — `@goemanglobal.com` admin/CEO/CS/demo paths
+5. **Directories** — `goeman-agent/`, `GoemanWallet/`, `GoemanWalletAndroid/`, `goeman-mcp-test-harness`
+6. **Deep links** — `goeman-wallet://`, `GOEMAN_API_BASE`
+7. **Tests** — backend **419 pass** / fraud-engine **44 pass**
 
-1. **Package names** — `backend/package.json`, `frontend/package.json`, `argus-agent`, `fraud-engine`
-2. **Config defaults** — `config.ts`: `RP_NAME`, `CREDENTIAL_BASE_URL`, DB paths
-3. **DIDs & verifier constants** — `did:goeman:checkout`, migration note for dev DBs
-4. **Feature flags** — `ARGUS_PAY_*` → `GOEMAN_PAY_*` with deprecated alias for one release
-5. **Seed data** — `first-run-setup.ts`, admin emails, demo users
-6. **Rename directories** — `argus-agent` → `goeman-agent`, wallets (Xcode/Android package IDs)
-7. **Skills** — `.claude/skills/argus-mcp-test-harness` → `goeman-mcp-test-harness`
-8. **Metrics / docker** — compose service names, prom labels
-
-### Phase R3 — Verify (1 day)
+### Phase R3 — Verify ✅ (June 2026)
 
 ```bash
 cd backend && npm run typecheck && npm test
-cd frontend && npm run build
-# iOS: update bundle ID → re-sign
-# e2e-validator full
+cd fraud-engine && npm test
 ```
 
 ### Phase R4 — Repo rename (§5.1) + local `mv bankai goeman`

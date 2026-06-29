@@ -1,5 +1,5 @@
 /**
- * Phase 20 fraud add-on — Argus integration tests.
+ * Phase 20 fraud add-on — Goeman integration tests.
  *
  * Verifies the hybrid wiring to the standalone fraud engine WITHOUT a network
  * (the fraud client is injected with a fake):

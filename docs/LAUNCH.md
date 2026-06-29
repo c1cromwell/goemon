@@ -61,9 +61,9 @@ Run `scripts/launch-gate.sh` for the bundled engineering gate (typecheck, tests,
 | Stage-1 fraud + fraud-engine add-on | ✅ built | graph eval via SantanderAI seam |
 | Internal agent ops + mech-gov | ✅ built | Phase 15; R3 human gate on KYC/compliance; `mechGovService` |
 | Identity Vault (graph features) | ✅ prototype | SQLite edges; Neo4j Aura prod swap |
-| Goeman Pay merchant wedge | ✅ prototype | `/pay` UI + escrow intents; `ARGUS_PAY_ENABLED` off by default |
+| Goeman Pay merchant wedge | ✅ prototype | `/pay` UI + escrow intents; `GOEMAN_PAY_ENABLED` off by default |
 | Admin console + RBAC | ✅ built | compliance surfaces gated |
-| Android wallet | ~ scaffold | `ArgusWalletAndroid/` fast-follow (`WalletScreen.kt`) |
+| Android wallet | ~ scaffold | `GoemanWalletAndroid/` fast-follow (`WalletScreen.kt`) |
 
 ---
 

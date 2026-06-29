@@ -280,10 +280,10 @@ export async function getOnChainBalances(
 }
 
 /**
- * Transfer USDC on-chain from a Argus Financial Partners user to any Hedera account address,
+ * Transfer USDC on-chain from a Goeman Global Finance user to any Hedera account address,
  * then post a matching ledger journal so the internal book balance stays in sync.
  *
- * @param input.toUserId  If set, the recipient is a Argus Financial Partners user: credit their
+ * @param input.toUserId  If set, the recipient is a Goeman Global Finance user: credit their
  *                        USDC ledger account. Otherwise credit external_clearing.
  * @returns transactionId (Hedera consensus) and journalId (internal ledger)
  */
@@ -574,7 +574,7 @@ export async function submitEscrowSettleOnChain(recipientUserId: string, amountM
   }
 }
 
-/** Look up a Argus Financial Partners user's Hedera account ID. Throws NOT_FOUND if they have none. */
+/** Look up a Goeman Global Finance user's Hedera account ID. Throws NOT_FOUND if they have none. */
 export async function requireUserHederaAccountId(userId: string): Promise<string> {
   const user = await getUserById(userId);
   if (!user) throw new AppError(ErrorCode.NOT_FOUND, "User not found");

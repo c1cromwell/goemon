@@ -1,5 +1,5 @@
 /**
- * rules-v1 — the deterministic rule scorer. Ports the Argus Stage-1 signals
+ * rules-v1 — the deterministic rule scorer. Ports the Goeman Stage-1 signals
  * (velocity, amount-spike, new-payee, large-absolute) and adds the typologies
  * the plan calls out: structuring, pass-through, mule, and geo/device anomaly.
  *

@@ -1,7 +1,7 @@
 /**
  * Seller P2P collectible purchases — in-app USDC escrow without a vault/custody partner.
  *
- * Flow (Corp B posture — Argus holds funds as intermediary until buyer confirms receipt):
+ * Flow (Corp B posture — Goeman holds funds as intermediary until buyer confirms receipt):
  *   purchase  → escrow hold (buyer → escrow), listing paused
  *   ship      → seller marks shipped
  *   confirm   → escrow release (escrow → seller) + treasury → buyer asset delivery

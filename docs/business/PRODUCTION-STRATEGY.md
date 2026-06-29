@@ -126,7 +126,7 @@ table, `tokenFactory`, `rbac`).
 ### Skills (Claude Agent SDK / MCP tools)
 
 Mirror the repo's own dogfooding pattern — it already ships operational skills (`e2e-validator`,
-`argus-mcp-test-harness`) that drive the system as a real client. Extend that idea to **ops skills**
+`goeman-mcp-test-harness`) that drive the system as a real client. Extend that idea to **ops skills**
 (reconciliation report, compliance-case summarizer, incident triage, release validator) so routine
 operations and CI are agent-automatable, while every state change still flows through the
 deterministic runner with its audit trail.

@@ -161,7 +161,7 @@ its gate clears is how fintechs get a cease-and-desist — so the waves are stri
 | 3 | **Debit cards** | Corp B · `CARDS_ENABLED` (BIN-sponsor + PCI) ⚖ | "Spend from your collection's value." | Holders → daily spend |
 | 4 | **Bank rails / ACH (deposit-withdraw)** | Corp B · `BANK_RAILS_ENABLED` (BaaS + MSB) ⚖ | "Move real dollars in and out." | Everyone → primary-account behavior |
 | 5 | **FX / cross-border** | Corp B/C · `FX_*ENABLED` (MT posture) ⚖ | "Buy from / sell to collectors worldwide." | Sellers → global liquidity |
-| 6 | **Goeman Pay (stablecoin rail)** | Corp B/C · `ARGUS_PAY_ENABLED` ⚖ | "Pay any merchant, agent-native." | Power users → payments |
+| 6 | **Goeman Pay (stablecoin rail)** | Corp B/C · `GOEMAN_PAY_ENABLED` ⚖ | "Pay any merchant, agent-native." | Power users → payments |
 | 7 | **RWA: real estate / treasuries / equities** | Corp B/C · `EQUITIES_ENABLED` + counsel/TA/ATS ⚖ | "Own everything else, same tap." | Broaden the marketplace surface |
 | 8 | **Starter (teen / family)** | Corp B/C · `TEEN_ENABLED` (COPPA, custodial) ⚖ | "Start your kid's collection + savings." | Parents in the collector base |
 

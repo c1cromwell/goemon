@@ -1,7 +1,7 @@
 /**
- * Phase 21 Stage 1 — Argus Pay rail tests (docs/business/PAYMENT-NETWORK-STRATEGY.md §4/§8).
+ * Phase 21 Stage 1 — Goeman Pay rail tests (docs/business/PAYMENT-NETWORK-STRATEGY.md §4/§8).
  *
- *   1. ARGUS_PAY_ENABLED is a kill-switch (off ⇒ PAY_DISABLED on new intents/payments)
+ *   1. GOEMAN_PAY_ENABLED is a kill-switch (off ⇒ PAY_DISABLED on new intents/payments)
  *      — but held funds remain resolvable (capture works while the switch is off).
  *   2. Request → pay → capture: payer debited at pay (escrow-held), merchant owner
  *      credited only at capture, zero rail fee.
@@ -36,10 +36,10 @@ afterAll(async () => {
 
 async function setPayEnabled(on: boolean) {
   const { config } = await import("../src/config");
-  (config as { ARGUS_PAY_ENABLED: boolean }).ARGUS_PAY_ENABLED = on;
+  (config as { GOEMAN_PAY_ENABLED: boolean }).GOEMAN_PAY_ENABLED = on;
 }
 
-describe("Phase 21 Stage 1: Argus Pay rail", () => {
+describe("Phase 21 Stage 1: Goeman Pay rail", () => {
   let owner: string; // merchant owner (the settlement account)
   let payer: string;
   let rival: string; // a second would-be payer

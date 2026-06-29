@@ -1,5 +1,5 @@
 /**
- * X-Money response F3 — P2P money requests (request-to-pay) on Argus's own rail.
+ * X-Money response F3 — P2P money requests (request-to-pay) on Goeman's own rail.
  *
  * POST /api/requests              — create a request ($X from a user, or an open link)
  * GET  /api/requests?role=sent|received — your requests

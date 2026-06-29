@@ -26,7 +26,7 @@ export const DEMO = {
   drew: { email: "drew@demo.com", name: "Drew Patel", tier: 0 },
 } as const;
 
-export const ADMIN = { email: "admin@argusfinancial.com", password: "Admin1234!" };
+export const ADMIN = { email: "admin@goemanglobal.com", password: "Admin1234!" };
 
 /** Log in through the real Login page via the dev password fallback. */
 export async function loginWithPassword(page: Page, email: string, password = DEMO_PASSWORD) {

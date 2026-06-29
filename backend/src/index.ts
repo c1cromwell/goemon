@@ -115,8 +115,8 @@ async function bootstrap(): Promise<void> {
     void runReconciliation().catch((e) => logger.error(e, "Initial reconciliation run failed"));
   }
 
-  if (config.ARGUS_PAY_ENABLED) {
-    logger.warn("Argus Pay rail ENABLED (Phase 21 Stage 1 prototype — not licensed for production)");
+  if (config.GOEMAN_PAY_ENABLED) {
+    logger.warn("Goeman Pay rail ENABLED (Phase 21 Stage 1 prototype — not licensed for production)");
   }
 
   if (config.JOURNEYS_ENABLED) {
@@ -218,7 +218,7 @@ async function bootstrap(): Promise<void> {
   app.use("/api/escrow", escrowRouter);
   app.use("/api/admin", escrowAdminRouter);
 
-  // ---- Phase 21 Stage 1 — Argus Pay (service-gated by ARGUS_PAY_ENABLED) ----
+  // ---- Phase 21 Stage 1 — Goeman Pay (service-gated by GOEMAN_PAY_ENABLED) ----
   app.use("/api/pay", payRouter);
 
   // ---- Phase 24 — production launch suite (standalone-first) ----
@@ -279,7 +279,7 @@ async function bootstrap(): Promise<void> {
   // ---- Phase 19.3 — bill pay ----
   app.use("/api/billpay", billpayRouter);
 
-  // ---- Phase 22.0 — Argus Starter (households + guardian↔teen linkage) ----
+  // ---- Phase 22.0 — Goeman Starter (households + guardian↔teen linkage) ----
   app.use("/api/starter", starterRouter);
 
   // ---- Seller P2P collectibles (slab cert verify + human review) ----
@@ -297,11 +297,11 @@ async function bootstrap(): Promise<void> {
   app.use(errorHandler);
 
   app.listen(config.PORT, () => {
-    logger.info({ port: config.PORT, dialect: getDb().dialect, env: config.NODE_ENV }, "Argus Financial Partners backend listening");
+    logger.info({ port: config.PORT, dialect: getDb().dialect, env: config.NODE_ENV }, "Goeman Global Finance backend listening");
   });
 }
 
 bootstrap().catch((e) => {
-  logger.error(e, "Failed to start Argus Financial Partners backend");
+  logger.error(e, "Failed to start Goeman Global Finance backend");
   process.exit(1);
 });

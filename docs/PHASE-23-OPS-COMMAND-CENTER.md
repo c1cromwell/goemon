@@ -1,6 +1,6 @@
 # Phase 23 — Internal Ops Command Center
 
-**Status: DESIGN (not built).** A role-gated internal web app — an **Argus Command Center** — that gives
+**Status: DESIGN (not built).** A role-gated internal web app — an **Goeman Command Center** — that gives
 leadership and operators read-only visibility into financial health, system stability, security/fraud
 posture, and tokenization performance. It extends the existing admin console (`frontend/` `/admin/*`); it
 does **not** introduce a separate internal product.
@@ -15,7 +15,7 @@ review after this design lands** before writing code.
 
 ## 1. Problem statement
 
-Argus today has **many RBAC-gated admin APIs** and **Prometheus metrics**, but almost no **unified operator UI**:
+Goeman today has **many RBAC-gated admin APIs** and **Prometheus metrics**, but almost no **unified operator UI**:
 
 | Surface today | What it does | Gap |
 |---|---|---|
@@ -24,7 +24,7 @@ Argus today has **many RBAC-gated admin APIs** and **Prometheus metrics**, but a
 | `AdminCollectibles` | Collectible seller review | Niche |
 | `/api/admin/*` (15+ routers) | Reconciliation, FBO, warehouse, marketplace, bank, cards, agent-ops, … | curl-only; no charts |
 | `GET /metrics` | Raw Prometheus | SRE must scrape; no in-app stability view |
-| `fraud-engine` `:4500` | Case queue, decisions, remediation | Separate service; no SOC dashboard in Argus |
+| `fraud-engine` `:4500` | Case queue, decisions, remediation | Separate service; no SOC dashboard in Goeman |
 
 As Corp B/C rails land (partner bank, cards, tokenization revenue), operators cannot answer “how is the
 company doing?” without ad-hoc SQL and API calls. Phase 23 closes that gap **without** rebuilding analytics
@@ -161,7 +161,7 @@ or explicit `{ num, den }` pairs — no floats in API contracts.
 | **Customer liability** | Total customer cash (USD minor); savings total; FBO covered boolean | Ledger aggregate; `fboCoverage()` |
 | **Cards** | Cards issued (active); auths 24h/7d; decline rate | `cards`, `card_authorizations` |
 | **Tokenization** | Listed assets; primary subscriptions 30d; secondary trades 30d; fee revenue 30d (ledger) | `marketplace_assets`, listings, escrow, marketplace journals |
-| **Argus Pay** | Payment intents paid 30d; GMV; open disputes | `payment_intents`, `escrow_events` |
+| **Goeman Pay** | Payment intents paid 30d; GMV; open disputes | `payment_intents`, `escrow_events` |
 | **Agent activity** | MCP calls 24h; SmartChat operation tokens 24h | `mcp_audit_logs`, `operation_tokens` |
 | **Human gates** | Pending CEO reviews count; overdue compliance reviews | `agent_reviews` → link `/admin/approvals` |
 
@@ -284,7 +284,7 @@ interface CommandCenterResponse<T> {
 | **CFO** | `GET /command/ceo` + `/command/compliance` → draft financial narrative (CEO gate unchanged) |
 | **CISO** | `GET /command/soc` → posture report (`ciso-posture` skill already audits; wire to live data) |
 | **COO/SRE** | `GET /command/sre` → incident summary context |
-| **Argus Brain** | Route “show me company health” → CEO pulse |
+| **Goeman Brain** | Route “show me company health” → CEO pulse |
 
 No new agent workflows required for Phase 23 v1; optional **23.7** adds `ceo-pulse-summary` skill that reads the API.
 

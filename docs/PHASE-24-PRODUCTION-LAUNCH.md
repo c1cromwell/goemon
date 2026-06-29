@@ -15,7 +15,7 @@ capability **live**. Read with: `docs/GOEMAN-PLAN.md` · `docs/PRD-PHASE-MATRIX.
 |---|---|---|
 | OID4VP + VC + MCP | `presentationService`, Phase 7/11 | — |
 | Checkout VP (merchant) | `presentationService` checkout path | `CHECKOUT_VP_ENABLED` |
-| Argus Pay | `paymentService`, `/api/pay` | `ARGUS_PAY_ENABLED` |
+| Goeman Pay | `paymentService`, `/api/pay` | `GOEMAN_PAY_ENABLED` |
 | Bank rails | `bankRailService`, Phase 19 | `BANK_RAILS_ENABLED` |
 | Cards / bill pay | `cardService`, `billPayService` | `CARDS_ENABLED`, `BILLPAY_ENABLED` |
 | USDC / Hedera | `hederaService`, wallet | `HEDERA_ENABLED` |
@@ -97,7 +97,7 @@ line together (or in a dependency-safe sequence) for a credible **tokenization-f
 
 | Capability | Standalone (no partner) | Optional partner (later) |
 |---|---|---|
-| x401 identity | Argus-issued VC + `did:key` wallet (`IDENTITY_ISSUER=argus`) | Proof.com OID4VC (`IDENTITY_ISSUER=proof`) |
+| x401 identity | Argus-issued VC + `did:key` wallet (`IDENTITY_ISSUER=goeman`) | Proof.com OID4VC (`IDENTITY_ISSUER=proof`) |
 | x402 commerce | USDC/USD on ledger via Goeman Pay | Card acquirer / Visa bridge |
 | Stablecoin | Hedera testnet → self-hosted mainnet operator | Circle treasury / CCTP |
 | Instant pay | Ledger P2P + Goeman Pay (seconds) | FedNow/RTP via Column |
@@ -112,7 +112,7 @@ line together (or in a dependency-safe sequence) for a credible **tokenization-f
 ```bash
 X401_ENABLED=1
 X402_ENABLED=1
-ARGUS_PAY_ENABLED=1
+GOEMAN_PAY_ENABLED=1
 CHECKOUT_VP_ENABLED=1
 BORDERLESS_SAVINGS_ENABLED=1
 SAVINGS_APY_BPS=350
@@ -185,7 +185,7 @@ flowchart TD
 issuer adapter.
 
 **Target:** Issuer-neutral x401 verifier on protected routes; optional **Proof Digital ID** as an external
-issuer alongside Argus-issued VCs.
+issuer alongside Goeman-issued VCs.
 
 | Stage | Engineering | Partner / counsel | Exit criteria |
 |---|---|---|---|
@@ -196,7 +196,7 @@ issuer alongside Argus-issued VCs.
 
 **Reuses:** `presentationService`, `vcService`, `userAgentGrantService`, checkout VP path, Phase 10 token relay.
 
-**Config (proposed):** `X401_ENABLED`, `X401_SIGNED_REQUESTS`, `IDENTITY_ISSUER=argus|proof`, `PROOF_API_KEY`.
+**Config (proposed):** `X401_ENABLED`, `X401_SIGNED_REQUESTS`, `IDENTITY_ISSUER=goeman|proof`, `PROOF_API_KEY`.
 
 ---
 
@@ -217,7 +217,7 @@ settlement; composes with x401 (“who authorized” before “what paid”).
 
 **Reuses:** Phase 21 Goeman Pay, escrow admin surface, MCP scopes, `presentationService`.
 
-**Config (proposed):** `X402_ENABLED`, `X402_DEFAULT_CURRENCY=USDC`, extends `ARGUS_PAY_ENABLED`.
+**Config (proposed):** `X402_ENABLED`, `X402_DEFAULT_CURRENCY=USDC`, extends `GOEMAN_PAY_ENABLED`.
 
 **Explicitly not in 24.2:** Card-network acquirer; x402 is **native-rail** agent commerce first.
 
@@ -402,7 +402,7 @@ path for non-US users first.
 | `HEDERA_ENABLED` | 24.4 | env-specific | mainnet + HSM |
 | `ONRAMP_ENABLED` / `OFFRAMP_ENABLED` | 24.4, 24.9 | prod-fatal | live provider |
 | `CCTP_ENABLED` | 24.4 | prod-fatal | Circle |
-| `ARGUS_PAY_ENABLED` | 24.2, 24.5 | prod-fatal | MSB |
+| `GOEMAN_PAY_ENABLED` | 24.2, 24.5 | prod-fatal | MSB |
 | `EQUITIES_ENABLED` | 24.6 | prod-fatal | issuer + BD |
 | `COLLECTIBLES_ESCROW_ENABLED` | 24.7 | prod-fatal | counsel memo |
 | `FX_SETTLEMENT_ENABLED` | 24.5, 24.9 | prod-fatal | FX partner |
@@ -416,7 +416,7 @@ Each workstream ships with:
 
 1. **Vitest** service tests (integer money, idempotency, append-only)
 2. **e2e-validator** journey extension (document new J# in `E2E-VALIDATION.md`)
-3. **argus-mcp-test-harness** path for x401/x402 + pay flows
+3. **goeman-mcp-test-harness** path for x401/x402 + pay flows
 4. **Launch-readiness row** updated in `LAUNCH-READINESS.md`
 5. **CEO Agentic OS gate** for any new regulated SKU copy (`launch_decision` task class → Anthropic-pinned)
 
@@ -483,7 +483,7 @@ From `LAUNCH-READINESS.md` — Phase 24 go-live **requires** (not optional):
 
 ### 13.A Standalone go-live (minimal partners — Phase A / testnet)
 
-Use when `IDENTITY_ISSUER=argus`, no BaaS, no live issuer.
+Use when `IDENTITY_ISSUER=goeman`, no BaaS, no live issuer.
 
 | Step | Action | Owner | Done when |
 |---|---|---|---|

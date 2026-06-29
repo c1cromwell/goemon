@@ -1,7 +1,7 @@
 -- Phase 20 — fraud remediation callback targets.
 --
 -- The standalone fraud engine (the `fraud-engine/` add-on) reacts to fire-and-
--- forget events asynchronously and, on a severe decision, calls back into Argus
+-- forget events asynchronously and, on a severe decision, calls back into Goeman
 -- to FREEZE an account or FLAG a transaction. These tables are that landing zone.
 --
 -- Both are APPEND-ONLY (UPDATE/DELETE blocked by triggers in migrate.ts, like

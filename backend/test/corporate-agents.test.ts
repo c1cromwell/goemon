@@ -1,5 +1,5 @@
 /**
- * M5 — Corporate agent fleet (C-suite runner skills + Argus Brain routing).
+ * M5 — Corporate agent fleet (C-suite runner skills + Goeman Brain routing).
  */
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { unlinkSync } from "fs";
@@ -78,11 +78,11 @@ describe("corporate agent workflows", () => {
     expect(run.outcome).toBe("executed");
   });
 
-  it("Argus Brain routes launch intent after CEO approves routing", async () => {
+  it("Goeman Brain routes launch intent after CEO approves routing", async () => {
     const { runOperation, resolveReview, getWorkflow } = await import("../src/operations/operationsWorkflow");
     const ceo: AdminActor = { adminId: "ceo-1", role: "ceo" };
 
-    const brainRun = await runOperation(getWorkflow("argus-brain-route")!, {
+    const brainRun = await runOperation(getWorkflow("goeman-brain-route")!, {
       intent: "ship Collect v2 to production",
       payload: { product: "Collect", version: "2.0" },
     });

@@ -1,7 +1,7 @@
 /**
  * Phase 20 — internal remediation API. The standalone fraud engine calls these
  * endpoints (service-bearer auth, NOT user sessions) to act on an async decision:
- * freeze/unfreeze an account or flag a transaction. Argus owns the deterministic
+ * freeze/unfreeze an account or flag a transaction. Goeman owns the deterministic
  * money state; the engine merely requests it. All calls are idempotent on
  * `decisionId`, so a retried callback is a no-op.
  *

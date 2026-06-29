@@ -1,4 +1,4 @@
--- Argus Fraud Engine — schema.
+-- Goeman Fraud Engine — schema.
 --
 -- Layer map (see docs/business/FraudEngine.md):
 --   events        → the unified event stream (Kafka topic analog), immutable

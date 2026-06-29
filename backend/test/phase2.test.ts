@@ -180,7 +180,7 @@ describe("Phase 2: Key rotation", () => {
     const { rotateKey } = await import("../src/services/didService");
 
     // Mint a token with the current key
-    const token = await mintScopedToken("jti-rotation-test", "did:web:argusfinancial.com:users:u1", "did:web:ext", ["balance:read"], 300);
+    const token = await mintScopedToken("jti-rotation-test", "did:web:goemanglobal.com:users:u1", "did:web:ext", ["balance:read"], 300);
 
     // Rotate
     await rotateKey();
@@ -191,6 +191,6 @@ describe("Phase 2: Key rotation", () => {
 
     // Old token still verifies
     const verified = await verifyToken(token);
-    expect(verified.payload.sub).toBe("did:web:argusfinancial.com:users:u1");
+    expect(verified.payload.sub).toBe("did:web:goemanglobal.com:users:u1");
   });
 });

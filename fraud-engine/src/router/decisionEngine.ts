@@ -6,7 +6,7 @@
  *   → fold the event into feature state → publish to the decisions bus.
  *
  * This is the synchronous core used by BOTH the sync (`mode=score`) path and the
- * async consumer. It returns the Decision so the sync caller (Argus blocking path)
+ * async consumer. It returns the Decision so the sync caller (Goeman blocking path)
  * gets an immediate advisory; the async path lets the remediation consumer react.
  */
 

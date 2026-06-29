@@ -6,16 +6,16 @@
  * published as a did:key and bound to the user's VC server-side (holder binding);
  * the backend resolves the DID to verify every VP signature.
  *
- * This is what lets the "Pay with Argus" button authorize a payment with the
+ * This is what lets the "Pay with Goeman" button authorize a payment with the
  * user's credential instead of a login/redirect: the wallet signs a VP over a
  * one-time checkout nonce, and the backend's /pay-with-presentation route accepts
  * it with NO session. In the real product this key lives in the Secure Enclave and
  * Face ID gates each signature.
  */
 
-const STORE = "argus_device_wallet";
+const STORE = "goeman_device_wallet";
 
-// ---- did:key P-256 encoder (port of the backend / argus-agent didKey.ts) ----
+// ---- did:key P-256 encoder (port of the backend / goeman-agent didKey.ts) ----
 const B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 const P256_MULTICODEC = Uint8Array.from([0x80, 0x24]); // p256-pub multicodec, varint
 

@@ -4,7 +4,7 @@
  * unless they can get it off — this closes the loop.
  *
  * Phase-A posture (mirror of the on-ramp): the licensed provider (MoonPay/Stripe/Coinbase)
- * takes the USDC AND delivers the fiat under ITS own license; Argus only debits the user's
+ * takes the USDC AND delivers the fiat under ITS own license; Goeman only debits the user's
  * USDC ledger balance (net of the off-ramp fee) and records the payout reference.
  *
  *   sell:  user_cash(USDC) → offramp_settlement(USDC) net,  fee → fee(USDC)

@@ -54,7 +54,7 @@ export function Login() {
     <div className="center">
       <div className="card pad-lg narrow" style={{ width: "100%" }}>
         <div className="brand" style={{ padding: "0 0 18px" }}>
-          <span className="mark">B</span> Argus Financial Partners
+          <span className="mark">B</span> Goeman Global Finance
         </div>
         <h1>Welcome back</h1>
         <p className="muted small" style={{ marginTop: 0 }}>
@@ -110,7 +110,7 @@ export function Login() {
         {error ? <p className="error" style={{ marginTop: 14 }}>{error}</p> : null}
 
         <p className="muted small" style={{ marginTop: 22 }}>
-          New to Argus Financial Partners? <Link to="/register" style={{ color: "var(--accent)", fontWeight: 600 }}>Create an account</Link>
+          New to Goeman Global Finance? <Link to="/register" style={{ color: "var(--accent)", fontWeight: 600 }}>Create an account</Link>
         </p>
       </div>
     </div>

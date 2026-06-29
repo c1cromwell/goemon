@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { freshContext } from "./helpers";
-import { setArgusClient, type ArgusClient } from "../src/remediation/argusClient";
+import { setGoemanClient, type GoemanClient } from "../src/remediation/goemanClient";
 import { config } from "../src/config";
 import type { Context } from "../src/context";
 import type { Decision } from "../src/types";
 
-class FakeArgus implements ArgusClient {
+class FakeGoeman implements GoemanClient {
   freezes: { userId: string; decisionId: string }[] = [];
   unfreezes: { userId: string }[] = [];
   flags: { userId: string }[] = [];
@@ -34,17 +34,17 @@ function freezeDecision(): Decision {
   };
 }
 
-describe("remediation — async callback into Argus", () => {
+describe("remediation — async callback into Goeman", () => {
   let ctx: Context;
-  let fake: FakeArgus;
+  let fake: FakeGoeman;
 
   beforeEach(async () => {
     ({ ctx } = await freshContext());
-    fake = new FakeArgus();
-    setArgusClient(fake);
+    fake = new FakeGoeman();
+    setGoemanClient(fake);
   });
   afterEach(() => {
-    setArgusClient(null);
+    setGoemanClient(null);
     (config as { FRAUD_AUTO_REMEDIATE: boolean }).FRAUD_AUTO_REMEDIATE = true;
   });
 
@@ -70,7 +70,7 @@ describe("remediation — async callback into Argus", () => {
     expect(await ctx.cases.list()).toHaveLength(0);
   });
 
-  it("does not remediate sync-mode decisions (Argus already gated those)", async () => {
+  it("does not remediate sync-mode decisions (Goeman already gated those)", async () => {
     await ctx.remediation.handle({ ...freezeDecision(), mode: "score" });
     expect(fake.freezes).toHaveLength(0);
   });

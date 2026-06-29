@@ -69,7 +69,7 @@ of these for launch.**
 |---|---|---|---|
 | `BANK_RAILS_ENABLED` | deposits / ACH / wire | **BaaS partner bank + FinCEN MSB + KYC/AML vendor** | Corp B ⚖ |
 | `CARDS_ENABLED` | debit cards | **card processor + BIN-sponsor bank + PCI scope** | Corp B ⚖ |
-| `ARGUS_PAY_ENABLED` | stablecoin merchant rail | **money-transmission licensing / partner** | Corp B/C ⚖ |
+| `GOEMAN_PAY_ENABLED` | stablecoin merchant rail | **money-transmission licensing / partner** | Corp B/C ⚖ |
 | `FX_ENABLED` / `FX_SETTLEMENT_ENABLED` | currency conversion | **licensed FX rate provider + MT posture** | Corp B/C ⚖ |
 | `BILLPAY_ENABLED` | bill pay | **partner bank + biller network** | Corp B ⚖ |
 | `TRADING_ENABLED` | brokerage | **broker-dealer/clearing partner** | Corp C ⚖ |

@@ -70,7 +70,7 @@ goes transactional, consistent with the GTM "audience-now, launch-at-Corp-B" tim
 | **FX spread** | Markup on currency conversion (the built `FX_SPREAD_BPS` ~50bps + cross-border markup) | **~0.5–1.5%** | `FX_ENABLED` / `FX_SETTLEMENT_ENABLED` ⚖ |
 | **Instant/expedited + ACH/wire fees** | Optional fee for instant withdrawal; wire fees | $ flat per txn | `BANK_RAILS_ENABLED` ⚖ |
 | **Bill-pay** | Small fee or float on scheduled payments | $ flat / float | `BILLPAY_ENABLED` ⚖ |
-| **Goeman Pay** | **Zero rail fee** (the wedge — do **not** add interchange) → monetize via **merchant SaaS / premium** | $/merchant/mo | `ARGUS_PAY_ENABLED` ⚖ |
+| **Goeman Pay** | **Zero rail fee** (the wedge — do **not** add interchange) → monetize via **merchant SaaS / premium** | $/merchant/mo | `GOEMAN_PAY_ENABLED` ⚖ |
 
 > The marketplace take rate is the flagship Phase-B line; interchange + NIM + FX are the "boring bank"
 > lines that turn a marketplace user into a primary-account ARPU. **Goeman Pay stays free** — it's an
@@ -139,7 +139,7 @@ Every line is gated by a prod-fatal switch (`LAUNCH-READINESS.md` §3) and a Cor
 | NIM / float, ACH/wire/instant | `BANK_RAILS_ENABLED` | B ⚖ |
 | FX spread | `FX_ENABLED` / `FX_SETTLEMENT_ENABLED` | B/C ⚖ |
 | Bill-pay | `BILLPAY_ENABLED` | B ⚖ |
-| Goeman Pay (merchant SaaS only) | `ARGUS_PAY_ENABLED` | B/C ⚖ |
+| Goeman Pay (merchant SaaS only) | `GOEMAN_PAY_ENABLED` | B/C ⚖ |
 | Brokerage | `TRADING_ENABLED` | C ⚖ |
 | RWA / equities | `EQUITIES_ENABLED` | B/C ⚖ |
 | Teen/family | `TEEN_ENABLED` | B/C ⚖ |

@@ -1,5 +1,5 @@
 /**
- * Phase 24.2 — x402 HTTP Payment Required (agent commerce on Argus Pay).
+ * Phase 24.2 — x402 HTTP Payment Required (agent commerce on Goeman Pay).
  *
  * Composes with x401: identity proof first, then payment fulfillment on the native rail.
  */
@@ -37,8 +37,8 @@ function assertX402Enabled(): void {
   if (!config.X402_ENABLED) {
     throw new AppError(ErrorCode.NOT_IMPLEMENTED, "x402 agent commerce is not enabled");
   }
-  if (!config.ARGUS_PAY_ENABLED) {
-    throw new AppError(ErrorCode.PAY_DISABLED, "x402 requires Argus Pay (ARGUS_PAY_ENABLED)");
+  if (!config.GOEMAN_PAY_ENABLED) {
+    throw new AppError(ErrorCode.PAY_DISABLED, "x402 requires Goeman Pay (GOEMAN_PAY_ENABLED)");
   }
 }
 

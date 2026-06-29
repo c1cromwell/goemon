@@ -25,7 +25,7 @@ const SECONDARY = [
   { to: "/console", label: "Console" },
   { to: "/trade", label: "Trade" },
   { to: "/escrow", label: "Escrow" },
-  { to: "/pay", label: "Argus Pay" },
+  { to: "/pay", label: "Goeman Pay" },
   { to: "/onboarding", label: "Verification & tiers" },
   { to: "/credentials", label: "Credentials" },
   { to: "/agents", label: "Internal agents" },
@@ -34,10 +34,10 @@ const SECONDARY = [
 ];
 
 function useTheme(): [string, () => void] {
-  const [theme, setTheme] = useState<string>(() => localStorage.getItem("argus_theme") ?? "dark");
+  const [theme, setTheme] = useState<string>(() => localStorage.getItem("goeman_theme") ?? "dark");
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("argus_theme", theme);
+    localStorage.setItem("goeman_theme", theme);
   }, [theme]);
   return [theme, () => setTheme((t) => (t === "dark" ? "light" : "dark"))];
 }
@@ -96,7 +96,7 @@ export function Layout() {
           <span className="mark">
             B<span className="streak-dot" title="Active streak" />
           </span>
-          Argus Financial Partners
+          Goeman Global Finance
         </div>
 
         {PRIMARY.map((item) => (

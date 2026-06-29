@@ -3,7 +3,7 @@
  *
  * Idempotent wire-up of a fresh dev environment:
  *   1. migrations + token factory + system ledger accounts
- *   2. seed the default RBAC admin (admin@argusfinancial.com / Admin1234!, role 'admin')
+ *   2. seed the default RBAC admin (admin@goemanglobal.com / Admin1234!, role 'admin')
  *   3. register the simulator external agent as an MCP client
  *   4. seed the five demo users (varying tiers + balances)
  *
@@ -27,7 +27,7 @@ import { seedDemoUsers, printDemoManifest } from "./seed-demo-users";
 // MCP tools map their own requiredScope, so these scopes unlock the matching tools.
 const SIMULATOR_AGENT = {
   clientDid: "did:simulator:agent-app",
-  displayName: "Argus Financial Partners Simulator Agent",
+  displayName: "Goeman Global Finance Simulator Agent",
   allowedFunctions: ["balance:read", "statement:read", "profile:read", "transfer:low"],
   maxTransferMinor: 50_000n, // $500.00 ceiling
   currency: "USD" as const,
@@ -35,7 +35,7 @@ const SIMULATOR_AGENT = {
 };
 
 async function main(): Promise<void> {
-  console.log("== Argus Financial Partners first-run setup ==");
+  console.log("== Goeman Global Finance first-run setup ==");
 
   await runMigrations();
   await initTokenFactory();

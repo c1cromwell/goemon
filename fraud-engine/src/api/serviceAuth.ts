@@ -1,7 +1,7 @@
 /**
- * Service-to-service auth for the engine's /v1 surface. Argus presents a shared
+ * Service-to-service auth for the engine's /v1 surface. Goeman presents a shared
  * bearer (FRAUD_ENGINE_API_KEY); compared in constant time. This is not user
- * RBAC — the engine has no users, only a trusted caller (Argus / the fraud team's
+ * RBAC — the engine has no users, only a trusted caller (Goeman / the fraud team's
  * tooling).
  */
 

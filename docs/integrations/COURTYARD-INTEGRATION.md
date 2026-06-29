@@ -78,7 +78,7 @@ if (c.COLLECTIBLES_PROVIDER === "courtyard" && !c.COURTYARD_API_KEY) {
 
 Typical partner surface — replace paths when contract is signed:
 
-| Courtyard (conceptual) | Argus mapping |
+| Courtyard (conceptual) | Goeman mapping |
 |---|---|
 | `GET /inventory` or `/listings?status=available` | `fetchInventory()` paginated |
 | Item `id` | `externalId` |
@@ -132,7 +132,7 @@ placeOrder (Courtyard asset)
       1. assertCourtyardEnabled + tier/compliance (existing gates)
       2. POST Courtyard reserve/hold (external order id)
       3. marketplace placeOrder OR custom journal (cash → settlement, treasury → buyer)
-      4. POST Courtyard confirm/settle (idempotent on Argus order id)
+      4. POST Courtyard confirm/settle (idempotent on Goeman order id)
       5. persist partner_order_id on order row
       on failure at 3: POST Courtyard release/cancel
 ```
@@ -322,11 +322,11 @@ POST   /api/collectibles/redemptions/:id/cancel   (if partner allows pre-ship)
 
 Copy blocks (UDAAP / B5):
 
-- Physical redemption is fulfilled by **Courtyard**, not Argus.
+- Physical redemption is fulfilled by **Courtyard**, not Goeman.
 - Shipping fees / insurance disclosed before confirm.
 - Token is burned/wiped on request; irreversible once partner accepts.
 
-### iOS wallet (`ArgusWallet/`)
+### iOS wallet (`GoemanWallet/`)
 
 Phase 10 gap: redemption deep link or in-app WebView to portal redemption — v2; web-first for Corp B launch.
 
@@ -339,7 +339,7 @@ Phase 10 gap: redemption deep link or in-app WebView to portal redemption — v2
 ```mermaid
 sequenceDiagram
   participant U as Buyer
-  participant A as Argus API
+  participant A as Goeman API
   participant L as Ledger
   participant C as Courtyard
   participant H as Hedera HTS
@@ -360,7 +360,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
   participant U as Holder
-  participant A as Argus API
+  participant A as Goeman API
   participant L as Ledger
   participant C as Courtyard
 

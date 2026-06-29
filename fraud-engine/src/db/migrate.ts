@@ -1,7 +1,7 @@
 /**
  * Migration runner. Applies schema.sql, then SQLite append-only triggers on the
  * immutable tables (decisions, case_events) — UPDATE/DELETE are blocked, the same
- * invariant the Argus ledger/audit tables enforce.
+ * invariant the Goeman ledger/audit tables enforce.
  *
  * Idempotent: schema.sql is all CREATE ... IF NOT EXISTS, and triggers use
  * CREATE TRIGGER IF NOT EXISTS. Safe to run on every boot.

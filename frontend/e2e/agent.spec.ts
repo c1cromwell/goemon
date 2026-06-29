@@ -17,7 +17,7 @@ test.describe("Agent · SmartChat", () => {
   test("a balance question gets a reply", async ({ page }) => {
     const agentBubbles = page.locator(".bubble.agent");
     await expect(agentBubbles).toHaveCount(1); // the intro
-    await page.getByPlaceholder("Message Argus Financial Partners…").fill("what's my balance?");
+    await page.getByPlaceholder("Message Goeman Global Finance…").fill("what's my balance?");
     await page.getByRole("button", { name: "Send" }).click();
     // The user's message and a fresh agent reply both render.
     await expect(page.locator(".bubble.user").filter({ hasText: "what's my balance?" })).toBeVisible();
@@ -25,7 +25,7 @@ test.describe("Agent · SmartChat", () => {
   });
 
   test("a transfer over $500 triggers the MFA gate", async ({ page }) => {
-    await page.getByPlaceholder("Message Argus Financial Partners…").fill("send $600 to blair@demo.com");
+    await page.getByPlaceholder("Message Goeman Global Finance…").fill("send $600 to blair@demo.com");
     await page.getByRole("button", { name: "Send" }).click();
     // The >$500 gate: an MFA confirmation card appears before anything executes.
     await expect(page.getByRole("heading", { name: "Confirm with MFA" })).toBeVisible({ timeout: 15_000 });

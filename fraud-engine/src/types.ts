@@ -1,6 +1,6 @@
 /**
  * Shared domain types for the fraud engine. The DTOs here form the wire contract
- * with any caller (Argus keeps its own copy of RiskEvent/Decision — no shared
+ * with any caller (Goeman keeps its own copy of RiskEvent/Decision — no shared
  * package, so the two services stay decoupled).
  */
 

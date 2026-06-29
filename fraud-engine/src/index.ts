@@ -16,7 +16,7 @@ async function main(): Promise<void> {
   const app = buildApp(ctx);
 
   const srv = app.listen(config.PORT, () => {
-    logger.info({ port: config.PORT }, "argus-fraud-engine listening");
+    logger.info({ port: config.PORT }, "goeman-fraud-engine listening");
   });
 
   const shutdown = async () => {

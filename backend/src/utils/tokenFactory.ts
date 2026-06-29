@@ -70,7 +70,7 @@ export async function mintScopedToken(
 /**
  * Sign an arbitrary claim set with the issuer key (RS256) — a tamper-evident,
  * JWKS-verifiable attestation. Used by the self-custody attestation/export so a
- * user (or anyone) can verify Argus's statement against /.well-known/jwks.json.
+ * user (or anyone) can verify Goeman's statement against /.well-known/jwks.json.
  */
 export async function signIssuerJwt(claims: Record<string, unknown>, opts?: { subject?: string; ttlSecs?: number; type?: string }): Promise<string> {
   const { kid, privateKey } = getActiveKey();

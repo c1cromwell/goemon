@@ -1,8 +1,8 @@
 {
-  "name": "argus-fraud-engine",
+  "name": "goeman-fraud-engine",
   "version": "1.0.0",
   "private": true,
-  "description": "Argus Fraud Engine — standalone real-time fraud intelligence platform (Phase 20 Stages 2–4). An add-on service Argus uses over HTTP; imports nothing from the Argus backend.",
+  "description": "Goeman Fraud Engine — standalone real-time fraud intelligence platform (Phase 20 Stages 2–4). An add-on service Goeman uses over HTTP; imports nothing from the Goeman backend.",
   "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {

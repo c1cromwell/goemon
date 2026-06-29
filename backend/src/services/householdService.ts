@@ -1,5 +1,5 @@
 /**
- * Phase 22.0 — Argus Starter household service.
+ * Phase 22.0 — Goeman Starter household service.
  *
  * Household = one guardian (Tier-2 KYC, legal owner) + 1..N teens (minors, DOB-verified).
  * Guardian attests the teen's DOB; the teen has no independent KYC. All gated by TEEN_ENABLED
@@ -51,7 +51,7 @@ export interface GuardianDashboard {
 }
 
 function assertTeenEnabled(): void {
-  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Argus Starter is currently unavailable");
+  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Goeman Starter is currently unavailable");
 }
 
 function toHousehold(row: HouseholdRow): Household {

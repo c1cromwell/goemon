@@ -4,7 +4,7 @@
  *
  * Phase-A posture (CORPORATE-STRUCTURE "route to a licensed third party"): the real
  * providers (MoonPay / Stripe Crypto / Coinbase) take the user's fiat AND run KYC/AML
- * under THEIR own license, then deliver USDC to the user. Argus never custodies the
+ * under THEIR own license, then deliver USDC to the user. Goeman never custodies the
  * fiat — it only credits the delivered USDC into the ledger. That keeps the on-ramp
  * Phase-A-safe (no MSB needed) while moving volume onto the own-rail USDC balance.
  *

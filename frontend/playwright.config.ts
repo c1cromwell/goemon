@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 /**
- * Argus Financial Partners web E2E (browser-driven). Closes the gap the validation runbook flags:
+ * Goeman Global Finance web E2E (browser-driven). Closes the gap the validation runbook flags:
  * "UI smoke is manual until a browser-driver is added" (docs/E2E-VALIDATION.md §2).
  *
  * Drives the real React portal in Chromium against a real backend on :3001.

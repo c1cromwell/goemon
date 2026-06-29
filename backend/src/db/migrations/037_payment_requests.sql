@@ -1,6 +1,6 @@
 -- X-Money response F3 — non-custodial P2P money requests (request-to-pay).
 --
--- "Request $X" between users, settled on ARGUS'S OWN RAIL (the double-entry ledger /
+-- "Request $X" between users, settled on GOEMAN'S OWN RAIL (the double-entry ledger /
 -- USDC on Hedera) — no Visa, no partner bank: the payer holds their funds until they
 -- choose to fulfill, then it settles via the existing transfer path (executeTransfer,
 -- idempotent at the ledger). This is the native, self-contained rail (own-rail goal),

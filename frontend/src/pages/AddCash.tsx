@@ -1,7 +1,7 @@
 /**
  * Add cash — fiat → USDC on-ramp. The activation step: turn dollars into spendable
  * USDC on your own rail. Enter an amount → see exactly what you'll get (fee disclosed)
- * → Buy. A licensed provider takes the card/bank payment under its own license; Argus
+ * → Buy. A licensed provider takes the card/bank payment under its own license; Goeman
  * credits the delivered USDC straight to your balance. One amount field, a live quote.
  */
 import { useEffect, useState } from "react";

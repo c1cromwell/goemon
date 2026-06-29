@@ -13,7 +13,7 @@
  *   m  server never holds user Hedera key → KNOWN GAP: Phase 5 stores
  *      private_key_hex server-side (KMS/on-device signing deferred; documented).
  *   n  daily on-chain↔ledger reconciliation → not implemented (deferred).
- *   o,p iOS (Keychain/Secure Enclave/deep links) → ArgusWallet (unverified source).
+ *   o,p iOS (Keychain/Secure Enclave/deep links) → GoemanWallet (unverified source).
  */
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { generateKeyPair, exportJWK, SignJWT, type KeyLike } from "jose";

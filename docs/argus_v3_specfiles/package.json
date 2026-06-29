@@ -1,8 +1,8 @@
 {
-  "name": "argus-backend",
+  "name": "goeman-backend",
   "version": "2.0.0",
   "private": true,
-  "description": "Argus Financial Partners backend — Hedera-aligned, production-hardened rebuild (Phase 0 + Phase 1 foundation)",
+  "description": "Goeman Global Finance backend — Hedera-aligned, production-hardened rebuild (Phase 0 + Phase 1 foundation)",
   "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {

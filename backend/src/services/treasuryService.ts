@@ -48,7 +48,7 @@ export async function seedTreasury(): Promise<Asset> {
   return createAsset({
     kind: "treasury",
     tokenStandard: "erc3643",
-    name: "Argus T-Bill",
+    name: "Goeman T-Bill",
     symbol: TREASURY_SYMBOL,
     decimals: 2,
     minTier: 1,

@@ -1,7 +1,7 @@
 /**
  * M5 — Corporate agent fleet as operations runner skills.
  *
- * New workflows: Argus Brain (router), CFO, CLO, CISO, CPO.
+ * New workflows: Goeman Brain (router), CFO, CLO, CISO, CPO.
  * CMO / CRO / COO reuse existing skills — see corporateAgentCatalog.ts.
  */
 
@@ -264,10 +264,10 @@ export const cpoLaunchWorkflow: WorkflowDef<{ product: string; version: string }
   },
 };
 
-// --- Argus Brain (orchestrator) ---------------------------------------------
+// --- Goeman Brain (orchestrator) ---------------------------------------------
 
-export const argusBrainSkill = defineSkill({
-  name: "argus-brain",
+export const goemanBrainSkill = defineSkill({
+  name: "goeman-brain",
   version: "1.0.0",
   tools: {
     count_pending_gates: {
@@ -293,12 +293,12 @@ export const argusBrainSkill = defineSkill({
 interface BrainCtx { intent: string; payload: Record<string, unknown> }
 interface BrainRec extends ReturnType<typeof resolveCorporateIntent> {}
 
-export const argusBrainRouteWorkflow: WorkflowDef<BrainCtx, BrainRec> = {
-  skill: "argus-brain-route",
+export const goemanBrainRouteWorkflow: WorkflowDef<BrainCtx, BrainRec> = {
+  skill: "goeman-brain-route",
   version: "1.0.0",
   supervision: "human_led",
   scopes: ["brain:read"],
-  skillDef: argusBrainSkill,
+  skillDef: goemanBrainSkill,
   async gather(input) {
     const i = (input ?? {}) as { intent?: string; payload?: Record<string, unknown> };
     if (!i.intent?.trim()) throw new Error("intent required");
@@ -322,7 +322,7 @@ export const argusBrainRouteWorkflow: WorkflowDef<BrainCtx, BrainRec> = {
     if (!def) throw new Error(`No workflow registered for ${rec.targetSkill}`);
     const child = await runOperation(def, rec.targetInput);
     await logAudit({
-      action: "argus_brain.routed",
+      action: "goeman_brain.routed",
       resource: review.workflow_run,
       details: {
         actorAdminId: actor.adminId,
@@ -338,4 +338,4 @@ registerWorkflow(cfoReportWorkflow as WorkflowDef);
 registerWorkflow(cloSignoffWorkflow as WorkflowDef);
 registerWorkflow(cisoPostureWorkflow as WorkflowDef);
 registerWorkflow(cpoLaunchWorkflow as WorkflowDef);
-registerWorkflow(argusBrainRouteWorkflow as WorkflowDef);
+registerWorkflow(goemanBrainRouteWorkflow as WorkflowDef);

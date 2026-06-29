@@ -16,7 +16,7 @@ const GROUPS: Array<{ title: string; links: Array<{ to: string; label: string }>
       { to: "/requests", label: "Requests" },
       { to: "/send-abroad", label: "Send abroad" },
       { to: "/fx", label: "Currency exchange" },
-      { to: "/pay", label: "Argus Pay" },
+      { to: "/pay", label: "Goeman Pay" },
       { to: "/escrow", label: "Escrow" },
     ],
   },
@@ -62,7 +62,7 @@ export function More() {
     const cur = document.documentElement.getAttribute("data-theme") ?? "dark";
     const next = cur === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("argus_theme", next);
+    localStorage.setItem("goeman_theme", next);
   }
 
   return (

@@ -374,7 +374,7 @@ export async function recordMcpAudit(input: McpAuditInput): Promise<void> {
 //
 // Instead of redirecting the customer to a hosted login, checkout asks the
 // customer's device to present a VC-backed VP. The VP proves the holder (→ their
-// Argus user) and is bound to ONE payment intent (the nonce carries intent_id), so
+// Goeman user) and is bound to ONE payment intent (the nonce carries intent_id), so
 // it authorizes paying that intent and nothing else. This reuses the exact same
 // signature-first verification, single-use nonce, replay guard, VC revocation and
 // holder-binding as the agent path — minus the agent client/grant/scope steps,
@@ -382,7 +382,7 @@ export async function recordMcpAudit(input: McpAuditInput): Promise<void> {
 // ---------------------------------------------------------------------------
 
 /** The relying party for a first-party checkout presentation (not an MCP agent). */
-export const CHECKOUT_VERIFIER_DID = "did:argus:checkout";
+export const CHECKOUT_VERIFIER_DID = "did:goeman:checkout";
 const CHECKOUT_NONCE_TTL_SECS = 300;
 
 /** Issue a single-use challenge bound to a specific payment intent. */

@@ -236,7 +236,7 @@ function mergeDecision(local: FraudDecision, remote: RemoteDecision): FraudDecis
 }
 
 /**
- * Screen a transfer before settlement. The in-Argus triage (the local rules-v0
+ * Screen a transfer before settlement. The in-Goeman triage (the local rules-v0
  * scorer) classifies the event:
  *   - non-benign (any elevated signal) → screened SYNCHRONOUSLY against the
  *     standalone fraud engine; the merged action gates settlement (blocking path).

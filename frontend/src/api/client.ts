@@ -1,5 +1,5 @@
 /**
- * Argus Financial Partners API client (Phase 9 — full customer portal).
+ * Goeman Global Finance API client (Phase 9 — full customer portal).
  *
  * Two independent token stores:
  *   - the ADMIN token (getToken/setToken/clearToken) used by the Phase 5A admin
@@ -15,9 +15,9 @@ import { newIdempotencyKey } from "../lib/idempotency";
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? "http://localhost:3001/api";
 
-const ADMIN_TOKEN_KEY = "argus_admin_token";
-const ADMIN_ROLE_KEY = "argus_admin_role";
-const USER_TOKEN_KEY = "argus_user_token";
+const ADMIN_TOKEN_KEY = "goeman_admin_token";
+const ADMIN_ROLE_KEY = "goeman_admin_role";
+const USER_TOKEN_KEY = "goeman_user_token";
 
 // ---- Admin token (unchanged surface used by AdminLogin/AdminConsole) --------
 export function getToken(): string | null {
@@ -753,7 +753,7 @@ export const userApi = {
   cctpTransfers: () => uget<{ transfers: CctpTransfer[] }>("/hedera/cctp"),
   pollInbound: () => upost<{ newEvents: number }>("/hedera/poll-inbound"),
 
-  // --- Argus Pay (Phase 21 merchant wedge) ---
+  // --- Goeman Pay (Phase 21 merchant wedge) ---
   payMerchants: () => uget<PayMerchant[]>("/pay/merchants"),
   createPayMerchant: (name: string) => upost<PayMerchant>("/pay/merchants", { name }),
   payIntents: (role: "merchant" | "payer" = "merchant") => uget<PaymentIntent[]>(`/pay/intents?role=${role}`),
@@ -862,7 +862,7 @@ export const userApi = {
     umoney<{ paymentId: string; status: string }>("/billpay/pay", body, key),
   cancelBill: (id: string) => upost<{ canceled: boolean }>(`/billpay/payments/${id}/cancel`),
 
-  // --- Argus Starter (Phase 22.0) ---
+  // --- Goeman Starter (Phase 22.0) ---
   starterHousehold: () => uget<{ household: StarterHousehold | null }>("/starter/household"),
   createStarterHousehold: (name?: string) => upost<{ household: StarterHousehold }>("/starter/household", name ? { name } : {}),
   starterDashboard: () => uget<StarterGuardianDashboard>("/starter/household/dashboard"),

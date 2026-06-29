@@ -1,9 +1,9 @@
 {
-  "name": "argus-frontend",
+  "name": "goeman-portal",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Argus Financial Partners customer portal — Quiet Premium design system (Phase 9)",
+  "description": "Goeman Global Finance customer portal — Quiet Premium design system (Phase 9)",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

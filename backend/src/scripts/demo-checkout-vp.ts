@@ -44,11 +44,11 @@ async function main(): Promise<void> {
   // Imports are hoisted above the top-of-file env assignments, so set everything on
   // the loaded config object directly (the same approach the tests use). config.SQLITE_PATH
   // is read at the first getDb() call, so set it here (before runMigrations) to keep the
-  // demo hermetic — its own throwaway DB, never the dev argus.db.
+  // demo hermetic — its own throwaway DB, never the dev goeman.db.
   (config as { SQLITE_PATH: string }).SQLITE_PATH = DEMO_DB;
-  (config as { ARGUS_PAY_ENABLED: boolean }).ARGUS_PAY_ENABLED = true;
+  (config as { GOEMAN_PAY_ENABLED: boolean }).GOEMAN_PAY_ENABLED = true;
   (config as { CHECKOUT_VP_ENABLED: boolean }).CHECKOUT_VP_ENABLED = true;
-  (config as { CARDS_ENABLED: boolean }).CARDS_ENABLED = true; // issue real (cash-backed) Argus cards
+  (config as { CARDS_ENABLED: boolean }).CARDS_ENABLED = true; // issue real (cash-backed) Goeman cards
 
   await runMigrations();
   await initTokenFactory();
@@ -84,7 +84,7 @@ async function main(): Promise<void> {
     const walletDid = publicJwkToDidKey(await exportJWK(publicKey));
     await bindWalletDid(customer.id, walletDid);
     const vcJwt = (await getCredential(customer.id))!.vc_jwt!;
-    // The customer's funding instruments (real, cash-backed Argus cards — Phase 19.4).
+    // The customer's funding instruments (real, cash-backed Goeman cards — Phase 19.4).
     await issueCard(customer.id, "USD");
     await issueCard(customer.id, "USD");
     const cards = await listCards(customer.id);

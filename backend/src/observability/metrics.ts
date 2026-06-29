@@ -91,10 +91,10 @@ export const marketDataQuoteTotal = new client.Counter({
   registers: [registry],
 });
 
-// Phase 21 — Argus Pay (native stablecoin rail; escrow-protected merchant payments).
+// Phase 21 — Goeman Pay (native stablecoin rail; escrow-protected merchant payments).
 export const payEventTotal = new client.Counter({
   name: "pay_event_total",
-  help: "Argus Pay payment-intent lifecycle events",
+  help: "Goeman Pay payment-intent lifecycle events",
   labelNames: ["event"],
   registers: [registry],
 });
@@ -244,7 +244,7 @@ export const billPaymentTotal = new client.Counter({
 
 export const starterHouseholdTotal = new client.Counter({
   name: "starter_household_total",
-  help: "Argus Starter household lifecycle events",
+  help: "Goeman Starter household lifecycle events",
   labelNames: ["action"], // created | teen_added
   registers: [registry],
 });

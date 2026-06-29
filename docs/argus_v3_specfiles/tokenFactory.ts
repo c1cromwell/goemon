@@ -16,7 +16,7 @@
 import { generateKeyPair, SignJWT, jwtVerify, exportJWK, type JWK, type KeyLike } from "jose";
 
 const ALG = "RS256";
-const KID = "did:web:argusfinancial.com#key-1";
+const KID = "did:web:goemanglobal.com#key-1";
 
 let privateKey: KeyLike | null = null;
 let publicKey: KeyLike | null = null;

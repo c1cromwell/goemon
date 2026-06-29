@@ -8,7 +8,7 @@
  *
  * Scope today: J1–J5 paths that are implemented (auth/ledger/SmartChat). J6
  * (external agent OID4VP + MCP — Phase 7) and J7/J8 (marketplace — Phase 8) are
- * PENDING and are validated by the e2e-validator/argus-mcp-test-harness skills
+ * PENDING and are validated by the e2e-validator/goeman-mcp-test-harness skills
  * once those phases land.
  */
 
@@ -114,7 +114,7 @@ describe("E2E §4: cross-cutting invariants", () => {
 });
 
 // ---------------------------------------------------------------------------
-// PENDING journeys — validated by the e2e-validator / argus-mcp-test-harness
+// PENDING journeys — validated by the e2e-validator / goeman-mcp-test-harness
 // skills once Phases 7–8 land (see docs/E2E-VALIDATION.md §3).
 // ---------------------------------------------------------------------------
 

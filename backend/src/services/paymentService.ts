@@ -1,8 +1,8 @@
 /**
- * Phase 21 Stage 1 — "Argus Pay": the native stablecoin-settled payment rail
+ * Phase 21 Stage 1 — "Goeman Pay": the native stablecoin-settled payment rail
  * (docs/business/PAYMENT-NETWORK-STRATEGY.md §4/§8).
  *
- * Merchants (directly-integrated counterparties owned by an Argus user) request
+ * Merchants (directly-integrated counterparties owned by an Goeman user) request
  * money with payment intents; the payer — or an authorized agent under the
  * pay:merchant MCP scope — pays them. There is NO interchange: the rail charges
  * zero fee (that is the wedge vs card networks).
@@ -20,7 +20,7 @@
  *   requires_payment → canceled | expired     (no money ever moved)
  *
  * Shed-ability (the SLA-isolation discipline from the Phase-17 seam): the
- * ARGUS_PAY_ENABLED kill-switch gates NEW intents and payments only — capture,
+ * GOEMAN_PAY_ENABLED kill-switch gates NEW intents and payments only — capture,
  * refund, and dispute on already-held funds stay available so money is never
  * stranded, and transfers/the rest of the bank are wholly unaffected.
  *
@@ -112,8 +112,8 @@ interface RawIntent {
 }
 
 function assertPayEnabled(): void {
-  if (!config.ARGUS_PAY_ENABLED) {
-    throw new AppError(ErrorCode.PAY_DISABLED, "Argus Pay is currently unavailable");
+  if (!config.GOEMAN_PAY_ENABLED) {
+    throw new AppError(ErrorCode.PAY_DISABLED, "Goeman Pay is currently unavailable");
   }
 }
 
@@ -326,7 +326,7 @@ export async function payIntent(input: {
     payeeId: raw.merchant_owner_id,
     amountMinor: BigInt(raw.amount_minor),
     currency: raw.currency,
-    memo: `Argus Pay: ${raw.merchant_name} (${raw.id})`,
+    memo: `Goeman Pay: ${raw.merchant_name} (${raw.id})`,
     idempotencyKey: `pay:intent:${raw.id}`,
   });
   // A racing payer may have created the hold first — only that payer holds the claim.

@@ -175,7 +175,7 @@ caution applies doubly to the words *credit* and *network*).
   **SLA-isolation discipline** from the Phase-17 trading seam (payments must not degrade money-critical SLOs).
   **Stage-1 prototype now BUILT** (see `docs/GOEMAN-PLAN.md` Phase 21): merchants + payment intents,
   escrow-protected pay→capture/refund/dispute, the `pay_merchant` MCP scope for agent-to-merchant commerce,
-  zero rail fee, `ARGUS_PAY_ENABLED` kill-switch (prod-fatal until licensed).
+  zero rail fee, `GOEMAN_PAY_ENABLED` kill-switch (prod-fatal until licensed).
 - **Credit** → **collateralized** lending is PRD v2 (rides the rail); **unsecured** is PRD v3 (lending
   license/partner + capital).
 

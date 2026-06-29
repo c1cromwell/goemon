@@ -13,7 +13,7 @@ import { listGoals } from "./savingsGoalService";
 import { getProfile } from "./identityService";
 
 function assertStarter(): void {
-  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Argus Starter is currently unavailable");
+  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Goeman Starter is currently unavailable");
 }
 
 export const QUEST_DEFS = [

@@ -46,7 +46,7 @@ export enum ErrorCode {
   // Trading (Phase 17 Stage 1 seam)
   TRADING_DISABLED = "TRADING_DISABLED",
 
-  // Argus Pay (Phase 21 Stage 1 rail)
+  // Goeman Pay (Phase 21 Stage 1 rail)
   PAY_DISABLED = "PAY_DISABLED",
 
   // FX quote seam (currency registry + rate provider)
@@ -89,7 +89,7 @@ export enum ErrorCode {
   // Seller P2P collectibles — in-app escrow (Corp B prototype kill-switch)
   COLLECTIBLES_ESCROW_DISABLED = "COLLECTIBLES_ESCROW_DISABLED",
 
-  // Argus Starter (Phase 22 — prototype kill-switch)
+  // Goeman Starter (Phase 22 — prototype kill-switch)
   TEEN_DISABLED = "TEEN_DISABLED",
 
   // Teen spend controls (Phase 22.1)

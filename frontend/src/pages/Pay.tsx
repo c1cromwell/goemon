@@ -1,5 +1,5 @@
 /**
- * Argus Pay — merchant wedge (Phase 21): register merchant, request payment, pay via escrow.
+ * Goeman Pay — merchant wedge (Phase 21): register merchant, request payment, pay via escrow.
  * Zero interchange; programmable rail vs card networks.
  */
 import { useEffect, useState } from "react";
@@ -109,14 +109,14 @@ export function Pay() {
   }
 
   /**
-   * Pay with Argus — login-less, via a Verifiable Credential.
+   * Pay with Goeman — login-less, via a Verifiable Credential.
    *
    * One-time device link (uses your session): make sure this device's wallet key
    * is bound to your VC. Then the actual payment carries NO session — the wallet
    * signs a VP over a one-time checkout challenge and the backend authorizes off
    * the verified credential, not a login.
    */
-  async function payWithArgus(i: PaymentIntent) {
+  async function payWithGoeman(i: PaymentIntent) {
     setBusy(true);
     try {
       // 1) one-time device link (session): ensure a VC exists + bind this wallet key
@@ -150,10 +150,10 @@ export function Pay() {
   if (disabled) {
     return (
       <div className="page stack lg narrow" style={{ maxWidth: 640 }}>
-        <h1>Argus Pay</h1>
+        <h1>Goeman Pay</h1>
         <div className="card">
           <p className="muted small" style={{ margin: 0 }}>
-            Merchant rail is disabled. Set <span className="code">ARGUS_PAY_ENABLED=true</span> for demo.
+            Merchant rail is disabled. Set <span className="code">GOEMAN_PAY_ENABLED=true</span> for demo.
           </p>
         </div>
       </div>
@@ -163,7 +163,7 @@ export function Pay() {
   return (
     <div className="page stack lg narrow" style={{ maxWidth: 640 }}>
       <div>
-        <h1>Argus Pay</h1>
+        <h1>Goeman Pay</h1>
         <p className="muted small" style={{ margin: 0 }}>
           Escrow-protected merchant payments — zero interchange. Register a merchant, request USDC, capture when delivered.
         </p>
@@ -203,7 +203,7 @@ export function Pay() {
         <input placeholder="Intent id" value={payIntentId} onChange={(e) => setPayIntentId(e.target.value)} />
         <button disabled={busy} onClick={payIntent}>Pay (escrow hold)</button>
         <p className="muted micro" style={{ margin: 0 }}>
-          Or use <strong>Pay with Argus</strong> on any unpaid intent below — your device credential
+          Or use <strong>Pay with Goeman</strong> on any unpaid intent below — your device credential
           authorizes the payment with no login or redirect.
         </p>
       </div>
@@ -223,8 +223,8 @@ export function Pay() {
                 {i.status === "held" ? (
                   <button className="ghost sm" onClick={() => capture(i.id)}>Capture</button>
                 ) : i.status === "requires_payment" ? (
-                  <button className="sm" disabled={busy} onClick={() => payWithArgus(i)} title="Pay with your Verifiable Credential — no login">
-                    Pay with Argus
+                  <button className="sm" disabled={busy} onClick={() => payWithGoeman(i)} title="Pay with your Verifiable Credential — no login">
+                    Pay with Goeman
                   </button>
                 ) : (
                   <Badge kind={i.status === "settled" ? "ok" : "warn"}>{i.status}</Badge>

@@ -337,8 +337,8 @@ agentOpsAdminRouter.post(
     try {
       const { intent, payload } = (req.body ?? {}) as { intent?: string; payload?: Record<string, unknown> };
       if (!intent?.trim()) throw new AppError(ErrorCode.VALIDATION, "intent required");
-      const brain = getWorkflow("argus-brain-route");
-      if (!brain) throw new AppError(ErrorCode.INTERNAL, "argus-brain-route workflow not registered");
+      const brain = getWorkflow("goeman-brain-route");
+      if (!brain) throw new AppError(ErrorCode.INTERNAL, "goeman-brain-route workflow not registered");
       res.json(await runOperation(brain, { intent, payload: payload ?? {} }));
     } catch (e) {
       next(e);

@@ -72,7 +72,7 @@ Do **not** use exploitative ninja caricature in regulated copy. Prefer abstract 
 | Email (demo/prod pattern) | `@goemanglobal.com` |
 | Repo | `goeman` |
 
-Code identifiers (`argus-agent`, `ArgusWallet`, `did:argus:*`) remain until **R2** rebrand — see `docs/GOEMAN-REBRAND-PLAN.md`.
+Code identifiers (`goeman-agent`, `GoemanWallet`, `did:goeman:*`) remain until **R2** rebrand — see `docs/GOEMAN-REBRAND-PLAN.md`.
 
 ---
 

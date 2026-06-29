@@ -2,7 +2,7 @@
  * Fraud Engine configuration.
  *
  * Read config ONLY through this module. Production fails fast on insecure config
- * (mirrors the Argus backend's posture) — the service-auth key must not be the
+ * (mirrors the Goeman backend's posture) — the service-auth key must not be the
  * known dev default in production.
  */
 
@@ -27,8 +27,8 @@ const schema = z.object({
 
   FRAUD_ENGINE_API_KEY: z.string().min(1).default(KNOWN_DEV_API_KEY),
 
-  ARGUS_BASE_URL: z.string().url().default("http://localhost:3001"),
-  ARGUS_SERVICE_KEY: z.string().min(1).default(KNOWN_DEV_API_KEY),
+  GOEMAN_BASE_URL: z.string().url().default("http://localhost:3001"),
+  GOEMAN_SERVICE_KEY: z.string().min(1).default(KNOWN_DEV_API_KEY),
 
   SQLITE_PATH: z.string().default("./data/fraud.db"),
 
@@ -69,6 +69,14 @@ if (isProd) {
 
 export const config = {
   ...parsed,
+  GOEMAN_BASE_URL:
+    parsed.GOEMAN_BASE_URL ||
+    (process.env.ARGUS_BASE_URL as string | undefined) ||
+    "http://localhost:3001",
+  GOEMAN_SERVICE_KEY:
+    parsed.GOEMAN_SERVICE_KEY ||
+    (process.env.ARGUS_SERVICE_KEY as string | undefined) ||
+    KNOWN_DEV_API_KEY,
   isProd,
   KNOWN_DEV_API_KEY,
 };

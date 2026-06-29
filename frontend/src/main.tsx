@@ -44,7 +44,7 @@ import { SelfCustody } from "./pages/SelfCustody";
 import "./styles.css";
 
 // Apply the persisted theme before first paint.
-document.documentElement.setAttribute("data-theme", localStorage.getItem("argus_theme") ?? "dark");
+document.documentElement.setAttribute("data-theme", localStorage.getItem("goeman_theme") ?? "dark");
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

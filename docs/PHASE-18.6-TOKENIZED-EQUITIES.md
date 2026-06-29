@@ -14,7 +14,7 @@ action, or on-chain-redemption machinery. Phase 18.6 closes that gap.
 
 ---
 
-## 1. Why it fits Argus cleanly
+## 1. Why it fits Goeman cleanly
 
 The Phase-8 marketplace already provides the substrate, so equities **reuse, not rebuild**:
 - **Holdings derive from the ledger** — each asset is its own currency code `ASSET:<id>` (no holdings
@@ -31,16 +31,16 @@ built here as a prototype seam.
 ## 2. Issuance model — both, as phases
 
 A swappable `EquityIssuer` provider (`backend/src/services/equityIssuerService.ts`, selected by
-`EQUITY_ISSUER`) decouples Argus from the backing/redemption mechanism:
+`EQUITY_ISSUER`) decouples Goeman from the backing/redemption mechanism:
 
 - **v1 — distribute a regulated 1:1 issuer (recommended first).** Integrate an issuer that already does
   1:1 backing + dividend pass-through + on-chain redemption:
   - **Dinari (dShares)** — US, SEC-registered transfer agent, 1:1 backed, dividends, on-chain redemption.
     Cleanest US fit and matches the no-derivative/1:1 requirement directly.
   - **Backed Finance (bTokens)** / **Ondo Global Markets** — EU/non-US.
-  - Argus = on-chain wallet + compliance + distribution + dividend/redemption **pass-through**. Lightest
+  - Goeman = on-chain wallet + compliance + distribution + dividend/redemption **pass-through**. Lightest
     path; the issuer holds the shares, is the transfer agent, and bears the securities-law weight.
-- **v2 — first-party issuance (later phase).** Argus custodies real shares via a partner and mints its
+- **v2 — first-party issuance (later phase).** Goeman custodies real shares via a partner and mints its
   own ERC-3643 equity tokens. Requires the **full Phase 18 stack**: broker-dealer, **transfer agent of
   record** (SEC Form TA-1 / Tokeny), **qualified custodian + DTC participant**, and an **ATS** for
   secondary. Maximum control/margin, heaviest cost and licensing.

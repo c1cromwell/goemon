@@ -1,7 +1,7 @@
 -- Fiat → USDC on-ramp (prototype seam). Buy USDC with fiat — the activation gap.
 --
 -- Phase-A posture: the real providers (MoonPay/Stripe Crypto/Coinbase) take the
--- fiat + run KYC under THEIR license and deliver USDC; Argus never custodies the
+-- fiat + run KYC under THEIR license and deliver USDC; Goeman never custodies the
 -- fiat. The prototype's simulated provider models the delivery: USDC is credited to
 -- the user's ledger balance via a balanced journal (onramp_settlement → user_cash,
 -- minus an on-ramp fee). Append-only order record; money lives in the ledger.

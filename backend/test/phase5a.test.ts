@@ -247,12 +247,12 @@ describe("Phase 5A: admin RBAC", () => {
   it("seed + authenticate; wrong password is rejected", async () => {
     const { seedAdmin, authenticateAdmin } = await import("../src/services/adminService");
     const seeded = await seedAdmin();
-    expect(seeded.email).toBe("admin@argusfinancial.com");
+    expect(seeded.email).toBe("admin@goemanglobal.com");
 
-    const ok = await authenticateAdmin("admin@argusfinancial.com", "Admin1234!");
+    const ok = await authenticateAdmin("admin@goemanglobal.com", "Admin1234!");
     expect(ok.role).toBe("admin");
 
-    await expect(authenticateAdmin("admin@argusfinancial.com", "wrong")).rejects.toThrow();
+    await expect(authenticateAdmin("admin@goemanglobal.com", "wrong")).rejects.toThrow();
   });
 
   it("requireAdmin rejects missing and non-admin (user) tokens; accepts admin tokens", async () => {
