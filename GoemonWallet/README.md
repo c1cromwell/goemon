@@ -4,12 +4,10 @@ A native SwiftUI wallet: it holds the user's keys on-device, stores their
 Verifiable Credential in the Keychain, signs Verifiable Presentations with a
 Secure-Enclave key (Face ID), and manages an on-chain (Hedera) USDC balance.
 
-> **Status: reviewed-but-unverified source.** This was authored without macOS/Xcode
-> available in the build environment, so it has **not been compiled or run**. Treat
-> it as a faithful implementation of the Phase 10 spec to be opened in Xcode,
-> wired into a project, and iterated. The security-critical logic (Secure-Enclave
-> key, Keychain VC storage, did:key encoding, VP JWT structure) mirrors the
-> backend contract that the Phase 11 agent app already verifies end-to-end.
+> **Status: compile-verified, not App Store ready.** `scripts/verify-ios-wallet.sh`
+> passes (simulator build). On-device smoke, production auth, privacy manifests, and
+> account-deletion flows are still open — see **App Store submission checklist** below.
+> Trail of Bits audit is planned (`docs/security/TRAIL-OF-BITS-AUDIT.md`).
 
 ## Source layout
 
@@ -17,7 +15,7 @@ Secure-Enclave key (Face ID), and manages an on-chain (Hedera) USDC balance.
 GoemonWallet/
   GoemonWalletApp.swift        TabView (Setup · Credential · Wallet · Activity) + deep links
   Config.swift                 API base (from Info.plist), client DID
-  Info.plist                   URL schemes, Face ID string, localhost ATS, GOEMON_API_BASE
+  Info.plist                   Bundle metadata (production keys still TODO — see checklist)
   Crypto/
     DIDKey.swift               P-256 public key → did:key:z… (base58btc + p256 multicodec)
     Base64URL.swift            JOSE base64url
@@ -33,6 +31,91 @@ GoemonWallet/
   Views/
     Theme.swift, SetupView, CredentialView, WalletView, ActivityView, ConsentView
 ```
+
+## App Store submission checklist
+
+**Verdict (June 2026): not ready for public submission.** Simulator compile passes;
+TestFlight internal beta is achievable after P0 items. Public App Store release is
+gated on auth, account deletion, privacy/legal, and financial licensing.
+
+Track progress by checking boxes. Severity: **P0** = App Review blocker,
+**P1** = required before external TestFlight, **P2** = polish / launch readiness.
+
+### 1. Payment & IAP compliance
+
+| | Item | Sev | Notes |
+|---|---|---|---|
+| [ ] | Remove demo credentials from UI | P0 | `SetupView` pre-fills `alex@demo.com` / `Demo1234!` |
+| [ ] | Production HTTPS API base only | P0 | `Config.apiBase` defaults to `http://localhost:3001` |
+| [ ] | Financial / crypto licensing posture documented | P0 | Guideline 3.1.5 — MSB/partner-bank licensing per `docs/legal/B6-phase-a-compliance-pack.md` |
+| [ ] | App Review notes for crypto wallet scope | P1 | Explain non-custodial signing companion to licensed service |
+| [ ] | Regional availability restrictions | P1 | Geo-gate if required by counsel |
+| [x] | No StoreKit / IAP needed | — | App does not sell digital goods or subscriptions |
+
+### 2. Privacy manifests & data declarations
+
+| | Item | Sev | Notes |
+|---|---|---|---|
+| [ ] | Add `PrivacyInfo.xcprivacy` to app target | P0 | Required; merge Hiero SPM dependency manifests |
+| [ ] | `NSFaceIDUsageDescription` in Info.plist | P0 | `LocalAuthentication` used in `KeyService`, `WalletView` |
+| [ ] | Register URL schemes in `CFBundleURLTypes` | P0 | `goemon-wallet://`, `openid-credential-offer://` |
+| [ ] | Privacy policy URL (in-app link + App Store Connect) | P0 | Email, session token, VC JWT, keys, transaction history |
+| [ ] | App Privacy nutrition labels (Connect) | P1 | Contact info, financial info, identifiers; tracking = No |
+| [ ] | `ITSAppUsesNonExemptEncryption` in Info.plist | P1 | Secure Enclave + Ed25519 + TLS — declare in Connect export compliance |
+| [x] | Sensitive data in Keychain (not UserDefaults) | — | VC JWT, keys, session token |
+
+### 3. Sign-in & account deletion
+
+| | Item | Sev | Notes |
+|---|---|---|---|
+| [ ] | Replace dev password login with passkeys (WebAuthn) | P0 | Backend has `/api/auth/webauthn/*`; wallet does not |
+| [ ] | Sign in with Apple | P0 | Guideline 4.8 — required alongside email/password |
+| [ ] | Sign-out UI | P0 | `SessionStore.signOut()` exists but no button in any view |
+| [ ] | In-app account deletion flow | P0 | Guideline 5.1.1(v) — local wipe ≠ server account deletion |
+| [ ] | Backend `DELETE` account endpoint | P0 | No account-deletion API in backend yet |
+| [x] | OID4VP consent before agent access | — | `ConsentView` shows agent DID + scopes; Face ID gates VP sign |
+
+### 4. Metadata & completeness
+
+| | Item | Sev | Notes |
+|---|---|---|---|
+| [ ] | App icon asset catalog (`AppIcon`, all sizes) | P0 | `ASSETCATALOG_COMPILER_APPICON_NAME` set but no `Assets.xcassets` |
+| [ ] | Launch screen | P1 | Empty `UILaunchScreen` dict only |
+| [ ] | `CFBundleDisplayName` ("Goemon Wallet") | P1 | Currently shows internal name `GoemonWallet` |
+| [ ] | Support URL | P1 | App Store Connect required field |
+| [ ] | Screenshots & App Preview | P1 | Connect assets — not in repo |
+| [ ] | Age rating (likely 17+ financial/crypto) | P1 | Configure in Connect |
+| [ ] | Entitlements file | P1 | Keychain Sharing, Associated Domains if using universal links |
+| [ ] | Unit / UI test target | P2 | No test target in Xcode project |
+| [x] | Deep link scheme documented | — | Code uses `goemon-wallet://` (not legacy `argus-wallet://`) |
+| [x] | Xcode project + Hiero SPM wired | — | `project.yml` → `GoemonWallet.xcodeproj` |
+
+### 5. Binary validation
+
+| | Item | Sev | Notes |
+|---|---|---|---|
+| [x] | Simulator compile (`verify-ios-wallet.sh`) | — | `xcodebuild` generic iOS Simulator — BUILD SUCCEEDED |
+| [ ] | Release archive + distribution signing | P0 | Verify script uses `CODE_SIGNING_ALLOWED=NO` |
+| [ ] | TestFlight internal beta upload | P1 | After P0 plist, auth, privacy items |
+| [ ] | App Store validation (Transporter / `altool`) | P1 | Run before public submission |
+| [ ] | On-device smoke | P1 | Secure Enclave, Hedera build→sign→submit, OID4VP deep link, Receive QR |
+| [ ] | Trail of Bits wallet audit complete | P1 | Planned — `docs/security/TRAIL-OF-BITS-AUDIT.md` (B7) |
+
+### Priority order (implementation)
+
+1. Info.plist — Face ID string, URL types, encryption declaration, HTTPS `GOEMON_API_BASE`
+2. `PrivacyInfo.xcprivacy` + App Privacy labels
+3. Remove demo defaults; production auth (passkeys + Sign in with Apple)
+4. Sign-out + account deletion (backend endpoint + in-app UI)
+5. App icon + launch screen + Connect metadata
+6. Signed Release archive → TestFlight → ToB audit → external beta
+
+### Related docs
+
+- `docs/security/TRAIL-OF-BITS-AUDIT.md` — wallet security audit (B7)
+- `docs/LAUNCH.md` — launch gate B1 (iOS verify)
+- `docs/legal/B6-phase-a-compliance-pack.md` — Phase A compliance
+- `scripts/verify-ios-wallet.sh` — compile verification
 
 ## Build (in Xcode, on macOS)
 
@@ -60,7 +143,7 @@ non-custodial Hedera send (`/transfer/build` → sign → `/transfer/submit`).
 - **Setup** authenticates (dev password), creates the **Secure-Enclave P-256 VP
   key** on first use, issues the VC (`POST /api/credentials/issue`), stores it in
   the **Keychain**, and binds the wallet did:key (`POST /api/credentials/bind-wallet`).
-- **Consent** (deep link `argus-wallet://present?nonce=…&aud=…&client_did=…&scope=…`)
+- **Consent** (deep link `goemon-wallet://present?nonce=…&aud=…&client_did=…&scope=…`)
   shows the requesting agent + scopes, signs a VP with Face ID, and posts it to
   `POST /api/present`, which mints a **90s scoped token** (the same path the Phase 11
   agent app verifies).
@@ -68,7 +151,7 @@ non-custodial Hedera send (`/transfer/build` → sign → `/transfer/submit`).
 
 ## Known gaps / honest deviations
 
-- **Unverified build** — see the status note above.
+- **App Store readiness** — see checklist above; compile verified, submission blockers remain.
 - **Hedera key custody.** The Secure Enclave only supports P-256, not Ed25519 or
   secp256k1, so the Hedera key cannot live in the Enclave. It is an Ed25519
   software key in the Keychain. (The **VP signing key is** in the Enclave.)
