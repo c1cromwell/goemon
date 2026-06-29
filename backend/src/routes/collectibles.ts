@@ -10,8 +10,17 @@ import { idempotency } from "../middleware/idempotency";
 import { AppError, ErrorCode } from "../errors";
 import * as sellerCollectibles from "../services/sellerCollectibleService";
 import * as collectiblePurchases from "../services/collectiblePurchaseService";
+import { getCollectiblesGoLiveStatus } from "../services/collectiblesGoLiveService";
 
 export const collectiblesRouter = Router();
+
+collectiblesRouter.get("/go-live-status", async (_req, res, next) => {
+  try {
+    res.json(await getCollectiblesGoLiveStatus());
+  } catch (e) {
+    next(e);
+  }
+});
 
 const graderSchema = z.enum(["psa", "bgs", "sgc", "cgc"]);
 const categorySchema = z.enum(["sports", "pokemon"]);

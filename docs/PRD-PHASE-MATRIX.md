@@ -30,6 +30,7 @@ Single reader guide reconciling [argus_prdv1/](argus_prdv1/) (full v1 bank PRD),
 | Trading equities/options | out of v1 PRD | ❌ | Phase 17 simulated | — | BD partner |
 | Tokenized 1:1 equities | brief v2 mention | ❌ | Phase 18.6 seam | Dinari/Backed | BD+TA+ATS |
 | Argus Starter (teen/family) | not in PRD | ❌ | Phase 22 prototype | COPPA counsel | custodial BD |
+| Phase 24 production suite | not in PRD | ❌ | design only | x401/x402 + 9 capabilities | Corp A/B/C |
 | Internal agent ops | Module 08 | ✅ draft-only support | Phase 15 built | real-time chat | scale |
 | Fraud platform | vendor TM | stage-1 seam | fraud-engine add-on | Kafka/Flink | lakehouse |
 | Identity Vault (Neo4j) | not in PRD | ❌ | ✅ SQLite prototype (`031`) | Neo4j Aura | prod graph |
@@ -55,6 +56,7 @@ Single reader guide reconciling [argus_prdv1/](argus_prdv1/) (full v1 bank PRD),
 | [PRODUCTION-STRATEGY.md](business/PRODUCTION-STRATEGY.md) | Identity Vault, infra stages |
 | [PHASE-23-WEALTH-PROPERTY.md](PHASE-23-WEALTH-PROPERTY.md) | Property lifecycle + wealth retention |
 | [CORP-B-RAMP.md](business/CORP-B-RAMP.md) | Partner cutover checklist |
+| [PHASE-24-PRODUCTION-LAUNCH.md](PHASE-24-PRODUCTION-LAUNCH.md) | x401/x402 + nine-capability production go-live |
 | [integrations/SANTANDER-AI.md](integrations/SANTANDER-AI.md) | Open-source AI adoption map |
 
 ## Stale doc pointers (updated by this pass)

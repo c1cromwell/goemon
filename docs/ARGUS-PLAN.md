@@ -1373,6 +1373,21 @@ stability, security/fraud posture, and tokenization performance without ad-hoc S
 - **Not in scope:** Replacing Grafana/SIEM; second admin app; dashboard actions that bypass human gates.
 - **Launch note:** Optional for Phase A prototype ops; **recommended before Corp B** real-money go-live.
 
+## Phase 24 — Production launch suite (x401/x402 + full money product) → **Corp A/B/C** (DESIGN)
+
+The **go-live orchestration** that moves prototype seams to production-backed offerings: Proof **x401**
+identity intents, **x402** agent commerce, full **neobank** (Phase 19 prod), **stablecoin** mainnet,
+**instant payments**, live **tokenized stocks** (18.6) and **collectibles**, **supported-product 24/7**
+catalog (honest hours per SKU), and **borderless savings**.
+
+**Design: `docs/PHASE-24-PRODUCTION-LAUNCH.md`.** **24.8a + 24.1a/b + 24.2a + 24.9a BUILT** (standalone-first); partner steps §13.
+- **Solution:** Nine workstreams (24.1–24.9) with staged engineering + partner steps; x401/x402 as HTTP layers
+  atop existing OID4VP/VC + Argus Pay (no bypass of VP verification or ledger idempotency).
+- **First revenue path (recommended):** collectibles (24.7) → stablecoin mainnet (24.4) → x402 commerce (24.2)
+  → neobank (24.3) → borderless savings (24.9) → tokenized equities (24.6).
+- **Not in scope:** prediction markets, perps, “trade everything 24/7” marketing.
+- **Pause for review** after design lands — same pattern as Phase 23.
+
 ---
 
 ## Quick Start (After Build)

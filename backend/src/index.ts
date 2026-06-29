@@ -66,6 +66,11 @@ import { bankAdminRouter } from "./routes/bankAdmin";
 import { cardsRouter } from "./routes/cards";
 import { billpayRouter } from "./routes/billpay";
 import { starterRouter } from "./routes/starter";
+import { savingsRouter } from "./routes/savings";
+import { productsRouter } from "./routes/products";
+import { x401Router } from "./routes/x401";
+import { x402Router } from "./routes/x402";
+import { phase24Router, phase24AdminRouter, bankWebhookRouter } from "./routes/phase24";
 import { collectiblesRouter } from "./routes/collectibles";
 import { collectiblesAdminRouter } from "./routes/collectiblesAdmin";
 import { identityVaultAdminRouter, identityVaultRouter } from "./routes/identityVault";
@@ -216,7 +221,14 @@ async function bootstrap(): Promise<void> {
   // ---- Phase 21 Stage 1 — Argus Pay (service-gated by ARGUS_PAY_ENABLED) ----
   app.use("/api/pay", payRouter);
 
-  // ---- FX quote seam (quote-only; service-gated by FX_ENABLED) ----
+  // ---- Phase 24 — production launch suite (standalone-first) ----
+  app.use("/api/products", productsRouter);
+  app.use("/api/x401", x401Router);
+  app.use("/api/x402", x402Router);
+  app.use("/api/savings", savingsRouter);
+  app.use("/api/phase24", phase24Router);
+  app.use("/api/webhooks/bank", bankWebhookRouter);
+  app.use("/api/admin/phase24", phase24AdminRouter);
   app.use("/api/fx", fxRouter);
 
   // ---- Journey orchestration platform (prototype; gated by JOURNEYS_ENABLED) ----

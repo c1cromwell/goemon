@@ -17,6 +17,7 @@ import "../src/operations/skills";
 const TMP_DB = `./data/test-compliance-${Date.now()}.db`;
 const compliance: AdminActor = { adminId: "c-admin", role: "compliance" };
 const support: AdminActor = { adminId: "c-support", role: "support" };
+const ceo: AdminActor = { adminId: "c-ceo", role: "ceo" };
 
 beforeAll(async () => {
   process.env.NODE_ENV = "test";
@@ -91,7 +92,7 @@ describe("compliance-filing", () => {
     expect(Math.round(hoursUntilDue)).toBe(FILING_DEADLINE_HOURS.SAR); // ~720h
     expect(JSON.parse(review!.recommendation).filingType).toBe("SAR");
 
-    const resolved = await resolveReview(res.reviewId!, compliance, "approve", "filed with FinCEN");
+    const resolved = await resolveReview(res.reviewId!, ceo, "approve", "filed with FinCEN");
     expect(resolved.outcome).toBe("executed");
   });
 

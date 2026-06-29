@@ -292,6 +292,20 @@ const schema = z.object({
   MODEL_ROUTER_ENABLED: boolishDefaultTrue,
   /** M4.1 — KYC/compliance/legal/launch tasks use Anthropic only (default on). */
   MODEL_ROUTER_COMPLIANCE_ANTHROPIC_ONLY: boolishDefaultTrue,
+
+  // Phase 24 — Production launch suite (standalone-first seams).
+  /** x401 HTTP proof requirement (maps to OID4VP; Argus VC default — no Proof.com required). */
+  X401_ENABLED: boolish,
+  /** x402 HTTP payment required (requires ARGUS_PAY_ENABLED). */
+  X402_ENABLED: boolish,
+  /** Adult borderless USDC savings (self-accrual from interest_source — not FDIC). */
+  BORDERLESS_SAVINGS_ENABLED: boolish,
+  /** Default APY for borderless savings (basis points; 350 = 3.50%). */
+  SAVINGS_APY_BPS: z.coerce.number().int().nonnegative().max(10_000).default(350),
+  /** Optional Proof.com issuer adapter (future 24.1c); argus VC works without it. */
+  IDENTITY_ISSUER: z.enum(["argus", "proof"]).default("argus"),
+  PROOF_API_KEY: z.string().optional(),
+
   OPERATIONS_ORCHESTRATOR: z.enum(["simulated", "anthropic"]).default("simulated"),
   OPERATIONS_REVIEW_FLOOR: z.coerce.number().min(0).max(1).default(0.3),
 
@@ -362,6 +376,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.ARGUS_PAY_ENABLED) {
     fatal.push("ARGUS_PAY_ENABLED must be false in production — the Phase-21 Stage-1 rail is a prototype (money-transmission licensing pending).");
+  }
+  if (c.X402_ENABLED && c.ARGUS_PAY_ENABLED) {
+    fatal.push("X402_ENABLED must be false in production until Argus Pay is counsel-cleared for live money transmission.");
   }
   if (c.FX_ENABLED && c.FX_RATE_PROVIDER === "simulated") {
     fatal.push("FX_ENABLED with FX_RATE_PROVIDER=simulated must not run in production — wire a licensed FX rate provider (circle|oanda).");
