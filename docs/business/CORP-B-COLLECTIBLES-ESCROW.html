@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CORP-B-COLLECTIBLES-ESCROW — Goeman Global Finance</title>
+<style>/* Goeman Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>CORP-B-COLLECTIBLES-ESCROW</h1>
+  
+  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#what-ships-in-the-prototype">What ships in the prototype</a></li><li class="lvl-2"><a href="#user-flow">User flow</a></li><li class="lvl-2"><a href="#corp-b-triggers-counsel-before-production">Corp B triggers (counsel before production)</a></li><li class="lvl-2"><a href="#config">Config</a></li><li class="lvl-2"><a href="#api-surface">API surface</a></li><li class="lvl-2"><a href="#differentiation-from-tier-3-courtyard">Differentiation from Tier 3 (Courtyard)</a></li><li class="lvl-2"><a href="#frontend">Frontend</a></li><li class="lvl-2"><a href="#related-docs">Related docs</a></li></ol></nav>
+  <main class="content">
+<h1 id="corp-b-in-app-collectible-escrow-no-vault-partner">Corp B — In-app collectible escrow (no vault partner)</h1>
+<p>Legal and product posture for <strong>seller P2P slab listings</strong> where Goeman holds buyer USDC in escrow until receipt is confirmed. This is <strong>Tier 2</strong> in the collectibles strategy: Goeman is the payment intermediary; the seller ships directly; no Courtyard/vault custody partner is required for the money path.</p>
+<h2 id="what-ships-in-the-prototype">What ships in the prototype</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Money</td>
+<td>Existing <code>escrowService</code> — payer_cash → escrow → payee_cash (USDC on Hedera when enabled)</td>
+</tr>
+<tr>
+<td>Asset</td>
+<td>Tokenized HTS collectible (qty 1) delivered from treasury on buyer confirm</td>
+</tr>
+<tr>
+<td>Listing</td>
+<td><code>listingType: seller_p2p</code> in asset metadata; instant <code>placeOrder</code> blocked</td>
+</tr>
+<tr>
+<td>State</td>
+<td><code>collectible_purchases</code> + escrow row; listing paused while open</td>
+</tr>
+<tr>
+<td>Kill-switch</td>
+<td><code>COLLECTIBLES_ESCROW_ENABLED</code> (off by default; <strong>prod-fatal</strong> when on)</td>
+</tr>
+</tbody></table>
+<h2 id="user-flow">User flow</h2>
+<ol>
+<li><strong>Seller</strong> — cert verify → human review → public listing (<code>/collect/sell</code>)</li>
+<li><strong>Buyer</strong> — <code>Buy with escrow</code> on asset detail → USDC held (<code>POST /api/collectibles/purchase</code>)</li>
+<li><strong>Seller</strong> — marks shipped (<code>POST /api/collectibles/purchases/:id/ship</code>)</li>
+<li><strong>Buyer</strong> — confirms receipt → escrow release + asset to buyer (<code>POST .../confirm</code>)</li>
+<li><strong>Dispute</strong> — either party disputes; compliance/admin resolves via existing <code>/api/admin/escrow/:id/resolve</code> (asset delivery syncs automatically)</li>
+</ol>
+<h2 id="corp-b-triggers-counsel-before-production">Corp B triggers (counsel before production)</h2>
+<ul>
+<li><strong>Money transmission / MSB</strong> — holding third-party funds pending performance</li>
+<li><strong>Marketplace intermediary</strong> — connecting buyers and sellers; dispute mediation</li>
+<li><strong>Not custody</strong> — Goeman does not take possession of the physical slab in this lane (seller ships)</li>
+<li><strong>Securities</strong> — seller P2P collectibles are non-security HTS collectibles (<code>isSecurity: false</code>)</li>
+</ul>
+<h2 id="config">Config</h2>
+<pre><code class="language-bash"># Dev/demo — enable in-app buy/escrow
+COLLECTIBLES_ESCROW_ENABLED=true
+
+# Production — blocked until counsel + licensing path (see CORP-B-RAMP.md)
+# COLLECTIBLES_ESCROW_ENABLED=true  # → process refuses to start
+</code></pre>
+<h2 id="api-surface">API surface</h2>
+<pre><code>POST   /api/collectibles/purchase              Idempotency-Key required
+GET    /api/collectibles/purchases
+GET    /api/collectibles/purchases/:id
+POST   /api/collectibles/purchases/:id/ship    seller
+POST   /api/collectibles/purchases/:id/confirm buyer
+POST   /api/collectibles/purchases/:id/cancel  seller (before ship)
+POST   /api/collectibles/purchases/:id/dispute either party
+</code></pre>
+<p>Generic <code>/api/escrow/:id/release|refund</code> is <strong>blocked</strong> when the escrow row is tied to a collectible purchase — use the purchase endpoints instead.</p>
+<h2 id="differentiation-from-tier-3-courtyard">Differentiation from Tier 3 (Courtyard)</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Tier 2 (this)</th>
+<th>Tier 3 (partner)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Physical custody</td>
+<td>Seller ships</td>
+<td>Vault partner holds</td>
+</tr>
+<tr>
+<td>Cert attestation</td>
+<td>PSA/GemRate API + human review</td>
+<td>Partner inventory sync</td>
+</tr>
+<tr>
+<td>Config</td>
+<td><code>COLLECTIBLES_ESCROW_ENABLED</code></td>
+<td><code>COLLECTIBLES_PROVIDER=courtyard</code></td>
+</tr>
+<tr>
+<td>Legal surface</td>
+<td>MSB / marketplace intermediary</td>
+<td>Custody + bailee agreements</td>
+</tr>
+</tbody></table>
+<h2 id="frontend">Frontend</h2>
+<ul>
+<li>Asset detail — <strong>Buy with escrow</strong> for <code>purchaseMode: escrow</code></li>
+<li><code>/collect/purchases</code> — buyer/seller actions (ship, confirm, dispute)</li>
+<li>Admin dispute queue unchanged (<code>/admin</code> → escrow disputes)</li>
+</ul>
+<h2 id="related-docs">Related docs</h2>
+<ul>
+<li><code>docs/business/CORP-B-RAMP.md</code> — partner cutover matrix</li>
+<li><code>docs/legal/B5-collectibles-memo.md</code> — collectibles legal memo (if present)</li>
+</ul>
+
+  </main>
+</div>
+</body></html>

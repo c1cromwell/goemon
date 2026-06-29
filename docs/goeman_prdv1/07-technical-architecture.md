@@ -2,7 +2,7 @@
 
 ## System overview
 
-Argus Financial Partners is a service-oriented Go backend, with Hedera as the settlement chain, Temporal for money-movement workflows, Conductor OSS for agent workflows, and Postgres as the system-of-record ledger. The mobile and web clients communicate via gRPC (with Connect for transport) and a thin REST gateway where needed.
+Goeman Global Finance is a service-oriented Go backend, with Hedera as the settlement chain, Temporal for money-movement workflows, Conductor OSS for agent workflows, and Postgres as the system-of-record ledger. The mobile and web clients communicate via gRPC (with Connect for transport) and a thin REST gateway where needed.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -67,7 +67,7 @@ Owns user identity, sessions, passkey credentials, recovery flows. Stateless exc
 
 ### Wallet Service
 
-Owns the mapping between Argus Financial Partners users and Hedera accounts, transaction construction, signing orchestration, and the server-side components of the native wallet stack. The most security-critical service after Ledger.
+Owns the mapping between Goeman Global Finance users and Hedera accounts, transaction construction, signing orchestration, and the server-side components of the native wallet stack. The most security-critical service after Ledger.
 
 **Tech:** Go, official Hedera Go SDK, Postgres, Redis, Kafka producer, AWS KMS for paymaster and HMAC backup factor signing
 
@@ -208,7 +208,7 @@ Workflows defined in v1:
 - Daily snapshot, point-in-time recovery, 7-year retention for financial records
 
 **Schema highlights:**
-- `ledger_accounts` — one row per Argus Financial Partners-tracked account (user USDC balance, user USD balance, escrow accounts, fee accounts, etc.)
+- `ledger_accounts` — one row per Goeman Global Finance-tracked account (user USDC balance, user USD balance, escrow accounts, fee accounts, etc.)
 - `ledger_entries` — append-only; every row is a debit or credit; idempotent via `external_ref`
 - `users`, `passkeys`, `sessions`, `kyc_tiers` — auth service
 - `listings`, `orders`, `trades` — marketplace

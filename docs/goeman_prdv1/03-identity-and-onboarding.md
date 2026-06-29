@@ -2,7 +2,7 @@
 
 ## The tiered identity ladder
 
-Argus Financial Partners uses a progressive identity model where capability unlocks happen at each tier rather than at a single signup gate. Users tier up only when they hit a feature that requires it.
+Goeman Global Finance uses a progressive identity model where capability unlocks happen at each tier rather than at a single signup gate. Users tier up only when they hit a feature that requires it.
 
 | Tier | Verification required | Time to complete | Capabilities unlocked |
 |---|---|---|---|
@@ -28,7 +28,7 @@ The defining property of Tier 0 is **no PII collected**. The user is identified 
 
 ### Tier 1 — Light verified
 
-Adds phone number (SMS OTP verified) and email (if not provided at Tier 0). Phone serves as one factor of recovery and as a uniqueness check (one Argus Financial Partners account per verified phone, soft-enforced).
+Adds phone number (SMS OTP verified) and email (if not provided at Tier 0). Phone serves as one factor of recovery and as a uniqueness check (one Goeman Global Finance account per verified phone, soft-enforced).
 
 **Requirements:**
 - `[REQ-ID-T1-001]` Phone verification via SMS OTP using a provider that supports global SMS delivery (Twilio Verify or equivalent)

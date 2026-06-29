@@ -50,6 +50,6 @@
 
 ## Related
 
-- `docs/argus_prdv1/11-open-questions-and-risks.md` — Q-WALLET-001
+- `docs/goeman_prdv1/11-open-questions-and-risks.md` — Q-WALLET-001
 - `docs/LAUNCH.md` — blocker B1, B7
 - `scripts/verify-ios-wallet.sh`

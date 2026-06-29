@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CORP-B-RAMP — Goeman Global Finance</title>
+<style>/* Goeman Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>CORP-B-RAMP</h1>
+  
+  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#partner-matrix">Partner matrix</a></li><li class="lvl-2"><a href="#cutover-order-recommended">Cutover order (recommended)</a></li><li class="lvl-2"><a href="#admin-verification-endpoints">Admin verification endpoints</a></li><li class="lvl-2"><a href="#production-fatals">Production fatals</a></li></ol></nav>
+  <main class="content">
+<h1 id="corp-b-ramp-partner-cutover-checklist">Corp B ramp — partner cutover checklist</h1>
+<p>Maps Phase A prototype seams to production partners. Each row is a <strong>config flag + provider enum</strong> in <code>backend/src/config.ts</code> with a <code>notImplemented()</code> stub until the contract is signed.</p>
+<h2 id="partner-matrix">Partner matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Config</th>
+<th>Providers (stub → prod)</th>
+<th>Route / service</th>
+<th>Counsel gate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Partner bank / BaaS</td>
+<td><code>BANK_RAILS_ENABLED</code>, <code>BANK_RAIL_PROVIDER</code></td>
+<td>simulated → column, treasuryprime, unit</td>
+<td><code>bankRailService</code></td>
+<td>FinCEN MSB, MTL</td>
+</tr>
+<tr>
+<td>Debit card (Visa bridge)</td>
+<td><code>CARDS_ENABLED</code>, <code>CARD_PROCESSOR</code></td>
+<td>simulated → marqeta, lithic, stripe</td>
+<td><code>cardService</code></td>
+<td>BIN sponsor, PCI</td>
+</tr>
+<tr>
+<td>Bill pay</td>
+<td><code>BILLPAY_ENABLED</code></td>
+<td>rides <code>BANK_RAIL_PROVIDER</code></td>
+<td><code>billPayService</code></td>
+<td>biller network</td>
+</tr>
+<tr>
+<td>KYC / IDV</td>
+<td><code>IDV_PROVIDER</code></td>
+<td>simulated → persona</td>
+<td><code>identityService</code></td>
+<td>vendor DPA</td>
+</tr>
+<tr>
+<td>Sanctions</td>
+<td><code>SANCTIONS_PROVIDER</code></td>
+<td>simulated → trm</td>
+<td>onboarding</td>
+<td>OFAC program</td>
+</tr>
+<tr>
+<td>Travel Rule</td>
+<td><code>TRAVEL_RULE_ENABLED</code>, <code>TRAVEL_RULE_PROVIDER</code></td>
+<td>simulated → notabene, sumsub, verifyvasp</td>
+<td><code>travelRuleService</code></td>
+<td>FATF compliance</td>
+</tr>
+<tr>
+<td>Collectibles inventory</td>
+<td><code>COLLECTIBLES_PROVIDER</code></td>
+<td>simulated → courtyard, collectorcrypt</td>
+<td><code>collectiblesProvider</code></td>
+<td>B5 memo</td>
+</tr>
+<tr>
+<td><strong>Seller P2P escrow</strong></td>
+<td><code>COLLECTIBLES_ESCROW_ENABLED</code></td>
+<td>prototype (no vault partner)</td>
+<td><code>collectiblePurchaseService</code></td>
+<td>MSB / marketplace intermediary — see <code>CORP-B-COLLECTIBLES-ESCROW.md</code></td>
+</tr>
+<tr>
+<td><strong>Courtyard vault</strong></td>
+<td><code>COLLECTIBLES_PROVIDER=courtyard</code></td>
+<td>stub → live API</td>
+<td><code>collectiblesProvider</code> + orders/webhooks/HTS/redemption — see <a href="../integrations/COURTYARD-INTEGRATION.md"><code>integrations/COURTYARD-INTEGRATION.md</code></a></td>
+<td></td>
+</tr>
+<tr>
+<td>RWA issuers</td>
+<td><code>RWA_ISSUER_ENABLED</code>, <code>RWA_ISSUER_PROVIDER</code></td>
+<td>simulated → ondo, securitize, realt</td>
+<td><code>rwaIssuerService</code></td>
+<td>B4 securities</td>
+</tr>
+<tr>
+<td>CCTP USDC bridge</td>
+<td><code>CCTP_ENABLED</code>, <code>CCTP_PROVIDER</code></td>
+<td>simulated → circle</td>
+<td><code>cctpService</code></td>
+<td>stablecoin</td>
+</tr>
+<tr>
+<td>Tokenized equities</td>
+<td><code>EQUITIES_ENABLED</code>, <code>EQUITY_ISSUER</code></td>
+<td>simulated → dinari, firstparty</td>
+<td>Phase 18.6</td>
+<td>BD/TA</td>
+</tr>
+<tr>
+<td>Goeman Pay merchants</td>
+<td><code>ARGUS_PAY_ENABLED</code></td>
+<td>prototype</td>
+<td><code>paymentService</code></td>
+<td>MSB + escrow</td>
+</tr>
+<tr>
+<td>Fraud remote</td>
+<td><code>FRAUD_ENGINE_URL</code></td>
+<td>local → fraud-engine service</td>
+<td><code>fraudClient</code></td>
+<td>vendor TM</td>
+</tr>
+<tr>
+<td>Data warehouse</td>
+<td><code>DATA_WAREHOUSE_ENABLED</code>, <code>WAREHOUSE_SINK</code></td>
+<td>simulated → bigquery, snowflake</td>
+<td><code>warehouseExportService</code></td>
+<td>SOC 2</td>
+</tr>
+</tbody></table>
+<h2 id="cutover-order-recommended">Cutover order (recommended)</h2>
+<ol>
+<li><strong>Entity + AML pack</strong> (B6) — before any real user money</li>
+<li><strong>Collectibles partner</strong> (Courtyard) — smallest regulated surface; <code>POST /api/admin/collectibles/sync</code></li>
+<li><strong>IDV + sanctions</strong> — Persona + TRM/Chainalysis before Tier 2 fiat</li>
+<li><strong>Partner bank</strong> — Column/Treasury Prime; enables deposit/withdraw/card</li>
+<li><strong>Travel Rule</strong> — before P2P/off-ramp above $3k</li>
+<li><strong>RWA issuers</strong> — after B4 securities counsel</li>
+<li><strong>Visa debit bridge</strong> — mass-adoption on-ramp per PAYMENT-NETWORK-STRATEGY</li>
+<li><strong>Goeman Pay</strong> — programmable rail wedge</li>
+</ol>
+<h2 id="admin-verification-endpoints">Admin verification endpoints</h2>
+<pre><code class="language-bash"># Collectibles sync (simulated or courtyard when wired)
+curl -X POST localhost:3001/api/admin/collectibles/sync -H &quot;Authorization: Bearer $ADMIN_JWT&quot;
+
+# RWA issuer catalog (requires RWA_ISSUER_ENABLED=true)
+curl localhost:3001/api/admin/rwa/catalog -H &quot;Authorization: Bearer $ADMIN_JWT&quot;
+</code></pre>
+<h2 id="production-fatals">Production fatals</h2>
+<p>All simulated rails remain <strong>prod-fatal</strong> via <code>productionFatals()</code> in <code>config.ts</code> until counsel and partner contracts clear each flag.</p>
+
+  </main>
+</div>
+</body></html>

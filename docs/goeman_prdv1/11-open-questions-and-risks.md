@@ -8,7 +8,7 @@ This document rolls up every open question (`[Q-XXX-NNN]`) flagged across the PR
 
 | ID | Question | Decision-maker | When needed by | Decision |
 |---|---|---|---|---|
-| Q-ID-001 | Pseudonymous Argus Financial Partners handles (e.g., `@alice`) — supported in v1, and if so, are they network-discoverable or contact-list-only? | Product | Phase 1 | Open |
+| Q-ID-001 | Pseudonymous Goeman Global Finance handles (e.g., `@alice`) — supported in v1, and if so, are they network-discoverable or contact-list-only? | Product | Phase 1 | Open |
 | Q-ID-002 | Final IDV vendor selection — Persona, Onfido, or Stripe Identity | Compliance + Eng | Phase 0 end | Open |
 | Q-ID-003 | Tier 0 users in US buying non-security NFTs — allowed with dollar cap, or Tier 1+ required? | Compliance + Legal | Phase 1 | **Tier 1+** to buy collectibles (all lanes); Tier 0 browse-only |
 
@@ -77,7 +77,7 @@ This document rolls up every open question (`[Q-XXX-NNN]`) flagged across the PR
 
 | ID | Question | Decision-maker | When needed by | Decision |
 |---|---|---|---|---|
-| Q-BRAND-001 | Final product name — is "Argus Financial Partners" the launch brand? Trademark and domain status | CEO + Legal + Design | Phase 0 | Yes — launch brand; trademark TBD |
+| Q-BRAND-001 | Final product name — is "Goeman" (DBA) / Goeman Global Finance the launch brand? Trademark and domain status | CEO + Legal + Design | Phase 0 | **Resolved (2026-06):** Goeman Global Finance, LLC · DBA **Goeman** · domain **goemanglobal.com** · repo **goeman**; trademark filing TBD with counsel |
 | Q-BRAND-002 | Visual identity direction — premium institutional vs friendly consumer | Design + CEO | Phase 0 | Open |
 
 ## Risk register
@@ -167,7 +167,7 @@ This section will be populated as decisions are made. Each entry includes the de
 | KYC: tiered ladder with on-demand upgrades; **Tier 1+ required to buy collectibles** (Q-ID-003) | Founder | Maximum onboarding speed; Tier 0 browse-only on Collect; purchase gates per regulatory threshold |
 | Marketplace: securities + collectibles + Web3 gaming | Founder | Two-surface approach; collectibles gives consumer pull, securities give AUM |
 | Excluded from v1: COD/traditional publisher gaming items | Claude (recommended) | Legally not possible without publisher cooperation |
-| Argus Financial Partners CLI: repurposed as internal admin console | Founder | Preserves prior work as ops/compliance tooling |
+| Goeman Global Finance CLI: repurposed as internal admin console | Founder | Preserves prior work as ops/compliance tooling |
 
 ### Resolved open questions (2026-06)
 
@@ -175,6 +175,6 @@ This section will be populated as decisions are made. Each entry includes the de
 |---|---|---|---|
 | Q-ROADMAP-001 | US-first only; international → Phase B | Founder | Focus launch scope; align with Phase A compliance ramp |
 | Q-ID-003 | Tier **1+** to buy collectibles (all lanes) | Founder + Compliance | Phone/email verified before any Collect purchase; Tier 0 browse-only |
-| Q-BRAND-001 | *Argus Financial Partners* is launch brand | Founder | Trademark/domain TBD with counsel |
+| Q-BRAND-001 | **Goeman** (DBA) / Goeman Global Finance — launch brand | Founder | Rebrand R1 (2026-06); trademark TBD with counsel |
 | Q-MK-002 | v1 fixed-price + seller escrow P2P; order book v2 | Founder + Eng | Matches shipped prototype; AMM not needed for v1 liquidity |
 | Q-AGENT-004 | No agent access to raw PII | Founder + Compliance | Minimize privacy/regulatory exposure; human gate for identity decisions |

@@ -8,7 +8,7 @@ does **not** introduce a separate internal product.
 This doc is the authoritative design for Phase 23. Implementation is staged (§10); **pause for CEO/engineering
 review after this design lands** before writing code.
 
-**Related:** `docs/ARGUS-PLAN.md` (master plan) · `docs/AGENTIC-OS.md` (CEO approvals + agent fleet) ·
+**Related:** `docs/GOEMAN-PLAN.md` (master plan) · `docs/AGENTIC-OS.md` (CEO approvals + agent fleet) ·
 `docs/LAUNCH.md` (Phase A posture) · Phase 20 warehouse/reconciliation · Phase 15 agent-ops · `fraud-engine/`
 
 ---

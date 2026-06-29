@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FraudEngine — Goeman Global Finance</title>
+<style>/* Goeman Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>FraudEngine</h1>
+  
+  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-3"><a href="#high-level-architecture-overview">High-Level Architecture Overview</a></li><li class="lvl-3"><a href="#core-components-tech-2026-best-fit-for-low-latency-transformer-support">Core Components &amp; Tech (2026 Best-Fit for Low Latency + Transformer Support)</a></li><li class="lvl-3"><a href="#how-the-fraud-team-operates-day-to-day-minimal-friction">How the Fraud Team Operates Day-to-Day (Minimal Friction)</a></li></ol></nav>
+  <main class="content">
+<h1 id="technology-strategy">Technology Strategy</h1>
+<blockquote>
+<p><strong>Status: v2 / production north-star — not current-phase scope.</strong> This describes the target real-time
+fraud platform (Kafka + Flink + Transformer serving + feature store + model registry + lakehouse), in the
+same category as Temporal/Conductor and the Go reimplementation. The prototype does <strong>not</strong> implement this
+platform. What <em>is</em> built is <strong>Stage 1</strong>: an in-process fraud seam (<code>backend/src/services/fraudService.ts</code> +
+the append-only <code>fraud_decisions</code> table) that screens the money path and shapes its event/score/decision/audit
+contract to grow into the design below. See <a href="./FraudEngine-GapAnalysis.md"><code>FraudEngine-GapAnalysis.md</code></a> for the
+conformance table, what Stage 1 closes, and the phased roadmap (Stages 2–4 remain a locked-architecture decision).</p>
+</blockquote>
+<p><strong>In this evolved architecture, the entire fintech/bank becomes a pure event-driven platform where <em>every</em> product (payments, lending, accounts, cards, investments, support, etc.) streams <em>all</em> its data in real time to a unified Kafka backbone. This creates a single source of truth for the full user lifecycle.</strong></p>
+<p>The fraud team gets full autonomy as a &quot;listener-first&quot; consumer: they subscribe to the stream(s), maintain their own processing jobs, and dynamically decide which Transformer model (or ensemble) to invoke for inference <em>or</em> trigger learning/retraining pipelines — for testing (shadow/canary) or production — without touching core product code. This decouples fraud completely while keeping sub-50–100ms end-to-end latency for decisions.</p>
+<p>This builds directly on the previous data layer/orchestrator (Flink + feature store + Backbase-style orchestration) but makes the stream the universal bus and gives fraud team self-service control via model registry + config-driven routing.</p>
+<h3 id="high-level-architecture-overview">High-Level Architecture Overview</h3>
+<ul>
+<li><strong>Producers (All Products)</strong> → <strong>Unified Event Stream (Kafka)</strong> → <strong>Fraud Listening &amp; Processing Layer (Flink jobs owned/controlled by fraud team)</strong> → <strong>Dynamic Transformer Model Router + Serving</strong> → <strong>Decisions back to stream + actions</strong> (block, challenge, flag, etc.).</li>
+<li>Everything is immutable events (standardized Avro/Protobuf schema with user_id, timestamp, context, payload). Schema Registry enforces consistency.</li>
+<li>Fraud team operates like an internal &quot;fraud intelligence platform&quot; on top of the shared stream — no direct database access needed; everything is event-driven.</li>
+</ul>
+<p><strong>Data Flow (per transaction/journey event)</strong>:</p>
+<ol>
+<li>Any product emits an event (e.g., &quot;payment_initiated&quot;, &quot;login_attempt&quot;, &quot;account_viewed&quot;, &quot;KYC_step_completed&quot;).</li>
+<li>Kafka ingests at massive scale (millions of events/sec).</li>
+<li>Fraud Flink job(s) consume (dedicated consumer group, partitioned by user_id for stateful processing).</li>
+<li>Flink enriches in real time (feature store lookup for user profile, session state, historical sequences).</li>
+<li>Fraud logic/config decides: &quot;Route this event to Transformer Model vX.Y (prod) or vX.Y-test (shadow)&quot;.</li>
+<li>Async inference call to the chosen model endpoint → risk score + explanation.</li>
+<li>Decision emitted to output Kafka topic (consumed by orchestrator/products for real-time action + UI adaptation).</li>
+<li>Outcome (actual fraud or not) loops back as a later event for labeling/learning.</li>
+</ol>
+<p><strong>Testing vs Production Models</strong>:</p>
+<ul>
+<li><strong>Shadow mode</strong>: Fraud team spins up parallel Flink job or branch in the main job that runs the test Transformer alongside prod (logs scores to a separate topic for offline comparison — zero impact on live decisions).</li>
+<li><strong>Canary/A/B</strong>: Config routes 1–5% of traffic (by user hash or risk tier) to test model; monitor metrics in real time.</li>
+<li><strong>Promotion</strong>: Fraud team updates a simple config (in etcd, Consul, or Databricks) → prod job instantly switches routing. Rollback in seconds.</li>
+<li><strong>Learning/Retraining</strong>: Stream feeds a lakehouse (Databricks Delta Lake or Iceberg). Fraud team triggers training pipelines (e.g., via Airflow/Databricks Workflows) on new labeled data. New Transformer version registered → tested in shadow → promoted.</li>
+</ul>
+<p>This gives the fraud team &quot;listen + decide + invoke&quot; superpowers with full auditability (every model call logged with version + input/output).</p>
+<h3 id="core-components-tech-2026-best-fit-for-low-latency-transformer-support">Core Components &amp; Tech (2026 Best-Fit for Low Latency + Transformer Support)</h3>
+<p>All components are cloud-native, Kubernetes-orchestrated, and compliant (GDPR, SOC2, explainability via SHAP/LIME for Transformers).</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Recommended Tech (2026)</th>
+<th>Why It Fits Fraud Team Autonomy + Transformers + Low Latency</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Event Streaming Backbone</strong></td>
+<td>Apache Kafka (Confluent Cloud or Redpanda) + Schema Registry</td>
+<td>Universal bus for <em>all</em> products. Exactly-once, replayable for testing. Fraud subscribes independently.</td>
+</tr>
+<tr>
+<td><strong>Fraud Listening/Processing</strong></td>
+<td>Apache Flink (2.2+ with ML_PREDICT support) — fraud-owned jobs</td>
+<td>Stateful per-user sequences (perfect for Transformer input). AsyncDataStream for non-blocking model calls. Fraud team deploys/maintains their own jobs via self-service GitOps.</td>
+</tr>
+<tr>
+<td><strong>Real-Time Features/Context</strong></td>
+<td>Feature Store (Tecton/Databricks online store on Redis/Cassandra)</td>
+<td>Sub-10ms lookups for user journey state. Stream updates features live.</td>
+</tr>
+<tr>
+<td><strong>Dynamic Model Router</strong></td>
+<td>Lightweight Flink ProcessFunction + config service (or simple Drools rules) controlled by fraud team</td>
+<td>Fraud team updates &quot;which Transformer for which event/risk&quot; in real time via API/UI. No code change needed.</td>
+</tr>
+<tr>
+<td><strong>Transformer Model Serving</strong></td>
+<td>Triton Inference Server (NVIDIA) or vLLM/TensorRT-LLM on GPU pods; or managed (SageMaker, Vertex AI, Databricks Model Serving)</td>
+<td>Optimized for Transformers (quantization, batching, time-aware embeddings like FraudTransformer-style). &lt;20–50ms inference even on sequences. Supports multiple versions side-by-side.</td>
+</tr>
+<tr>
+<td><strong>Model Registry &amp; Experiments</strong></td>
+<td>MLflow (or Databricks Model Registry) + experiment tracking</td>
+<td>Fraud team trains (offline on lakehouse data from stream), registers versions, compares test/prod metrics. Shadow testing built-in.</td>
+</tr>
+<tr>
+<td><strong>Training/Learning Data Lake</strong></td>
+<td>Databricks Lakehouse (or Snowflake) fed by Kafka → Flink → Delta Lake</td>
+<td>Stream continuously materializes training datasets + labels. Fraud triggers online learning or full retrains.</td>
+</tr>
+<tr>
+<td><strong>Orchestrator Integration</strong></td>
+<td>Backbase/Temporal hooks consume fraud decisions from output topic</td>
+<td>Full journey adaptation (e.g., &quot;block + show challenge UI&quot; based on Transformer score).</td>
+</tr>
+</tbody></table>
+<p><strong>Transformer-Specific Notes</strong>:</p>
+<ul>
+<li>Use sequence models (TabTransformer, Time-Aware GPT variants, or custom encoder-only Transformers) trained on user journey sequences (clicks + transactions).</li>
+<li>Input: Real-time windowed sequence from Flink state + features.</li>
+<li>Low-latency tricks: Quantized models (8-bit/4-bit), distillation, GPU acceleration, async calls in Flink. End-to-end &lt;100ms is standard in production fraud systems today.</li>
+</ul>
+<h3 id="how-the-fraud-team-operates-day-to-day-minimal-friction">How the Fraud Team Operates Day-to-Day (Minimal Friction)</h3>
+<ul>
+<li><strong>Listen</strong>: Deploy a Flink job (or use a managed platform like Databricks Streaming) that auto-subscribes to relevant topics. Filter/transform as needed.</li>
+<li><strong>Decide Model</strong>: Via a fraud-controlled config dashboard: &quot;For high-risk payments → use Transformer-v2.3-prod; for testing → shadow with v2.4-experimental&quot;.</li>
+<li><strong>Invoke</strong>: Flink routes the enriched event payload to the chosen endpoint (REST/gRPC). Supports ensembles (multiple Transformers + rules).</li>
+<li><strong>Learn/Iterate</strong>: Monitor drift via stream metrics → trigger retrain on lakehouse data → register new model → shadow test → promote.</li>
+<li><strong>Testing Safety</strong>: Historical replay (Kafka + Flink savepoints) or shadow mode on live traffic. Metrics dashboards compare models without production risk.</li>
+<li><strong>Autonomy Without Chaos</strong>: Fraud jobs run in isolated namespaces/consumer groups. Platform team handles Kafka/Flink infra; fraud owns logic/models.</li>
+</ul>
+<p><strong>Latency &amp; Scale</strong>: Flink + async inference + optimized serving = sub-second decisions at millions of TPS. Transformers add negligible overhead with modern serving (proven in 2025–2026 fintech deployments).</p>
+<p><strong>Compliance &amp; Observability</strong>:</p>
+<ul>
+<li>Every decision includes model version, confidence, SHAP explanation → audit topic.</li>
+<li>Bias/drift monitoring built into the registry.</li>
+<li>Consent &amp; PII: Stream redaction + on-demand purge.</li>
+</ul>
+<p>This architecture turns fraud from a siloed &quot;batch model&quot; team into a real-time intelligence layer that evolves continuously with the business. It fits perfectly into the broader user journey orchestrator (same stream, same Flink cluster, shared feature store) while giving fraud complete ownership.</p>
+<p>If you share your current Kafka/Flink maturity, preferred cloud, or specific Transformer use case (e.g., sequence vs tabular), I can provide sample Flink job pseudocode, model registry config examples, or a more detailed diagram description. This is production-proven at scale in banks today.</p>
+
+  </main>
+</div>
+</body></html>

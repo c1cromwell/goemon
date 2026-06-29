@@ -1,6 +1,6 @@
 # Corp B — In-app collectible escrow (no vault partner)
 
-Legal and product posture for **seller P2P slab listings** where Argus holds buyer USDC in escrow until receipt is confirmed. This is **Tier 2** in the collectibles strategy: Argus is the payment intermediary; the seller ships directly; no Courtyard/vault custody partner is required for the money path.
+Legal and product posture for **seller P2P slab listings** where Goeman holds buyer USDC in escrow until receipt is confirmed. This is **Tier 2** in the collectibles strategy: Goeman is the payment intermediary; the seller ships directly; no Courtyard/vault custody partner is required for the money path.
 
 ## What ships in the prototype
 
@@ -24,7 +24,7 @@ Legal and product posture for **seller P2P slab listings** where Argus holds buy
 
 - **Money transmission / MSB** — holding third-party funds pending performance
 - **Marketplace intermediary** — connecting buyers and sellers; dispute mediation
-- **Not custody** — Argus does not take possession of the physical slab in this lane (seller ships)
+- **Not custody** — Goeman does not take possession of the physical slab in this lane (seller ships)
 - **Securities** — seller P2P collectibles are non-security HTS collectibles (`isSecurity: false`)
 
 ## Config

@@ -2,14 +2,14 @@
 
 ## Surfaces
 
-Argus Financial Partners ships three client surfaces and one internal surface at launch:
+Goeman Global Finance ships three client surfaces and one internal surface at launch:
 
 | Surface | Platform | Primary purpose |
 |---|---|---|
 | Mobile app | iOS (Swift/SwiftUI), Android (Kotlin/Compose) | Primary consumer surface — wallet, marketplace, transfer, support |
 | Web app | Next.js 15 (App Router) | Same product surface as mobile; passkey-first; better for portfolio review and tax export |
 | Headless API | Go services exposing gRPC + REST | Used by all clients; also exposed to partners under contract |
-| Internal admin console | Repurposed Argus Financial Partners CLI (Python) | Used by compliance reviewers, customer support escalations, ops |
+| Internal admin console | Repurposed Goeman Global Finance CLI (Python) | Used by compliance reviewers, customer support escalations, ops |
 
 The mobile and web apps are at feature parity at launch with the exception of biometric authentication flow (Face ID / Touch ID on mobile; passkey-via-browser on web). There is no feature gated to a single client surface.
 
@@ -48,7 +48,7 @@ No KYC. No phone number required. No address. No SSN/national ID. The user has a
 The first action a new Tier 0 user takes. The flow has to be obvious and shareable.
 
 1. Home → "Receive" → modal shows the user's Hedera account address with QR code
-2. User can copy address, share via system share sheet, or generate a payment request link (deep link that opens to a pre-filled send screen if recipient also has Argus Financial Partners)
+2. User can copy address, share via system share sheet, or generate a payment request link (deep link that opens to a pre-filled send screen if recipient also has Goeman Global Finance)
 3. Incoming transfers appear in the activity feed within ~5 seconds of on-chain confirmation
 4. Push notification on receipt (if notifications enabled)
 
@@ -90,7 +90,7 @@ The flow varies by KYC tier required:
 
 The Move tab consolidates all outbound flows.
 
-1. Move → "Send" → enter recipient (Argus Financial Partners handle, Hedera address, EVM address, or contact)
+1. Move → "Send" → enter recipient (Goeman Global Finance handle, Hedera address, EVM address, or contact)
 2. Enter amount
 3. If amount exceeds Travel Rule threshold ($3K) and KYC tier insufficient: tier upgrade flow inserted
 4. Confirmation screen with amount, recipient, fee (sponsored or shown), and estimated arrival
@@ -99,7 +99,7 @@ The Move tab consolidates all outbound flows.
 **Requirements:**
 - `[REQ-SEND-001]` Address validation runs before submission; invalid Hedera/EVM addresses block submit
 - `[REQ-SEND-002]` Travel Rule data collection (originator and beneficiary information) is automatic and based on KYC tier — user does not see Travel Rule form unless additional info is required
-- `[REQ-SEND-003]` Sending to a known Argus Financial Partners handle short-circuits address entry and shows the recipient's name/avatar for confirmation
+- `[REQ-SEND-003]` Sending to a known Goeman Global Finance handle short-circuits address entry and shows the recipient's name/avatar for confirmation
 
 ### Cross-border (international corridors)
 
@@ -149,7 +149,7 @@ In-app and push notifications are categorized; users can opt out per category.
 - Charts, technical indicators, or any analytical/trading UI
 - Multi-asset portfolio allocation tools
 - Tax-loss harvesting or any tax-optimization features
-- Subscription tiers (Argus Financial Partners Plus, Pro, etc.) — single free tier at launch
+- Subscription tiers (Goeman Global Finance Plus, Pro, etc.) — single free tier at launch
 - Card management UI (no card at launch)
 - Lending UI (no lending at launch)
 - Group accounts, joint accounts, business accounts

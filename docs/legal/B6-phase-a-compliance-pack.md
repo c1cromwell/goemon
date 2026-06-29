@@ -4,7 +4,7 @@ Entity and compliance items required before onboarding real users (`docs/LAUNCH.
 
 ## Entity
 
-- [ ] Argus Financial Partners LLC formed (Wyoming)
+- [ ] Goeman Global Finance, LLC formed (Wyoming)
 - [ ] EIN obtained
 - [ ] Registered agent active
 - [ ] Foreign qualification in founder home state (if required)

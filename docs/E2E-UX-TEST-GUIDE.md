@@ -1,4 +1,4 @@
-# Argus Financial Partners — End-to-End UX & System Test Guide
+# Goeman Global Finance — End-to-End UX & System Test Guide
 
 A hands-on guide to exercising **every product, every channel, and the fraud platform** as a
 real user/operator, plus how to build/run/validate the backend end-to-end. This is the manual,

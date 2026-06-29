@@ -1,6 +1,6 @@
 # Go-Live Plan — Child-Owned, Founder-Controlled, with a Guerrilla GTM
 
-The operator's plan for taking Argus Financial Partners live under a specific ownership design:
+The operator's plan for taking Goeman Global Finance live under a specific ownership design:
 **your adult child owns the company anonymously, you control it and earn through a separate
 management company you own, and you grow it with a low-budget guerrilla marketing engine** — all
 inside the Phase-A non-custodial posture and the "never call it a bank" guardrail.
@@ -33,7 +33,7 @@ one and built to survive the future Delaware C-corp conversion:
               │ owns 100%                            │ owns 100% (anonymously)
               ▼                                       ▼
    ┌───────────────────────┐  Management   ┌───────────────────────────────┐
-   │  Argus Management LLC  │ Services Agr. │  Argus Financial Partners LLC │
+   │  Goeman Management LLC  │ Services Agr. │  Goeman Global Finance, LLC │
    │  (your home state)     │ ────────────▶ │  (Wyoming, manager-managed)   │
    │  • you bank here       │  fee for svc  │  • owns ALL IP + brand + code │
    │  • you draw income     │ ◀──────────── │  • the appreciating asset     │
@@ -46,13 +46,13 @@ one and built to survive the future Delaware C-corp conversion:
 company."**
 
 - The valuable, appreciating asset is the **IP**: the code in this repo, the architecture, the brand,
-  the domains. It lives in the **IP HoldCo** (`Argus Financial Partners LLC`, Wyoming), which your
+  the domains. It lives in the **IP HoldCo** (`Goeman Global Finance, LLC`, Wyoming), which your
   child owns 100%. Because the gift happens **now, pre-revenue**, the company is worth very little — the
   **most tax-efficient moment** to move ownership and future appreciation into your child's hands. ⚖
 - **Ownership ≠ control.** A Wyoming LLC can be **manager-managed**: you are appointed **manager** in
   the operating agreement and run everything and sign for the company, while your child is the passive
   **member/owner**. You don't need to own it to control it.
-- The **Management Company** (`Argus Management LLC`) is owned by **you**. It contracts with the IP
+- The **Management Company** (`Goeman Management LLC`) is owned by **you**. It contracts with the IP
   HoldCo under a **Management Services Agreement** and is paid a fee. This is the entity where **you
   open bank accounts, draw income, and file taxes** — and it owns no IP and does no regulated activity,
   so it carries no appreciating value and no licensing exposure.
@@ -70,7 +70,7 @@ your entity is a **management company you own**; **maximum anonymity**; equity g
 
 ---
 
-## 2. Entity 1 — the IP HoldCo (`Argus Financial Partners LLC`, Wyoming)
+## 2. Entity 1 — the IP HoldCo (`Goeman Global Finance, LLC`, Wyoming)
 
 **DO NOW.** This is the same Wyoming LLC that `CORPORATE-STRUCTURE.md` §2 recommends — the lowest-cost,
 most private, most crypto-forward US entity — with two modifications for your design: it is
@@ -114,14 +114,14 @@ company — see the holdco/opco split in `CORPORATE-STRUCTURE.md` §2.2.
 ### 2.4 How it converts later (DEFER → Phase B/C)
 
 When you raise or stand up a regulated subsidiary, convert the IP HoldCo to a **Delaware C-corp**
-(`Argus Financial Partners, Inc.`) per `CORPORATE-STRUCTURE.md` §2.2: the child's units become
+(`Goeman Global Finance, Inc.`) per `CORPORATE-STRUCTURE.md` §2.2: the child's units become
 **founder stock**, profits interests convert to an **ISO/NSO option pool** (§6), and the holdco/opco
 split insulates licenses from the IP. Papering the operating agreement cleanly now makes that
 conversion tax-neutral and cheap. **Don't pay for any of this today.** ⚖
 
 ---
 
-## 3. Entity 2 — the Management Company (`Argus Management LLC`)
+## 3. Entity 2 — the Management Company (`Goeman Management LLC`)
 
 **DO NOW.** This is the entity you asked for — *your* vehicle for **taxes and bank accounts**.
 
@@ -137,8 +137,8 @@ conversion tax-neutral and cheap. **Don't pay for any of this today.** ⚖
 
 ### 3.2 The Management Services Agreement (the connective tissue) ⚖
 
-A written **Management Services Agreement (MSA)** between `Argus Management LLC` (provider) and
-`Argus Financial Partners LLC` (client):
+A written **Management Services Agreement (MSA)** between `Goeman Management LLC` (provider) and
+`Goeman Global Finance, LLC` (client):
 
 - **Scope:** software development, product management, operations, marketing, and administration
   performed by you/your company **for** the IP HoldCo.
@@ -167,7 +167,7 @@ This is the step that makes your child the owner. Because they're an adult, it's
 but the **tax treatment is the part to get right with a CPA before you sign.**
 
 - **The instrument:** an **Assignment of Membership Interest / Gift Agreement** transferring 100% of
-  `Argus Financial Partners LLC` to your child, recorded in the operating agreement's member schedule.
+  `Goeman Global Finance, LLC` to your child, recorded in the operating agreement's member schedule.
   Document **donative intent** (it's a gift, not a sale).
 - **Do it pre-revenue, at low valuation.** The earlier and emptier the company, the lower the gift's
   value, the less of your lifetime exemption it consumes, and the more future appreciation lands
@@ -207,7 +207,7 @@ Items already detailed elsewhere are cross-referenced, not rewritten.
 | 10 | **Contributor / Contractor IP-Assignment + NDA** template | IP HoldCo | Any contributor | DO NOW | Anyone who ever touches the code assigns it to the HoldCo (work-for-hire alone is insufficient) |
 | 11 | **ToS / Privacy / E-Sign / risk + "not advice" disclaimers** | IP HoldCo | — (publish) | DO NOW | Cross-ref `LAUNCH.md` §5; publish before any signup |
 | 12 | **AML/KYC/BSA policy + named compliance officer + OFAC screening** | IP HoldCo | You (officer) | DO NOW | Cross-ref `CORPORATE-STRUCTURE.md` §8; the identity ladder + VC + append-only audit are ~70% of the evidence layer already |
-| 13 | **Trademark application** (Argus brand) | IP HoldCo | You | Soon | USPTO knockout search + file; marks company-owned via #5 |
+| 13 | **Trademark application** (Goeman brand) | IP HoldCo | You | Soon | USPTO knockout search + file; marks company-owned via #5 |
 | 14 | **Beneficial Ownership (BOI) status check** | Both | You | DO NOW ⚖ | FinCEN BOI rules have shifted; confirm current applicability for each entity |
 | 15 | **Equity Incentive Framework** (profits-interest plan + pool) | IP HoldCo | You (mgr) | DO NOW | §6 — set up the framework even before the first grant |
 
@@ -304,7 +304,7 @@ wallet**) is the wedge (`PRODUCTION-STRATEGY.md` §8).
 - **Short YouTube explainers:** "how the agent actually works" — the credibility long-form.
 - **Guerrilla tactics (zero/low budget):** light, defensible hot takes on "agentic finance,"
   meme-able demo moments, cross-promo with AI-tool creators, and **stunt demos** (an AI agent doing
-  something legitimately novel, on camera). Tie the **teen/family angle** to the Phase-22 *Argus
+  something legitimately novel, on camera). Tie the **teen/family angle** to the Phase-22 *Goeman
   Starter* product for a distinct audience.
 
 ### 7.5 Cadence, funnel & metrics

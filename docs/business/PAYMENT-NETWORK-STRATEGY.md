@@ -1,13 +1,13 @@
-# Payment Network Strategy — can Argus build a card on a *new* (non-Visa/MC/Amex) rail?
+# Payment Network Strategy — can Goeman build a card on a *new* (non-Visa/MC/Amex) rail?
 
 An honest feasibility take on the founder question: *"Can we create a credit-card brand, but build a new
 card network — new tech or a stablecoin rail — that isn't Amex, Visa, or Mastercard?"*
 
 > **How to read this.** Sections are tagged **DO NOW**, **DEFER → Corp B/C**, or **⚖ see counsel** (matching
 > `CORPORATE-STRUCTURE.md`). Dollar/market figures are planning estimates, not quotes. This is strategy, not
-> legal or investment advice. It reconciles with — and extends — `docs/argus_prdv1/06-payments-and-rails.md`
+> legal or investment advice. It reconciles with — and extends — `docs/goeman_prdv1/06-payments-and-rails.md`
 > (which currently plans the card as a **Visa/MC debit, v2**), `CORPORATE-STRUCTURE.md` (the Corp A/B/C ramp),
-> and `docs/ARGUS-PLAN.md` (Phases 19–20).
+> and `docs/GOEMAN-PLAN.md` (Phases 19–20).
 
 ---
 
@@ -23,10 +23,10 @@ one of them is a good idea.**
   in — still under-index on acceptance. Apple, PayPal, and Cash App, with enormous distribution, all chose
   to **ride** Visa/MC rather than rebuild the rails. A startup cannot buy acceptance head-on.
 - **A new *rail* (stablecoin / programmable) for a focused wedge:** **genuinely credible, and the only
-  honest path to "not Visa/MC/Amex."** You own issuance (the Argus wallet/users) and acceptance (merchants
+  honest path to "not Visa/MC/Amex."** You own issuance (the Goeman wallet/users) and acceptance (merchants
   you directly integrate), and you settle in **USDC on Hedera** (~3s finality, ~zero fee, no interchange, no
   chargebacks). The unlock that legacy networks structurally cannot match is **programmable, scoped,
-  agent-authorized payments** — which Argus already has the primitives for.
+  agent-authorized payments** — which Goeman already has the primitives for.
 
 **So the recommendation is a barbell:** issue a **Visa-rails card as a bridge** for legacy acceptance on day
 one (Trojan horse), while building your **own stablecoin settlement rail** for the places where acceptance is
@@ -45,7 +45,7 @@ separate, harder layer** layered on top of whichever rail (see §6).
 
 A "network" is defined by owning **both sides** — cardholders *and* merchant acceptance — plus settlement and
 the dispute/rulebook layer. Conflating "I want my own card" (brand, easy) with "I want my own network" (rails,
-near-impossible head-on) is the trap. Argus can have a **brand on Visa now** and a **rail of its own** for a
+near-impossible head-on) is the trap. Goeman can have a **brand on Visa now** and a **rail of its own** for a
 specific wedge — those are not in conflict; they're the bridge-and-beachhead.
 
 ---
@@ -72,13 +72,13 @@ closed by structure, not by effort or capital.
 
 ---
 
-## 4. The reframe — a stablecoin-settled, agent-native rail (where Argus is actually strong)
+## 4. The reframe — a stablecoin-settled, agent-native rail (where Goeman is actually strong)
 
-The credible "new network" doesn't replace Visa's acceptance; it builds a **different rail** where Argus
+The credible "new network" doesn't replace Visa's acceptance; it builds a **different rail** where Goeman
 *already owns both sides* and the incumbents are weak.
 
 **What "the network" means here:**
-- **Issuance side:** the Argus non-custodial wallet + user base (you control it).
+- **Issuance side:** the Goeman non-custodial wallet + user base (you control it).
 - **Acceptance side:** merchants you **directly integrate** (checkout SDK / API / QR), starting where they
   *want* a new rail — see §5.
 - **Settlement:** **USDC on Hedera** — ~3s finality, fractions-of-a-cent fees, **no interchange**, no
@@ -86,7 +86,7 @@ The credible "new network" doesn't replace Visa's acceptance; it builds a **diff
   attach seam; merchant payout is a balanced journal mirrored on-chain (the same money-seam discipline as the
   Phase-17 trading settlement).
 
-**The genuine unlock legacy networks cannot match — programmable, scoped, agent-authorized payments.** Argus
+**The genuine unlock legacy networks cannot match — programmable, scoped, agent-authorized payments.** Goeman
 already has the primitives: **OID4VP + the MCP server + 90s scoped operation-tokens** (`presentationService`,
 `routes/mcp.ts`, `smartchatService`). That means a payment can be **authorized by an AI agent under a
 user-signed, scope-limited, time-boxed grant** — "spend up to $X at merchant Y for purpose Z, expiring in 90s."
@@ -110,10 +110,10 @@ payment rail for agentic and programmable commerce."
 
 **Beachhead — go where acceptance is *greenfield*, not where Visa is entrenched:**
 1. **Crypto-native merchants** — already want stablecoin settlement; no terminal to displace.
-2. **Online / API checkout** — a "Pay with Argus (USDC)" button; integration is software, not hardware.
+2. **Online / API checkout** — a "Pay with Goeman (USDC)" button; integration is software, not hardware.
 3. **P2P** — already built (Hedera USDC, ~3s; `06-payments-and-rails.md` §P2P). The social on-ramp.
 4. **Agent-to-merchant / machine commerce** — the structurally-defensible frontier (§4); AI agents paying
-   under scoped grants. Few competitors, and Argus is ahead on the primitives.
+   under scoped grants. Few competitors, and Goeman is ahead on the primitives.
 
 **The bridge — issue a Visa card anyway, as a Trojan horse (DO NOW when at Corp B):**
 - A **virtual + physical Visa card** (Marqeta/Lithic, BIN-sponsor bank) that **pulls from the USDC balance**
@@ -140,7 +140,7 @@ The question said *credit* card. Credit ≠ the rail; **credit = lending = a loa
   1. **Charge card / pay-in-full** (settle the balance each cycle) — far less lending exposure; closer to a
      debit+float product.
   2. **Stablecoin-/RWA-collateralized credit** — already designed as **PRD v2 collateralized lending**
-     (`06-payments-and-rails.md` §Lending): pledge Argus-held RWA tokens, borrow USDC, auto-liquidate on LTV
+     (`06-payments-and-rails.md` §Lending): pledge Goeman-held RWA tokens, borrow USDC, auto-liquidate on LTV
      breach. This is a *secured* loan — much more tractable than unsecured, and it fits the tokenization stack.
   3. **Unsecured revolving** — defer to v3, behind a lending partner/license + capital.
 - **Key point:** credit **rides on top of** whichever rail. Decide the *rail* (§4–5) first; bolt credit on
@@ -167,18 +167,18 @@ caution applies doubly to the words *credit* and *network*).
 
 ## 8. How it maps onto the roadmap
 
-- **Card brand / issuing** → extends **Phase 19 — Full-bank rails** in `docs/ARGUS-PLAN.md` (BaaS partner +
+- **Card brand / issuing** → extends **Phase 19 — Full-bank rails** in `docs/GOEMAN-PLAN.md` (BaaS partner +
   MSB already the gate there); the Visa-bridge card is a Phase-19 deliverable.
-- **Native stablecoin settlement rail + agent-native payments** → **Phase 21 — "Argus Pay"** (Corp B/C),
+- **Native stablecoin settlement rail + agent-native payments** → **Phase 21 — "Goeman Pay"** (Corp B/C),
   reusing: the ledger **`external_clearing`** seam, **Hedera USDC**, the **OID4VP/MCP/operation-
   token** authorization stack, the **Phase-8 escrow** pattern (for the dispute layer), and the
   **SLA-isolation discipline** from the Phase-17 trading seam (payments must not degrade money-critical SLOs).
-  **Stage-1 prototype now BUILT** (see `docs/ARGUS-PLAN.md` Phase 21): merchants + payment intents,
+  **Stage-1 prototype now BUILT** (see `docs/GOEMAN-PLAN.md` Phase 21): merchants + payment intents,
   escrow-protected pay→capture/refund/dispute, the `pay_merchant` MCP scope for agent-to-merchant commerce,
   zero rail fee, `ARGUS_PAY_ENABLED` kill-switch (prod-fatal until licensed).
 - **Credit** → **collateralized** lending is PRD v2 (rides the rail); **unsecured** is PRD v3 (lending
   license/partner + capital).
 
-> **One-line summary for the cap table / a pitch:** *Argus isn't building "a cheaper Visa" — that's a
+> **One-line summary for the cap table / a pitch:** *Goeman isn't building "a cheaper Visa" — that's a
 > graveyard. It's building the **settlement rail for agentic and stablecoin-native commerce**, with a Visa
 > card as the bridge to legacy acceptance. The card is the on-ramp; the agent-authorized USDC rail is the moat.*

@@ -2,7 +2,7 @@
 
 ## The thesis
 
-Argus Financial Partners's structural cost advantage comes from running a meaningful share of bank operations through AI agents. This isn't a "we'll have a chatbot" thesis — it's "we design every back-office workflow around an agent participant from day one." Traditional banks spend 50-70% of OpEx on people performing repeatable knowledge work (support, KYC review, fraud investigation, compliance drafting, marketing operations). A correctly-designed agent layer reduces that to 20-30%, with the remaining humans focused on edge cases, escalations, and supervision.
+Goeman Global Finance's structural cost advantage comes from running a meaningful share of bank operations through AI agents. This isn't a "we'll have a chatbot" thesis — it's "we design every back-office workflow around an agent participant from day one." Traditional banks spend 50-70% of OpEx on people performing repeatable knowledge work (support, KYC review, fraud investigation, compliance drafting, marketing operations). A correctly-designed agent layer reduces that to 20-30%, with the remaining humans focused on edge cases, escalations, and supervision.
 
 This module specifies how agents fit into the architecture, what skills they have, where humans are required, and what guardrails are in place.
 
@@ -51,7 +51,7 @@ Each skill is an MCP server with a versioned API, scoped permissions, and its ow
 - `get_user_account` — read account info (no PII beyond what user can see themselves)
 - `get_user_transactions` — read transaction history
 - `get_user_kyc_status` — read tier and verification status
-- `search_knowledge_base` — query Argus Financial Partners's docs and FAQ
+- `search_knowledge_base` — query Goeman Global Finance's docs and FAQ
 - `draft_response` — produce a customer-facing message
 - `create_internal_note` — annotate the ticket for human reviewers
 - `escalate_to_human` — route to human queue with reason

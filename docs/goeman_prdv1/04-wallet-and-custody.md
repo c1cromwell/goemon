@@ -2,15 +2,15 @@
 
 ## Custody model
 
-Argus Financial Partners is **non-custodial** for all on-chain assets (USDC, USDT, RWA tokens, NFTs). The user's Hedera account holds their assets; Argus Financial Partners operates the infrastructure that lets them use that account through the app.
+Goeman Global Finance is **non-custodial** for all on-chain assets (USDC, USDT, RWA tokens, NFTs). The user's Hedera account holds their assets; Goeman Global Finance operates the infrastructure that lets them use that account through the app.
 
-For US dollars (real bank-rail dollars, distinct from USDC), Argus Financial Partners is **custodial-via-partner-bank** at Tier 2+. The partner bank holds the USD in a pooled or FBO ("for benefit of") account; user balances are tracked in our ledger and reconciled with the bank daily. Tier 0 and Tier 1 users do not have USD balances — only USDC.
+For US dollars (real bank-rail dollars, distinct from USDC), Goeman Global Finance is **custodial-via-partner-bank** at Tier 2+. The partner bank holds the USD in a pooled or FBO ("for benefit of") account; user balances are tracked in our ledger and reconciled with the bank daily. Tier 0 and Tier 1 users do not have USD balances — only USDC.
 
 ## Wallet stack — v1
 
 ### Native build on Hedera SDKs
 
-Argus Financial Partners builds the wallet infrastructure directly on Hedera's first-party SDKs rather than integrating a third-party embedded wallet provider. This decision was made deliberately to maximize control, eliminate vendor lock-in, and take advantage of Hedera's protocol-level account abstraction (which makes the build substantially simpler than the equivalent on EVM, where smart-contract wallets and ERC-4337 paymasters would add material complexity).
+Goeman Global Finance builds the wallet infrastructure directly on Hedera's first-party SDKs rather than integrating a third-party embedded wallet provider. This decision was made deliberately to maximize control, eliminate vendor lock-in, and take advantage of Hedera's protocol-level account abstraction (which makes the build substantially simpler than the equivalent on EVM, where smart-contract wallets and ERC-4337 paymasters would add material complexity).
 
 **Why native:**
 - **Hedera's protocol-level AA eliminates the smart contract wallet pattern.** Account IDs are decoupled from keys; rotating keys, adding multi-signature thresholds, and gating transactions on policy all happen at the network layer without a deployed contract per user.
@@ -28,10 +28,10 @@ Argus Financial Partners builds the wallet infrastructure directly on Hedera's f
 ### Architecture
 
 ```
-User device                              Argus Financial Partners backend                   Hedera network
+User device                              Goeman Global Finance backend                   Hedera network
 ─────────────                            ──────────────                   ──────────────
 ┌────────────────────┐                  ┌──────────────────┐              ┌────────────┐
-│  Argus Financial Partners app        │                  │  Wallet Service  │              │   Hedera   │
+│  Goeman Global Finance app        │                  │  Wallet Service  │              │   Hedera   │
 │  ┌──────────────┐  │   transaction    │  ┌─────────────┐ │   submit tx  │   network  │
 │  │  Signing UX  │  │   construction   │  │ Tx Builder  │ │              │            │
 │  │  + passkey   │  │ ────────────────►│  │             │ │ ────────────►│  consensus │
@@ -65,7 +65,7 @@ User device                              Argus Financial Partners backend       
 - An encrypted blob containing the user's key material is stored server-side
 - Encryption is performed with a key derived from the user's passkey credentials + an HMAC factor held in KMS
 - Backup is used only during cross-device recovery (see Recovery section below)
-- Decryption requires the user's passkey signature, which Argus Financial Partners cannot produce on the user's behalf
+- Decryption requires the user's passkey signature, which Goeman Global Finance cannot produce on the user's behalf
 
 **Paymaster signing — KMS / HSM:**
 - The paymaster account that sponsors gas operates from a separate signer service
@@ -88,8 +88,8 @@ Each user gets a single Hedera account on signup. Hedera's protocol-level accoun
 - Express policy-based authorization via Hedera's native key list and threshold key constructs — no smart contract required
 
 **Requirements:**
-- `[REQ-WALLET-006]` Each Argus Financial Partners user account has exactly one Hedera account ID at any time
-- `[REQ-WALLET-007]` New users' Hedera accounts are created on first sign-in with a single device-derived key; account creation cost is sponsored by Argus Financial Partners's paymaster
+- `[REQ-WALLET-006]` Each Goeman Global Finance user account has exactly one Hedera account ID at any time
+- `[REQ-WALLET-007]` New users' Hedera accounts are created on first sign-in with a single device-derived key; account creation cost is sponsored by Goeman Global Finance's paymaster
 - `[REQ-WALLET-008]` Account key rotation is supported and triggered automatically when a user adds a new device; the prior device's key remains valid until explicitly revoked or until 90 days of inactivity, whichever is sooner
 - `[REQ-WALLET-009]` Step-up auth (Module 03) uses a 2-of-2 threshold key list: user's device-derived signature + a server-side signature from the policy enforcement service
 - `[REQ-WALLET-010]` Hedera accounts have an associated EVM-compatible address (HIP-583 ECDSA alias) so users can receive from EVM-side wallets
@@ -101,26 +101,26 @@ Hedera requires explicit account-to-token associations before an account can rec
 
 - USDC (Hedera-native)
 - USDT (Hedera-native, when available)
-- Any token issued by Argus Financial Partners's first-party tokenization (v2+)
+- Any token issued by Goeman Global Finance's first-party tokenization (v2+)
 
 For third-party tokens the user purchases through the marketplace, we auto-associate at purchase time. For inbound transfers of unknown tokens, the system shows a "Pending association" state and prompts the user to accept before the asset appears in their balance.
 
 **Requirements:**
-- `[REQ-WALLET-012]` USDC association happens automatically at account creation; cost (currently ~$0.05 of HBAR equivalent) is sponsored by Argus Financial Partners
+- `[REQ-WALLET-012]` USDC association happens automatically at account creation; cost (currently ~$0.05 of HBAR equivalent) is sponsored by Goeman Global Finance
 - `[REQ-WALLET-013]` Maximum auto-associated tokens per account: 100 (Hedera's network limit). Above that, users must explicitly manage associations
 - `[REQ-WALLET-014]` Unknown inbound tokens require manual user acceptance to avoid spam token issues
 
 ## Gas sponsorship
 
-Users never see HBAR. Argus Financial Partners pays all transaction fees on the user's behalf using Hedera's transaction fee delegation model.
+Users never see HBAR. Goeman Global Finance pays all transaction fees on the user's behalf using Hedera's transaction fee delegation model.
 
 **Mechanism:**
-- Argus Financial Partners operates a "paymaster" account funded with HBAR
+- Goeman Global Finance operates a "paymaster" account funded with HBAR
 - Transactions are constructed with the paymaster as the `payerAccountId` and signed by both the user's key and the paymaster
 - Fee policy enforced server-side: certain transaction types are sponsored, others not (e.g., spamming Hedera with HCS submissions outside of audit flow is not sponsored)
 
 **Requirements:**
-- `[REQ-WALLET-015]` Gas sponsorship covers: token transfers up to a daily quota per user, marketplace purchases, smart contract calls to whitelisted Argus Financial Partners contracts
+- `[REQ-WALLET-015]` Gas sponsorship covers: token transfers up to a daily quota per user, marketplace purchases, smart contract calls to whitelisted Goeman Global Finance contracts
 - `[REQ-WALLET-016]` Daily HBAR spend per user is capped (configurable; v1 default $0.10/user/day equivalent)
 - `[REQ-WALLET-017]` Paymaster account balance is monitored; alerts fire below 30 days runway at current usage rate
 - `[REQ-WALLET-018]` Failed transactions due to paymaster issues are retried automatically up to 3 times with exponential backoff
@@ -165,7 +165,7 @@ If all automated paths fail (lost email access, lost phone, no synced passkey):
 ## What we do NOT do
 
 - **Seed phrases.** Users never see a 12- or 24-word recovery phrase. Hardware-bound keys plus encrypted backup remove the need for the worst footgun in consumer crypto.
-- **Wallet export to third parties from within Argus Financial Partners by default.** Users can export their Hedera private key via a clearly-labeled "Advanced" flow that includes a security warning, step-up auth, and a 24-hour cooldown, but we don't make it a primary action. Export is for users leaving the platform.
+- **Wallet export to third parties from within Goeman Global Finance by default.** Users can export their Hedera private key via a clearly-labeled "Advanced" flow that includes a security warning, step-up auth, and a 24-hour cooldown, but we don't make it a primary action. Export is for users leaving the platform.
 - **Custodial holding of crypto for any user.** Even Tier 4 users with lending products retain custody; the lending mechanism uses smart-contract escrow, not custodial transfer.
 - **Recovery shortcuts via "knowledge factors" alone.** No security questions, no email-only resets, no SMS-only resets. Recovery always requires multiple factors and applies a withdrawal hold.
 
@@ -208,7 +208,7 @@ For physical-backed collectibles (graded Pokemon cards, sneakers, etc.), the **p
 ## Out of scope for v1
 
 - Multi-signature wallets for joint accounts or business use
-- Hardware wallet integration (Ledger, Trezor) for the primary Argus Financial Partners wallet
+- Hardware wallet integration (Ledger, Trezor) for the primary Goeman Global Finance wallet
 - Cross-chain support beyond Ethereum/Base/Polygon via CCTP (Solana via CCTP coming v2)
 - Custom smart-contract wallets per user (Hedera's protocol-level AA makes this unnecessary)
 

@@ -458,5 +458,5 @@ docs/integrations/COURTYARD-INTEGRATION.md  # this file
 - [CORP-B-RAMP.md](../business/CORP-B-RAMP.md) — partner matrix
 - [CORP-B-COLLECTIBLES-ESCROW.md](../business/CORP-B-COLLECTIBLES-ESCROW.md) — seller P2P lane (orthogonal)
 - [B5-collectibles-legal-memo.md](../legal/B5-collectibles-legal-memo.md)
-- PRD Module 05 (`docs/argus_prdv1/05-tokenization-and-marketplace.md`) — HTS + listing lifecycle
+- PRD Module 05 (`docs/goeman_prdv1/05-tokenization-and-marketplace.md`) — HTS + listing lifecycle
 - PRD Module 04 — REQ-WALLET-034 redemption routing

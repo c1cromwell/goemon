@@ -1,4 +1,4 @@
-# Competitive Brief — Argus vs. X Money
+# Competitive Brief — Goeman vs. X Money
 
 How to compete with (and beat, in a defensible segment) Musk's **X Money** — based on Ron Shevlin's
 Forbes analysis and the early-2026 launch coverage. The play: **don't fight head-on; close the table
@@ -15,13 +15,13 @@ stakes and win on the four axes where X is structurally weak.**
 
 **You cannot beat X Money head-on — and you shouldn't try.** X is *launching* with 50-state money-
 transmitter licenses, a Visa partnership, Cross River Bank + FDIC, a 6% yield, hundreds of millions of
-accounts, and capital. Argus is **pre-launch and gate-short** (`LAUNCH-READINESS.md`). A bootstrapped
+accounts, and capital. Goeman is **pre-launch and gate-short** (`LAUNCH-READINESS.md`). A bootstrapped
 startup does not out-distribute, out-yield, or out-licence X. That door is closed by structure, not effort
 (the same lesson as `PAYMENT-NETWORK-STRATEGY.md`: "don't out-Visa Visa").
 
 **So "beat" means win a *defensible segment*** on the axes where X is structurally weak — while
 selectively matching the table stakes so you don't look primitive. Net posture: **be the anti-X.** Where X
-is broad, custodial, generic, and trust-poor, Argus is a focused, **non-custodial**, **asset-native**,
+is broad, custodial, generic, and trust-poor, Goeman is a focused, **non-custodial**, **asset-native**,
 **agent-native** product for the (large, growing) audience that will never hand Musk their deposits.
 
 ---
@@ -60,21 +60,21 @@ regulated away.
 
 ---
 
-## 4. The four differentiation axes (Argus's structural moat X can't copy)
+## 4. The four differentiation axes (Goeman's structural moat X can't copy)
 
 1. **Non-custodial self-sovereignty — the anti-deplatforming wedge.** This is the sharpest weapon *against
    X specifically*. X has a documented pattern of freezing/suspending accounts; putting your money inside X
-   means X can freeze it. Argus's **locked architecture** (keys in the Secure Enclave; the server never
+   means X can freeze it. Goeman's **locked architecture** (keys in the Secure Enclave; the server never
    holds a private key) means **no platform can freeze, seize, or deplatform you.** This is the direct
-   antidote to Shevlin's #1 reason X won't win (trust). Message: *"X can freeze your money. With Argus, you
+   antidote to Shevlin's #1 reason X won't win (trust). Message: *"X can freeze your money. With Goeman, you
    hold the keys — no one can."*
-2. **Tokenized asset surface.** X Money is payments + yield + card — a commodity. Argus has a **differentiated
+2. **Tokenized asset surface.** X Money is payments + yield + card — a commodity. Goeman has a **differentiated
    asset wedge** (graded collectibles + RWA) X has no path to, anchored in a high-intent *community*
    (`GTM-COLLECTIBLES-LAUNCH.md`) rather than X's generic mass market.
 3. **Agent-native programmable money.** AI agents that act on your money under **scoped, revocable,
    cryptographic** permission — genuinely novel, and ironically a more credible "AI product" than Musk's
-   wallet. X Money is a balance; Argus is programmable.
-4. **Global / stablecoin reach.** X Money is US-centric (Visa/Cross River/FDIC). Argus's **USDC-on-Hedera**
+   wallet. X Money is a balance; Goeman is programmable.
+4. **Global / stablecoin reach.** X Money is US-centric (Visa/Cross River/FDIC). Goeman's **USDC-on-Hedera**
    cross-border rail (`RAILS-CURRENCY-STRATEGY.md`) serves the dollar-access + emerging-market audience X
    doesn't — exactly the PRD's global thesis.
 
@@ -82,7 +82,7 @@ regulated away.
 
 ## 5. Selective feature-match — close the table stakes (honestly, with gates)
 
-Match enough that Argus isn't primitive next to X — but on Argus's terms, not X's.
+Match enough that Goeman isn't primitive next to X — but on Goeman's terms, not X's.
 
 - **Card → match (Corp B).** The Visa-bridge debit card is already the plan (`PAYMENT-NETWORK-STRATEGY.md`):
   a Visa card funded from the USDC balance gives day-one acceptance. Turn on at **Corp B** (`CARDS_ENABLED`
@@ -95,14 +95,14 @@ Match enough that Argus isn't primitive next to X — but on Argus's terms, not 
   ("my idle dollars should earn") with **tokenized treasuries / RWA the user OWNS** — asset-based earning,
   non-custodial, on-brand. Message: *"Own a yield-bearing asset, not a balance someone can freeze."* X's 6%
   is a shrinking, at-risk target; don't chase it. ⚖ Corp B/C.
-- **Creator payouts → match (re-aimed).** X's creator hook → Argus's **collector/creator** angle: tokenize
+- **Creator payouts → match (re-aimed).** X's creator hook → Goeman's **collector/creator** angle: tokenize
   and monetize what creators *make and own* (drops, authenticated goods), not ad-revenue retention.
 
 ---
 
 ## 6. Feature-response checklist (by phase)
 
-| X Money feature | Argus response | Phase / gate | Note |
+| X Money feature | Goeman response | Phase / gate | Note |
 |---|---|---|---|
 | 6% APY (custodial) | **Don't chase** — differentiate via owned RWA/treasuries | B/C ⚖ | Capital war + CLARITY-Act risk |
 | Visa debit card | **Match** (Visa bridge, USDC-funded) | B · `CARDS_ENABLED` ⚖ | "Spend from assets you own" |
@@ -119,7 +119,7 @@ Match enough that Argus isn't primitive next to X — but on Argus's terms, not 
 ## 7. The anti-X positioning + tactical plays
 
 - **Target the segment X repels.** A large, growing audience is *actively distrustful* of X/Musk — plus the
-  self-custody/crypto-minded and the collector community. That's Argus's beachhead, not the X mass market.
+  self-custody/crypto-minded and the collector community. That's Goeman's beachhead, not the X mass market.
 - **Lead with the trust inversion.** *"X can freeze your money and your account. We can't — you hold the
   keys."* It's true, it's structural, and it hits X's single biggest weakness.
 - **Use X Money's launch as free market education.** X normalizes in-app payments and "your money in an
@@ -146,7 +146,7 @@ Match enough that Argus isn't primitive next to X — but on Argus's terms, not 
 | Risk | Mitigation |
 |---|---|
 | **X pivots to tokenization/crypto** (Doge + capital + distribution) | Build the **asset + non-custodial + community** moat *before* X gets there; it's your only durable edge |
-| The raw **asymmetry** (X launched; Argus pre-launch) | Don't compete on X's terms; win the segment; close your own launch gates (`LAUNCH-READINESS.md`) first |
+| The raw **asymmetry** (X launched; Goeman pre-launch) | Don't compete on X's terms; win the segment; close your own launch gates (`LAUNCH-READINESS.md`) first |
 | X's **distribution** floods the category | Community + trust + asset surface are defensible where reach isn't |
 | Your own **non-custodial UX friction** (vs. X's custodial ease) | Invest in the wallet UX; the trust payoff must outweigh the friction |
 
@@ -156,7 +156,7 @@ Match enough that Argus isn't primitive next to X — but on Argus's terms, not 
 
 **Don't fight X Money on yield, P2P, or distribution — you'll lose. Beat it where it's structurally weak:
 be the non-custodial, asset-native, agent-native, global alternative for the large segment that will never
-trust Musk with their money — "X can freeze your money; with Argus, you hold the keys."**
+trust Musk with their money — "X can freeze your money; with Goeman, you hold the keys."**
 
 ---
 
@@ -167,4 +167,4 @@ trust Musk with their money — "X can freeze your money; with Argus, you hold t
   CoinDesk, BusinessToday, and fintech-analysis blogs (almcorp, BlockEden, neobanque.ch).
 
 *Companion documents: `PAYMENT-NETWORK-STRATEGY.md`, `GTM-COLLECTIBLES-LAUNCH.md`, `REVENUE-MODEL.md`,
-`LAUNCH-READINESS.md`, `CORPORATE-STRUCTURE.md`, `RAILS-CURRENCY-STRATEGY.md`, `argus_prdv1/01`.*
+`LAUNCH-READINESS.md`, `CORPORATE-STRUCTURE.md`, `RAILS-CURRENCY-STRATEGY.md`, `goeman_prdv1/01`.*

@@ -1,4 +1,4 @@
-# Argus Financial Partners — Product Requirements Document
+# Goeman Global Finance — Product Requirements Document
 
 **Status:** v0.1 draft for review
 **Last updated:** May 2026
@@ -47,7 +47,7 @@ These are committed and do not need to be re-litigated when reading the modules.
 - Partner bank selection (Column vs Lead vs Cross River)
 - First-party tokenization partner (Securitize vs Tokeny vs both)
 - Capital plan / team sizing for parallel US + international launch
-- Brand and product name confirmation (is "Argus Financial Partners" final?)
+- Brand and product name confirmation — **resolved:** Goeman (DBA), Goeman Global Finance, LLC; domain goemanglobal.com (see Module 11 Q-BRAND-001)
 - Specific international corridors for v1 (which 3 of: Nigeria, Philippines, Brazil, Indonesia, Mexico)
 
 ## Conventions used in this PRD

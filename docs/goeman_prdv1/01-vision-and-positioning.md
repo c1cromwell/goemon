@@ -14,11 +14,11 @@ Three trends form the foundation of the bet:
 
 **The cost structure of running a bank is artificially high.** A typical neobank spends a substantial fraction of revenue on customer support, compliance review, and back-office operations. AI agents — properly scoped, properly supervised, properly orchestrated — can take ~60-80% of that work, and the founder who designs the company around that from day one will have a permanent cost advantage over competitors who bolt agents on later.
 
-Argus Financial Partners sits at the intersection of these three trends. The wedge is the tokenization marketplace. The retention is the wallet. The cost advantage is the agent-operated back office.
+Goeman Global Finance sits at the intersection of these three trends. The wedge is the tokenization marketplace. The retention is the wallet. The cost advantage is the agent-operated back office.
 
 ## Positioning statement
 
-> **For** people who want their money to work harder than a checking account allows but who don't want to learn options trading or crypto, **Argus Financial Partners** is a mobile-first bank that lets them hold dollars, own tokenized real-world assets and collectibles, and move money globally — all in one app, with no paperwork until they actually need it.
+> **For** people who want their money to work harder than a checking account allows but who don't want to learn options trading or crypto, **Goeman Global Finance** is a mobile-first bank that lets them hold dollars, own tokenized real-world assets and collectibles, and move money globally — all in one app, with no paperwork until they actually need it.
 
 ## Competitive landscape
 
@@ -56,7 +56,7 @@ Concretely, we measure winning along three axes:
 
 ## Brand and naming
 
-The working name is "Argus Financial Partners." It draws from Japanese (the term means "release" or "final form"), which lends itself to a clean visual brand and is uncrowded in trademark databases. Final brand decision is open in Module 11.
+The working name is "Goeman Global Finance." It draws from Japanese (the term means "release" or "final form"), which lends itself to a clean visual brand and is uncrowded in trademark databases. Final brand decision is open in Module 11.
 
 The product surface positions us as a *bank*, not a *crypto company*. Marketing language emphasizes outcomes (own a piece of a building, hold dollars that earn yield, send money to family in Lagos) rather than infrastructure (blockchain, tokens, DeFi).
 

@@ -1,8 +1,8 @@
-# Argus Financial Partners — End-to-End Validation Runbook
+# Goeman Global Finance — End-to-End Validation Runbook
 
 The single, repeatable validation that exercises whole **user journeys across every channel** — not
 per-phase unit invariants (those live in `backend/test/phaseN.test.ts`). Referenced from
-`docs/ARGUS-PLAN.md` at two anchors: **sub-step 8.12** (gate after Phase 8, `through-phase-8` scope) and
+`docs/GOEMAN-PLAN.md` at two anchors: **sub-step 8.12** (gate after Phase 8, `through-phase-8` scope) and
 **Phase 16** (comprehensive pass after the last phase, `full` scope).
 
 > **Status:** Phases 7–16 are not all built yet. The deterministic suite and the skills are authored

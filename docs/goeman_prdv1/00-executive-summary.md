@@ -2,7 +2,7 @@
 
 ## What we're building
 
-Argus Financial Partners is a mobile-first neobank that wedges into the market through tokenized real-world assets and collectibles, with a dollar wallet underneath that works in 30 seconds with no paperwork. The user-facing product is one app that lets a person hold USDC, browse and buy tokenized US Treasuries, real estate fractions, private credit, Pokémon cards, and Web3-native game items, send money to friends across borders, and (over time) borrow against their holdings and spend with a debit card.
+Goeman Global Finance is a mobile-first neobank that wedges into the market through tokenized real-world assets and collectibles, with a dollar wallet underneath that works in 30 seconds with no paperwork. The user-facing product is one app that lets a person hold USDC, browse and buy tokenized US Treasuries, real estate fractions, private credit, Pokémon cards, and Web3-native game items, send money to friends across borders, and (over time) borrow against their holdings and spend with a debit card.
 
 The back office is run by AI agents operating on top of Conductor OSS workflows, with humans in the loop for high-stakes decisions and regulatory review.
 
@@ -36,7 +36,7 @@ The customer-facing v1 includes:
 6. Fiat on/off ramp in US (via partner bank) and 3 international corridors (priority: Nigeria, Philippines, Brazil)
 7. In-app activity feed, basic portfolio view, push notifications
 8. Customer support powered by AI agent with human escalation
-9. Internal admin console (the repurposed Argus Financial Partners CLI) for compliance reviewers and ops
+9. Internal admin console (the repurposed Goeman Global Finance CLI) for compliance reviewers and ops
 
 What we explicitly do NOT ship in v1:
 - First-party tokenization (v2)

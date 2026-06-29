@@ -1,4 +1,4 @@
-# Argus Agentic OS — Corporate Brain Design
+# Goeman Agentic OS — Corporate Brain Design
 
 **Status:** M6 — product squad + PDLC orchestrator **BUILT** (CEO sign-off gate for deploy)  
 **Authoritative webview:** [`agentic-os/index.html`](agentic-os/index.html)  
@@ -8,7 +8,7 @@
 
 ## Mission & framing
 
-**Mission:** Run Argus Financial Partners with the smallest possible human staff — an auditable, agent-native corporation where AI agents hold real jobs, every material decision is logged, and humans gate only what must never run unattended: money out, first production launches, and final legal sign-offs.
+**Mission:** Run Goeman Global Finance with the smallest possible human staff — an auditable, agent-native corporation where AI agents hold real jobs, every material decision is logged, and humans gate only what must never run unattended: money out, first production launches, and final legal sign-offs.
 
 **Positioning (Phase A):** Tokenization-first, non-custodial, agentic finance. We are *not* a bank — we are the all-seeing guardian of your money: keys in your device, decisions in an append-only ledger, agents that operate under scoped credentials, and a CEO who remains the final authority on financial outputs, launches, and legal posture.
 

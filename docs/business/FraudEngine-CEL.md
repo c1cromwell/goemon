@@ -1,6 +1,6 @@
 # Fraud Engine × Google CEL — rules-as-data, decision policy, cohort routing
 
-A review of the Argus Fraud Engine architecture and how **Google CEL** (Common Expression Language,
+A review of the Goeman Fraud Engine architecture and how **Google CEL** (Common Expression Language,
 cel.dev) makes it better — plus a working prototype that ships CEL rules as a **shadow** model with
 zero risk to the live decision.
 
@@ -100,8 +100,8 @@ k8s/Envoy/IAM). CEL is the same idea applied to the fraud decision.
   in int64 and within JS's exact-integer range, so the conversion is lossless; documented in
   `src/rules/activation.ts`.
 - **Money-path determinism.** `rules-v1` stays **prod**; CEL ships **shadow-first** and never changes the
-  live decision until someone promotes it. The engine is standalone (Argus calls it over HTTP), so there
-  is zero Argus money-path risk.
+  live decision until someone promotes it. The engine is standalone (Goeman calls it over HTTP), so there
+  is zero Goeman money-path risk.
 
 ---
 

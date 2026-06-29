@@ -1,9 +1,9 @@
 {
-  "name": "argus-docs-build",
+  "name": "goeman-docs-build",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Markdown → styled HTML → PDF pipeline for Argus Financial Partners strategy docs",
+  "description": "Markdown → styled HTML → PDF pipeline for Goeman Global Finance strategy docs",
   "scripts": {
     "render": "node render.mjs"
   },

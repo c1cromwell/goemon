@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Goeman logo concept 4  shield and blade">
+  <rect width="120" height="120" fill="#0b0d10"/>
+  <path d="M 60 18 L 88 32 L 88 58 Q 88 82 60 96 Q 32 82 32 58 L 32 32 Z" fill="none" stroke="#2dd4a7" stroke-width="2"/>
+  <path d="M 60 28 L 60 88" stroke="#2dd4a7" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 48 52 L 72 52" stroke="#2dd4a7" stroke-width="1.5" opacity="0.6"/>
+  <path d="M 44 68 L 76 44" stroke="#2dd4a7" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+  <text x="60" y="112" text-anchor="middle" font-family="system-ui,sans-serif" font-size="6.5" letter-spacing="0.18em" fill="#6b7480">PROTECT</text>
+</svg>

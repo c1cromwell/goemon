@@ -2,15 +2,15 @@
 
 ## Disclaimer
 
-This module describes the compliance framework Argus Financial Partners will operate under and the obligations it implies. It is not legal advice. Every requirement here will be reviewed and refined by external counsel before launch. Where this document and counsel disagree, counsel wins.
+This module describes the compliance framework Goeman Global Finance will operate under and the obligations it implies. It is not legal advice. Every requirement here will be reviewed and refined by external counsel before launch. Where this document and counsel disagree, counsel wins.
 
 ## US regulatory framework
 
-Argus Financial Partners operates in the US under several overlapping regimes:
+Goeman Global Finance operates in the US under several overlapping regimes:
 
 ### Bank Secrecy Act (BSA) and AML
 
-As a money services business (MSB) and (eventually) a custodian of customer funds, Argus Financial Partners is subject to BSA/AML requirements:
+As a money services business (MSB) and (eventually) a custodian of customer funds, Goeman Global Finance is subject to BSA/AML requirements:
 
 - **FinCEN MSB registration** within 180 days of starting operations
 - **Customer Identification Program (CIP)** — applies at Tier 2 and above
@@ -40,7 +40,7 @@ Listing tokenized securities triggers SEC and FINRA obligations:
 
 ### Stablecoin and crypto
 
-- **GENIUS Act (2025)** — provides federal framework for stablecoin issuers. Argus Financial Partners does not issue a stablecoin in v1; we use USDC issued by Circle (which is compliant). If we ever issue our own, we register under GENIUS.
+- **GENIUS Act (2025)** — provides federal framework for stablecoin issuers. Goeman Global Finance does not issue a stablecoin in v1; we use USDC issued by Circle (which is compliant). If we ever issue our own, we register under GENIUS.
 - **SEC custody guidance** — applies to crypto held on behalf of clients. Our non-custodial model substantially reduces but does not eliminate our exposure here.
 - **CFTC** — for any commodity-related tokenization (gold via PAXG); we follow Paxos's regulatory framework
 
@@ -61,7 +61,7 @@ Each launch corridor has its own regulatory picture. Detailed analysis lives wit
 
 - **CBN (Central Bank of Nigeria)** has historically been cautious on crypto; the situation has evolved through 2024-2025 toward a more permissive licensing regime
 - **SEC Nigeria** regulates security tokens
-- **Operating model:** partner with a CBN-licensed payment service provider (Flutterwave-tier) for fiat rails; operate the wallet and marketplace through a Argus Financial Partners Nigerian entity registered as a fintech
+- **Operating model:** partner with a CBN-licensed payment service provider (Flutterwave-tier) for fiat rails; operate the wallet and marketplace through a Goeman Global Finance Nigerian entity registered as a fintech
 - **Risk:** policy reversal. Mitigated by ability to fall back to USDC-only operation for Nigerian users
 
 ### Philippines
@@ -186,7 +186,7 @@ A separate system from sanctions screening; looks at patterns rather than identi
 - **SOC 2 Type II** audit begins at launch; target completion 12 months
 - **Annual financial audit** by Big 4 firm beginning year one
 - **Penetration testing** annually by external security firm
-- **Smart contract audits** for any contracts Argus Financial Partners deploys (ERC-3643 implementations, escrow contracts, paymaster, multisig)
+- **Smart contract audits** for any contracts Goeman Global Finance deploys (ERC-3643 implementations, escrow contracts, paymaster, multisig)
 - **AML independent review** annually per FinCEN guidance
 
 ### Regulatory reporting

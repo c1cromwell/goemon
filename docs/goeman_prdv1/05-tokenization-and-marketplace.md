@@ -11,7 +11,7 @@ Both surfaces share the same listing infrastructure, search/filter, transaction 
 
 ## v1 listings — Invest surface
 
-Argus Financial Partners does not issue tokens in v1. We list third-party tokenized assets through partnerships. Target ~10 assets across three categories at launch:
+Goeman Global Finance does not issue tokens in v1. We list third-party tokenized assets through partnerships. Target ~10 assets across three categories at launch:
 
 ### Tokenized US Treasuries (target: 3 listings)
 
@@ -21,7 +21,7 @@ Argus Financial Partners does not issue tokens in v1. We list third-party tokeni
 | BENJI (Franklin OnChain US Government Money Fund) | Franklin Templeton | Stellar → Hedera | $20 |
 | OUSG (Ondo Short-Term US Government Treasuries) | Ondo Finance | Ethereum → Hedera | $100 |
 
-For v1, the listings are *displayed and orderable* through Argus Financial Partners but settlement may happen on the issuer's native chain with Argus Financial Partners acting as an order router. Where the asset is available natively on Hedera (BENJI is targeting this; BUIDL is exploring), settlement is local.
+For v1, the listings are *displayed and orderable* through Goeman Global Finance but settlement may happen on the issuer's native chain with Goeman Global Finance acting as an order router. Where the asset is available natively on Hedera (BENJI is targeting this; BUIDL is exploring), settlement is local.
 
 ### Tokenized real estate and private credit (target: 4 listings)
 
@@ -75,7 +75,7 @@ Each listing shows: asset image (multiple angles), grading certificate, physical
 
 ### ERC-3643 (T-REX) on HSCS — for securities
 
-Argus Financial Partners uses ERC-3643 for any tokenized asset that is or could be a security. The standard enforces transfer restrictions on-chain via:
+Goeman Global Finance uses ERC-3643 for any tokenized asset that is or could be a security. The standard enforces transfer restrictions on-chain via:
 
 - **Identity Registry** — every holder is mapped to an on-chain identity object containing their verified claims (KYC tier, jurisdiction, accreditation status)
 - **Compliance Module** — pluggable rules engine that gates transfers based on identity claims (e.g., "no transfers to jurisdiction X," "no transfers under $1K," "no transfers if it would push holder count over 99 for Reg D")
@@ -93,13 +93,13 @@ We operate the Identity Registry for assets we list; for assets where the issuer
 For non-securities (collectibles, game assets, USDC operations), we use Hedera Token Service native tokens. Cheaper, faster, simpler.
 
 HTS tokens can carry compliance metadata via:
-- **KYC key** — Argus Financial Partners-controlled key that can grant/revoke KYC status per holder
-- **Freeze key** — Argus Financial Partners-controlled key that can freeze individual holders (for fraud, sanctions, etc.)
+- **KYC key** — Goeman Global Finance-controlled key that can grant/revoke KYC status per holder
+- **Freeze key** — Goeman Global Finance-controlled key that can freeze individual holders (for fraud, sanctions, etc.)
 - **Wipe key** — used rarely, for fraud or court-ordered remediation
-- **Custom fees** — optional royalty to issuer/Argus Financial Partners on transfer
+- **Custom fees** — optional royalty to issuer/Goeman Global Finance on transfer
 
 **Requirements:**
-- `[REQ-MK-TOK-005]` HTS tokens for collectibles include a Freeze key controlled by Argus Financial Partners's compliance multisig
+- `[REQ-MK-TOK-005]` HTS tokens for collectibles include a Freeze key controlled by Goeman Global Finance's compliance multisig
 - `[REQ-MK-TOK-006]` Royalty fees, where applied, are disclosed in the listing detail before purchase
 - `[REQ-MK-TOK-007]` Tokens representing physical-backed assets include metadata pointing to the custody attestation (auditable proof-of-reserve)
 
@@ -117,7 +117,7 @@ How an asset gets onto the marketplace:
 
 **Requirements:**
 - `[REQ-MK-LIFE-001]` Each listing has a versioned "listing record" that captures issuer info, contract address, due diligence outcome, and reviewer signatures
-- `[REQ-MK-LIFE-002]` Listings can be paused or delisted by Argus Financial Partners at any time; user holdings are preserved but new orders are blocked
+- `[REQ-MK-LIFE-002]` Listings can be paused or delisted by Goeman Global Finance at any time; user holdings are preserved but new orders are blocked
 - `[REQ-MK-LIFE-003]` Delisted assets continue to display in user portfolios with a "no longer listed" marker; users can still transfer or redeem if those mechanisms are partner-supported
 
 ## Trade execution
@@ -136,11 +136,11 @@ For assets with ongoing liquidity (treasuries, gold, gaming items, collectibles)
 - Order book or AMM, depending on asset characteristics
 - Treasuries and gold: NAV-driven pricing with issuer redemption mechanism; user gets a fair price guaranteed by issuer
 - Collectibles and gaming: marketplace listing (seller sets ask, buyer takes or makes offer) — model proven by OpenSea, Magic Eden, Courtyard
-- Real estate fractions: order book matching internal buy/sell intent across Argus Financial Partners users where the asset's transfer rules permit
+- Real estate fractions: order book matching internal buy/sell intent across Goeman Global Finance users where the asset's transfer rules permit
 
 ### Direct transfer (user-to-user)
 
-For non-securities assets, direct transfer between Argus Financial Partners users is supported. ERC-3643 securities require recipient to be on the Identity Registry; same-user transfer to an external wallet is possible if the destination address is registered.
+For non-securities assets, direct transfer between Goeman Global Finance users is supported. ERC-3643 securities require recipient to be on the Identity Registry; same-user transfer to an external wallet is possible if the destination address is registered.
 
 **Requirements:**
 - `[REQ-MK-EXEC-001]` Order entry shows total cost (asset price + any platform/issuer fees + estimated gas, though gas is sponsored) before confirmation
@@ -164,7 +164,7 @@ Where prices come from:
 
 ## Fees
 
-Argus Financial Partners's revenue model on the marketplace is a combination of:
+Goeman Global Finance's revenue model on the marketplace is a combination of:
 
 - **Spread/markup** on primary issuance (typically 0.25-1.0% depending on partner agreement)
 - **Trading fee** on secondary trades (0.5-1.5% depending on asset class; collectibles higher than treasuries)
@@ -173,14 +173,14 @@ Argus Financial Partners's revenue model on the marketplace is a combination of:
 **Requirements:**
 - `[REQ-MK-FEE-001]` All fees are fully disclosed in the order confirmation screen before user confirms
 - `[REQ-MK-FEE-002]` No hidden fees or post-trade adjustments
-- `[REQ-MK-FEE-003]` Fee structure is uniform per asset class; no tier-based fee discounts in v1 (added in v2 with Argus Financial Partners Plus)
+- `[REQ-MK-FEE-003]` Fee structure is uniform per asset class; no tier-based fee discounts in v1 (added in v2 with Goeman Global Finance Plus)
 
 ## Out of scope for v1
 
-- First-party tokenization (Argus Financial Partners issuing its own RWA tokens) — v2
+- First-party tokenization (Goeman Global Finance issuing its own RWA tokens) — v2
 - Derivatives, leverage, margin trading
 - Tokenized equities (legally complex in US; international only in v2)
-- Tokenized debt obligations of Argus Financial Partners users (peer lending)
+- Tokenized debt obligations of Goeman Global Finance users (peer lending)
 - Yield farming, staking, liquidity providing
 - Auctions (English, Dutch, sealed-bid) — v2 for collectibles
 - Curated drops or limited-edition releases — v2

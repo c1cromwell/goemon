@@ -15,7 +15,7 @@ Concurrent workstreams; no user-visible output.
 - Engage outside counsel (US + each launch corridor)
 - Initiate partner bank conversations (Column primary, Lead Bank backup)
 - Begin MTL applications in priority states (sponsor-bank covers initially)
-- Register Argus Financial Partners entity per jurisdiction
+- Register Goeman Global Finance entity per jurisdiction
 - Draft Terms of Service, Privacy Policy, asset-specific disclosure templates
 
 **Partnerships:**
@@ -29,7 +29,7 @@ Concurrent workstreams; no user-visible output.
 - Stand up infrastructure (AWS, Kubernetes, Postgres, Temporal, Conductor)
 - Implement core services skeletons (Auth, Wallet, Ledger, Marketplace)
 - **Begin native wallet build** — 3-engineer team (backend + iOS + Android), Hedera SDK integration, Secure Enclave / Keystore key management, server-side encrypted backup architecture; targets Phase 1 alpha completion with external security audit between Phase 1 and Phase 2
-- Bootstrap internal admin console (repurposed Argus Financial Partners CLI)
+- Bootstrap internal admin console (repurposed Goeman Global Finance CLI)
 - Hedera testnet integration end-to-end
 
 **Product and design:**
@@ -114,7 +114,7 @@ What ships post-launch, in priority order:
 
 ### v2.3 — First-party tokenization (months 15-18)
 
-- Argus Financial Partners issues its own RWA tokens (specific assets TBD based on Phase 3 demand signals)
+- Goeman Global Finance issues its own RWA tokens (specific assets TBD based on Phase 3 demand signals)
 - ERC-3643 contracts on HSCS
 - Securitize partnership for transfer agent services (or build in-house)
 - Primary issuance UX in marketplace
@@ -187,8 +187,8 @@ These are explicit "we are not building this" decisions:
 
 - **A crypto exchange** — no spot trading of speculative tokens (BTC/ETH spot is reconsidered as a v3 product but only if regulatory and brand positioning support it)
 - **DeFi protocol** — we use DeFi for some collateral/lending mechanics but don't build a DeFi protocol
-- **An NFT mint platform** — users can't mint arbitrary NFTs through Argus Financial Partners
-- **A wallet for general crypto** — Argus Financial Partners is specifically a bank + marketplace, not a Trust Wallet competitor
+- **An NFT mint platform** — users can't mint arbitrary NFTs through Goeman Global Finance
+- **A wallet for general crypto** — Goeman Global Finance is specifically a bank + marketplace, not a Trust Wallet competitor
 - **Robo-advisory** — out of scope by policy through v2; reconsidered for v3
 - **Crypto card with stake-to-earn or yield gimmicks** — out of scope by policy
 

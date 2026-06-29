@@ -1,4 +1,4 @@
-# Argus Financial Partners — Master Plan (consolidated, Hedera-aligned, production-hardened)
+# Goeman Global Finance — Master Plan (consolidated, Hedera-aligned, production-hardened)
 
 > **This is the single authoritative implementation plan.** It consolidates the former
 > `REBUILD-PLAN-v2.md` (the core phases) and the `docs/agent-ops/` blueprint (now **Phase 15 —
@@ -11,7 +11,7 @@
 >
 > Each phase is a self-contained block you can hand to Claude Code. Phases are ordered so each builds on the last. **Phase 0 must be read before any code is written** — it defines conventions every later phase depends on.
 >
-> **Strategic context:** this evolves the Argus Financial Partners prototype toward the architecture in the Argus Financial Partners PRD (Hedera settlement, native wallet, double-entry ledger). The credential + agent-authorization layer is the foundation and is kept intact; the simulated-banking core is replaced with a correct ledger and a Hedera integration seam.
+> **Strategic context:** this evolves the Goeman Global Finance prototype toward the architecture in the Goeman Global Finance PRD (Hedera settlement, native wallet, double-entry ledger). The credential + agent-authorization layer is the foundation and is kept intact; the simulated-banking core is replaced with a correct ledger and a Hedera integration seam.
 
 ---
 
@@ -40,8 +40,8 @@
 - [~] **Phase 17** — Trading & brokerage (equities, options, crypto spot; market data; order routing) → **Corp C** (broker-dealer/clearing partner). **Design: `docs/PHASE-17-TRADING-BROKERAGE.md`** — SLA-isolation architecture (trading bulkheaded; settles into the ledger async + idempotently; shed-able to protect money-critical SLOs). **Stage-1 simulated seam BUILT** (`tradingService`/`tradingBroker`, migration 008, `TRADING_ENABLED` kill-switch; `trading.test.ts` 8 incl. SLA-isolation under broker stall/failure). Real broker/market-data/ATS remain Corp C.
 - [ ] **Phase 18** — Tokenization production (real-estate + securities for real money; audited ERC-3643, real HTS, transfer agent, **ATS** resale) → **Corp B/C**
 - [ ] **Phase 19** — Full-bank rails (fiat on/off-ramp, FBO accounts, ACH/wire, cards, statements, partner-bank deposits) → **Corp B** (BaaS partner + FinCEN MSB)
-- [~] **Phase 20** — Production hardening & scale (KMS/HSM custody, ledger⇄chain reconciliation, fraud Stages 2–4, Temporal/Conductor orchestration, data warehouse) → **Corp B/C**. **Reconciliation BUILT** (closes Phase-14 invariant *n*): `reconciliationService` compares the ledger USDC projection vs on-chain balances (Hedera Mirror Node provider, injectable for tests) per-user plus an escrow-custodian coverage check; drift → append-only `reconciliation_runs`/`reconciliation_findings` (migration 011) and **gates on-chain settlement** (`RECONCILIATION_HOLD` in `hederaService`); daily loop + RBAC admin surface (`/api/admin/reconciliation`); `reconciliation.test.ts` (6). **Fraud Stages 2–4 BUILT** as a standalone add-on (`fraud-engine/`, Node/TS :4500 — imports nothing from `backend/`): full FraudEngine.md architecture at prototype scale (event backbone + schema registry, feature store, `rules-v1`+`seq-v0` models, registry/serving + shadow/canary routing, case queue, async remediation, retrain loop). Hybrid HTTP integration: in-Argus triage routes blocking vs fire-and-forget; severe async decisions call back to `/api/internal/remediation` to freeze (`ACCOUNT_FROZEN`, append-only `account_holds`, migration 012) or flag. **KMS custody BUILT** (closes invariant *m* / audit C-1): `keyVaultService` wraps at-rest secrets — per-user Hedera keys (`hedera_accounts.private_key_enc`, migration 013) + the issuer JWK (`did_keys.private_jwk`) — via a pluggable provider (local AES-256-GCM dev stand-in; AWS/GCP KMS stubs for prod), AAD-bound to the row id, plaintext nulled with lazy migration of legacy rows; `npm run encrypt-keys` backfills; the operator key is vault-aware too (`HEDERA_OPERATOR_KEY` raw in dev or `gcm.v1.`-wrapped, `npm run wrap-secret`); `KMS_PROVIDER=local` and a raw operator key are prod-fatal; `kms.test.ts` (12). HSM/on-device signing + orchestration remain.
-- [~] **Phase 21** — "Argus Pay": native stablecoin-settled, agent-native payment rail (`docs/business/PAYMENT-NETWORK-STRATEGY.md` §4/§8) → **Corp B/C** (money transmission + stablecoin regime). **Stage-1 prototype BUILT**: merchants + payment intents (migration 010), every payment **escrow-protected** (hold→capture/refund/dispute via the escrow layer — the chargeback substitute; USDC settles on Hedera through the same primitives), zero rail fee (no interchange), `pay_merchant` MCP tool under scope `pay:merchant` with client+grant ceilings (agent-to-merchant commerce), `ARGUS_PAY_ENABLED` kill-switch (off by default, prod-fatal; held funds always resolvable when shed), `/api/pay` surface, `payments.test.ts` (7). Real merchant acquiring/licensing remains Corp B/C.
+- [~] **Phase 20** — Production hardening & scale (KMS/HSM custody, ledger⇄chain reconciliation, fraud Stages 2–4, Temporal/Conductor orchestration, data warehouse) → **Corp B/C**. **Reconciliation BUILT** (closes Phase-14 invariant *n*): `reconciliationService` compares the ledger USDC projection vs on-chain balances (Hedera Mirror Node provider, injectable for tests) per-user plus an escrow-custodian coverage check; drift → append-only `reconciliation_runs`/`reconciliation_findings` (migration 011) and **gates on-chain settlement** (`RECONCILIATION_HOLD` in `hederaService`); daily loop + RBAC admin surface (`/api/admin/reconciliation`); `reconciliation.test.ts` (6). **Fraud Stages 2–4 BUILT** as a standalone add-on (`fraud-engine/`, Node/TS :4500 — imports nothing from `backend/`): full FraudEngine.md architecture at prototype scale (event backbone + schema registry, feature store, `rules-v1`+`seq-v0` models, registry/serving + shadow/canary routing, case queue, async remediation, retrain loop). Hybrid HTTP integration: in-Goeman triage routes blocking vs fire-and-forget; severe async decisions call back to `/api/internal/remediation` to freeze (`ACCOUNT_FROZEN`, append-only `account_holds`, migration 012) or flag. **KMS custody BUILT** (closes invariant *m* / audit C-1): `keyVaultService` wraps at-rest secrets — per-user Hedera keys (`hedera_accounts.private_key_enc`, migration 013) + the issuer JWK (`did_keys.private_jwk`) — via a pluggable provider (local AES-256-GCM dev stand-in; AWS/GCP KMS stubs for prod), AAD-bound to the row id, plaintext nulled with lazy migration of legacy rows; `npm run encrypt-keys` backfills; the operator key is vault-aware too (`HEDERA_OPERATOR_KEY` raw in dev or `gcm.v1.`-wrapped, `npm run wrap-secret`); `KMS_PROVIDER=local` and a raw operator key are prod-fatal; `kms.test.ts` (12). HSM/on-device signing + orchestration remain.
+- [~] **Phase 21** — "Goeman Pay": native stablecoin-settled, agent-native payment rail (`docs/business/PAYMENT-NETWORK-STRATEGY.md` §4/§8) → **Corp B/C** (money transmission + stablecoin regime). **Stage-1 prototype BUILT**: merchants + payment intents (migration 010), every payment **escrow-protected** (hold→capture/refund/dispute via the escrow layer — the chargeback substitute; USDC settles on Hedera through the same primitives), zero rail fee (no interchange), `pay_merchant` MCP tool under scope `pay:merchant` with client+grant ceilings (agent-to-merchant commerce), `ARGUS_PAY_ENABLED` kill-switch (off by default, prod-fatal; held funds always resolvable when shed), `/api/pay` surface, `payments.test.ts` (7). Real merchant acquiring/licensing remains Corp B/C.
 - [ ] **Phase 23** — Internal Ops Command Center (CEO/SRE/SOC/compliance dashboards) → **Corp A/B**. **Design: `docs/PHASE-23-OPS-COMMAND-CENTER.md`** — extend `/admin/command/*`; `opsMetricsService` + read-only `/api/admin/command/*`; not built.
 
 ---
@@ -191,7 +191,7 @@ argus/
 **Prompt for Claude Code:**
 
 ```
-Establish the cross-cutting conventions for the Argus Financial Partners rebuild. These rules apply to every later phase.
+Establish the cross-cutting conventions for the Goeman Global Finance rebuild. These rules apply to every later phase.
 
 1. MONEY HANDLING (non-negotiable):
    - All monetary amounts are stored and computed as integer minor units. USD is stored as integer cents.
@@ -234,7 +234,7 @@ in /backend documenting these rules for future contributors.
 **Prompt for Claude Code:**
 
 ```
-Create a Node.js + Express + TypeScript backend for Argus Financial Partners.
+Create a Node.js + Express + TypeScript backend for Goeman Global Finance.
 
 Setup:
 - Init npm project in /backend
@@ -433,7 +433,7 @@ idempotent replay returns same journal; concurrent transfers don't double-spend 
 **Prompt for Claude Code:**
 
 ```
-Add a Hedera integration seam so Argus Financial Partners accounts map to real Hedera testnet accounts and USDC. This is the foundation
+Add a Hedera integration seam so Goeman Global Finance accounts map to real Hedera testnet accounts and USDC. This is the foundation
 for the PRD's native-wallet architecture. Keep it behind a HEDERA_ENABLED flag so the simulated path still works.
 
 Install: @hashgraph/sdk
@@ -641,7 +641,7 @@ Phase 10.
   on-chain — the exact controls Reg D / §12(g) require — so the securities posture is representable in
   the demo and ready to back a real flow once counsel + an ATS partner are in place.
 - **Token form (NFT vs fungible) & what actually moves the custody line.** A recurring question is
-  whether holding the asset as an **NFT with smart contracts handling value/ownership** changes Argus Financial Partners's
+  whether holding the asset as an **NFT with smart contracts handling value/ownership** changes Goeman Global Finance's
   exposure as a holder of user money. The short answer: it changes the *mechanics*, not the
   *characterization* — custody turns on **who controls the keys and the funds**, not on the token standard.
   - **The token standard is cosmetic to the regulator.** A fractional interest in income-producing real
@@ -662,13 +662,13 @@ Phase 10.
   - **Custody turns on key/fund control — three separate things:**
     - *Security status* — unchanged by NFT/contract form.
     - *Asset/token custody* — reduced **only** by the locked **non-custodial** model (keys in the Secure
-      Enclave, server never holds the private key). If the user holds the token, Argus Financial Partners isn't the asset
-      custodian; if Argus Financial Partners holds the keys, it is — NFT or not.
+      Enclave, server never holds the private key). If the user holds the token, Goeman Global Finance isn't the asset
+      custodian; if Goeman Global Finance holds the keys, it is — NFT or not.
     - *Cash / USDC leg* — the **escrow window** (8.3/8.4) transiently holds user funds, raising
       money-transmission + custody questions. Atomic settlement (see invariants below) minimizes the window
       but doesn't remove it; an NFT wrapper doesn't avoid this leg.
   - **The real lever, and its catch.** A **trust-minimized contract** holding the deed-NFT + escrow, where
-    Argus Financial Partners holds **no admin/upgrade/freeze keys**, supports a "the protocol is the custodian" argument.
+    Goeman Global Finance holds **no admin/upgrade/freeze keys**, supports a "the protocol is the custodian" argument.
     **But** regulators **look through to control**: the prototype's 8.1 holds the HTS **KYC/Freeze/Wipe
     keys** as a compliance stand-in — that *is* control, which *is* custody. You can't hold the freeze keys
     and disclaim custody. And the **fiat off-ramp + the LLC/SPV legal layer** always sit with a real entity.
@@ -727,7 +727,7 @@ Phase 10.
       POST /api/marketplace/assets/:id/transfer (Idempotency-Key): asset-only journal user_asset →
       user_asset. Securities path runs the 8.1 Compliance Module first and rejects with a new
       COMPLIANCE_BLOCKED ErrorCode + clear reason if the recipient isn't registered or a rule fails.
-      Non-securities transfer freely between Argus Financial Partners users. Reuses the transferService shape
+      Non-securities transfer freely between Goeman Global Finance users. Reuses the transferService shape
       (recipient-exists check, in-transaction balance check, audit).
 
 8.6   Pricing & discovery (pricingService.ts)
@@ -775,7 +775,7 @@ Phase 10.
       external-agent paths driven via the argus-mcp-test-harness skill.
 ```
 
-**Out of scope (PRD-05/10 production/v2 items, noted not built):** first-party Argus Financial Partners token issuance;
+**Out of scope (PRD-05/10 production/v2 items, noted not built):** first-party Goeman Global Finance token issuance;
 deployed ERC-3643 contracts + Tokeny audit; cross-chain bridging / CCTP; AMM; auctions / curated
 drops; real partner integrations (Securitize, Courtyard, Centrifuge, Paxos).
 
@@ -939,11 +939,11 @@ HEDERA_USDC_TOKEN_ID=               # testnet USDC token id
 3. Start services: backend (npm run dev), frontend (5173), argus-agent (5174),
    iOS Wallet (Xcode, iPhone 15 sim).
 
-4. Seed admin (RBAC): POST /api/admin/seed → admin@argusfinancial.com / Admin1234! with role 'admin'.
+4. Seed admin (RBAC): POST /api/admin/seed → admin@goemanglobal.com / Admin1234! with role 'admin'.
 
 5. Register simulator agent as MCP client (admin JWT):
 POST /api/admin/mcp-clients
-{ "client_did":"did:simulator:agent-app", "display_name":"Argus Financial Partners Simulator Agent",
+{ "client_did":"did:simulator:agent-app", "display_name":"Goeman Global Finance Simulator Agent",
   "allowed_functions":["get_balance","get_transactions","get_statement","transfer_funds","get_profile"],
   "max_transfer_minor":50000, "require_user_approval":true }
 
@@ -1242,8 +1242,8 @@ dividends automatically**; **no derivatives, no IOUs** (the Dinari dShares / Bac
 Distinct from Phase 17 (off-chain brokerage) and from the RWA classes above (treasuries/real-estate/
 private credit). **Design: `docs/PHASE-18.6-TOKENIZED-EQUITIES.md`.**
 - **Issuance — both, as phases:** a swappable `EquityIssuer` seam (`EQUITY_ISSUER`); **v1** distributes a
-  regulated 1:1 issuer (**Dinari** US / **Backed**, **Ondo** non-US) with Argus as wallet + compliance +
-  distribution + dividend/redemption pass-through; **v2** first-party issuance (Argus + transfer agent +
+  regulated 1:1 issuer (**Dinari** US / **Backed**, **Ondo** non-US) with Goeman as wallet + compliance +
+  distribution + dividend/redemption pass-through; **v2** first-party issuance (Goeman + transfer agent +
   qualified custodian + ATS — the full 18.1–18.5 stack).
 - **New machinery (the only real gaps):** a dividend/corporate-action engine (per-holder, idempotent,
   pro-rata pass-through) and on-chain redemption (burn → deliver the underlying). 1:1 backing proven by a
@@ -1258,13 +1258,13 @@ private credit). **Design: `docs/PHASE-18.6-TOKENIZED-EQUITIES.md`.**
 
 ## Phase 19 — Full-bank rails (fiat, cards, deposits via partner) → **Corp B**
 
-Add the "money app" rails that make Argus a daily-driver account — **without** becoming a bank: partner
+Add the "money app" rails that make Goeman a daily-driver account — **without** becoming a bank: partner
 in every regulated leg (the `CORPORATE-STRUCTURE.md` Phase-B thesis).
 
 - **Scope:** fiat **on/off-ramp** (19.1), **FBO/escrow** accounts for held balances (19.2 — never the
   operating account; the commingling rule from CORPORATE-STRUCTURE §7), **ACH/wire** + **bill pay**
   (19.3), **debit cards** (19.4), **statements** export (19.5), partner-bank **deposits** (FDIC *via the
-  partner*, never marketed as our own — see the "bank naming" rule the Argus rebrand serves).
+  partner*, never marketed as our own — see the "bank naming" rule the Goeman rebrand serves).
 - **Hard dependency (Corp B):** a **BaaS / partner bank** (Column, Lead Bank, Treasury Prime/Unit) that
   holds the banking license + moves the money; **FinCEN MSB registration**; an industrialized **KYC/AML
   vendor** (Persona/Alloy/Footprint) replacing the simulated providers; a written AML program + named
@@ -1316,9 +1316,9 @@ The non-feature work that must land before real money flows at scale — the ite
   schema registry (`bus/`), per-user feature store + enrichment (`features/`), a `rules-v1` ensemble +
   `seq-v0` sequence model (Transformer stand-in), a model **registry + serving** layer with config-driven
   **routing + shadow/canary** (`models/`, `router/`), an append-only decision topic, an analyst **case
-  queue** (`cases/`), an async **remediation** loop that calls Argus back to **freeze/flag** (`remediation/`),
+  queue** (`cases/`), an async **remediation** loop that calls Goeman back to **freeze/flag** (`remediation/`),
   and a **label → retrain** loop (`learning/`). The service imports **nothing** from `backend/`. **Hybrid
-  integration:** an in-Argus triage (`fraudService`) routes each money event blocking (sync `fraudClient`
+  integration:** an in-Goeman triage (`fraudService`) routes each money event blocking (sync `fraudClient`
   call → advisory merge → local deterministic gate) vs fire-and-forget; severe async decisions trigger a
   service-bearer callback to `/api/internal/remediation` that places an append-only `account_holds` row
   (`ACCOUNT_FROZEN` gate on transfers/pay), idempotent on `decisionId`, degrading open unless
@@ -1330,7 +1330,7 @@ The non-feature work that must land before real money flows at scale — the ite
 - **Build out Phase 15** internal agent operations (KYC review, Fraud/AML triage, support, compliance
   drafting) from design to runtime, on the orchestration substrate above.
 
-## Phase 22 — Argus Starter (13+ family/teen wealth-building suite) → **Corp B/C** (DESIGN)
+## Phase 22 — Goeman Starter (13+ family/teen wealth-building suite) → **Corp B/C** (DESIGN)
 
 A full-suite **starter product for the 13+ age group**: teen **debit card**, a **credit-builder card**,
 **high-yield savings**, and **custodial investing**, all **gamified to teach wealth-building**.
@@ -1360,7 +1360,7 @@ stability, security/fraud posture, and tokenization performance without ad-hoc S
 
 - **Problem:** ~15 `/api/admin/*` route modules + Prometheus `/metrics`, but only three admin UI pages
   (identities, Agentic OS approvals, collectibles). No unified “how is the company doing?” view.
-- **Solution:** Extend `frontend/` `/admin/command/*` — **Argus Command Center** — backed by a new
+- **Solution:** Extend `frontend/` `/admin/command/*` — **Goeman Command Center** — backed by a new
   `opsMetricsService` and `/api/admin/command/*` aggregation API (ledger-derived money, integer minor units only).
 - **Dashboards:** CEO business pulse (accounts, onboarding abandonment, money flows, cards, tokenization,
   agent activity); SRE stability (latency, ledger/Hedera/reconciliation gates, kill-switches); SOC/fraud
@@ -1382,7 +1382,7 @@ catalog (honest hours per SKU), and **borderless savings**.
 
 **Design: `docs/PHASE-24-PRODUCTION-LAUNCH.md`.** **24.8a + 24.1a/b + 24.2a + 24.9a BUILT** (standalone-first); partner steps §13.
 - **Solution:** Nine workstreams (24.1–24.9) with staged engineering + partner steps; x401/x402 as HTTP layers
-  atop existing OID4VP/VC + Argus Pay (no bypass of VP verification or ledger idempotency).
+  atop existing OID4VP/VC + Goeman Pay (no bypass of VP verification or ledger idempotency).
 - **First revenue path (recommended):** collectibles (24.7) → stablecoin mainnet (24.4) → x402 commerce (24.2)
   → neobank (24.3) → borderless savings (24.9) → tokenized equities (24.6).
 - **Not in scope:** prediction markets, perps, “trade everything 24/7” marketing.
@@ -1418,7 +1418,7 @@ curl -X POST http://localhost:3001/api/admin/seed
 
 | Role | Email | Password / Auth |
 |---|---|---|
-| Admin | admin@argusfinancial.com | Admin1234! (RBAC role: admin) |
+| Admin | admin@goemanglobal.com | Admin1234! (RBAC role: admin) |
 | Demo User | register yourself | Passkey (or password if ALLOW_PASSWORD_AUTH) |
 | Demo Users (seed) | david.chen@demo.com etc | Demo1234! |
 

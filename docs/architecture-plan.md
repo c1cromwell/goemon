@@ -1,4 +1,4 @@
-# Argus Financial Partners — Full-Stack Architecture Plan
+# Goeman Global Finance — Full-Stack Architecture Plan
 
 ## Context
 

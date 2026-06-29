@@ -1,6 +1,6 @@
 # Rails, Currency & Instant-Payments Strategy
 
-What Argus should think about next on **instant payments**, **cross-border stablecoin rails**, and
+What Goeman should think about next on **instant payments**, **cross-border stablecoin rails**, and
 **other currencies** — grounded in what's already built, with the honest gaps and the licensing posture.
 
 > **How to read this.** Companion to `PAYMENT-NETWORK-STRATEGY.md` (the card-brand-vs-network analysis)
@@ -12,7 +12,7 @@ What Argus should think about next on **instant payments**, **cross-border stabl
 
 ## 1. The thesis (read this first)
 
-**The instant, cross-border rail mostly already exists.** Argus settles in **USDC on Hedera** — ~3s
+**The instant, cross-border rail mostly already exists.** Goeman settles in **USDC on Hedera** — ~3s
 finality, fractions-of-a-cent fees, no interchange, no chargeback reversals — wrapped in escrow for
 disputes and authorizable by an AI agent under a scoped, user-signed grant. That *is* an instant,
 global, programmable payment rail. The work that remains is **not the core** — it's at two edges:
@@ -44,7 +44,7 @@ enabler for everything else.
 
 **What's instant today (DO NOW — already shipped):**
 - **On-chain USDC** settles in ~3s via `hederaService` (build → sign → submit, non-custodial).
-- **P2P** is built; **Argus Pay** (Phase 21) settles merchant payments on the same rail, escrow-protected.
+- **P2P** is built; **Goeman Pay** (Phase 21) settles merchant payments on the same rail, escrow-protected.
 
 **What is *not* instant (DEFER → Corp B):**
 - **Instant *fiat* out** — a real **FedNow** / **RTP** / **push-to-card** payout. `bankRailService` models
@@ -63,7 +63,7 @@ as every other seam. ⚖
 
 ## 3. Cross-border stablecoin rails (the strategic wedge)
 
-This is where Argus is genuinely differentiated and ~70% built. **Remittance + B2B payouts settled in
+This is where Goeman is genuinely differentiated and ~70% built. **Remittance + B2B payouts settled in
 USDC**, with local fiat on/off-ramps per corridor.
 
 **Reuses what exists:**
@@ -192,7 +192,7 @@ the same lean-now / licensed-later logic as the corporate ramp.
 ---
 
 *Companion documents: `PAYMENT-NETWORK-STRATEGY.md` (card brand vs. network; the stablecoin-rail wedge),
-`CORPORATE-STRUCTURE.md` (the Corp A/B/C ramp), `ARGUS-PLAN.md` Phases 19–21 (bank rails, Argus Pay).
+`CORPORATE-STRUCTURE.md` (the Corp A/B/C ramp), `GOEMAN-PLAN.md` Phases 19–21 (bank rails, Goeman Pay).
 The registry + FX quote seam and cross-currency settlement referenced in §6 are implemented
 (`backend/src/services/currencyRegistry.ts`, `fxRateService.ts`, `fxSettlementService.ts`, `routes/fx.ts`,
 `test/fx.test.ts`; frontend `pages/Fx.tsx`).*

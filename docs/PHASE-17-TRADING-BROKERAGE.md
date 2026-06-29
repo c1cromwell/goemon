@@ -2,11 +2,11 @@
 
 **Status: design only — not built. Gated on Corp C (registered broker-dealer + clearing partner).**
 This is the implementation-ready architecture for bringing Robinhood-class trading — equities, options,
-and crypto spot — onto the Argus Financial Partners platform, **without letting the trading subsystem
+and crypto spot — onto the Goeman Global Finance platform, **without letting the trading subsystem
 degrade the money-critical SLAs** of the core bank (ledger, transfers, auth, agent/MCP access). It mirrors
 the deliverable style of `docs/PHASE-15-INTERNAL-AGENT-OPS.md` and `docs/business/FraudEngine.md`.
 
-> Read with: `docs/ARGUS-PLAN.md` Phase 17 (scope + corporate gate), `docs/business/CORPORATE-STRUCTURE.md`
+> Read with: `docs/GOEMAN-PLAN.md` Phase 17 (scope + corporate gate), `docs/business/CORPORATE-STRUCTURE.md`
 > Phase C (broker-dealer/ATS), and Phase 4/8 in the plan (the ledger + asset-as-currency pattern this reuses).
 
 ---

@@ -1,5 +1,5 @@
 /**
- * Render a Argus Financial Partners strategy doc: Markdown → self-contained styled HTML → PDF.
+ * Render a Goeman Global Finance strategy doc: Markdown → self-contained styled HTML → PDF.
  *
  *   node render.mjs <input.md> --title "..." --subtitle "..."
  *
@@ -84,7 +84,7 @@ const html = `<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(title)} — Argus Financial Partners</title>
+<title>${escapeHtml(title)} — Goeman Global Finance</title>
 <style>${css}</style>
 </head>
 <body>
@@ -92,7 +92,7 @@ const html = `<!doctype html>
   <div class="mark">B</div>
   <h1>${escapeHtml(title)}</h1>
   ${subtitle ? `<p class="sub">${escapeHtml(subtitle)}</p>` : ""}
-  <div class="meta">Argus Financial Partners &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>${dateStr}</b></div>
+  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>${dateStr}</b></div>
   <div class="disclaimer">${DISCLAIMER}</div>
 </section>
 <div class="wrap">
@@ -124,7 +124,7 @@ try {
     headerTemplate: "<span></span>",
     footerTemplate:
       '<div style="width:100%;font-family:sans-serif;font-size:8px;color:#9aa1a6;padding:0 18mm;display:flex;justify-content:space-between;">' +
-      `<span>Argus Financial Partners · ${escapeHtml(title)}</span>` +
+      `<span>Goeman Global Finance · ${escapeHtml(title)}</span>` +
       '<span class="pageNumber"></span> / <span class="totalPages"></span></div>',
   });
 } finally {

@@ -1,6 +1,6 @@
 # Launch Readiness — honest scorecard + 90-day gate-closing plan
 
-A candid go/no-go on launching Argus in the US: where each gate actually stands, who owns it, and the
+A candid go/no-go on launching Goeman in the US: where each gate actually stands, who owns it, and the
 shortest dependency-ordered path to a real launch. **No new features** — this is about closing gates.
 
 > **How to read this.** Companion to `LAUNCH.md` (the gate definitions B1–B8), `CORPORATE-STRUCTURE.md`
@@ -25,7 +25,7 @@ features do not close a single gate.**
 - **Door 1 — narrow Phase-A launch** (non-custodial *software*, **no customer funds**, money rails OFF,
   testnet, RWA demo-only). The only door open in **weeks-to-months**, and it's mostly *non-engineering*
   work (counsel, vendor contracts, app verification). **Still not ready** — see §2.
-- **Door 2 — the full neobank** (deposits, cards, FX, Argus Pay, real trading/RWA). **Corp B/C**:
+- **Door 2 — the full neobank** (deposits, cards, FX, Goeman Pay, real trading/RWA). **Corp B/C**:
   **multi-quarter-to-multi-year, capital-intensive**, gated on a partner bank + FinCEN MSB + real
   vendors + licensing + production custody + SOC 2 + an ops org that doesn't exist yet. See §3.
 

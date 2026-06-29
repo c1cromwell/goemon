@@ -1,12 +1,12 @@
 # FraudEngine — Architecture Conformance & Gap Analysis
 
-**Subject:** Does the Argus Financial Partners codebase conform to the target architecture in [`FraudEngine.md`](./FraudEngine.md)?
+**Subject:** Does the Goeman Global Finance codebase conform to the target architecture in [`FraudEngine.md`](./FraudEngine.md)?
 **Date:** 2026-06-09
 **Verdict:** **No — and by design.** `FraudEngine.md` is a production-scale, event-driven *target* architecture. The current repo is the TypeScript/Node prototype. Essentially none of the FraudEngine *platform* exists yet, and the prototype was never scoped to implement it. This document maps the gap precisely and proposes a phased path.
 
 > **Update (2026-06-09): Stage 1 is now built.** The in-process fraud seam (§5 Stage 1) ships in `backend/src/services/fraudService.ts` + the append-only `fraud_decisions` table, screening the money path inside `transferService`. This **closes §4** (there is now a transaction-time fraud check).
 
-> **Update (2026-06-13): Stages 2–4 are now built as a standalone add-on (`fraud-engine/`).** The full platform — event backbone + schema registry, per-user feature store + enrichment, a `rules-v1` ensemble plus a `seq-v0` sequence model (Transformer stand-in), a model **registry + serving** layer with **config-driven routing and shadow/canary**, an append-only decision topic, an analyst **case queue**, an **async remediation** loop that calls back into Argus to **freeze/flag**, and a **label → retrain** loop — runs in `fraud-engine/` as a separate Node/TS service that imports **nothing** from `backend/`. Argus uses it over HTTP via a hybrid integration: an in-Argus triage decides blocking-vs-fire-and-forget; the remote score is advisory, the local deterministic gate + account-freeze are authoritative. Each layer is a prototype-scale stand-in behind an interface that maps 1:1 to the north-star tech (Kafka/Flink/Triton/MLflow/lakehouse), which remain the production graduation — see `fraud-engine/README.md`. The component table below describes the *production platform* gap; the **add-on implements the architecture, not the production infrastructure**.
+> **Update (2026-06-13): Stages 2–4 are now built as a standalone add-on (`fraud-engine/`).** The full platform — event backbone + schema registry, per-user feature store + enrichment, a `rules-v1` ensemble plus a `seq-v0` sequence model (Transformer stand-in), a model **registry + serving** layer with **config-driven routing and shadow/canary**, an append-only decision topic, an analyst **case queue**, an **async remediation** loop that calls back into Goeman to **freeze/flag**, and a **label → retrain** loop — runs in `fraud-engine/` as a separate Node/TS service that imports **nothing** from `backend/`. Goeman uses it over HTTP via a hybrid integration: an in-Goeman triage decides blocking-vs-fire-and-forget; the remote score is advisory, the local deterministic gate + account-freeze are authoritative. Each layer is a prototype-scale stand-in behind an interface that maps 1:1 to the north-star tech (Kafka/Flink/Triton/MLflow/lakehouse), which remain the production graduation — see `fraud-engine/README.md`. The component table below describes the *production platform* gap; the **add-on implements the architecture, not the production infrastructure**.
 
 > Scope note: this is an analysis deliverable. No runtime code was changed. Findings reflect the repo at the commit this file was added.
 
@@ -16,9 +16,9 @@
 
 `FraudEngine.md` describes a **real-time fraud intelligence platform**: every product streams immutable events to a unified Kafka backbone; a fraud-owned Flink layer enriches via a feature store, routes each event to a versioned Transformer model (shadow/canary/prod), emits a scored decision back to the stream, and continuously retrains from a lakehouse — all at sub‑100 ms, with full audit and explainability.
 
-The Argus Financial Partners prototype implements **none of that infrastructure** and, more importantly, has **no transaction-time fraud screening at all**. The money path (`transferService`, `smartchatService`, `ledgerService`) gates a transfer only on balance + idempotency (plus the compliance module for marketplace assets). No event is emitted, scored, or acted on for fraud.
+The Goeman Global Finance prototype implements **none of that infrastructure** and, more importantly, has **no transaction-time fraud screening at all**. The money path (`transferService`, `smartchatService`, `ledgerService`) gates a transfer only on balance + idempotency (plus the compliance module for marketplace assets). No event is emitted, scored, or acted on for fraud.
 
-This is consistent with the program's stated boundaries: `CLAUDE.md` lists Temporal/Conductor and equivalent production infra as **out of scope for current phases**, and `docs/ARGUS-PLAN.md` (phases 0–16) contains **no fraud phase**. `FraudEngine.md` is best read as a **v2 / production north‑star**, in the same category as the Go reimplementation and Temporal orchestration — directional, not a build spec the prototype was meant to satisfy.
+This is consistent with the program's stated boundaries: `CLAUDE.md` lists Temporal/Conductor and equivalent production infra as **out of scope for current phases**, and `docs/GOEMAN-PLAN.md` (phases 0–16) contains **no fraud phase**. `FraudEngine.md` is best read as a **v2 / production north‑star**, in the same category as the Go reimplementation and Temporal orchestration — directional, not a build spec the prototype was meant to satisfy.
 
 ---
 
@@ -99,7 +99,7 @@ Onboarding-only `signalService` + `riskOrchestratorService`; compliance gating o
 
 ## 6. Recommendations
 
-1. **Reclassify `FraudEngine.md` as a v2/production north-star** in the docs, alongside Temporal/Conductor and the Go reimplementation, so it is not mistaken for current-phase scope. (Add a one-line banner at its top and a pointer from `docs/ARGUS-PLAN.md`'s out-of-scope section.)
+1. **Reclassify `FraudEngine.md` as a v2/production north-star** in the docs, alongside Temporal/Conductor and the Go reimplementation, so it is not mistaken for current-phase scope. (Add a one-line banner at its top and a pointer from `docs/GOEMAN-PLAN.md`'s out-of-scope section.)
 2. **If any fraud capability is wanted now, do Stage 1 only.** It is the high-value, achievable slice and it deliberately shapes its event/decision/audit contract to be forward-compatible with the Kafka/Flink target — so Stage 1 is throwaway-free.
 3. **Do not introduce Kafka/Flink/model-serving unprompted.** Stages 2–4 are a multi-quarter platform effort and a locked-architecture decision; they need explicit scoping, a chain decision, and infra ownership before any code.
 4. **Preserve the two shared invariants** in whatever gets built: advisory model + deterministic enforcement, and immutable per-decision audit with model version + explanation.

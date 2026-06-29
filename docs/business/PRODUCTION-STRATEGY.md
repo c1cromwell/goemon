@@ -1,6 +1,6 @@
 # Production Deployment & Technology Strategy
 
-How to ship Argus Financial Partners to real users cheaply, run it as an AI-operated bank, and harden it into a
+How to ship Goeman Global Finance to real users cheaply, run it as an AI-operated bank, and harden it into a
 fraud-resistant, compliance-ready platform — grounded in what's already built in the repo (Hedera
 settlement, the double-entry ledger, DID/VC + OID4VP + MCP, the risk-adaptive onboarding orchestrator,
 and the Phase 15 internal-agent-ops design).

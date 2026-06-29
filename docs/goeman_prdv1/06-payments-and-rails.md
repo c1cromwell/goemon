@@ -46,8 +46,8 @@ Three candidates evaluated:
 ### ACH
 
 US users (Tier 2+) can:
-- **Deposit** by pushing ACH from their external bank to Argus Financial Partners (one-time or recurring)
-- **Withdraw** by initiating ACH from Argus Financial Partners to their linked external bank
+- **Deposit** by pushing ACH from their external bank to Goeman Global Finance (one-time or recurring)
+- **Withdraw** by initiating ACH from Goeman Global Finance to their linked external bank
 - **Convert** between USD balance and USDC balance with one tap (settled by partner bank + Bridge)
 
 **Requirements:**
@@ -113,11 +113,11 @@ Each corridor is implemented as a pluggable connector that supports:
 
 ## Peer-to-peer USDC
 
-The simplest payment surface — Argus Financial Partners user to Argus Financial Partners user, or Argus Financial Partners user to any external Hedera address.
+The simplest payment surface — Goeman Global Finance user to Goeman Global Finance user, or Goeman Global Finance user to any external Hedera address.
 
 **Requirements:**
-- `[REQ-PAY-P2P-001]` Argus Financial Partners-to-Argus Financial Partners transfers settle in under 5 seconds end-to-end (Hedera finality + our notification latency)
-- `[REQ-PAY-P2P-002]` Argus Financial Partners-to-external transfers settle at Hedera finality (~3 seconds)
+- `[REQ-PAY-P2P-001]` Goeman Global Finance-to-Goeman Global Finance transfers settle in under 5 seconds end-to-end (Hedera finality + our notification latency)
+- `[REQ-PAY-P2P-002]` Goeman Global Finance-to-external transfers settle at Hedera finality (~3 seconds)
 - `[REQ-PAY-P2P-003]` Transfers above Travel Rule threshold ($3K) trigger automatic IVMS 101 data collection via our Travel Rule provider (Notabene or Sumsub)
 - `[REQ-PAY-P2P-004]` Sending to a sanctioned address (per TRM Labs / Chainalysis screening) is blocked at submission time with explanatory error
 - `[REQ-PAY-P2P-005]` Receiving from a sanctioned address triggers automatic freeze of received funds pending compliance review
@@ -128,14 +128,14 @@ Lending is out of scope for v1. Documented here for architectural foresight; ful
 
 ### v2: Collateralized stablecoin loans
 
-User pledges Argus Financial Partners-held RWA tokens (BUIDL, OUSG, etc.) as collateral; borrows USDC against them. Mechanism:
+User pledges Goeman Global Finance-held RWA tokens (BUIDL, OUSG, etc.) as collateral; borrows USDC against them. Mechanism:
 - Smart contract on HSCS locks the collateral
-- USDC is disbursed to user from a Argus Financial Partners liquidity pool
+- USDC is disbursed to user from a Goeman Global Finance liquidity pool
 - Liquidation threshold and interest rate set per asset
 - Liquidation triggered automatically if LTV breaches threshold
 - Interest accrues continuously, repayment optional but reduces LTV
 
-This is a securities-collateralized loan and routes through a regulated entity (US: through partner bank or registered broker-dealer; international: through Argus Financial Partners's local entity per jurisdiction).
+This is a securities-collateralized loan and routes through a regulated entity (US: through partner bank or registered broker-dealer; international: through Goeman Global Finance's local entity per jurisdiction).
 
 ### v3: Personal loans and lines of credit
 
@@ -147,7 +147,7 @@ Traditional unsecured consumer lending. Requires:
 
 ## Card (future)
 
-> **Network strategy note:** the v1/v2 card rides Visa/MC (below). Whether Argus could instead build a
+> **Network strategy note:** the v1/v2 card rides Visa/MC (below). Whether Goeman could instead build a
 > *new* (non-Visa/MC/Amex) rail — and why the honest answer is "a stablecoin/agent-native rail with a Visa
 > bridge, not a frontal assault on card acceptance" — is analyzed in
 > [`docs/business/PAYMENT-NETWORK-STRATEGY.md`](../business/PAYMENT-NETWORK-STRATEGY.md).
@@ -155,7 +155,7 @@ Traditional unsecured consumer lending. Requires:
 Debit card is v2. Architecturally:
 - Visa or Mastercard BIN sponsored by partner bank
 - Card issued physically and virtually
-- Real-time authorization through Argus Financial Partners's processor (Marqeta, Lithic, or partner bank's processor)
+- Real-time authorization through Goeman Global Finance's processor (Marqeta, Lithic, or partner bank's processor)
 - Spending pulls from USD balance with optional USDC-to-USD instant conversion
 - Rewards in USDC for v2 launch
 
@@ -164,8 +164,8 @@ Debit card is v2. Architecturally:
 | Operation | P50 latency | P99 latency | Settlement finality |
 |---|---|---|---|
 | USDC receive (on-chain → app shown) | 3s | 8s | Hedera consensus (~3s) |
-| USDC send (Argus Financial Partners→Argus Financial Partners) | 4s | 10s | Hedera consensus + our DB |
-| USDC send (Argus Financial Partners→external) | 4s | 10s | Hedera consensus |
+| USDC send (Goeman Global Finance→Goeman Global Finance) | 4s | 10s | Hedera consensus + our DB |
+| USDC send (Goeman Global Finance→external) | 4s | 10s | Hedera consensus |
 | CCTP cross-chain | 13min | 30min | Circle CCTP V2 (chain-dependent) |
 | US ACH deposit | 1 business day | 3 business days | NACHA settlement |
 | US ACH withdrawal | 1 business day | 3 business days | NACHA settlement |

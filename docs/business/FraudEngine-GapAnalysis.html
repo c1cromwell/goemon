@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FraudEngine-GapAnalysis — Goeman Global Finance</title>
+<style>/* Goeman Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>FraudEngine-GapAnalysis</h1>
+  
+  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-executive-summary">1. Executive summary</a></li><li class="lvl-2"><a href="#2-component-by-component-conformance">2. Component-by-component conformance</a></li><li class="lvl-2"><a href="#3-what-exists-that-is-adjacent-and-why-it-is-not-the-fraud-engine">3. What exists that is adjacent (and why it is not the fraud engine)</a></li><li class="lvl-2"><a href="#4-the-single-most-material-gap">4. The single most material gap</a></li><li class="lvl-2"><a href="#5-phased-roadmap-prototype-fraudengine-target">5. Phased roadmap (prototype → FraudEngine target)</a></li><li class="lvl-3"><a href="#stage-0-status-quo-today">Stage 0 — Status quo (today)</a></li><li class="lvl-3"><a href="#stage-1-in-process-fraud-seam-prototype-scale-no-new-infra-built-2026-06-09">Stage 1 — In-process fraud seam (prototype-scale, no new infra) — ✅ BUILT (2026-06-09)</a></li><li class="lvl-3"><a href="#stage-2-stream-backbone-built-as-fraud-engine-2026-06-13">Stage 2 — Stream backbone — ✅ BUILT as fraud-engine/ (2026-06-13)</a></li><li class="lvl-3"><a href="#stage-3-stateful-enrichment-feature-store-built">Stage 3 — Stateful enrichment + feature store — ✅ BUILT</a></li><li class="lvl-3"><a href="#stage-4-model-serving-registry-shadowcanary-built">Stage 4 — Model serving + registry + shadow/canary — ✅ BUILT</a></li><li class="lvl-2"><a href="#6-recommendations">6. Recommendations</a></li></ol></nav>
+  <main class="content">
+<h1 id="fraudengine-architecture-conformance-gap-analysis">FraudEngine — Architecture Conformance &amp; Gap Analysis</h1>
+<p><strong>Subject:</strong> Does the Goeman Global Finance codebase conform to the target architecture in <a href="./FraudEngine.md"><code>FraudEngine.md</code></a>?
+<strong>Date:</strong> 2026-06-09
+<strong>Verdict:</strong> <strong>No — and by design.</strong> <code>FraudEngine.md</code> is a production-scale, event-driven <em>target</em> architecture. The current repo is the TypeScript/Node prototype. Essentially none of the FraudEngine <em>platform</em> exists yet, and the prototype was never scoped to implement it. This document maps the gap precisely and proposes a phased path.</p>
+<blockquote>
+<p><strong>Update (2026-06-09): Stage 1 is now built.</strong> The in-process fraud seam (§5 Stage 1) ships in <code>backend/src/services/fraudService.ts</code> + the append-only <code>fraud_decisions</code> table, screening the money path inside <code>transferService</code>. This <strong>closes §4</strong> (there is now a transaction-time fraud check).</p>
+</blockquote>
+<blockquote>
+<p><strong>Update (2026-06-13): Stages 2–4 are now built as a standalone add-on (<code>fraud-engine/</code>).</strong> The full platform — event backbone + schema registry, per-user feature store + enrichment, a <code>rules-v1</code> ensemble plus a <code>seq-v0</code> sequence model (Transformer stand-in), a model <strong>registry + serving</strong> layer with <strong>config-driven routing and shadow/canary</strong>, an append-only decision topic, an analyst <strong>case queue</strong>, an <strong>async remediation</strong> loop that calls back into Goeman to <strong>freeze/flag</strong>, and a <strong>label → retrain</strong> loop — runs in <code>fraud-engine/</code> as a separate Node/TS service that imports <strong>nothing</strong> from <code>backend/</code>. Goeman uses it over HTTP via a hybrid integration: an in-Goeman triage decides blocking-vs-fire-and-forget; the remote score is advisory, the local deterministic gate + account-freeze are authoritative. Each layer is a prototype-scale stand-in behind an interface that maps 1:1 to the north-star tech (Kafka/Flink/Triton/MLflow/lakehouse), which remain the production graduation — see <code>fraud-engine/README.md</code>. The component table below describes the <em>production platform</em> gap; the <strong>add-on implements the architecture, not the production infrastructure</strong>.</p>
+</blockquote>
+<blockquote>
+<p>Scope note: this is an analysis deliverable. No runtime code was changed. Findings reflect the repo at the commit this file was added.</p>
+</blockquote>
+<hr>
+<h2 id="1-executive-summary">1. Executive summary</h2>
+<p><code>FraudEngine.md</code> describes a <strong>real-time fraud intelligence platform</strong>: every product streams immutable events to a unified Kafka backbone; a fraud-owned Flink layer enriches via a feature store, routes each event to a versioned Transformer model (shadow/canary/prod), emits a scored decision back to the stream, and continuously retrains from a lakehouse — all at sub‑100 ms, with full audit and explainability.</p>
+<p>The Goeman Global Finance prototype implements <strong>none of that infrastructure</strong> and, more importantly, has <strong>no transaction-time fraud screening at all</strong>. The money path (<code>transferService</code>, <code>smartchatService</code>, <code>ledgerService</code>) gates a transfer only on balance + idempotency (plus the compliance module for marketplace assets). No event is emitted, scored, or acted on for fraud.</p>
+<p>This is consistent with the program&#39;s stated boundaries: <code>CLAUDE.md</code> lists Temporal/Conductor and equivalent production infra as <strong>out of scope for current phases</strong>, and <code>docs/GOEMAN-PLAN.md</code> (phases 0–16) contains <strong>no fraud phase</strong>. <code>FraudEngine.md</code> is best read as a <strong>v2 / production north‑star</strong>, in the same category as the Go reimplementation and Temporal orchestration — directional, not a build spec the prototype was meant to satisfy.</p>
+<hr>
+<h2 id="2-component-by-component-conformance">2. Component-by-component conformance</h2>
+<table>
+<thead>
+<tr>
+<th>FraudEngine component</th>
+<th>Target tech</th>
+<th>Status in repo</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unified event backbone</td>
+<td>Kafka/Redpanda + Schema Registry (Avro/Protobuf)</td>
+<td>❌ Absent</td>
+<td>No streaming deps in <code>backend/package.json</code>; no producer/consumer code</td>
+</tr>
+<tr>
+<td>Fraud listening/processing</td>
+<td>Apache Flink, per-user-partitioned stateful jobs</td>
+<td>❌ Absent</td>
+<td>No Flink, no consumer groups, no stream-state code</td>
+</tr>
+<tr>
+<td>Real-time feature store</td>
+<td>Tecton / Databricks online store (Redis/Cassandra)</td>
+<td>❌ Absent</td>
+<td>No feature store; no Redis/Cassandra</td>
+</tr>
+<tr>
+<td>Dynamic model router</td>
+<td>Flink ProcessFunction + config service (etcd/Consul)</td>
+<td>❌ Absent</td>
+<td>No routing layer; no model-selection config</td>
+</tr>
+<tr>
+<td>Transformer model serving</td>
+<td>Triton / vLLM / SageMaker, multi-version</td>
+<td>❌ Absent</td>
+<td>No model serving anywhere in the stack</td>
+</tr>
+<tr>
+<td>Model registry + experiments</td>
+<td>MLflow / Databricks Model Registry</td>
+<td>❌ Absent</td>
+<td>No registry; no versioned model artifacts</td>
+</tr>
+<tr>
+<td>Shadow / canary / A‑B testing</td>
+<td>Parallel jobs, hash-based traffic split, instant promote/rollback</td>
+<td>❌ Absent</td>
+<td>No traffic-splitting or shadow-eval mechanism</td>
+</tr>
+<tr>
+<td>Training lakehouse + retraining</td>
+<td>Databricks Delta / Iceberg + Airflow</td>
+<td>❌ Absent</td>
+<td>No lakehouse; no training pipeline</td>
+</tr>
+<tr>
+<td>Decision → stream → action</td>
+<td>Output Kafka topic consumed by orchestrator/products</td>
+<td>❌ Absent</td>
+<td>No decision topic; no real-time action loop</td>
+</tr>
+<tr>
+<td>Transaction-time fraud scoring</td>
+<td>(implied by the whole design)</td>
+<td>🟡 <strong>Stage 1 built</strong></td>
+<td><code>fraudService.screenTransfer</code> screens the money path in <code>transferService</code>; deterministic <code>rules-v0</code> scorer (velocity/spike/new-payee/large-absolute) → allow/flag/challenge/block. Not yet a Transformer, not streaming</td>
+</tr>
+<tr>
+<td>Compliance &amp; audit</td>
+<td>Per-decision model version + SHAP → audit topic</td>
+<td>🟡 Partial analog</td>
+<td>Append-only <code>audit_logs</code> / <code>mcp_audit_logs</code> (auth/ledger/MCP). Stage 1 adds append-only <code>fraud_decisions</code> with <code>model_version</code> + reasons (the &quot;audit topic&quot; shape) — reasons are rule codes, not yet SHAP</td>
+</tr>
+</tbody></table>
+<p><strong>Legend:</strong> ✅ conforms · 🟡 partial / analog only · ❌ absent</p>
+<hr>
+<h2 id="3-what-exists-that-is-adjacent-and-why-it-is-not-the-fraud-engine">3. What exists that is <em>adjacent</em> (and why it is not the fraud engine)</h2>
+<p>Two Phase 5A services rhyme with the design but are <strong>onboarding-scoped</strong>, synchronous, and rule-based — not ongoing transaction fraud:</p>
+<ul>
+<li><strong><code>backend/src/services/signalService.ts</code></strong> — deterministic, rule-based scoring of <em>onboarding</em> signals (disposable email, IP, device fingerprint, rapid-completion) into PII-free sub-scores. PII minimization at the boundary. No streaming, no model serving.</li>
+<li><strong><code>backend/src/services/riskOrchestratorService.ts</code></strong> — an <em>advisory</em> model (<code>utils/orchestratorModel.assessRisk</code>) whose output is overridden by deterministic guardrails in <code>finalizeDecision</code> (the single authority for a tier grant). Embodies &quot;agents decide; deterministic code executes; humans gate.&quot;</li>
+</ul>
+<p>Two design <em>threads</em> are genuinely shared and worth preserving into any future build:</p>
+<ol>
+<li><strong>Advisory model + deterministic enforcement.</strong> FraudEngine&#39;s &quot;risk score + explanation → decision → action&quot; maps cleanly onto the existing <code>assessRisk → finalizeDecision</code> split. A fraud engine should reuse this invariant: the Transformer is advisory; deterministic policy and human gates decide.</li>
+<li><strong>Append-only audit as the &quot;audit topic&quot; analog.</strong> <code>auditService</code> + append-only triggers on <code>audit_logs</code> / <code>mcp_audit_logs</code> are the closest existing thing to the doc&#39;s immutable audit stream — but they record auth/ledger/MCP events, not fraud decisions with model version + confidence + explanation.</li>
+</ol>
+<p>The <strong>compliance module</strong> (<code>complianceService.ts</code>: tier/jurisdiction/holder-cap gating, <code>COMPLIANCE_BLOCKED</code>) is a <em>policy</em> gate on marketplace transfers, not a <em>fraud/anomaly</em> detector. It is rules, not risk scoring, and does not cover ordinary cash transfers.</p>
+<p><strong>Net:</strong> the prototype has onboarding risk scoring and policy/compliance gating, but <strong>no real-time, transaction-level fraud detection</strong> and <strong>none</strong> of the streaming/ML platform FraudEngine specifies.</p>
+<hr>
+<h2 id="4-the-single-most-material-gap">4. The single most material gap</h2>
+<p>Independent of the heavy platform, the prototype has <strong>no transaction-time fraud check on the money path</strong>. <code>transferService.executeTransfer</code> gates only on:</p>
+<ul>
+<li>idempotency (inside the DB transaction, no TOCTOU), and</li>
+<li>balance sufficiency (inside the same transaction).</li>
+</ul>
+<p>There is no velocity check, no anomaly score, no device/session correlation, no &quot;challenge/flag/block&quot; outcome distinct from a hard balance failure. This is the one gap that is both <strong>high-value</strong> and <strong>achievable at prototype scale</strong> without any new infrastructure — see Stage 1 below.</p>
+<hr>
+<h2 id="5-phased-roadmap-prototype-fraudengine-target">5. Phased roadmap (prototype → FraudEngine target)</h2>
+<p>Framed so each stage is independently shippable and each preserves the invariants above. Stages 2+ are explicitly v2/production and require the locked-architecture review that Kafka/Flink/model-serving demand.</p>
+<h3 id="stage-0-status-quo-today">Stage 0 — Status quo (today)</h3>
+<p>Onboarding-only <code>signalService</code> + <code>riskOrchestratorService</code>; compliance gating on assets; append-only audit. No transaction fraud.</p>
+<h3 id="stage-1-in-process-fraud-seam-prototype-scale-no-new-infra-built-2026-06-09">Stage 1 — In-process fraud seam <em>(prototype-scale, no new infra)</em> — ✅ <strong>BUILT (2026-06-09)</strong></h3>
+<ul>
+<li>✅ Normalized <code>TransferRiskEvent</code> emitted from the money path inside <code>transferService.transfer</code> (channel-tagged: <code>api</code> / <code>smartchat</code> / <code>mcp</code>) — an in-process event abstraction that <em>later</em> maps to a Kafka topic 1:1.</li>
+<li>✅ Deterministic <code>fraudService.scoreTransferFeatures</code> (velocity, amount-vs-history spike, new-payee, large-absolute) returning <code>score + reasons + action ∈ {allow, flag, challenge, block}</code>. Pure and unit-tested.</li>
+<li>✅ Enforced via the advisory+deterministic split (score is advisory; the thresholds in <code>fraudService</code> are the only thing that blocks). <code>block</code> → <code>FRAUD_BLOCKED</code>; <code>FRAUD_ENGINE_ENFORCE=false</code> gives shadow mode. The existing <code>&gt;$500 → MFA</code> SmartChat gate remains the live &quot;challenge&quot;.</li>
+<li>✅ Each decision written to the append-only <code>fraud_decisions</code> table with score, reasons, and <code>model_version=&#39;rules-v0&#39;</code> (+ mirrored to <code>audit_logs</code>) — the forward-compatible &quot;audit topic&quot; shape. A <code>fraud_decision_total{action}</code> prom counter is incremented.</li>
+<li>✅ Only <strong>funded</strong> transfers are screened (an unfunded attempt stays <code>INSUFFICIENT_FUNDS</code>); the in-transaction balance check remains authoritative for TOCTOU.</li>
+<li><strong>Closes §4.</strong> Tests: <code>backend/test/fraud.test.ts</code> (10) — pure scorer, allow/block/shadow on the money path, append-only enforcement, unfunded skip. Full suite 141 pass / 3 todo.</li>
+</ul>
+<h3 id="stage-2-stream-backbone-built-as-fraud-engine-2026-06-13">Stage 2 — Stream backbone — ✅ <strong>BUILT as <code>fraud-engine/</code> (2026-06-13)</strong></h3>
+<p><code>bus/eventBus.ts</code> (<code>EventBus</code> interface + <code>InProcessEventBus</code>, consumer groups, topics) is the broker analog; <code>bus/schemaRegistry.ts</code> validates versioned event schemas on ingest. <code>POST /v1/events</code> ingests; scoring runs in a decision pipeline; decisions publish to a <code>decisions</code> topic consumed by the remediation service. <strong>Production graduation:</strong> swap <code>InProcessEventBus</code> for a Kafka/Redpanda client behind the same interface; add cross-process exactly-once.</p>
+<h3 id="stage-3-stateful-enrichment-feature-store-built">Stage 3 — Stateful enrichment + feature store — ✅ <strong>BUILT</strong></h3>
+<p><code>features/featureStore.ts</code> (<code>SqliteFeatureStore</code>) holds per-user sequence state (velocity window, trailing max, distinct payees, recent-amount sequence, last geo/device); <code>features/enrichment.ts</code> joins the snapshot before scoring. <strong>Production graduation:</strong> replace the SQLite store with a Tecton/Redis online store + Flink-partitioned state behind the <code>FeatureStore</code> interface.</p>
+<h3 id="stage-4-model-serving-registry-shadowcanary-built">Stage 4 — Model serving + registry + shadow/canary — ✅ <strong>BUILT</strong></h3>
+<p><code>models/registry.ts</code> (versions + <code>prod|shadow|canary|retired</code>), <code>models/serving.ts</code> (<code>ModelServer</code> + <code>ServingBackend</code> seam), <code>router/router.ts</code> (config-driven prod ensemble + shadow + hash-bucketed canary, live promotion), and <code>learning/retrain.ts</code> (labels → drift → registered shadow candidate). <code>rules-v1</code> is the prod floor; <code>seq-v0</code> is the served sequence model (Transformer stand-in). <strong>Production graduation:</strong> register a real Triton/vLLM endpoint as a <code>ServingBackend</code>, back the registry with MLflow, and feed retraining from a real lakehouse. This is the full FraudEngine.md target architecture, with the heavy infra as the remaining swap.</p>
+<hr>
+<h2 id="6-recommendations">6. Recommendations</h2>
+<ol>
+<li><strong>Reclassify <code>FraudEngine.md</code> as a v2/production north-star</strong> in the docs, alongside Temporal/Conductor and the Go reimplementation, so it is not mistaken for current-phase scope. (Add a one-line banner at its top and a pointer from <code>docs/GOEMAN-PLAN.md</code>&#39;s out-of-scope section.)</li>
+<li><strong>If any fraud capability is wanted now, do Stage 1 only.</strong> It is the high-value, achievable slice and it deliberately shapes its event/decision/audit contract to be forward-compatible with the Kafka/Flink target — so Stage 1 is throwaway-free.</li>
+<li><strong>Do not introduce Kafka/Flink/model-serving unprompted.</strong> Stages 2–4 are a multi-quarter platform effort and a locked-architecture decision; they need explicit scoping, a chain decision, and infra ownership before any code.</li>
+<li><strong>Preserve the two shared invariants</strong> in whatever gets built: advisory model + deterministic enforcement, and immutable per-decision audit with model version + explanation.</li>
+</ol>
+
+  </main>
+</div>
+</body></html>

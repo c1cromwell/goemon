@@ -8,9 +8,9 @@ Tracks PRD vs prototype vs launch posture after competitive-gap + Tier 1/2 imple
 
 1. **Shipped code** (`backend/`, `frontend/`, `ArgusWallet/`) — what actually runs
 2. **`docs/LAUNCH.md`** — Phase A go/no-go
-3. **`docs/argus_prdv1/11-open-questions-and-risks.md`** — founder decisions
+3. **`docs/goeman_prdv1/11-open-questions-and-risks.md`** — founder decisions
 4. **`docs/PRD-PHASE-MATRIX.md`** — PRD vs prototype vs Corp B/C
-5. **`docs/argus_prdv1/`** modules — aspirational v1 bank PRD (some items deferred)
+5. **`docs/goeman_prdv1/`** modules — aspirational v1 bank PRD (some items deferred)
 
 ## Intentional PRD divergences (documented)
 
@@ -39,7 +39,7 @@ Tracks PRD vs prototype vs launch posture after competitive-gap + Tier 1/2 imple
 | Item | Doc | Code |
 |---|---|---|
 | Identity Vault | PRODUCTION-STRATEGY §4 | `identityVaultService.ts`, migration `031`, admin sync |
-| Argus Pay wedge | PAYMENT-NETWORK-STRATEGY | `paymentService` + `/pay` + `Pay.tsx` UI |
+| Goeman Pay wedge | PAYMENT-NETWORK-STRATEGY | `paymentService` + `/pay` + `Pay.tsx` UI |
 | Doc recon | this file | PRD-PHASE-MATRIX, LAUNCH, open-questions synced |
 | Agentic OS M1 | `AGENTIC-OS.md`, `agentic-os/index.html` | Corporate brain design + webview; M2–M6 code pending CEO sign-off |
 
