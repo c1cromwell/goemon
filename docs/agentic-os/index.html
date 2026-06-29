@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Goeman Agentic OS — Corporate Brain</title>
+  <title>Goemon Agentic OS — Corporate Brain</title>
   <style>
     :root {
       --bg: #0b0d10;
@@ -99,10 +99,10 @@
 <body>
 <div class="wrap">
   <header>
-    <img class="logo" src="logo.svg" alt="Goeman Global Finance"/>
+    <img class="logo" src="logo.svg" alt="Goemon Global Finance"/>
     <div class="hero">
       <span class="badge">M1 — CEO sign-off gate</span>
-      <h1>Goeman Agentic OS</h1>
+      <h1>Goemon Agentic OS</h1>
       <p>Run the corporation with AI agents at corporate and product levels. Humans gate only financial outputs, first production launches, and final legal sign-offs.</p>
     </div>
   </header>
@@ -110,15 +110,15 @@
   <section id="mission">
     <h2>Mission &amp; framing</h2>
     <div class="panel panel-accent">
-      <p><strong>Mission:</strong> Operate Goeman Global Finance with the smallest possible human staff — an auditable, agent-native corporation where every material decision is logged and the CEO retains final authority on money, launches, and legal posture.</p>
+      <p><strong>Mission:</strong> Operate Goemon Global Finance with the smallest possible human staff — an auditable, agent-native corporation where every material decision is logged and the CEO retains final authority on money, launches, and legal posture.</p>
       <p style="margin-top:0.75rem;color:var(--text-2)"><strong>Phase A framing:</strong> Tokenization-first, non-custodial, agentic finance. Keys on-device; agents under scoped credentials; append-only audit. Not a bank — the all-seeing guardian of your money.</p>
     </div>
   </section>
 
   <section id="org">
     <h2>Organization overview</h2>
-    <img class="org-img" src="org.svg" alt="Goeman Agentic OS org chart"/>
-    <p style="margin-top:0.75rem;font-size:0.85rem;color:var(--text-3)">Inspired by the Company OS ontology (function → category → task + skill files). Goeman maps this onto <code>runOperation</code> skills, RBAC gates, and a decision knowledge graph.</p>
+    <img class="org-img" src="org.svg" alt="Goemon Agentic OS org chart"/>
+    <p style="margin-top:0.75rem;font-size:0.85rem;color:var(--text-3)">Inspired by the Company OS ontology (function → category → task + skill files). Goemon maps this onto <code>runOperation</code> skills, RBAC gates, and a decision knowledge graph.</p>
   </section>
 
   <section id="gates">
@@ -202,7 +202,7 @@
       <li class="current"><strong>M3</strong> — Decision KG: <code>kg_nodes</code>/<code>kg_edges</code>, <code>decisionGraphService</code>, graph API + admin panel ← <em>built — CEO sign-off pending</em></li>
       <li class="current"><strong>M4</strong> — Model router + <code>model_invocations</code>; <code>kycReviewSkill</code> routed via task class ← <em>built — CEO sign-off pending</em></li>
       <li><strong>M2</strong> — Governance core: <code>ceo</code>/<code>chief_of_staff</code> RBAC, gate-policy, Approvals admin UI</li>
-      <li class="current"><strong>M5</strong> — Corporate agent fleet (CFO/CLO/CISO/CPO + Goeman Brain router) ← <em>built — CEO sign-off pending</em></li>
+      <li class="current"><strong>M5</strong> — Corporate agent fleet (CFO/CLO/CISO/CPO + Goemon Brain router) ← <em>built — CEO sign-off pending</em></li>
       <li class="current"><strong>M6</strong> — Product squad + PDLC orchestrator + product KG ← <em>built — CEO sign-off pending</em></li>
     </ul>
   </section>
@@ -231,22 +231,22 @@
 <script>
 const AGENTS = {
   corporate: [
-    { name: "Goeman Brain", charter: "Office of CEO / Orchestrator — routes work, convenes agents, owns the CEO/CS approval queue and corporate decision log.", responsibilities: "Triage incoming work · Assign to C-suite agents · Surface pending human gates · Maintain corporate decision log", interacts: "All corporate agents · CEO/CS approval queue · Goeman Brain dashboard (M2)", tools: "runOperation · agent-ops API · mechGovService", tier: "human_led", gate: "Owns queue — does not bypass CEO gates" },
-    { name: "CFO", charter: "Budgets, treasury, revenue and spend reporting.", responsibilities: "Cash projections · Spend approvals · Revenue recognition drafts · FBO coverage reports", interacts: "CRO (compliance) · COO (infra spend) · Goeman Brain", tools: "Ledger read · bank-rail reports · statementService", tier: "human_required", gate: "CEO — financial outputs", gated: true },
+    { name: "Goemon Brain", charter: "Office of CEO / Orchestrator — routes work, convenes agents, owns the CEO/CS approval queue and corporate decision log.", responsibilities: "Triage incoming work · Assign to C-suite agents · Surface pending human gates · Maintain corporate decision log", interacts: "All corporate agents · CEO/CS approval queue · Goemon Brain dashboard (M2)", tools: "runOperation · agent-ops API · mechGovService", tier: "human_led", gate: "Owns queue — does not bypass CEO gates" },
+    { name: "CFO", charter: "Budgets, treasury, revenue and spend reporting.", responsibilities: "Cash projections · Spend approvals · Revenue recognition drafts · FBO coverage reports", interacts: "CRO (compliance) · COO (infra spend) · Goemon Brain", tools: "Ledger read · bank-rail reports · statementService", tier: "human_required", gate: "CEO — financial outputs", gated: true },
     { name: "CLO (General Counsel)", charter: "Legal and regulatory posture for Phase A non-custodial software.", responsibilities: "Memo drafts (B4–B6) · Regulatory mapping · Filing prep · Launch legal review", interacts: "CRO · CPO · CEO gate", tools: "complianceSkill (legal) · doc templates in docs/legal/", tier: "human_required", gate: "CEO — final legal signoff", gated: true },
     { name: "CISO", charter: "Corporate security posture; peer to product Cyber Specialist.", responsibilities: "Threat landscape · Wallet audit coordination (Trail of Bits) · Security invariant tracking", interacts: "Cyber Specialist · COO/SRE · CLO", tools: "phase14-security tests · kms/signer seams", tier: "auto_approve_audit", gate: "—" },
     { name: "CPO", charter: "Product portfolio and roadmap; owns launch readiness.", responsibilities: "Roadmap prioritization · Launch checklist · Feature scope vs Phase A posture", interacts: "CMO · Product squads · CEO launch gate", tools: "PRD-PHASE-MATRIX · LAUNCH.md", tier: "human_required", gate: "CEO — first production launch", gated: true },
     { name: "CMO", charter: "Brand, positioning, go-to-market.", responsibilities: "Messaging compliance (no 'bank') · Campaign drafts · GTM for collectibles-first", interacts: "CPO · CLO (messaging review) · marketing skill", tools: "backOfficeSkills marketing · LAUNCH.md §1", tier: "auto_approve_audit", gate: "Admin gate ≥1k audience" },
     { name: "CRO / Compliance", charter: "Risk, audit, regulatory filings.", responsibilities: "KYC review queue · SAR/OFAC/CTR drafts · Sanctions rescreen · Account holds", interacts: "CLO · CFO · compliance admin", tools: "complianceSkill · kycReviewSkill · accountHoldService", tier: "human_required", gate: "Compliance/admin (not CEO unless legal final)" },
     { name: "COO / SRE", charter: "Infrastructure, vendors, reliability.", responsibilities: "Incident summaries · Vendor eval · SLO tracking · Temporal/Conductor health", interacts: "CISO · CFO · SRE product agent", tools: "backOfficeSkills SRE · metrics · launch-gate.sh", tier: "auto_approve_audit", gate: "—" },
-    { name: "Chief of Staff", charter: "Backup human gate when CEO is unavailable.", responsibilities: "Approve/reject queued reviews · Escalation routing · Executive briefings", interacts: "Goeman Brain · CEO · all gated output classes", tools: "agent_reviews · resolveReview (M2 RBAC)", tier: "human_led", gate: "Backup for all three CEO gate classes" }
+    { name: "Chief of Staff", charter: "Backup human gate when CEO is unavailable.", responsibilities: "Approve/reject queued reviews · Escalation routing · Executive briefings", interacts: "Goemon Brain · CEO · all gated output classes", tools: "agent_reviews · resolveReview (M2 RBAC)", tier: "human_led", gate: "Backup for all three CEO gate classes" }
   ],
   product: [
     { name: "AI Product Strategist", charter: "The why — market, positioning, strategy documents.", responsibilities: "PRD alignment · Competitive analysis · Strategy docs with rationale", interacts: "PDLC Orchestrator · CPO · CMO", tools: "Read-only skill tools · docs/argus_prdv1/", tier: "auto_approve_audit", gate: "—" },
     { name: "AI Engineer", charter: "Implementation — code, migrations, APIs.", responsibilities: "Feature build · Typecheck/test green · Idempotent money paths", interacts: "PDLC Orchestrator · Cyber · QA", tools: "Scoped write (M6) · existing backend services", tier: "auto_approve_audit", gate: "—" },
     { name: "AI Spec / PDLC Orchestrator", charter: "Drives spec → design → build → test → launch; enforces gates.", responsibilities: "Milestone tracking · Gate enforcement · Launch proposal to CEO", interacts: "All product agents · CPO · CEO launch gate", tools: "WorkflowEngine · runOperation · LAUNCH.md checklist", tier: "human_required", gate: "CEO — first prod launch", gated: true },
     { name: "AI Cyber Specialist", charter: "Per-product threat modeling and security review.", responsibilities: "STRIDE reviews · VP/MCP scope audit · Pre-launch security sign-off", interacts: "CISO · Engineer · PDLC Orchestrator", tools: "presentation tests · phase14-security · wallet audit docs", tier: "human_required", gate: "Material findings → human_required" },
-    { name: "AI Agentic Builder", charter: "Continuously updates agents, skills, and MCP servers.", responsibilities: "Skill registry updates · MCP client registration · Agent charter sync", interacts: "PDLC Orchestrator · Goeman Brain · all agents", tools: "skillRegistry · skills/index.ts · goeman-agent MCP", tier: "auto_approve_audit", gate: "—" },
+    { name: "AI Agentic Builder", charter: "Continuously updates agents, skills, and MCP servers.", responsibilities: "Skill registry updates · MCP client registration · Agent charter sync", interacts: "PDLC Orchestrator · Goemon Brain · all agents", tools: "skillRegistry · skills/index.ts · goemon-agent MCP", tier: "auto_approve_audit", gate: "—" },
     { name: "AI QA / Test", charter: "Test plans, regression, e2e gates.", responsibilities: "Vitest · Playwright · e2e-validator · launch-gate.sh", interacts: "Engineer · PDLC Orchestrator · COO/SRE", tools: "npm test · test:e2e · e2e-validator skill", tier: "auto_approve_audit", gate: "—" },
     { name: "AI SRE / Reliability", charter: "Product SLOs and incident response.", responsibilities: "On-call summaries · Performance · Degradation paths", interacts: "COO/SRE · Engineer · Cyber", tools: "metrics · temporal/conductor seams", tier: "auto_approve_audit", gate: "—" },
     { name: "AI Support", charter: "Support issues and fixes feed the product knowledge graph.", responsibilities: "Ticket triage · Root-cause drafts · Fix verification", interacts: "Engineer · Strategist · product KG (M3)", tools: "backOfficeSkills support · decision KG", tier: "human_required", gate: "Customer-facing fixes" },

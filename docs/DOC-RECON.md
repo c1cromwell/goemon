@@ -6,11 +6,11 @@ Tracks PRD vs prototype vs launch posture after competitive-gap + Tier 1/2 imple
 
 ## Source-of-truth hierarchy
 
-1. **Shipped code** (`backend/`, `frontend/`, `GoemanWallet/`) — what actually runs
+1. **Shipped code** (`backend/`, `frontend/`, `GoemonWallet/`) — what actually runs
 2. **`docs/LAUNCH.md`** — Phase A go/no-go
-3. **`docs/goeman_prdv1/11-open-questions-and-risks.md`** — founder decisions
+3. **`docs/goemon_prdv1/11-open-questions-and-risks.md`** — founder decisions
 4. **`docs/PRD-PHASE-MATRIX.md`** — PRD vs prototype vs Corp B/C
-5. **`docs/goeman_prdv1/`** modules — aspirational v1 bank PRD (some items deferred)
+5. **`docs/goemon_prdv1/`** modules — aspirational v1 bank PRD (some items deferred)
 
 ## Intentional PRD divergences (documented)
 
@@ -27,7 +27,7 @@ Tracks PRD vs prototype vs launch posture after competitive-gap + Tier 1/2 imple
 | Item | Doc | Code / script |
 |---|---|---|
 | iOS verify B1 | LAUNCH.md §3 | `scripts/verify-ios-wallet.sh` |
-| Android fast-follow | `GoemanWalletAndroid/` | Gradle scaffold + README |
+| Android fast-follow | `GoemonWalletAndroid/` | Gradle scaffold + README |
 | Legal memos B4–B6 | `docs/legal/` | Templates; B5 updated for Q-ID-003 |
 | E2E/UI gate | LAUNCH.md §4 | `scripts/launch-gate.sh`, `frontend/e2e/wallet.spec.ts` |
 | Trail of Bits audit | Q-WALLET-001 | `docs/security/TRAIL-OF-BITS-AUDIT.md` |
@@ -39,7 +39,7 @@ Tracks PRD vs prototype vs launch posture after competitive-gap + Tier 1/2 imple
 | Item | Doc | Code |
 |---|---|---|
 | Identity Vault | PRODUCTION-STRATEGY §4 | `identityVaultService.ts`, migration `031`, admin sync |
-| Goeman Pay wedge | PAYMENT-NETWORK-STRATEGY | `paymentService` + `/pay` + `Pay.tsx` UI |
+| Goemon Pay wedge | PAYMENT-NETWORK-STRATEGY | `paymentService` + `/pay` + `Pay.tsx` UI |
 | Doc recon | this file | PRD-PHASE-MATRIX, LAUNCH, open-questions synced |
 | Agentic OS M1 | `AGENTIC-OS.md`, `agentic-os/index.html` | Corporate brain design + webview; M2–M6 code pending CEO sign-off |
 
@@ -49,7 +49,7 @@ Tracks PRD vs prototype vs launch posture after competitive-gap + Tier 1/2 imple
 - Trail of Bits SOW execution
 - Courtyard API client (`COLLECTIBLES_PROVIDER=courtyard` stub)
 - Neo4j Aura swap for Identity Vault (SQLite prototype today)
-- `GOEMAN_PAY_ENABLED` / `COLLECTIBLES_ESCROW_ENABLED` prod counsel before flip
+- `GOEMON_PAY_ENABLED` / `COLLECTIBLES_ESCROW_ENABLED` prod counsel before flip
 
 ## Maintenance
 

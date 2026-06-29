@@ -1,4 +1,4 @@
-# Goeman Global Finance — End-to-End UX & System Test Guide
+# Goemon Global Finance — End-to-End UX & System Test Guide
 
 A hands-on guide to exercising **every product, every channel, and the fraud platform** as a
 real user/operator, plus how to build/run/validate the backend end-to-end. This is the manual,
@@ -16,11 +16,11 @@ real user/operator, plus how to build/run/validate the backend end-to-end. This 
 |---|---|---|---|---|
 | 1 | **Backend API** | `backend/` | `http://localhost:3001` (health: `/api/health`) | everything |
 | 2 | **Customer portal** (React) | `frontend/` | `http://localhost:5173` | all user journeys |
-| 3 | **External agent app** (OID4VP + MCP) | `goeman-agent/` | `http://localhost:5174` | connected-agent journey |
+| 3 | **External agent app** (OID4VP + MCP) | `goemon-agent/` | `http://localhost:5174` | connected-agent journey |
 | 4 | **Fraud engine** (standalone) | `fraud-engine/` | `http://localhost:4500` (health: `/health`) | fraud journey, learning loop |
 | 5 | **Temporal** (optional) | `backend/` compose | gRPC `localhost:7233`, UI `http://localhost:8233` | durable money + agent ops |
 | 6 | **Conductor** (optional) | `backend/` compose | API `http://localhost:8080/api`, UI `http://localhost:5001` | agent-ops orchestration |
-| 7 | **iOS wallet** (`GoemanWallet/`) | Xcode | simulator | mobile (unverified source — needs macOS/Xcode) |
+| 7 | **iOS wallet** (`GoemonWallet/`) | Xcode | simulator | mobile (unverified source — needs macOS/Xcode) |
 
 **Primary starting URL for almost everything: `http://localhost:5173`** (the customer portal).
 Admin journeys start at `http://localhost:5173/admin/login`. The external-agent journey starts at
@@ -43,7 +43,7 @@ npm run dev                     # API on :3001 (auto-migrates in dev)
 cd frontend && npm install && npm run dev      # :5173
 
 # --- external agent app (new terminal) ---
-cd goeman-agent && npm install && npm run dev    # :5174
+cd goemon-agent && npm install && npm run dev    # :5174
 
 # --- fraud engine (new terminal) ---
 cd fraud-engine && npm install && cp .env.example .env && npm run dev   # :4500
@@ -60,7 +60,7 @@ Most products are behind kill-switches (off by default). For a full demo set the
 ```bash
 ALLOW_PASSWORD_AUTH=true          # lets you log in with the demo passwords (passkeys otherwise)
 TRADING_ENABLED=true              # /trade journey (Phase 17 simulated broker)
-GOEMAN_PAY_ENABLED=true            # Goeman Pay merchant journey (Phase 21)
+GOEMON_PAY_ENABLED=true            # Goemon Pay merchant journey (Phase 21)
 BANK_RAILS_ENABLED=true           # bank rails: deposit/withdraw/statement (Phase 19 Stage-1)
 CARDS_ENABLED=true                # debit cards: issue/authorize/capture (Phase 19.4)
 BILLPAY_ENABLED=true              # bill pay: payees + scheduled/recurring payments (Phase 19.3)
@@ -88,7 +88,7 @@ In `fraud-engine/.env` set the **same** `FRAUD_ENGINE_API_KEY` (the engine valid
 for freeze callbacks).
 
 > ⚠️ These flags are **prod-fatal** — the server refuses to boot in `NODE_ENV=production` with
-> `TRADING_ENABLED`/`GOEMAN_PAY_ENABLED`/`ALLOW_PASSWORD_AUTH` on, with the simulated on/off-ramp
+> `TRADING_ENABLED`/`GOEMON_PAY_ENABLED`/`ALLOW_PASSWORD_AUTH` on, with the simulated on/off-ramp
 > (`ONRAMP_ENABLED`/`OFFRAMP_ENABLED` while `*_PROVIDER=simulated`), with `LENDING_ENABLED` or the
 > simulated money/wealth seams, or with `KMS_PROVIDER=local`. They are for local/dev demoing only.
 > The dev `.env` already ships the on-ramp, off-ramp, Treasury, and lending flags **on**.
@@ -97,7 +97,7 @@ for freeze callbacks).
 
 | Who | Login | Tier / state | Use for |
 |---|---|---|---|
-| **admin@goemanglobal.com** / `Admin1234!` | `/admin/login` | RBAC `admin` | admin console, agent-ops, escrow mediation |
+| **admin@goemonglobal.com** / `Admin1234!` | `/admin/login` | RBAC `admin` | admin console, agent-ops, escrow mediation |
 | **alex@demo.com** / `Demo1234!` | `/login` | Tier 2, $12,500 | transfers, SmartChat, escrow |
 | **blair@demo.com** / `Demo1234!` | `/login` | Tier 2, $40,000 | marketplace Invest (accredited) |
 | **casey@demo.com** / `Demo1234!` | `/login` | Tier 1, $3,000 | KYC step-up; rejection demo (expired doc #1) |
@@ -107,7 +107,7 @@ for freeze callbacks).
 Plus: marketplace Invest/Collect assets, and the simulator MCP client `did:simulator:agent-app`
 (used by the external-agent app, $500 ceiling).
 
-Extra data created inline per journey below (a merchant for Goeman Pay, an agent-ops review) via `curl`.
+Extra data created inline per journey below (a merchant for Goemon Pay, an agent-ops review) via `curl`.
 
 ---
 
@@ -165,7 +165,7 @@ Each journey lists the **start URL**, steps, and **what to verify**. Log in as t
 ### Portal money-app pages & the More menu
 The customer portal surfaces every product through a flat top nav (Home · Invest · Collect · Agent) plus
 a **grouped More menu** — **Money** (Add cash · Cash out · Earn · Borrow · Bank · Cards · Bills · Requests ·
-Send abroad · Currency exchange · Goeman Pay · Escrow), **Invest & collect** (Trade · Drops), **Trust &
+Send abroad · Currency exchange · Goemon Pay · Escrow), **Invest & collect** (Trade · Drops), **Trust &
 identity** (Self-custody · On-chain wallet · Credentials · Verification & tiers · Connected agents ·
 Internal agents), **Family** (Starter guardian/teen), and **Account** (Activity · Console). On wide
 screens these appear in the sidebar. Each gated page needs its matching `*_ENABLED` flag (§1.1).
@@ -181,7 +181,7 @@ screens these appear in the sidebar. Each gated page needs its matching `*_ENABL
 - **Verify:** hold debits payer to the `escrow` system account; release→credits recipient; refund→back to
   payer; dispute → mediated by admin (J13). Each step is an idempotent ledger journal.
 
-### J9 — Goeman Pay (merchant rail; needs `GOEMAN_PAY_ENABLED=true`)
+### J9 — Goemon Pay (merchant rail; needs `GOEMON_PAY_ENABLED=true`)
 Create a merchant first (as **blair**, Tier 2). Get a session token by logging in via the portal and
 copying the Bearer from the Network tab, or use the API:
 ```bash
@@ -324,12 +324,12 @@ units). Set the §1.1 flags; they're all in the **More → Money** menu (and the
 - **Verify:** scarcity is enforced **at the ledger** — `treasury → buyer` token + `buyer → creator` cash
   in one atomic journal; the claim is idempotent; the edition count can't be oversold.
 
-### J23 — Pay with Argus + login-less VC checkout — `/pay` (needs `GOEMAN_PAY_ENABLED` / `CHECKOUT_VP_ENABLED`)
+### J23 — Pay with Argus + login-less VC checkout — `/pay` (needs `GOEMON_PAY_ENABLED` / `CHECKOUT_VP_ENABLED`)
 - **Start:** `/pay`. Register a merchant, create a payment intent, and **pay with a device Verifiable
   Credential — no login, no redirect to a card site** (the browser holds an ES256 `did:key`; see
   `frontend/src/lib/deviceWallet.ts`).
 - **Verify:** the device VC is presented and verified, then the payment posts **escrow-protected** (status
-  derives from the escrow row — same model as J9). Ties together the Goeman Pay rail (J9) and the OID4VP
+  derives from the escrow row — same model as J9). Ties together the Goemon Pay rail (J9) and the OID4VP
   presentation path (J12) for a frictionless, self-sovereign checkout.
 
 ---
@@ -354,7 +354,7 @@ units). Set the §1.1 flags; they're all in the **More → Money** menu (and the
   balanced journal; `REPLAY_DETECTED` on a reused nonce/VP; revoking the grant blocks further calls.
 
 ### J13 — Admin console (RBAC; start at `http://localhost:5173/admin/login`)
-- Log in as **admin@goemanglobal.com**.
+- Log in as **admin@goemonglobal.com**.
 - **Verify:** onboarding **review queue** (approve/reject drew/erin/casey), escrow **dispute mediation**,
   MCP-client **suspend**, **reconciliation** view, and the back-office **agent-ops** surface (§3).
   Sensitive actions require `compliance`/`admin` and are written to `audit_logs` with the actor id.
@@ -404,7 +404,7 @@ append-only. With `CONDUCTOR_ENABLED`/`TEMPORAL_ENABLED` the same flow runs thro
 **Architecture (hybrid):** the backend's in-app triage (`fraudService`) classifies each money event and
 routes it:
 - **Blocking** (`fraudClient.scoreSync` → `POST :4500/v1/events?mode=score`) — waits for an advisory
-  score, merges it, then applies a **local deterministic gate** (the engine is advisory; Goeman decides).
+  score, merges it, then applies a **local deterministic gate** (the engine is advisory; Goemon decides).
   Degrades **open** unless `FRAUD_REMOTE_REQUIRED=true`.
 - **Fire-and-forget** (`emitAsync` → `POST :4500/v1/events?mode=async`) — no wait. On a **severe** async
   decision the engine calls back `POST :3001/api/internal/remediation/freeze` (service-bearer auth) to
@@ -530,7 +530,7 @@ fails closed. Tear down: `docker rm -f argus-temporal argus-conductor`.
 | Invest / Collect | ✅ J4/J5 | — | — | listing lifecycle | ✅ |
 | Trading | ✅ J7 | — | — | — | ✅ |
 | Escrow | ✅ J8 | — | — | mediation J13 | ✅ |
-| Goeman Pay | via API J9 | — | `pay_merchant` tool | — | ✅ |
+| Goemon Pay | via API J9 | — | `pay_merchant` tool | — | ✅ |
 | On-chain wallet | ✅ J10 | — | — | reconciliation | ✅ |
 | Credentials/VC | ✅ J11 | — | consumes VC | revoke | ✅ |
 | Agent ops (Phase 15) | — | — | — | ✅ §3 | ✅ |
@@ -576,7 +576,7 @@ only recommend/draft; humans gate material actions; every tool scoped + audited.
 
 - **Can't log in with a password** → set `ALLOW_PASSWORD_AUTH=true` and restart; or use a passkey.
 - **`ACCOUNT_LOCKED`** → `npm run reset:auth`.
-- **A product page returns 503 (`*_DISABLED`)** → set the matching `*_ENABLED` flag: `TRADING_ENABLED` / `GOEMAN_PAY_ENABLED` / `BANK_RAILS_ENABLED` / `CARDS_ENABLED` / `BILLPAY_ENABLED`, and for the J14–J23 cluster `ONRAMP_ENABLED` / `OFFRAMP_ENABLED` / `TREASURY_ENABLED` / `LENDING_ENABLED` / `FX_ENABLED` / `FX_SETTLEMENT_ENABLED` / `CREATOR_DROPS_ENABLED` / `CHECKOUT_VP_ENABLED`.
+- **A product page returns 503 (`*_DISABLED`)** → set the matching `*_ENABLED` flag: `TRADING_ENABLED` / `GOEMON_PAY_ENABLED` / `BANK_RAILS_ENABLED` / `CARDS_ENABLED` / `BILLPAY_ENABLED`, and for the J14–J23 cluster `ONRAMP_ENABLED` / `OFFRAMP_ENABLED` / `TREASURY_ENABLED` / `LENDING_ENABLED` / `FX_ENABLED` / `FX_SETTLEMENT_ENABLED` / `CREATOR_DROPS_ENABLED` / `CHECKOUT_VP_ENABLED`.
 - **Borrow (`/borrow`) shows "no collateral"** → buy Treasury (ATB) on `/earn` first (needs `TREASURY_ENABLED`); the loan pledges that holding.
 - **Fraud engine "unreachable, degrading open"** → engine not running or `FRAUD_ENGINE_URL`/key mismatch.
 - **Temporal/Conductor "falling back to in-process"** → server not up; start the compose file (§6).

@@ -9,7 +9,7 @@ pass() { echo "PASS: $1"; }
 fail() { echo "FAIL: $1"; FAIL=1; }
 skip() { echo "SKIP: $1"; }
 
-echo "== Goeman launch gate =="
+echo "== Goemon launch gate =="
 
 echo "-- backend typecheck --"
 if (cd "$ROOT/backend" && npm run typecheck); then pass "backend typecheck"; else fail "backend typecheck"; fi

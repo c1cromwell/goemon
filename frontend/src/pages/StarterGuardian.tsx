@@ -1,5 +1,5 @@
 /**
- * Goeman Starter — guardian dashboard (Phase 22.0–22.3).
+ * Goemon Starter — guardian dashboard (Phase 22.0–22.3).
  */
 import { useEffect, useState } from "react";
 import {
@@ -69,7 +69,7 @@ export function StarterGuardian() {
   if (household === null && dashboard === null) {
     return (
       <div className="page stack lg">
-        <h1>Goeman Starter</h1>
+        <h1>Goemon Starter</h1>
         <p className="muted">Family accounts for teens 13+ are not enabled in this environment.</p>
       </div>
     );
@@ -78,7 +78,7 @@ export function StarterGuardian() {
   return (
     <div className="page stack lg">
       <div>
-        <h1>Goeman Starter</h1>
+        <h1>Goemon Starter</h1>
         <p className="muted" style={{ margin: 0 }}>Guardian dashboard — teens, controls, approvals, coach insights.</p>
       </div>
 

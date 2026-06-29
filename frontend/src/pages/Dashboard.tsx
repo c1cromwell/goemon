@@ -75,7 +75,7 @@ export function Dashboard() {
             </button>
           ) : (
             <button className="lg" onClick={() => navigate("/agent")}>
-              Send or ask Goeman Global Finance
+              Send or ask Goemon Global Finance
             </button>
           )}
           <button className="ghost" onClick={() => navigate("/add-cash")}>Add cash</button>

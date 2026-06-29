@@ -2,7 +2,7 @@
 --
 -- At a merchant checkout, instead of redirecting the customer to a hosted login,
 -- the customer's device presents a VC-backed Verifiable Presentation that proves
--- the holder (→ their Goeman user) and authorizes paying ONE specific payment
+-- the holder (→ their Goemon user) and authorizes paying ONE specific payment
 -- intent. The challenge nonce is bound to that intent here so a presentation
 -- minted for intent A can never be replayed to pay intent B.
 --

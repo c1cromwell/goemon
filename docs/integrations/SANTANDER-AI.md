@@ -1,10 +1,10 @@
 # SantanderAI open-source integration map
 
-[Banco Santander AI Lab](https://github.com/SantanderAI) publishes Apache-2.0 tooling for responsible AI in financial services. None are banking products — they strengthen Goeman **fraud graph ML** and **agent governance**.
+[Banco Santander AI Lab](https://github.com/SantanderAI) publishes Apache-2.0 tooling for responsible AI in financial services. None are banking products — they strengthen Goemon **fraud graph ML** and **agent governance**.
 
 ## Adopted in this repo
 
-| Upstream repo | Goeman integration | Path |
+| Upstream repo | Goemon integration | Path |
 |---|---|---|
 | [gen-fraud-graph](https://github.com/SantanderAI/gen-fraud-graph) | TypeScript synthetic graph generator for fraud-engine eval + future Identity Vault training | `fraud-engine/src/eval/syntheticFraudGraph.ts` |
 | [mech-gov-framework](https://github.com/SantanderAI/mech-gov-framework) | R1/R2/R3 governance overlay on Phase 15 gate decisions | `backend/src/integrations/mechGovService.ts` |
@@ -45,5 +45,5 @@ pip install git+https://github.com/SantanderAI/gen-fraud-graph
 
 ## License
 
-- Code repos: Apache-2.0 — compatible with Goeman prototype
+- Code repos: Apache-2.0 — compatible with Goemon prototype
 - `sota-stressed-datasets` data: CC BY 4.0 — attribute if redistributed

@@ -11,7 +11,7 @@
 import "dotenv/config";
 import { z } from "zod";
 
-const KNOWN_DEV_JWT_SECRET = "goeman_dev_secret_change_in_production";
+const KNOWN_DEV_JWT_SECRET = "goemon_dev_secret_change_in_production";
 const KNOWN_DEV_FRAUD_KEY = "fraud_dev_key_change_in_production";
 
 const boolish = z
@@ -41,7 +41,7 @@ const schema = z.object({
   JWT_SECRET: z.string().min(1),
 
   DATABASE_URL: z.string().optional(),
-  SQLITE_PATH: z.string().default("./data/goeman.db"),
+  SQLITE_PATH: z.string().default("./data/goemon.db"),
   REDIS_URL: z.string().optional(),
 
   ALLOW_PASSWORD_AUTH: boolish,
@@ -56,7 +56,7 @@ const schema = z.object({
     ),
 
   RP_ID: z.string().default("localhost"),
-  RP_NAME: z.string().default("Goeman"),
+  RP_NAME: z.string().default("Goemon"),
   RP_ORIGIN: z.string().default("http://localhost:5173"),
 
   IDV_PROVIDER: z.enum(["simulated", "persona"]).default("simulated"),
@@ -97,7 +97,7 @@ const schema = z.object({
   FRAUD_ENGINE_ENFORCE: boolishDefaultTrue,
 
   // Phase 20 — comprehensive fraud platform as a standalone ADD-ON service
-  // (the `fraud-engine/` deployable; Stages 2–4 of FraudEngine.md). Goeman talks
+  // (the `fraud-engine/` deployable; Stages 2–4 of FraudEngine.md). Goemon talks
   // to it ONLY over HTTP via fraudClient — no shared code. A lightweight local
   // triage (the rules-v0 scorer) decides whether each money event is screened
   // synchronously (blocking) or emitted fire-and-forget; the remote score is
@@ -135,16 +135,16 @@ const schema = z.object({
   FX_SETTLEMENT_ENABLED: boolish,
   FX_SPREAD_BPS: z.coerce.number().int().nonnegative().max(10_000).default(50),
 
-  // Phase 21 Stage 1 — "Goeman Pay" native payment rail. Off by default — a kill-switch
+  // Phase 21 Stage 1 — "Goemon Pay" native payment rail. Off by default — a kill-switch
   // that sheds new payment intents/payments without touching transfers or in-flight
   // escrows (docs/business/PAYMENT-NETWORK-STRATEGY.md §4/§8). The Stage-1 rail is a
   // prototype (money-transmission licensing pending) and must never run in production.
-  GOEMAN_PAY_ENABLED: boolish,
+  GOEMON_PAY_ENABLED: boolish,
 
   // Phase 21 — login-less merchant checkout via Verifiable Presentation. Off by default.
   // When on, a customer can authorize a payment intent by presenting a VC-backed VP from
   // their device (no session/redirect login) — the VP proves the holder and binds to one
-  // intent. Rides GOEMAN_PAY_ENABLED for the actual money move, so it inherits that
+  // intent. Rides GOEMON_PAY_ENABLED for the actual money move, so it inherits that
   // prototype/prod posture; this flag only gates the two no-auth checkout routes.
   CHECKOUT_VP_ENABLED: boolish,
 
@@ -169,7 +169,7 @@ const schema = z.object({
 
   // Fiat → USDC on-ramp (prototype seam). Off by default; prod-fatal while simulated.
   // The real providers (MoonPay/Stripe Crypto/Coinbase) take the fiat + do KYC under
-  // THEIR license (Phase-A safe — Goeman never custodies the fiat); USDC is delivered to
+  // THEIR license (Phase-A safe — Goemon never custodies the fiat); USDC is delivered to
   // the user. ONRAMP_FEE_BPS is the on-ramp spread/fee (100 = 1%).
   ONRAMP_ENABLED: boolish,
   ONRAMP_PROVIDER: z.enum(["simulated", "moonpay", "stripe", "coinbase"]).default("simulated"),
@@ -211,7 +211,7 @@ const schema = z.object({
   // payments. Rides the BANK_RAIL_PROVIDER (bill pay is a directed payout to a biller).
   BILLPAY_ENABLED: boolish,
 
-  // Phase 22 — Goeman Starter (13+ family/teen suite). Off by default; a kill-switch
+  // Phase 22 — Goemon Starter (13+ family/teen suite). Off by default; a kill-switch
   // gating household/teen endpoints. Stages 22.0–22.3 are simulated; prod requires
   // partner bank, card issuer, COPPA counsel, etc.
   TEEN_ENABLED: boolish,
@@ -294,16 +294,16 @@ const schema = z.object({
   MODEL_ROUTER_COMPLIANCE_ANTHROPIC_ONLY: boolishDefaultTrue,
 
   // Phase 24 — Production launch suite (standalone-first seams).
-  /** x401 HTTP proof requirement (maps to OID4VP; Goeman VC default — no Proof.com required). */
+  /** x401 HTTP proof requirement (maps to OID4VP; Goemon VC default — no Proof.com required). */
   X401_ENABLED: boolish,
-  /** x402 HTTP payment required (requires GOEMAN_PAY_ENABLED). */
+  /** x402 HTTP payment required (requires GOEMON_PAY_ENABLED). */
   X402_ENABLED: boolish,
   /** Adult borderless USDC savings (self-accrual from interest_source — not FDIC). */
   BORDERLESS_SAVINGS_ENABLED: boolish,
   /** Default APY for borderless savings (basis points; 350 = 3.50%). */
   SAVINGS_APY_BPS: z.coerce.number().int().nonnegative().max(10_000).default(350),
-  /** Optional Proof.com issuer adapter (future 24.1c); Goeman VC works without it. */
-  IDENTITY_ISSUER: z.enum(["goeman", "proof", "argus"]).default("goeman"),
+  /** Optional Proof.com issuer adapter (future 24.1c); Goemon VC works without it. */
+  IDENTITY_ISSUER: z.enum(["goemon", "proof", "argus"]).default("goemon"),
   PROOF_API_KEY: z.string().optional(),
 
   OPERATIONS_ORCHESTRATOR: z.enum(["simulated", "anthropic"]).default("simulated"),
@@ -315,7 +315,7 @@ const schema = z.object({
   TEMPORAL_ENABLED: boolish,
   TEMPORAL_ADDRESS: z.string().default("localhost:7233"),
   TEMPORAL_NAMESPACE: z.string().default("default"),
-  TEMPORAL_TASK_QUEUE: z.string().default("goeman-operations"),
+  TEMPORAL_TASK_QUEUE: z.string().default("goemon-operations"),
 
   // Phase 15.4 — Conductor OSS as the PRIMARY agent-workflow substrate (design §7:
   // Conductor for agents, Temporal for money). Takes precedence over Temporal for the
@@ -327,7 +327,7 @@ const schema = z.object({
   // durable, exactly-once Temporal workflow (the activity is the idempotency-keyed
   // ledger transfer); off by default → direct call. Degrades to direct if unavailable.
   TEMPORAL_MONEY_ENABLED: boolish,
-  TEMPORAL_MONEY_TASK_QUEUE: z.string().default("goeman-money"),
+  TEMPORAL_MONEY_TASK_QUEUE: z.string().default("goemon-money"),
 
   METRICS_TOKEN: z.string().optional(),
 
@@ -374,11 +374,11 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   if (c.TRADING_ENABLED) {
     fatal.push("TRADING_ENABLED must be false in production — the Phase-17 Stage-1 broker is simulated only.");
   }
-  if (c.GOEMAN_PAY_ENABLED) {
-    fatal.push("GOEMAN_PAY_ENABLED must be false in production — the Phase-21 Stage-1 rail is a prototype (money-transmission licensing pending).");
+  if (c.GOEMON_PAY_ENABLED) {
+    fatal.push("GOEMON_PAY_ENABLED must be false in production — the Phase-21 Stage-1 rail is a prototype (money-transmission licensing pending).");
   }
-  if (c.X402_ENABLED && c.GOEMAN_PAY_ENABLED) {
-    fatal.push("X402_ENABLED must be false in production until Goeman Pay is counsel-cleared for live money transmission.");
+  if (c.X402_ENABLED && c.GOEMON_PAY_ENABLED) {
+    fatal.push("X402_ENABLED must be false in production until Goemon Pay is counsel-cleared for live money transmission.");
   }
   if (c.FX_ENABLED && c.FX_RATE_PROVIDER === "simulated") {
     fatal.push("FX_ENABLED with FX_RATE_PROVIDER=simulated must not run in production — wire a licensed FX rate provider (circle|oanda).");
@@ -471,15 +471,15 @@ function load(): Config {
   const isProd = c.NODE_ENV === "production";
   const isTest = c.NODE_ENV === "test";
 
-  // Deprecated env aliases (one release — see docs/GOEMAN-REBRAND-PLAN.md R2).
-  const goemanPayEnabled =
-    !!c.GOEMAN_PAY_ENABLED ||
+  // Deprecated env aliases (one release — see docs/GOEMON-REBRAND-PLAN.md R2).
+  const goemonPayEnabled =
+    !!c.GOEMON_PAY_ENABLED ||
     process.env.ARGUS_PAY_ENABLED === "true" ||
     process.env.ARGUS_PAY_ENABLED === "1";
-  const identityIssuer = c.IDENTITY_ISSUER === "argus" ? "goeman" : c.IDENTITY_ISSUER;
+  const identityIssuer = c.IDENTITY_ISSUER === "argus" ? "goemon" : c.IDENTITY_ISSUER;
 
   // Production safety gates — fail fast.
-  const fatal = productionFatals({ ...c, GOEMAN_PAY_ENABLED: goemanPayEnabled });
+  const fatal = productionFatals({ ...c, GOEMON_PAY_ENABLED: goemonPayEnabled });
   if (fatal.length > 0) {
     // eslint-disable-next-line no-console
     console.error("[config] Refusing to start in production:");
@@ -492,7 +492,7 @@ function load(): Config {
 
   return {
     ...c,
-    GOEMAN_PAY_ENABLED: goemanPayEnabled,
+    GOEMON_PAY_ENABLED: goemonPayEnabled,
     IDENTITY_ISSUER: identityIssuer,
     isProd,
     isTest,

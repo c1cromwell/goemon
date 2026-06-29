@@ -1,4 +1,4 @@
-# Goeman Agentic OS — Corporate Brain Design
+# Goemon Agentic OS — Corporate Brain Design
 
 **Status:** M6 — product squad + PDLC orchestrator **BUILT** (CEO sign-off gate for deploy)  
 **Authoritative webview:** [`agentic-os/index.html`](agentic-os/index.html)  
@@ -8,11 +8,11 @@
 
 ## Mission & framing
 
-**Mission:** Run Goeman Global Finance with the smallest possible human staff — an auditable, agent-native corporation where AI agents hold real jobs, every material decision is logged, and humans gate only what must never run unattended: money out, first production launches, and final legal sign-offs.
+**Mission:** Run Goemon Global Finance with the smallest possible human staff — an auditable, agent-native corporation where AI agents hold real jobs, every material decision is logged, and humans gate only what must never run unattended: money out, first production launches, and final legal sign-offs.
 
 **Positioning (Phase A):** Tokenization-first, non-custodial, agentic finance. We are *not* a bank — we are the all-seeing guardian of your money: keys in your device, decisions in an append-only ledger, agents that operate under scoped credentials, and a CEO who remains the final authority on financial outputs, launches, and legal posture.
 
-**Brand motif:** Goeman — the many-eyed sentinel. Jade accent (`#2dd4a7`) on dark surfaces; type-led hierarchy; no hype.
+**Brand motif:** Goemon — the many-eyed sentinel. Jade accent (`#2dd4a7`) on dark surfaces; type-led hierarchy; no hype.
 
 ---
 
@@ -67,7 +67,7 @@ Agent invoke → gate() → escalate?
 
 | Agent | Charter | Supervision | CEO gate |
 |---|---|---|---|
-| **Goeman Brain** (Office of CEO / Orchestrator) | Routes work, convenes agents, owns CEO/CS approval queue and corporate decision log | `human_led` | Owns queue |
+| **Goemon Brain** (Office of CEO / Orchestrator) | Routes work, convenes agents, owns CEO/CS approval queue and corporate decision log | `human_led` | Owns queue |
 | **CFO** | Budgets, treasury, revenue/spend reporting | `human_required` on financial outputs | **Financial outputs** |
 | **CLO** (General Counsel) | Legal/regulatory posture, memo drafts, filing prep | `human_required` on final signoff | **Legal signoff** |
 | **CISO** | Corporate security posture; peers with product Cyber Specialist | `auto_approve_audit` | — |
@@ -102,7 +102,7 @@ Agent invoke → gate() → escalate?
 
 ```
                     ┌─────────────┐
-                    │ Goeman Brain │
+                    │ Goemon Brain │
                     └──────┬──────┘
            ┌───────────────┼───────────────┐
            ▼               ▼               ▼
@@ -256,7 +256,7 @@ Manual for M1 (you review webview + doc). M2 adds optional **`ceo_milestone_sign
 - [ ] Open `docs/agentic-os/index.html` in a browser (no server)
 - [ ] Every corporate + product agent has a card (charter · responsibilities · interactions · tools · tier · gate)
 - [ ] Three CEO-gated categories + CEO → CS backup flow visible
-- [ ] SVG org diagram + logo render; Goeman branding
+- [ ] SVG org diagram + logo render; Goemon branding
 - [ ] Knowledge graph + model router overviews present
 - [ ] Render `AGENTIC-OS.html` / `.pdf` via `docs/build/render.mjs`
 - [ ] CEO reviews webview + doc → signs off → M1 deployed → plan M2

@@ -1,5 +1,5 @@
 /**
- * Phase 24.2 — x402 HTTP Payment Required (agent commerce on Goeman Pay).
+ * Phase 24.2 — x402 HTTP Payment Required (agent commerce on Goemon Pay).
  *
  * Composes with x401: identity proof first, then payment fulfillment on the native rail.
  */
@@ -37,8 +37,8 @@ function assertX402Enabled(): void {
   if (!config.X402_ENABLED) {
     throw new AppError(ErrorCode.NOT_IMPLEMENTED, "x402 agent commerce is not enabled");
   }
-  if (!config.GOEMAN_PAY_ENABLED) {
-    throw new AppError(ErrorCode.PAY_DISABLED, "x402 requires Goeman Pay (GOEMAN_PAY_ENABLED)");
+  if (!config.GOEMON_PAY_ENABLED) {
+    throw new AppError(ErrorCode.PAY_DISABLED, "x402 requires Goemon Pay (GOEMON_PAY_ENABLED)");
   }
 }
 

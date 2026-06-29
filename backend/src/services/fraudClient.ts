@@ -1,12 +1,12 @@
 /**
  * Phase 20 — client to the standalone fraud engine (the `fraud-engine/` add-on).
  *
- * This is Goeman's ONLY coupling to the engine: HTTP + a shared service bearer, no
+ * This is Goemon's ONLY coupling to the engine: HTTP + a shared service bearer, no
  * shared code. It is injectable (setFraudClient) exactly like reconciliation's
  * ChainBalanceProvider, so tests assert behavior without a network and CI never
  * calls out.
  *
- * Two paths, chosen by the in-Goeman triage (see fraudService):
+ * Two paths, chosen by the in-Goemon triage (see fraudService):
  *   - scoreSync  — the blocking path: wait for an advisory decision. Degrades OPEN
  *                  (returns null ⇒ "no remote opinion") unless FRAUD_REMOTE_REQUIRED,
  *                  in which case an unreachable engine fails CLOSED (FRAUD_BLOCKED).
@@ -22,7 +22,7 @@ import { AppError, ErrorCode } from "../errors";
 import { logger } from "../observability/logger";
 import { fraudRemoteCallTotal } from "../observability/metrics";
 
-/** Mirrors the engine's RiskEvent wire shape (Goeman keeps its own copy). */
+/** Mirrors the engine's RiskEvent wire shape (Goemon keeps its own copy). */
 export interface RemoteRiskEvent {
   eventType: string;
   channel?: string;

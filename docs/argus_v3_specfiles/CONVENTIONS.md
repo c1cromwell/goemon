@@ -1,4 +1,4 @@
-# Goeman Global Finance Backend — Conventions
+# Goemon Global Finance Backend — Conventions
 
 These rules are enforced across the codebase. Read before contributing.
 

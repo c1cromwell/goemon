@@ -1,6 +1,6 @@
 # Production Deployment & Technology Strategy
 
-How to ship Goeman Global Finance to real users cheaply, run it as an AI-operated bank, and harden it into a
+How to ship Goemon Global Finance to real users cheaply, run it as an AI-operated bank, and harden it into a
 fraud-resistant, compliance-ready platform — grounded in what's already built in the repo (Hedera
 settlement, the double-entry ledger, DID/VC + OID4VP + MCP, the risk-adaptive onboarding orchestrator,
 and the Phase 15 internal-agent-ops design).
@@ -126,7 +126,7 @@ table, `tokenFactory`, `rbac`).
 ### Skills (Claude Agent SDK / MCP tools)
 
 Mirror the repo's own dogfooding pattern — it already ships operational skills (`e2e-validator`,
-`goeman-mcp-test-harness`) that drive the system as a real client. Extend that idea to **ops skills**
+`goemon-mcp-test-harness`) that drive the system as a real client. Extend that idea to **ops skills**
 (reconciliation report, compliance-case summarizer, incident triage, release validator) so routine
 operations and CI are agent-automatable, while every state change still flows through the
 deterministic runner with its audit trail.

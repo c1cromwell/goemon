@@ -10,16 +10,16 @@ test.describe("Admin console", () => {
   test("anonymous /admin redirects to the admin login", async ({ page }) => {
     await page.goto("/admin");
     await expect(page).toHaveURL(/\/admin\/login$/);
-    await expect(page.getByRole("heading", { name: "Goeman Global Finance Admin" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Goemon Global Finance Admin" })).toBeVisible();
   });
 
   test("seeded admin signs in and sees the identities console", async ({ page }) => {
     await page.goto("/admin/login");
-    // Fields are pre-filled with the seeded admin; confirm and submit.
-    await expect(page.locator('input').first()).toHaveValue(ADMIN.email);
+    await page.getByRole("row", { name: /Admin/ }).getByRole("button", { name: "Use" }).click();
+    await expect(page.locator('input[autocomplete="username"]')).toHaveValue(ADMIN.email);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await expect(page).toHaveURL(/\/admin$/, { timeout: 10_000 });
-    await expect(page.getByRole("heading", { name: /Goeman Global Finance Admin · Identities/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Goemon Global Finance Admin · Identities/ })).toBeVisible();
     await expect(page.getByRole("heading", { name: /All registered identities/ })).toBeVisible();
   });
 });

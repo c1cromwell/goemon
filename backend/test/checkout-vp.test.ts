@@ -34,7 +34,7 @@ beforeAll(async () => {
   await initTokenFactory();
   const { bootstrapSystemAccounts } = await import("../src/services/ledgerService");
   await bootstrapSystemAccounts();
-  (config as { GOEMAN_PAY_ENABLED: boolean }).GOEMAN_PAY_ENABLED = true;
+  (config as { GOEMON_PAY_ENABLED: boolean }).GOEMON_PAY_ENABLED = true;
   (config as { CHECKOUT_VP_ENABLED: boolean }).CHECKOUT_VP_ENABLED = true;
 });
 

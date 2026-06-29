@@ -27,11 +27,11 @@ import {
 import { SIM_PROFILES, DEFAULT_SIM_PROFILES } from "../sim/profiles";
 import type { AdminRole } from "../middleware/rbac";
 
-const SEED_ADMIN_EMAIL = "admin@goemanglobal.com";
+const SEED_ADMIN_EMAIL = "admin@goemonglobal.com";
 const SEED_ADMIN_PASSWORD = "Admin1234!";
-const SEED_CEO_EMAIL = "ceo@goemanglobal.com";
+const SEED_CEO_EMAIL = "ceo@goemonglobal.com";
 const SEED_CEO_PASSWORD = "Ceo1234!";
-const SEED_CS_EMAIL = "cos@goemanglobal.com";
+const SEED_CS_EMAIL = "cos@goemonglobal.com";
 const SEED_CS_PASSWORD = "Cos1234!";
 
 /** Dev-only manifest — printed by `npm run setup` and returned from POST /admin/seed. */

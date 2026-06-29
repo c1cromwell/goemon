@@ -44,7 +44,7 @@ export interface CustodialBroker {
 }
 
 function assertCustodialEnabled(): void {
-  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Goeman Starter is currently unavailable");
+  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Goemon Starter is currently unavailable");
   if (!config.TEEN_CUSTODIAL_ENABLED) {
     throw new AppError(ErrorCode.TEEN_CUSTODIAL_DISABLED, "Custodial investing is currently unavailable");
   }

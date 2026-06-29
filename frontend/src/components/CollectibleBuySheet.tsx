@@ -51,7 +51,7 @@ export function CollectibleBuySheet({
         </div>
 
         <p className="small muted" style={{ marginTop: 0 }}>
-          Goeman holds your USDC until you confirm receipt. The seller ships directly to you — no vault partner required.
+          Goemon holds your USDC until you confirm receipt. The seller ships directly to you — no vault partner required.
         </p>
 
         <div className="card" style={{ background: "var(--surface-2)", borderColor: "transparent" }}>

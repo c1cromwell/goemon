@@ -22,7 +22,7 @@ export interface InstantPaymentsStatus {
 
 const NATIVE_SLAS: InstantPaymentSla[] = [
   { rail: "ledger.p2p_transfer", targetP99Ms: 2000, availability: "24_7", partnerRequired: false, enabled: true },
-  { rail: "pay.goeman_intent", targetP99Ms: 10000, availability: "24_7", partnerRequired: false, enabled: !!config.GOEMAN_PAY_ENABLED },
+  { rail: "pay.goemon_intent", targetP99Ms: 10000, availability: "24_7", partnerRequired: false, enabled: !!config.GOEMON_PAY_ENABLED },
   { rail: "pay.payment_request", targetP99Ms: 2000, availability: "24_7", partnerRequired: false, enabled: true },
   { rail: "hedera.usdc_settlement", targetP99Ms: 15000, availability: "24_7", partnerRequired: false, enabled: !!config.HEDERA_ENABLED },
   { rail: "bank.fednow", targetP99Ms: 60000, availability: "US_banking_hours", partnerRequired: true, enabled: false },

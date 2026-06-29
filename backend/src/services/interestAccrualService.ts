@@ -20,7 +20,7 @@ import {
 } from "./ledgerService";
 
 function assertStarter(): void {
-  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Goeman Starter is currently unavailable");
+  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Goemon Starter is currently unavailable");
 }
 
 /** Daily accrual amount: balance * apyBps / 10000 / 365 (integer floor). */

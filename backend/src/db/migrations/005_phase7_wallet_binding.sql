@@ -1,6 +1,6 @@
 -- Phase 7 — Holder binding for Verifiable Presentations.
 --
--- A user's VC subject is a platform DID (did:web:goemanglobal.com:users:<id>), but a
+-- A user's VC subject is a platform DID (did:web:goemonglobal.com:users:<id>), but a
 -- Verifiable Presentation is signed by the wallet's own did:key. To prevent a
 -- stolen (bearer) VC JWT from being presented by a different wallet, we bind the
 -- wallet's did:key to the credential. verifyPresentation requires the VP signer

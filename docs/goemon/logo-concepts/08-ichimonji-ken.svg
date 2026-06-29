@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Goemon logo concept 8  ichimonji single cut">
+  <rect width="120" height="120" fill="#0b0d10"/>
+  <line x1="18" y1="60" x2="102" y2="60" stroke="#2dd4a7" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 18 60 L 42 48 L 42 72 Z" fill="#2dd4a7" opacity="0.35"/>
+  <text x="60" y="88" text-anchor="middle" font-family="serif" font-size="14" fill="#6b7480" opacity="0.7">ckMck{Y</text>
+  <text x="60" y="104" text-anchor="middle" font-family="system-ui,sans-serif" font-size="6" letter-spacing="0.15em" fill="#6b7480">LIVE BY THE SWORD</text>
+</svg>

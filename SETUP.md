@@ -1,6 +1,6 @@
-# Goeman Global Finance — Setup Guide
+# Goemon Global Finance — Setup Guide
 
-Step-by-step setup for working on Goeman Global Finance with Claude Code. macOS-first (you'll need macOS for the iOS wallet later); notes for Linux/Windows where they differ.
+Step-by-step setup for working on Goemon Global Finance with Claude Code. macOS-first (you'll need macOS for the iOS wallet later); notes for Linux/Windows where they differ.
 
 ## 0. Prerequisites
 
@@ -68,7 +68,7 @@ On first launch it opens your browser to authenticate with your Anthropic accoun
 cd ~/code/argus
 claude
 ```
-Claude Code automatically reads `CLAUDE.md` at the project root — that file tells it what Goeman Global Finance is, the current build status, the commands, and the non-negotiable conventions. You do **not** need to run `/init` (the CLAUDE.md already exists).
+Claude Code automatically reads `CLAUDE.md` at the project root — that file tells it what Goemon Global Finance is, the current build status, the commands, and the non-negotiable conventions. You do **not** need to run `/init` (the CLAUDE.md already exists).
 
 Good first thing to type in the Claude Code session:
 ```

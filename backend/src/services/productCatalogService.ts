@@ -1,7 +1,7 @@
 /**
  * Phase 24.8 — Supported product catalog (honest availability per SKU).
  *
- * Drives UX, agent tools, and marketing: only products Goeman actually supports
+ * Drives UX, agent tools, and marketing: only products Goemon actually supports
  * appear as available; 24/7 badge applies only where `availability === "24_7"`.
  */
 
@@ -53,20 +53,20 @@ const CATALOG: SupportedProduct[] = [
     standaloneReady: true,
   }),
   product({
-    sku: "pay.merchant.goeman",
-    name: "Goeman Pay merchant checkout",
+    sku: "pay.merchant.goemon",
+    name: "Goemon Pay merchant checkout",
     category: "instant_payments",
     availability: "24_7",
     regions: ["GLOBAL"],
     minTier: 1,
-    enabled: !!config.GOEMAN_PAY_ENABLED,
+    enabled: !!config.GOEMON_PAY_ENABLED,
     requiresPartner: false,
     standaloneReady: true,
-    configFlag: "GOEMAN_PAY_ENABLED",
+    configFlag: "GOEMON_PAY_ENABLED",
   }),
   product({
     sku: "agent.x401.identity",
-    name: "x401 identity proof (Goeman VC)",
+    name: "x401 identity proof (Goemon VC)",
     category: "identity",
     availability: "24_7",
     regions: ["GLOBAL"],
@@ -83,7 +83,7 @@ const CATALOG: SupportedProduct[] = [
     availability: "24_7",
     regions: ["GLOBAL"],
     minTier: 1,
-    enabled: !!config.X402_ENABLED && !!config.GOEMAN_PAY_ENABLED,
+    enabled: !!config.X402_ENABLED && !!config.GOEMON_PAY_ENABLED,
     requiresPartner: false,
     standaloneReady: true,
     configFlag: "X402_ENABLED",

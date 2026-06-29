@@ -1,8 +1,8 @@
 {
-  "name": "goeman-fraud-engine",
+  "name": "goemon-fraud-engine",
   "version": "1.0.0",
   "private": true,
-  "description": "Goeman Fraud Engine — standalone real-time fraud intelligence platform (Phase 20 Stages 2–4). An add-on service Goeman uses over HTTP; imports nothing from the Goeman backend.",
+  "description": "Goemon Fraud Engine — standalone real-time fraud intelligence platform (Phase 20 Stages 2–4). An add-on service Goemon uses over HTTP; imports nothing from the Goemon backend.",
   "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {

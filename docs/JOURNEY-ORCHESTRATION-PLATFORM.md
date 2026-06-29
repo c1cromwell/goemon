@@ -1,6 +1,6 @@
 # Journey Orchestration Platform — architecture review & design
 
-How Goeman becomes a reusable, configurable platform that can run **any account-opening flow** — a
+How Goemon becomes a reusable, configurable platform that can run **any account-opening flow** — a
 journey builder over a data layer, a vendor marketplace + bring-your-own-service, fraud/risk called at
 each step via a context, custom branding, and one journey rendered to any channel (web/iOS/Android) —
 benchmarked against **Alloy, Transmit Security, Strivacity**, with a working prototype of the core.
@@ -15,11 +15,11 @@ benchmarked against **Alloy, Transmit Security, Strivacity**, with a working pro
 
 ## 1. Honest review & gap analysis
 
-Goeman has excellent orchestration **primitives**, but was **not** architected as this platform. The
+Goemon has excellent orchestration **primitives**, but was **not** architected as this platform. The
 benchmark vendors: **Alloy** (vendor orchestration + decisioning + waterfall/cascade + case mgmt),
 **Transmit** (CIAM + risk/DRS + orchestration), **Strivacity** (no-code journey builder + branding).
 
-| Capability | Goeman before | Status | The platform |
+| Capability | Goemon before | Status | The platform |
 |---|---|---|---|
 | Flow definition | `riskOrchestratorService` — **hardcoded TS** | 🔴 → 🟢 (proto) | **Journey-as-data DAG** (`journeys/types.ts`) |
 | Orchestration runner | `WorkflowEngine`/`WorkflowDef` — imperative, **headless**, back-office | 🟡 substrate | Declarative runner over the DAG (`journeyRunner.ts`) |
@@ -85,7 +85,7 @@ Strivacity sell. The prototype returns real `ScreenDescriptor`s so the contract 
 
 ## 4. Pillar 3 — Connector framework + vendor marketplace *(prototyped)*
 
-Goeman's provider enums (`IDV_PROVIDER`, `SANCTIONS_PROVIDER`, …) are **compile-time**. The platform needs
+Goemon's provider enums (`IDV_PROVIDER`, `SANCTIONS_PROVIDER`, …) are **compile-time**. The platform needs
 **runtime connectors** (`connectors.ts`):
 
 - **Registry** — connectors registered by id; a `connector` step names vendors by id (a builder UI could
@@ -125,7 +125,7 @@ pre-funding fraud — passing whatever context has accumulated. *Proven:* sancti
 
 ## 6. Cross-cutting — the "am I missing features?" answer
 
-Beyond your list, a complete platform needs these (each maps to an existing Goeman primitive to reuse):
+Beyond your list, a complete platform needs these (each maps to an existing Goemon primitive to reuse):
 
 | Missing capability | Why it matters | Reuse |
 |---|---|---|

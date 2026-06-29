@@ -119,7 +119,7 @@ export const productStrategyWorkflow: WorkflowDef<ProductCtx, { strategy: string
   skillDef: productSquadSkill,
   async gather(input) {
     const i = (input ?? {}) as { product?: string; version?: string; summary?: string };
-    return { ctx: { product: i.product ?? "Goeman", version: i.version ?? "1.0", summary: i.summary ?? "" } };
+    return { ctx: { product: i.product ?? "Goemon", version: i.version ?? "1.0", summary: i.summary ?? "" } };
   },
   async invoke(ctx, client) {
     const { strategy } = await client.call<{ strategy: string }>("draft_strategy", ctx);
@@ -141,7 +141,7 @@ export const productEngineerWorkflow: WorkflowDef<ProductCtx, { plan: string }> 
   skillDef: productSquadSkill,
   async gather(input) {
     const i = (input ?? {}) as { product?: string; version?: string; summary?: string };
-    return { ctx: { product: i.product ?? "Goeman", version: i.version ?? "1.0", summary: i.summary ?? "" } };
+    return { ctx: { product: i.product ?? "Goemon", version: i.version ?? "1.0", summary: i.summary ?? "" } };
   },
   async invoke(ctx, client) {
     const { plan } = await client.call<{ plan: string }>("draft_engineering_plan", ctx);
@@ -163,7 +163,7 @@ export const productCyberWorkflow: WorkflowDef<ProductCtx, { review: string; mat
   skillDef: productSquadSkill,
   async gather(input) {
     const i = (input ?? {}) as { product?: string; version?: string; summary?: string };
-    return { ctx: { product: i.product ?? "Goeman", version: i.version ?? "1.0", summary: i.summary ?? "" } };
+    return { ctx: { product: i.product ?? "Goemon", version: i.version ?? "1.0", summary: i.summary ?? "" } };
   },
   async invoke(ctx, client) {
     const out = await client.call<{ review: string; materialFinding: boolean }>("draft_cyber_review", ctx);
@@ -188,7 +188,7 @@ export const productQaWorkflow: WorkflowDef<ProductCtx, { qaPlan: string; testsG
   skillDef: productSquadSkill,
   async gather(input) {
     const i = (input ?? {}) as { product?: string; version?: string; summary?: string };
-    return { ctx: { product: i.product ?? "Goeman", version: i.version ?? "1.0", summary: i.summary ?? "" } };
+    return { ctx: { product: i.product ?? "Goemon", version: i.version ?? "1.0", summary: i.summary ?? "" } };
   },
   async invoke(ctx, client) {
     const out = await client.call<{ qaPlan: string; testsGreen: boolean }>("draft_qa_plan", ctx);
@@ -212,7 +212,7 @@ export const productDesignWorkflow: WorkflowDef<ProductCtx, { design: string }> 
   skillDef: productSquadSkill,
   async gather(input) {
     const i = (input ?? {}) as { product?: string; version?: string; summary?: string };
-    return { ctx: { product: i.product ?? "Goeman", version: i.version ?? "1.0", summary: i.summary ?? "" } };
+    return { ctx: { product: i.product ?? "Goemon", version: i.version ?? "1.0", summary: i.summary ?? "" } };
   },
   async invoke(ctx, client) {
     const { design } = await client.call<{ design: string }>("draft_design_notes", ctx);
@@ -234,7 +234,7 @@ export const productAgenticBuilderWorkflow: WorkflowDef<ProductCtx, { updates: s
   skillDef: productSquadSkill,
   async gather(input) {
     const i = (input ?? {}) as { product?: string; version?: string; summary?: string };
-    return { ctx: { product: i.product ?? "Goeman", version: i.version ?? "1.0", summary: i.summary ?? "" } };
+    return { ctx: { product: i.product ?? "Goemon", version: i.version ?? "1.0", summary: i.summary ?? "" } };
   },
   async invoke(ctx, client) {
     const { updates } = await client.call<{ updates: string }>("draft_agentic_updates", ctx);
@@ -349,7 +349,7 @@ export const productSupportFixWorkflow: WorkflowDef<SupportFixCtx, { fix: string
     if (!i.issue?.trim()) throw new Error("issue required");
     return {
       ctx: {
-        product: i.product ?? "Goeman",
+        product: i.product ?? "Goemon",
         issue: i.issue.trim(),
         fixSummary: i.fixSummary ?? "",
       },

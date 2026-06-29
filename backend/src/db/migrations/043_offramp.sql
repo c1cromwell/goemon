@@ -1,6 +1,6 @@
 -- USDC → fiat off-ramp (prototype seam). The symmetric exit to the on-ramp: a user sells
 -- USDC and receives fiat in a linked bank/card. The licensed provider (MoonPay/Stripe/
--- Coinbase) takes the USDC and delivers the fiat under ITS own license; Goeman debits the
+-- Coinbase) takes the USDC and delivers the fiat under ITS own license; Goemon debits the
 -- user's USDC ledger balance (net of the off-ramp fee) and records the payout reference.
 --
 -- Money path (balanced, idempotent, append-only ledger journal — see offRampService):

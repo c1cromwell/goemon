@@ -1,4 +1,4 @@
--- Goeman Global Finance initial schema (v2). Portable across SQLite (dev) and Postgres (prod).
+-- Goemon Global Finance initial schema (v2). Portable across SQLite (dev) and Postgres (prod).
 -- Conventions:
 --   * Money is INTEGER minor units in columns named *_minor, paired with a currency column.
 --   * Booleans are INTEGER 0/1.

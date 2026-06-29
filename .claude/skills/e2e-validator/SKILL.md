@@ -1,14 +1,14 @@
 ---
 name: e2e-validator
-description: Run Goeman Global Finance's end-to-end validation pass across user journeys and channels. Use when asked to validate Goeman Global Finance end-to-end, run the E2E suite, execute the Phase 8 validation gate, run the Phase 16 comprehensive validation, or produce a journey × channel pass/fail report. Takes a scope arg (through-phase-8 | full).
+description: Run Goemon Global Finance's end-to-end validation pass across user journeys and channels. Use when asked to validate Goemon Global Finance end-to-end, run the E2E suite, execute the Phase 8 validation gate, run the Phase 16 comprehensive validation, or produce a journey × channel pass/fail report. Takes a scope arg (through-phase-8 | full).
 ---
 
-# Goeman Global Finance E2E Validator
+# Goemon Global Finance E2E Validator
 
 Orchestrates the **hybrid** end-to-end validation defined in `docs/E2E-VALIDATION.md`: a deterministic
 floor first, then agent/MCP-driven journeys, then a single pass/fail report.
 
-This skill is the thing a human (or you) invokes. It depends on the **`goeman-mcp-test-harness`** skill to
+This skill is the thing a human (or you) invokes. It depends on the **`goemon-mcp-test-harness`** skill to
 drive the NL/SmartChat and external-agent (OID4VP+MCP) journeys as a real client.
 
 ## Scope
@@ -27,7 +27,7 @@ Default to `through-phase-8` if no scope is given and Phases 9+ are not yet buil
 2. **Deterministic floor (always first).** Run `cd backend && npm run typecheck && npx vitest run e2e`.
    If this fails on any §4 money-critical invariant, stop and report FAIL — the gate is blocked.
 3. **Agent/MCP journeys.** Ensure a dev server is up (`npm run dev` on :3001). Use the
-   `goeman-mcp-test-harness` skill to drive J5 (SmartChat NL → 90s token → transfer, incl. the >$500 MFA
+   `goemon-mcp-test-harness` skill to drive J5 (SmartChat NL → 90s token → transfer, incl. the >$500 MFA
    gate), J6 (external agent OID4VP → VP-verify → MCP scoped op), and the NL "buy/subscribe" path of J7.
 4. **PENDING handling.** A journey whose phase isn't built yet is **PENDING** (skipped), not FAIL.
 5. **Report.** Emit a table mirroring §3 of `docs/E2E-VALIDATION.md` (PASS / FAIL / PENDING per journey)

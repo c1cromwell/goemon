@@ -31,7 +31,7 @@ const COLOR: Record<Kind, string> = {
 };
 
 export function Console() {
-  const [log, setLog] = useState<Line[]>([{ kind: "sys", text: "Goeman console — type `help`." }]);
+  const [log, setLog] = useState<Line[]>([{ kind: "sys", text: "Goemon console — type `help`." }]);
   const [input, setInput] = useState("");
   const [pendingMfa, setPendingMfa] = useState<{ tokenId: string } | null>(null);
   const [busy, setBusy] = useState(false);

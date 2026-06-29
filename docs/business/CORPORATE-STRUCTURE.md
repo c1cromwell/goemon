@@ -1,6 +1,6 @@
 # Corporate Structure & Compliance Strategy
 
-A lean-now, licensed-later blueprint for incorporating Goeman Global Finance as a US tokenization-first
+A lean-now, licensed-later blueprint for incorporating Goemon Global Finance as a US tokenization-first
 fintech — the least-compliance entry that still scales cleanly into a fully licensed money
 business.
 
@@ -13,7 +13,7 @@ business.
 
 ## 1. Executive summary & the core legal thesis
 
-**The thesis:** the cheapest legal way into fintech is to *not be a money business yet*. Goeman Global Finance's
+**The thesis:** the cheapest legal way into fintech is to *not be a money business yet*. Goemon Global Finance's
 locked architecture already supports this — keys live in the user's Secure Enclave, the server never
 holds a private key, and tokenization is delivered as **software**. If you never take custody of
 customer funds and never act as the intermediary that moves value, you stay outside the two most
@@ -34,7 +34,7 @@ them, you are probably a money transmitter in most states. Phase A is engineered
 
 **Recommendation at a glance:**
 
-- **Form a Wyoming LLC now** (`Goeman Global Finance, LLC`) — the lowest-cost, lowest-admin, most private US entity,
+- **Form a Wyoming LLC now** (`Goemon Global Finance, LLC`) — the lowest-cost, lowest-admin, most private US entity,
   with pass-through taxation and crypto-friendly statutes. **Convert to a Delaware C-corp later**,
   when you raise institutional capital or stand up the regulated subsidiary (Phase B/C).
 - **Adopt a real operating agreement** even as a single member — it's the document partner banks,
@@ -50,7 +50,7 @@ them, you are probably a money transmitter in most states. Phase A is engineered
 
 ### 2.1 What to form now (DO NOW)
 
-A **single-member Wyoming LLC**, `Goeman Global Finance, LLC`, with you as sole member and manager. It is the
+A **single-member Wyoming LLC**, `Goemon Global Finance, LLC`, with you as sole member and manager. It is the
 cheapest, fastest, most private US entity, and for a solo bootstrapper it's the right Phase-A home.
 A single-member LLC is **"disregarded" for federal tax** — its income flows straight to your personal
 return, so there's no separate corporate tax to file and no double taxation.
@@ -87,19 +87,19 @@ a license never contaminates your software IP:
 
 ```
                  ┌─────────────────────────┐
-                 │   Goeman Global Finance, Inc. (Delaware)│  ← parent holdco; owns IP, cap table, brand
+                 │   Goemon Global Finance, Inc. (Delaware)│  ← parent holdco; owns IP, cap table, brand
                  └───────────┬─────────────┘
             ┌────────────────┼──────────────────┐
             ▼                ▼                  ▼
    ┌────────────────┐ ┌────────────────┐ ┌──────────────────────┐
-   │ Goeman Tech     │ │ Goeman Markets  │ │ Goeman Transfer/MT   │
+   │ Goemon Tech     │ │ Goemon Markets  │ │ Goemon Transfer/MT   │
    │ (software/IP)   │ │ (RWA issuance,  │ │ (regulated sub:      │
    │ non-custodial   │ │  Reg D/A+/CF)   │ │  MTLs / transfer     │
    │ software/IP home│ │  — Phase B      │ │  agent — Phase C)    │
    └────────────────┘ └────────────────┘ └──────────────────────┘
 ```
 
-*(Until you convert, "Goeman Global Finance, LLC" simply **is** the software/IP entity — the boxes below collapse
+*(Until you convert, "Goemon Global Finance, LLC" simply **is** the software/IP entity — the boxes below collapse
 into the single LLC. The split appears only at conversion.)*
 
 The reason: licenses, bonds, regulatory exams, and money-movement liability sit in the regulated
@@ -111,7 +111,7 @@ revenue or the regulator forces it.** ⚖ see counsel when you spin up the first
 
 If raising institutional money or pursuing licensing *soon* is likely, you can **skip straight to a
 Delaware C-corp** and avoid a later conversion — at the cost of higher run-rate, double taxation, and
-more admin than a bootstrapper needs in Phase A. For Goeman Global Finance's lean, pre-revenue start, the **Wyoming
+more admin than a bootstrapper needs in Phase A. For Goemon Global Finance's lean, pre-revenue start, the **Wyoming
 LLC is the recommended default**, converting when the money or the regulator makes the C-corp worth
 it.
 
@@ -146,7 +146,7 @@ it.
   regulator suspicion. **Not recommended** for your launch. Revisit only if a token-generation event
   for a protocol token (not the product) is ever on the table. ⚖ see counsel.
 
-**Decision:** form `Goeman Global Finance, LLC` in Wyoming now; foreign-qualify where you live; plan the **Delaware
+**Decision:** form `Goemon Global Finance, LLC` in Wyoming now; foreign-qualify where you live; plan the **Delaware
 C-corp conversion** for your first raise/regulated subsidiary; keep the **Wyoming SPDI** as the deep
 Phase-C charter option.
 
@@ -213,8 +213,8 @@ problems exactly when you can least afford them (a raise, a partner-bank diligen
 **The IP assignment — do this immediately. ⚖ DO NOW.**
 Right now, *you personally* wrote the code sitting in this repository — which means **you**, not the
 company, may own it. Before any value accrues, execute a **Technology/IP Assignment Agreement**
-transferring all of it (code, designs, the Goeman Global Finance marks, domains, the architecture docs) to
-`Goeman Global Finance, LLC`. This is the #1 thing acquirers and investors diligence, it survives the future C-corp
+transferring all of it (code, designs, the Goemon Global Finance marks, domains, the architecture docs) to
+`Goemon Global Finance, LLC`. This is the #1 thing acquirers and investors diligence, it survives the future C-corp
 conversion intact, and it's trivially cheap to fix today and expensive to fix later. Make sure any
 contractor or contributor (now or ever) signs an assignment too — work-for-hire alone is not enough
 for IP.
@@ -252,7 +252,7 @@ intermediary, issue and sell securities to the public, or move money between use
 A tokenized building, fund, or business interest is almost certainly a **security**. Selling it in
 the US requires either registration or an exemption:
 
-| Exemption | Who can invest | Raise cap | Marketing | Fit for Goeman Global Finance |
+| Exemption | Who can invest | Raise cap | Marketing | Fit for Goemon Global Finance |
 |---|---|---|---|---|
 | **Reg D 506(c)** | Accredited only (verified) | Unlimited | Public solicitation OK | Best early path; pair with accreditation checks |
 | **Reg A+ (Tier 2)** | Anyone | $75M/yr | Public | Costly "mini-IPO"; later phase |
@@ -353,7 +353,7 @@ scoring) are already ~70% of a credible AML program's *evidence layer*. What's m
 | 1 | **EIN** | DO NOW | Free from IRS; gates the bank account |
 | 2 | **Registered agent** in Wyoming | DO NOW | ~$50–125/yr (Wyoming Agents, Northwest, etc.) |
 | 3 | **Foreign qualification** in your home state | DO NOW | Where you actually operate; confirm if a high-fee state requires LLC registration too |
-| 4 | **⚠ "Bank" naming risk** | DO NOW | "Bank"/"banking" are **regulated terms**; using them without a charter invites cease-and-desist. Consider a market-facing brand that avoids implying you *are* a bank ("Goeman Global Finance" the company is fine; marketing copy saying "your bank" is not). ⚖ see counsel |
+| 4 | **⚠ "Bank" naming risk** | DO NOW | "Bank"/"banking" are **regulated terms**; using them without a charter invites cease-and-desist. Consider a market-facing brand that avoids implying you *are* a bank ("Goemon Global Finance" the company is fine; marketing copy saying "your bank" is not). ⚖ see counsel |
 | 5 | **Trademark** the brand | Soon | USPTO search + file; the name/marks should be company-owned (via §5 IP assignment) |
 | 6 | **Terms of Service / Privacy Policy / E-Sign / risk disclosures** | DO NOW | Before any user signs up |
 | 7 | **Data protection: GLBA + state privacy (CCPA/CPRA etc.)** | DO NOW | Fintech data is sensitive; GLBA safeguards apply once you're financial |
@@ -373,7 +373,7 @@ scoring) are already ~70% of a credible AML program's *evidence layer*. What's m
 2. File the **Wyoming LLC** (Articles of Organization); appoint a registered agent.
 3. Get the **EIN**.
 4. Adopt the **operating agreement** (you as manager); make your **capital contribution**.
-5. Execute the **IP/Technology Assignment** (repo → `Goeman Global Finance, LLC`) and sign your invention assignment.
+5. Execute the **IP/Technology Assignment** (repo → `Goemon Global Finance, LLC`) and sign your invention assignment.
 6. *(Only if you grant vesting/profits interests later — file the protective **83(b)** within 30 days
    of that grant. Not triggered by a sole member owning units outright.)*
 

@@ -1,14 +1,14 @@
 /**
  * Remediation service — the async consumer of the decisions topic.
  *
- * This is what makes the fire-and-forget path actionable: Goeman emitted the event
+ * This is what makes the fire-and-forget path actionable: Goemon emitted the event
  * async (did NOT wait), so the engine reacts here. On a high-severity decision it
- * opens a case and — when auto-remediation is on — calls back into Goeman to FREEZE
- * the user's account (a standing, deterministic money state Goeman owns). A `block`/
+ * opens a case and — when auto-remediation is on — calls back into Goemon to FREEZE
+ * the user's account (a standing, deterministic money state Goemon owns). A `block`/
  * `challenge` opens a case for analyst review but takes no automated money action.
  *
  * The score is advisory; the decision to freeze is the deterministic threshold
- * (routing_config.freeze_at, surfaced as action === "freeze"). Mirrors Goeman's
+ * (routing_config.freeze_at, surfaced as action === "freeze"). Mirrors Goemon's
  * "model advisory, deterministic code gates" invariant on the engine side.
  */
 
@@ -16,7 +16,7 @@ import type { EventBus } from "../bus/eventBus";
 import { TOPICS } from "../bus/eventBus";
 import type { CaseService } from "../cases/caseService";
 import { severityFor } from "../cases/caseService";
-import { getGoemanClient } from "./goemanClient";
+import { getGoemonClient } from "./goemonClient";
 import { config } from "../config";
 import { logger } from "../observability/logger";
 import type { Decision } from "../types";
@@ -32,7 +32,7 @@ export class RemediationService {
   /** Exposed for tests / direct invocation. */
   async handle(d: Decision): Promise<void> {
     // Only async decisions drive remediation; sync ones were already gated inline
-    // by Goeman. Low-risk async decisions need no case.
+    // by Goemon. Low-risk async decisions need no case.
     if (d.mode !== "async") return;
     if (d.action === "allow" || d.action === "flag") return;
 
@@ -47,12 +47,12 @@ export class RemediationService {
     if (d.action === "freeze") {
       if (config.FRAUD_AUTO_REMEDIATE) {
         await this.cases.recordAction(c.id, "freeze_requested", "system", reasonCodes);
-        await getGoemanClient().freeze({
+        await getGoemonClient().freeze({
           userId: d.userId,
           reason: `fraud-engine: ${reasonCodes}`,
           decisionId: d.decisionId,
         });
-        logger.warn({ userId: d.userId, decisionId: d.decisionId }, "auto-froze account via Goeman remediation");
+        logger.warn({ userId: d.userId, decisionId: d.decisionId }, "auto-froze account via Goemon remediation");
       } else {
         await this.cases.recordAction(c.id, "freeze_recommended", "system", "auto-remediate disabled — awaiting analyst");
       }

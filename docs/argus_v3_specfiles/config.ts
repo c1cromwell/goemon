@@ -11,7 +11,7 @@
 import "dotenv/config";
 import { z } from "zod";
 
-const KNOWN_DEV_JWT_SECRET = "goeman_dev_secret_change_in_production";
+const KNOWN_DEV_JWT_SECRET = "goemon_dev_secret_change_in_production";
 
 const boolish = z
   .string()
@@ -28,7 +28,7 @@ const schema = z.object({
   JWT_SECRET: z.string().min(1),
 
   DATABASE_URL: z.string().optional(),
-  SQLITE_PATH: z.string().default("./data/goeman.db"),
+  SQLITE_PATH: z.string().default("./data/goemon.db"),
   REDIS_URL: z.string().optional(),
 
   ALLOW_PASSWORD_AUTH: boolish,
@@ -43,7 +43,7 @@ const schema = z.object({
     ),
 
   RP_ID: z.string().default("localhost"),
-  RP_NAME: z.string().default("Goeman Global Finance"),
+  RP_NAME: z.string().default("Goemon Global Finance"),
   RP_ORIGIN: z.string().default("http://localhost:5173"),
 
   IDV_PROVIDER: z.enum(["simulated", "persona"]).default("simulated"),

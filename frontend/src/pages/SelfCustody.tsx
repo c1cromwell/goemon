@@ -26,7 +26,7 @@ export function SelfCustody() {
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url; a.download = "goeman-self-custody-export.json"; a.click();
+      a.href = url; a.download = "goemon-self-custody-export.json"; a.click();
       URL.revokeObjectURL(url);
       toast.show("Exported — your keys, identity, and holdings, signed and portable");
     } catch (e) {

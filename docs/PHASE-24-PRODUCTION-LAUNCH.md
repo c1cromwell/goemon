@@ -6,7 +6,7 @@ partner-backed, counsel-cleared** offerings. It does **not** introduce predictio
 derivatives — those remain out of scope (see §12).
 
 This doc folds the feature-coverage review into a single staged plan with explicit steps to get each
-capability **live**. Read with: `docs/GOEMAN-PLAN.md` · `docs/PRD-PHASE-MATRIX.md` ·
+capability **live**. Read with: `docs/GOEMON-PLAN.md` · `docs/PRD-PHASE-MATRIX.md` ·
 `docs/business/CORP-B-RAMP.md` · `docs/business/LAUNCH-READINESS.md` · `docs/business/PAYMENT-NETWORK-STRATEGY.md`.
 
 **Related prototype seams (already built, not production):**
@@ -15,7 +15,7 @@ capability **live**. Read with: `docs/GOEMAN-PLAN.md` · `docs/PRD-PHASE-MATRIX.
 |---|---|---|
 | OID4VP + VC + MCP | `presentationService`, Phase 7/11 | — |
 | Checkout VP (merchant) | `presentationService` checkout path | `CHECKOUT_VP_ENABLED` |
-| Goeman Pay | `paymentService`, `/api/pay` | `GOEMAN_PAY_ENABLED` |
+| Goemon Pay | `paymentService`, `/api/pay` | `GOEMON_PAY_ENABLED` |
 | Bank rails | `bankRailService`, Phase 19 | `BANK_RAILS_ENABLED` |
 | Cards / bill pay | `cardService`, `billPayService` | `CARDS_ENABLED`, `BILLPAY_ENABLED` |
 | USDC / Hedera | `hederaService`, wallet | `HEDERA_ENABLED` |
@@ -29,7 +29,7 @@ capability **live**. Read with: `docs/GOEMAN-PLAN.md` · `docs/PRD-PHASE-MATRIX.
 | Stage | What | Service / routes | Tests |
 |---|---|---|---|
 | **24.8a** | Supported product catalog | `productCatalogService`, `GET /api/products/supported` | `phase24.test.ts` |
-| **24.1a** | x401 HTTP proof (Goeman VC) | `x401Service`, `/api/x401/*` | `phase24.test.ts` |
+| **24.1a** | x401 HTTP proof (Goemon VC) | `x401Service`, `/api/x401/*` | `phase24.test.ts` |
 | **24.1b** | Verification token exchange | `x401_verification_tokens`, `POST /api/x401/token/redeem` | `phase24.test.ts` |
 | **24.2a** | x402 HTTP pay gate | `x402Service`, `/api/x402/*` | `phase24.test.ts` |
 | **24.9a** | Borderless USDC savings | `savingsProductService`, `/api/savings/borderless/*` | `phase24.test.ts` |
@@ -48,7 +48,7 @@ capability **live**. Read with: `docs/GOEMAN-PLAN.md` · `docs/PRD-PHASE-MATRIX.
 
 ## 1. Problem statement
 
-Goeman has **breadth ahead of launch**: simulated partner seams, demo marketplace inventory, and a strong
+Goemon has **breadth ahead of launch**: simulated partner seams, demo marketplace inventory, and a strong
 agent-native identity model — but **production readiness** is gated on partners, counsel, and operational
 runbooks (`LAUNCH-READINESS.md` §3). Phase 24 names the **nine product capabilities** that must cross the
 line together (or in a dependency-safe sequence) for a credible **tokenization-first neobank**, plus the
@@ -93,14 +93,14 @@ line together (or in a dependency-safe sequence) for a credible **tokenization-f
 
 ## 3.5 Standalone-first path (minimal partners)
 
-**Goal:** A fully functional Goeman money + agent product **without** partner bank, Courtyard, Dinari, or Proof.com.
+**Goal:** A fully functional Goemon money + agent product **without** partner bank, Courtyard, Dinari, or Proof.com.
 
 | Capability | Standalone (no partner) | Optional partner (later) |
 |---|---|---|
-| x401 identity | Argus-issued VC + `did:key` wallet (`IDENTITY_ISSUER=goeman`) | Proof.com OID4VC (`IDENTITY_ISSUER=proof`) |
-| x402 commerce | USDC/USD on ledger via Goeman Pay | Card acquirer / Visa bridge |
+| x401 identity | Argus-issued VC + `did:key` wallet (`IDENTITY_ISSUER=goemon`) | Proof.com OID4VC (`IDENTITY_ISSUER=proof`) |
+| x402 commerce | USDC/USD on ledger via Goemon Pay | Card acquirer / Visa bridge |
 | Stablecoin | Hedera testnet → self-hosted mainnet operator | Circle treasury / CCTP |
-| Instant pay | Ledger P2P + Goeman Pay (seconds) | FedNow/RTP via Column |
+| Instant pay | Ledger P2P + Goemon Pay (seconds) | FedNow/RTP via Column |
 | Collectibles | Demo seed + seller P2P listings | Courtyard vault API |
 | Tokenized stocks | Simulated `EQUITY_ISSUER=simulated` (demo) | Dinari / Backed |
 | Neobank | **Not standalone** — needs BaaS for fiat FDIC | Column / Treasury Prime |
@@ -112,7 +112,7 @@ line together (or in a dependency-safe sequence) for a credible **tokenization-f
 ```bash
 X401_ENABLED=1
 X402_ENABLED=1
-GOEMAN_PAY_ENABLED=1
+GOEMON_PAY_ENABLED=1
 CHECKOUT_VP_ENABLED=1
 BORDERLESS_SAVINGS_ENABLED=1
 SAVINGS_APY_BPS=350
@@ -124,7 +124,7 @@ HEDERA_ENABLED=1          # testnet first; mainnet = 24.4
 
 1. **24.8a** product catalog — honest SKU list (`/api/products/supported`)
 2. **24.1a+b** x401 headers + verification tokens (`/api/x401`)
-3. **24.2a** x402 pay gate (`/api/x402`) — stacks on Goeman Pay + checkout VP
+3. **24.2a** x402 pay gate (`/api/x402`) — stacks on Goemon Pay + checkout VP
 4. **24.9a** borderless savings (`/api/savings/borderless`)
 5. **24.4** stablecoin mainnet hardening (Hedera + reconciliation — no bank)
 6. **24.7** collectibles escrow (counsel only; no Courtyard required for seller P2P)
@@ -180,12 +180,12 @@ flowchart TD
 
 ### 24.1 — Proof x401 Identity Intent Support
 
-**Today:** Goeman implements **OID4VP-style** challenges via `/api/present/challenge` + wallet-signed VP JWT +
+**Today:** Goemon implements **OID4VP-style** challenges via `/api/present/challenge` + wallet-signed VP JWT +
 90s scoped tokens (`presentationService`). No `PROOF-REQUIRED` / `PROOF-PRESENTATION` HTTP headers; no Proof
 issuer adapter.
 
 **Target:** Issuer-neutral x401 verifier on protected routes; optional **Proof Digital ID** as an external
-issuer alongside Goeman-issued VCs.
+issuer alongside Goemon-issued VCs.
 
 | Stage | Engineering | Partner / counsel | Exit criteria |
 |---|---|---|---|
@@ -196,13 +196,13 @@ issuer alongside Goeman-issued VCs.
 
 **Reuses:** `presentationService`, `vcService`, `userAgentGrantService`, checkout VP path, Phase 10 token relay.
 
-**Config (proposed):** `X401_ENABLED`, `X401_SIGNED_REQUESTS`, `IDENTITY_ISSUER=goeman|proof`, `PROOF_API_KEY`.
+**Config (proposed):** `X401_ENABLED`, `X401_SIGNED_REQUESTS`, `IDENTITY_ISSUER=goemon|proof`, `PROOF_API_KEY`.
 
 ---
 
 ### 24.2 — x402 Agent Commerce
 
-**Today:** Goeman Pay (`paymentService`) + MCP `pay_merchant` + checkout VP — **application-layer** commerce,
+**Today:** Goemon Pay (`paymentService`) + MCP `pay_merchant` + checkout VP — **application-layer** commerce,
 not HTTP 402.
 
 **Target:** x402-compatible resources: server responds with payment requirement; agent pays via stablecoin
@@ -215,9 +215,9 @@ settlement; composes with x401 (“who authorized” before “what paid”).
 | **24.2c — x401 + x402 stack** | Protected API route: x401 proof → scoped token → x402 pay → content | — | Harness: present → pay → fetch in one agent session |
 | **24.2d — External merchant SDK** | Publish `@argus/x402` helper (fetch wrapper) for third-party sites | Merchant terms + dispute policy | Reference merchant on `/pay` docs |
 
-**Reuses:** Phase 21 Goeman Pay, escrow admin surface, MCP scopes, `presentationService`.
+**Reuses:** Phase 21 Goemon Pay, escrow admin surface, MCP scopes, `presentationService`.
 
-**Config (proposed):** `X402_ENABLED`, `X402_DEFAULT_CURRENCY=USDC`, extends `GOEMAN_PAY_ENABLED`.
+**Config (proposed):** `X402_ENABLED`, `X402_DEFAULT_CURRENCY=USDC`, extends `GOEMON_PAY_ENABLED`.
 
 **Explicitly not in 24.2:** Card-network acquirer; x402 is **native-rail** agent commerce first.
 
@@ -265,7 +265,7 @@ and `CardProcessor` stubs.
 
 ### 24.5 — Instant Payments
 
-**Today:** **Instant on native rail** (ledger transfer, Goeman Pay USDC, P2P payment requests). Bank
+**Today:** **Instant on native rail** (ledger transfer, Goemon Pay USDC, P2P payment requests). Bank
 `method: "instant"` is a **label**; real FedNow/RTP not wired (`LAUNCH-READINESS.md`).
 
 **Target:** Published SLAs per rail; FedNow/RTP where partner bank supports; card auth realtime.
@@ -274,7 +274,7 @@ and `CardProcessor` stubs.
 |---|---|---|---|
 | **24.5a — Native rail SLA** | Metrics: p99 transfer latency; status page | — | Public SLA doc: ledger P2P < 2s |
 | **24.5b — FedNow/RTP** | Map `bank.withdraw(method: instant)` to partner instant rail API | Partner bank FedNow participation | Credit within 60s (PRD REQ-PAY-US-008) |
-| **24.5c — Goeman Pay instant** | Hedera finality monitoring; intent TTL defaults | — | Merchant webhook on `paid` < 10s p99 |
+| **24.5c — Goemon Pay instant** | Hedera finality monitoring; intent TTL defaults | — | Merchant webhook on `paid` < 10s p99 |
 | **24.5d — Cross-border instant** | `crossBorderService` prod FX provider (`FX_RATE_PROVIDER` ≠ simulated) | FX liquidity partner | Corridor quote→settle e2e NG/PH/BR pilot |
 
 **Reuses:** `bankRailService`, `paymentService`, `crossBorderService`, `paymentRequestService`.
@@ -336,12 +336,12 @@ honest hours; trad-fi trading simulated (Phase 17).
 | Stage | Engineering | Partner / counsel | Exit criteria |
 |---|---|---|---|
 | **24.8a — Product registry** | `productCatalogService`: SKU → asset class, hours, regions, min tier | Product/legal review of list | API `/api/products/supported` |
-| **24.8b — 24/7 SKUs** | Mark: USDC wallet P2P, Goeman Pay, tokenized collectibles secondary, on-chain equity tokens | — | UI badge “Available now” only for 24_7 |
+| **24.8b — 24/7 SKUs** | Mark: USDC wallet P2P, Goemon Pay, tokenized collectibles secondary, on-chain equity tokens | — | UI badge “Available now” only for 24_7 |
 | **24.8c — Exchange-hours SKUs** | Mark: Phase 17 spot equities/options when live; halt flags | BD partner market calendar | Orders rejected outside hours with clear code |
 | **24.8d — Corridor SKUs** | Cross-border + off-ramp per country from registry | Corridor licenses | Send Abroad only shows supported corridors |
 | **24.8e — Agent scope** | MCP/SmartChat tools filter by registry — agents cannot trade unsupported SKUs | — | Harness: unsupported product → `NOT_IMPLEMENTED` |
 
-**Principle:** Goeman markets **what it supports**, 24/7 where technically and legally true — never imply
+**Principle:** Goemon markets **what it supports**, 24/7 where technically and legally true — never imply
 NYSE-hours products trade overnight.
 
 **Reuses:** `currencyRegistry`, marketplace listings, Phase 17 instruments, cross-border tables.
@@ -375,7 +375,7 @@ path for non-US users first.
 | Milestone | Delivers | Corp gate | Depends on |
 |---|---|---|---|
 | **24.0** | Program kickoff: counsel engaged, partner pipeline, prod env template (all money flags off) | A | — |
-| **24.1** | x401 verifier + Goeman VC path | A | 24.0 |
+| **24.1** | x401 verifier + Goemon VC path | A | 24.0 |
 | **24.2** | x402 + x401 stacked agent commerce | B (MSB) | 24.1, 24.4a |
 | **24.3** | Full neobank rails live | B | 24.0, 24.4 |
 | **24.4** | Stablecoin mainnet + reconciliation | B | 24.0 |
@@ -402,7 +402,7 @@ path for non-US users first.
 | `HEDERA_ENABLED` | 24.4 | env-specific | mainnet + HSM |
 | `ONRAMP_ENABLED` / `OFFRAMP_ENABLED` | 24.4, 24.9 | prod-fatal | live provider |
 | `CCTP_ENABLED` | 24.4 | prod-fatal | Circle |
-| `GOEMAN_PAY_ENABLED` | 24.2, 24.5 | prod-fatal | MSB |
+| `GOEMON_PAY_ENABLED` | 24.2, 24.5 | prod-fatal | MSB |
 | `EQUITIES_ENABLED` | 24.6 | prod-fatal | issuer + BD |
 | `COLLECTIBLES_ESCROW_ENABLED` | 24.7 | prod-fatal | counsel memo |
 | `FX_SETTLEMENT_ENABLED` | 24.5, 24.9 | prod-fatal | FX partner |
@@ -416,7 +416,7 @@ Each workstream ships with:
 
 1. **Vitest** service tests (integer money, idempotency, append-only)
 2. **e2e-validator** journey extension (document new J# in `E2E-VALIDATION.md`)
-3. **goeman-mcp-test-harness** path for x401/x402 + pay flows
+3. **goemon-mcp-test-harness** path for x401/x402 + pay flows
 4. **Launch-readiness row** updated in `LAUNCH-READINESS.md`
 5. **CEO Agentic OS gate** for any new regulated SKU copy (`launch_decision` task class → Anthropic-pinned)
 
@@ -436,7 +436,7 @@ Proposed new journeys:
 
 From `LAUNCH-READINESS.md` — Phase 24 go-live **requires** (not optional):
 
-- Customer support console + dispute/chargeback ops (collectibles + Goeman Pay)
+- Customer support console + dispute/chargeback ops (collectibles + Goemon Pay)
 - Statements + tax docs (1099-INT/B/DIV)
 - Push notifications (payment received, escrow shipped)
 - SOC 2 + status page + incident response
@@ -449,7 +449,7 @@ From `LAUNCH-READINESS.md` — Phase 24 go-live **requires** (not optional):
 | ID | Question | Owner |
 |---|---|---|
 | Q24-1 | Proof commercial terms vs issuer-neutral self-hosted x401 only? | Founder + counsel |
-| Q24-2 | x402 first merchant: internal Goeman Pay only or external SDK day one? | Product |
+| Q24-2 | x402 first merchant: internal Goemon Pay only or external SDK day one? | Product |
 | Q24-3 | Collectibles before neobank vs full bank first? | CEO (GTM recommends collectibles) |
 | Q24-4 | Adult savings: partner-bank yield vs tokenized T-bill (Ondo/BUIDL) first? | CFO + counsel |
 | Q24-5 | Which corridors for 24.9 pilot (NG, PH, BR per PRD)? | BD |
@@ -465,7 +465,7 @@ From `LAUNCH-READINESS.md` — Phase 24 go-live **requires** (not optional):
 | **18** Tokenization prod | 24.6/24.7 are the live subsets of 18 + 18.6 |
 | **19** Bank rails | 24.3 is Phase 19 production cutover |
 | **20** Hardening | 24.4 reconciliation + fraud prod are prerequisites |
-| **21** Goeman Pay | 24.2 x402 wraps Phase 21 |
+| **21** Goemon Pay | 24.2 x402 wraps Phase 21 |
 | **22** Teen starter | Parallel; 24.9 is **adult borderless** savings |
 | **23** Command Center | Ops visibility before Corp B; not blocking 24.7 wedge |
 
@@ -483,7 +483,7 @@ From `LAUNCH-READINESS.md` — Phase 24 go-live **requires** (not optional):
 
 ### 13.A Standalone go-live (minimal partners — Phase A / testnet)
 
-Use when `IDENTITY_ISSUER=goeman`, no BaaS, no live issuer.
+Use when `IDENTITY_ISSUER=goemon`, no BaaS, no live issuer.
 
 | Step | Action | Owner | Done when |
 |---|---|---|---|
@@ -507,7 +507,7 @@ Use when `IDENTITY_ISSUER=goeman`, no BaaS, no live issuer.
 | B2 | FedNow instant fiat | Partner bank | 24.5 fiat instant |
 | B3 | Collectible vault inventory | Courtyard | Branded graded inventory |
 | B4 | Live tokenized equities | Dinari / Backed | Real stock tokens (24.6) |
-| B5 | MSB registration | FinCEN | Real-money x402 / Goeman Pay at scale |
+| B5 | MSB registration | FinCEN | Real-money x402 / Goemon Pay at scale |
 | B6 | Circle CCTP / treasury | Circle | Cross-chain USDC prod (24.4) |
 
 **Rule:** Do not enable `productionFatals()` partner flags until the matching B-row is complete.

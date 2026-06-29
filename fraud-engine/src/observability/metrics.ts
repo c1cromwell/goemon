@@ -45,7 +45,7 @@ export const casesTotal = new client.Counter({
 
 export const remediationTotal = new client.Counter({
   name: "fe_remediation_total",
-  help: "Remediation callbacks to Goeman",
+  help: "Remediation callbacks to Goemon",
   labelNames: ["action", "result"],
   registers: [registry],
 });

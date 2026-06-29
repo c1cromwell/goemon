@@ -85,7 +85,7 @@ export function AdminConsole() {
   return (
     <div className="page">
       <header className="bar">
-        <h1>Goeman Global Finance Admin · Identities</h1>
+        <h1>Goemon Global Finance Admin · Identities</h1>
         <div>
           <Link to="/admin/approvals" className="ghost sm" style={{ marginRight: 8 }}>CEO Approvals</Link>
           <Link to="/admin/collectibles" className="ghost sm" style={{ marginRight: 8 }}>Collectibles review</Link>

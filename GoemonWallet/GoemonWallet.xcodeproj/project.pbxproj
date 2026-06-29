@@ -1,0 +1,432 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A5669F8CA3ABB25BEB6D208 /* ConsentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2302ED518F5D616CFA45A3 /* ConsentView.swift */; };
+		12334298AAD81D9CDD4BA6E2 /* KeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DE08FD1499F39754D31223 /* KeyService.swift */; };
+		1D795FF113FD93B5AAF5C0C8 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC3A18E1C58C7AE228E2094 /* Config.swift */; };
+		257DA6499F9DD9047CCAC5D4 /* CredentialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B0EC0AFDBC3ECDF48E35ED /* CredentialView.swift */; };
+		28AFF277EC9B9D6F3CE2F180 /* DIDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29845B04AB121490871457CE /* DIDKey.swift */; };
+		29C410611A70DB3C9FFA7968 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C347BC10EAC95D8F34AC3A4 /* ActivityView.swift */; };
+		2FF659ED43BE59E0053EF308 /* HederaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D4853703BE587B261FA096 /* HederaService.swift */; };
+		467BA9BB2DBF8EF66AC91A6B /* GoemonWalletApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF87537F18C9C76EBF37D9B2 /* GoemonWalletApp.swift */; };
+		50A62D813E603F839B39D98E /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597ADBF7E4D0B6696D04A8CA /* APIClient.swift */; };
+		5BF734789499AC70FFC414B9 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16E0B3FD2D34D7B0FF4B0FE /* SessionStore.swift */; };
+		63D19EBDC20913559D3D3BA6 /* CredentialService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F6904CBC6C536B3AE4C11 /* CredentialService.swift */; };
+		675896ABD6937ABDD82E0CD8 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09B652F29CEABB41E47D36C /* Keychain.swift */; };
+		70C92BEF7609DAB2E96DDBFF /* PresentationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FA9FEC69F10B9C3B3F38F8 /* PresentationService.swift */; };
+		88EBB4E9A98C0EB5438D5E43 /* Base64URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1890874359A66CB06F10B531 /* Base64URL.swift */; };
+		8945209936278037BB437ACD /* VPSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2818F1395DFE6B930849654 /* VPSigner.swift */; };
+		AA42F762E63BF705C0DC1E9B /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413787EDA9CEED494107717D /* SetupView.swift */; };
+		AA5B1F50954FC2BD0D9769AC /* Hiero in Frameworks */ = {isa = PBXBuildFile; productRef = 65D4835DEFD741B2E3B26D81 /* Hiero */; };
+		E27C461571A8C23C4989DE9A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F96B15276157B3CDC5313C /* Theme.swift */; };
+		E94B50F508EC42BDD24D57AC /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1107B2B24F53BCE9CDA724A4 /* WalletView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		027F6904CBC6C536B3AE4C11 /* CredentialService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialService.swift; sourceTree = "<group>"; };
+		1107B2B24F53BCE9CDA724A4 /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; };
+		15FA9FEC69F10B9C3B3F38F8 /* PresentationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationService.swift; sourceTree = "<group>"; };
+		1890874359A66CB06F10B531 /* Base64URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base64URL.swift; sourceTree = "<group>"; };
+		29845B04AB121490871457CE /* DIDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIDKey.swift; sourceTree = "<group>"; };
+		413787EDA9CEED494107717D /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		59644CCF7E6694440D01B159 /* GoemonWallet.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GoemonWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		597ADBF7E4D0B6696D04A8CA /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		72D4853703BE587B261FA096 /* HederaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HederaService.swift; sourceTree = "<group>"; };
+		9C347BC10EAC95D8F34AC3A4 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		C09B652F29CEABB41E47D36C /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		C16E0B3FD2D34D7B0FF4B0FE /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		C2818F1395DFE6B930849654 /* VPSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPSigner.swift; sourceTree = "<group>"; };
+		C5F96B15276157B3CDC5313C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		C7DE08FD1499F39754D31223 /* KeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyService.swift; sourceTree = "<group>"; };
+		D3B0EC0AFDBC3ECDF48E35ED /* CredentialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialView.swift; sourceTree = "<group>"; };
+		EBC3A18E1C58C7AE228E2094 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		EC2302ED518F5D616CFA45A3 /* ConsentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentView.swift; sourceTree = "<group>"; };
+		EF87537F18C9C76EBF37D9B2 /* GoemonWalletApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoemonWalletApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		37C41F188FA840AA513E6C28 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA5B1F50954FC2BD0D9769AC /* Hiero in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		220360AC8B58B39F760CE2B4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9C347BC10EAC95D8F34AC3A4 /* ActivityView.swift */,
+				EC2302ED518F5D616CFA45A3 /* ConsentView.swift */,
+				D3B0EC0AFDBC3ECDF48E35ED /* CredentialView.swift */,
+				413787EDA9CEED494107717D /* SetupView.swift */,
+				C5F96B15276157B3CDC5313C /* Theme.swift */,
+				1107B2B24F53BCE9CDA724A4 /* WalletView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2B0AA10D7C9A5F579FFAFE8B /* GoemonWallet */ = {
+			isa = PBXGroup;
+			children = (
+				3E5168443026CDF19CE2FD39 /* Crypto */,
+				CFD397B937AAA204B748860F /* Networking */,
+				535AF27B32B1E39CD41F94B3 /* Services */,
+				7FE12E97F1BC05BD8F97254F /* Storage */,
+				220360AC8B58B39F760CE2B4 /* Views */,
+				EBC3A18E1C58C7AE228E2094 /* Config.swift */,
+				EF87537F18C9C76EBF37D9B2 /* GoemonWalletApp.swift */,
+			);
+			path = GoemonWallet;
+			sourceTree = "<group>";
+		};
+		32282D730BA6749B66ACFE05 = {
+			isa = PBXGroup;
+			children = (
+				2B0AA10D7C9A5F579FFAFE8B /* GoemonWallet */,
+				AB406C31957A9E2A7B999A80 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3E5168443026CDF19CE2FD39 /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				1890874359A66CB06F10B531 /* Base64URL.swift */,
+				29845B04AB121490871457CE /* DIDKey.swift */,
+				C2818F1395DFE6B930849654 /* VPSigner.swift */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
+		535AF27B32B1E39CD41F94B3 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				027F6904CBC6C536B3AE4C11 /* CredentialService.swift */,
+				72D4853703BE587B261FA096 /* HederaService.swift */,
+				C7DE08FD1499F39754D31223 /* KeyService.swift */,
+				15FA9FEC69F10B9C3B3F38F8 /* PresentationService.swift */,
+				C16E0B3FD2D34D7B0FF4B0FE /* SessionStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		7FE12E97F1BC05BD8F97254F /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				C09B652F29CEABB41E47D36C /* Keychain.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		AB406C31957A9E2A7B999A80 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				59644CCF7E6694440D01B159 /* GoemonWallet.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CFD397B937AAA204B748860F /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				597ADBF7E4D0B6696D04A8CA /* APIClient.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		63BEEC0A552D39C340A35741 /* GoemonWallet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F6FCE21B4C1F3B46183F42E2 /* Build configuration list for PBXNativeTarget "GoemonWallet" */;
+			buildPhases = (
+				78440F056C2833A070F514F7 /* Sources */,
+				37C41F188FA840AA513E6C28 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GoemonWallet;
+			packageProductDependencies = (
+				65D4835DEFD741B2E3B26D81 /* Hiero */,
+			);
+			productName = GoemonWallet;
+			productReference = 59644CCF7E6694440D01B159 /* GoemonWallet.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		991C3432DDECFA2758F2A4D4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 65EE71CF3BBD8B2F8EEB0ECC /* Build configuration list for PBXProject "GoemonWallet" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 32282D730BA6749B66ACFE05;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9C87A17528E7A0737B2D03E3 /* XCRemoteSwiftPackageReference "hiero-sdk-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = AB406C31957A9E2A7B999A80 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				63BEEC0A552D39C340A35741 /* GoemonWallet */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		78440F056C2833A070F514F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50A62D813E603F839B39D98E /* APIClient.swift in Sources */,
+				29C410611A70DB3C9FFA7968 /* ActivityView.swift in Sources */,
+				88EBB4E9A98C0EB5438D5E43 /* Base64URL.swift in Sources */,
+				1D795FF113FD93B5AAF5C0C8 /* Config.swift in Sources */,
+				0A5669F8CA3ABB25BEB6D208 /* ConsentView.swift in Sources */,
+				63D19EBDC20913559D3D3BA6 /* CredentialService.swift in Sources */,
+				257DA6499F9DD9047CCAC5D4 /* CredentialView.swift in Sources */,
+				28AFF277EC9B9D6F3CE2F180 /* DIDKey.swift in Sources */,
+				467BA9BB2DBF8EF66AC91A6B /* GoemonWalletApp.swift in Sources */,
+				2FF659ED43BE59E0053EF308 /* HederaService.swift in Sources */,
+				12334298AAD81D9CDD4BA6E2 /* KeyService.swift in Sources */,
+				675896ABD6937ABDD82E0CD8 /* Keychain.swift in Sources */,
+				70C92BEF7609DAB2E96DDBFF /* PresentationService.swift in Sources */,
+				5BF734789499AC70FFC414B9 /* SessionStore.swift in Sources */,
+				AA42F762E63BF705C0DC1E9B /* SetupView.swift in Sources */,
+				E27C461571A8C23C4989DE9A /* Theme.swift in Sources */,
+				8945209936278037BB437ACD /* VPSigner.swift in Sources */,
+				E94B50F508EC42BDD24D57AC /* WalletView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		27FC6A57095D89D4C460BA22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = GoemonWallet/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.goemonglobal.wallet;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3E9D4BF3EF590239397316CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B43443B1F56DCFA5A66300DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = GoemonWallet/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.goemonglobal.wallet;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CF7BA604BD837D09E8E2265C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		65EE71CF3BBD8B2F8EEB0ECC /* Build configuration list for PBXProject "GoemonWallet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF7BA604BD837D09E8E2265C /* Debug */,
+				3E9D4BF3EF590239397316CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F6FCE21B4C1F3B46183F42E2 /* Build configuration list for PBXNativeTarget "GoemonWallet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B43443B1F56DCFA5A66300DA /* Debug */,
+				27FC6A57095D89D4C460BA22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9C87A17528E7A0737B2D03E3 /* XCRemoteSwiftPackageReference "hiero-sdk-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hiero-ledger/hiero-sdk-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.49.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		65D4835DEFD741B2E3B26D81 /* Hiero */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9C87A17528E7A0737B2D03E3 /* XCRemoteSwiftPackageReference "hiero-sdk-swift" */;
+			productName = Hiero;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 991C3432DDECFA2758F2A4D4 /* Project object */;
+}

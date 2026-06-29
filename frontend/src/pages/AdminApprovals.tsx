@@ -406,7 +406,7 @@ export function AdminApprovals() {
                   <td>{agent.supervision}</td>
                   <td>{agent.ceoGate ?? "—"}</td>
                   <td>
-                    {agent.id !== "goeman-brain" && (
+                    {agent.id !== "goemon-brain" && (
                       <button
                         type="button"
                         className="ghost sm"
@@ -427,7 +427,7 @@ export function AdminApprovals() {
             style={{ flex: 1, minWidth: 240 }}
             value={routeIntent}
             onChange={(e) => setRouteIntent(e.target.value)}
-            placeholder="Intent for Goeman Brain (e.g. ship Collect v2)"
+            placeholder="Intent for Goemon Brain (e.g. ship Collect v2)"
           />
           <button type="button" className="ghost sm" disabled={busy === "route-preview"} onClick={() => void previewRoute()}>
             Preview route

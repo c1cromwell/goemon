@@ -4,11 +4,11 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-IOS_DIR="$ROOT/GoemanWallet"
-SCHEME="GoemanWallet"
+IOS_DIR="$ROOT/GoemonWallet"
+SCHEME="GoemonWallet"
 DERIVED="$ROOT/.build/ios-verify"
 
-echo "== Goeman iOS wallet verification (B1) =="
+echo "== Goemon iOS wallet verification (B1) =="
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "SKIP: macOS + Xcode required for compile verification."
@@ -20,8 +20,8 @@ if ! command -v xcodebuild >/dev/null 2>&1; then
   exit 1
 fi
 
-if [[ ! -d "$IOS_DIR/GoemanWallet.xcodeproj" && ! -d "$IOS_DIR/GoemanWallet.xcworkspace" ]]; then
-  echo "WARN: No Xcode project yet — open Package.swift in Xcode and create the app target per GoemanWallet/README.md"
+if [[ ! -d "$IOS_DIR/GoemonWallet.xcodeproj" && ! -d "$IOS_DIR/GoemonWallet.xcworkspace" ]]; then
+  echo "WARN: No Xcode project yet — open Package.swift in Xcode and create the app target per GoemonWallet/README.md"
   echo "      Verifying Swift package resolves instead..."
   if command -v swift >/dev/null 2>&1; then
     (cd "$IOS_DIR" && swift package resolve)
@@ -34,10 +34,10 @@ if [[ ! -d "$IOS_DIR/GoemanWallet.xcodeproj" && ! -d "$IOS_DIR/GoemanWallet.xcwo
 fi
 
 PROJECT_FLAG=()
-if [[ -d "$IOS_DIR/GoemanWallet.xcworkspace" ]]; then
-  PROJECT_FLAG=(-workspace "$IOS_DIR/GoemanWallet.xcworkspace")
+if [[ -d "$IOS_DIR/GoemonWallet.xcworkspace" ]]; then
+  PROJECT_FLAG=(-workspace "$IOS_DIR/GoemonWallet.xcworkspace")
 else
-  PROJECT_FLAG=(-project "$IOS_DIR/GoemanWallet.xcodeproj")
+  PROJECT_FLAG=(-project "$IOS_DIR/GoemonWallet.xcodeproj")
 fi
 
 mkdir -p "$DERIVED"

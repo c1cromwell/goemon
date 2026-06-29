@@ -7,8 +7,8 @@
  * tokens signed with it remain verifiable.
  *
  * DIDs:
- *   - Platform issuer: did:web:goemanglobal.com  (fragment #<kid> per key)
- *   - User subject:    did:web:goemanglobal.com:users:<userId>  (deterministic, no key needed)
+ *   - Platform issuer: did:web:goemonglobal.com  (fragment #<kid> per key)
+ *   - User subject:    did:web:goemonglobal.com:users:<userId>  (deterministic, no key needed)
  * In Phase 5 both migrate to did:hedera:mainnet:<accountId>.
  */
 
@@ -105,11 +105,11 @@ export async function rotateKey(): Promise<ActiveKey> {
 }
 
 /** Platform issuer DID. Fragment #<kid> is appended by callers when needed. */
-export const issuerDid = "did:web:goemanglobal.com";
+export const issuerDid = "did:web:goemonglobal.com";
 
 /** User subject DID — deterministic from userId (Phase 5 migrates to did:hedera). */
 export function userDid(userId: string): string {
-  return `did:web:goemanglobal.com:users:${userId}`;
+  return `did:web:goemonglobal.com:users:${userId}`;
 }
 
 // ---------------------------------------------------------------------------

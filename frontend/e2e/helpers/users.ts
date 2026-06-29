@@ -26,7 +26,7 @@ export const DEMO = {
   drew: { email: "drew@demo.com", name: "Drew Patel", tier: 0 },
 } as const;
 
-export const ADMIN = { email: "admin@goemanglobal.com", password: "Admin1234!" };
+export const ADMIN = { email: "admin@goemonglobal.com", password: "Admin1234!" };
 
 /** Log in through the real Login page via the dev password fallback. */
 export async function loginWithPassword(page: Page, email: string, password = DEMO_PASSWORD) {
@@ -37,6 +37,11 @@ export async function loginWithPassword(page: Page, email: string, password = DE
   await field(page, "Password").fill(password);
   await page.getByRole("button", { name: "Sign in with password" }).click();
   await expect(page).toHaveURL("/", { timeout: 10_000 });
+}
+
+/** Alias for wallet smoke — logs in as a seeded demo user. */
+export async function loginAsDemoUser(page: Page, email: string) {
+  await loginWithPassword(page, email, DEMO_PASSWORD);
 }
 
 /**

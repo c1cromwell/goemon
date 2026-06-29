@@ -4,8 +4,8 @@ import { productionFatals } from "../src/config";
 const base = {
   NODE_ENV: "production",
   PORT: 4500,
-  GOEMAN_BASE_URL: "https://goeman.example.com",
-  GOEMAN_SERVICE_KEY: "x".repeat(40),
+  GOEMON_BASE_URL: "https://goemon.example.com",
+  GOEMON_SERVICE_KEY: "x".repeat(40),
   SQLITE_PATH: "./data/fraud.db",
   FRAUD_AUTO_REMEDIATE: true,
   FRAUD_ENGINE_API_KEY: "k".repeat(40),

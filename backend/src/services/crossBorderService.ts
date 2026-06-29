@@ -2,7 +2,7 @@
  * X-Money response F6 — cross-border send (remittance) on the native rail.
  *
  * Send money to ANOTHER user in a different currency/corridor (e.g. USD/USDC → EURC),
- * settled on Goeman's own rail — no Visa, no US-only constraint. The global,
+ * settled on Goemon's own rail — no Visa, no US-only constraint. The global,
  * dollar-access audience X Money (US-centric via Visa/Cross River/FDIC) can't serve.
  *
  * Mechanics mirror fxSettlementService.convert, but cross-USER: ONE balanced journal

@@ -1,4 +1,4 @@
--- Phase 22.0 — Goeman Starter: households + guardian↔teen linkage + minor account type.
+-- Phase 22.0 — Goemon Starter: households + guardian↔teen linkage + minor account type.
 
 CREATE TABLE IF NOT EXISTS households (
   id               TEXT PRIMARY KEY,

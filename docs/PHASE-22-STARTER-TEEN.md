@@ -1,8 +1,8 @@
-# Phase 22 — Goeman Starter (13+ family/teen wealth-building suite)
+# Phase 22 — Goemon Starter (13+ family/teen wealth-building suite)
 
 **Status: DESIGN (not built).** Production-ready, scalable design for a full-suite starter product for the
 **13+ age group**: a teen **debit card**, a **credit-builder card**, **high-yield savings**, and **custodial
-investing** — all **gamified to teach how to build wealth**. (Working name "Goeman Starter" — placeholder.)
+investing** — all **gamified to teach how to build wealth**. (Working name "Goemon Starter" — placeholder.)
 
 This doc is the senior-eng + design/UX blueprint. It names the exact existing seams each feature extends so
 the staged build (§14) is low-risk, and it states the legal posture a compliance/consumer-finance/securities
@@ -22,7 +22,7 @@ Design principles (non-negotiable):
 - **Guardian-owned, teen-operated.** The guardian owns and is liable; the teen operates within guardian-set
   controls. Trust + autonomy in balance — autonomy grows as the teen demonstrates good habits.
 - **Honest money.** Integer minor units, ledger as source of truth, every action audited — the same
-  discipline as the rest of Goeman. Fees and APY shown plainly; no dark patterns (CFPB/UDAAP).
+  discipline as the rest of Goemon. Fees and APY shown plainly; no dark patterns (CFPB/UDAAP).
 - **Privacy-first for minors.** Data minimization, no third-party ad targeting of minors, parental consent.
 
 ## 2. Account model — the Household
@@ -130,14 +130,14 @@ A teen-facing AI coach built as a **read / recommend / draft** skill (`operation
 - **Controls** — set/adjust spend limits + categories, allowance/match, freeze (`placeHold`).
 - **Approval queue** — approve/deny teen requests (debit over-limit, withdrawals, investment orders) via the
   reused `agent_reviews` queue (`requires_role='guardian'`, `decided_by`=guardian id), with push.
-- **Multi-teen** management within one household; the guardian's own adult Goeman account is unaffected.
+- **Multi-teen** management within one household; the guardian's own adult Goemon account is unaffected.
 
 ## 10. Compliance & legal (counsel sign-off required)
 
 - **Guardian-owned + liable**; KYC on the guardian (Persona/Alloy); teen DOB/minor verification.
 - **COPPA** posture for the 13–17 band: data minimization, verifiable parental consent, no marketing/ad
   targeting to minors, careful PII handling. (Under-13 is explicitly out of scope.)
-- **Deposits**: FDIC **via the partner bank**, never marketed as Goeman's own (the bank-naming rule).
+- **Deposits**: FDIC **via the partner bank**, never marketed as Goemon's own (the bank-naming rule).
 - **Investing**: **UGMA/UTMA** custodial structure; guardian-approved; partner broker-dealer + transfer agent.
 - **Credit-builder**: secured/charge structure, guardian liability, CARD-Act-aware disclosures, FCRA-compliant
   bureau reporting via partner.

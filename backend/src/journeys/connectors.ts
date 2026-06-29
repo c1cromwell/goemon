@@ -1,7 +1,7 @@
 /**
  * Connector framework (Pillar 3) — the runtime vendor marketplace + BYO seam.
  *
- * Unlike Goeman's compile-time provider enums (IDV_PROVIDER, …), connectors are
+ * Unlike Goemon's compile-time provider enums (IDV_PROVIDER, …), connectors are
  * REGISTERED AT RUNTIME with an id, so a journey's `connector` step names a vendor
  * by id and a journey-builder UI could add one without a deploy. Includes:
  *   - a simulated connector (offline default),

@@ -7,7 +7,7 @@
  *   - meets the asset's minimum tier,
  *   - is in an allowed jurisdiction, and
  *   - would not push the asset over its holder-count cap (§12(g) style).
- * Non-securities (HTS collectibles/gaming) transfer freely between Goeman Global Finance users
+ * Non-securities (HTS collectibles/gaming) transfer freely between Goemon Global Finance users
  * (subject only to the asset's min_tier, if any).
  *
  * A deployed, audited ERC-3643 contract enforcing these on-chain is the

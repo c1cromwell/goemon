@@ -7,7 +7,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 /**
  * Seed the dev DB before the web servers boot.
  *
- * `npm run setup` is idempotent: migrate + RBAC admin (admin@goemanglobal.com /
+ * `npm run setup` is idempotent: migrate + RBAC admin (admin@goemonglobal.com /
  * Admin1234!) + simulator MCP client + the five demo users (*@demo.com /
  * Demo1234!). `seed:marketplace` adds the Invest/Collect listings the portal
  * renders. Both talk to SQLite directly — no server needed yet.

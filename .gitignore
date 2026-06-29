@@ -1,5 +1,12 @@
 # macOS
 .DS_Store
 
+# Xcode user-specific state
+**/xcuserdata/
+*.xcuserstate
+
+# Swift build artifacts
+.build/
+
 # Claude Code local machine state (skills are tracked; local settings are not)
 .claude/settings.local.json

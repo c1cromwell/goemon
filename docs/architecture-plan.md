@@ -1,4 +1,4 @@
-# Goeman Global Finance — Full-Stack Architecture Plan
+# Goemon Global Finance — Full-Stack Architecture Plan
 
 ## Context
 

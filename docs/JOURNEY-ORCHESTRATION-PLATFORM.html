@@ -2,8 +2,8 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Journey Orchestration Platform — Goeman Global Finance</title>
-<style>/* Goeman Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+<title>Journey Orchestration Platform — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
    single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
 
 :root {
@@ -160,14 +160,14 @@ tbody tr:nth-child(even) td { background: var(--line-2); }
   <div class="mark">B</div>
   <h1>Journey Orchestration Platform</h1>
   <p class="sub">Reusable journey-builder architecture (à la Alloy/Transmit/Strivacity): declarative journeys, server-driven UI, connector marketplace, and fraud-as-a-step — with a working engine prototype.</p>
-  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 24, 2026</b></div>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 24, 2026</b></div>
   <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
 </section>
 <div class="wrap">
   <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-honest-review-gap-analysis">1. Honest review &amp; gap analysis</a></li><li class="lvl-2"><a href="#2-pillar-1-declarative-journey-engine-prototyped">2. Pillar 1 — Declarative journey engine (prototyped)</a></li><li class="lvl-2"><a href="#3-pillar-2-server-driven-ui-multi-channel-renderer-contract-prototyped-renderers-designed">3. Pillar 2 — Server-Driven UI + multi-channel renderer (contract prototyped; renderers designed)</a></li><li class="lvl-2"><a href="#4-pillar-3-connector-framework-vendor-marketplace-prototyped">4. Pillar 3 — Connector framework + vendor marketplace (prototyped)</a></li><li class="lvl-2"><a href="#5-pillar-4-riskfraud-as-a-journey-node-prototyped">5. Pillar 4 — Risk/fraud as a journey node (prototyped)</a></li><li class="lvl-2"><a href="#6-cross-cutting-the-am-i-missing-features-answer">6. Cross-cutting — the &quot;am I missing features?&quot; answer</a></li><li class="lvl-2"><a href="#7-what-the-prototype-proves-the-build-roadmap">7. What the prototype proves &amp; the build roadmap</a></li></ol></nav>
   <main class="content">
 <h1 id="journey-orchestration-platform-architecture-review-design">Journey Orchestration Platform — architecture review &amp; design</h1>
-<p>How Goeman becomes a reusable, configurable platform that can run <strong>any account-opening flow</strong> — a
+<p>How Goemon becomes a reusable, configurable platform that can run <strong>any account-opening flow</strong> — a
 journey builder over a data layer, a vendor marketplace + bring-your-own-service, fraud/risk called at
 each step via a context, custom branding, and one journey rendered to any channel (web/iOS/Android) —
 benchmarked against <strong>Alloy, Transmit Security, Strivacity</strong>, with a working prototype of the core.</p>
@@ -180,14 +180,14 @@ is a seam, not a rewrite.</p>
 </blockquote>
 <hr>
 <h2 id="1-honest-review-gap-analysis">1. Honest review &amp; gap analysis</h2>
-<p>Goeman has excellent orchestration <strong>primitives</strong>, but was <strong>not</strong> architected as this platform. The
+<p>Goemon has excellent orchestration <strong>primitives</strong>, but was <strong>not</strong> architected as this platform. The
 benchmark vendors: <strong>Alloy</strong> (vendor orchestration + decisioning + waterfall/cascade + case mgmt),
 <strong>Transmit</strong> (CIAM + risk/DRS + orchestration), <strong>Strivacity</strong> (no-code journey builder + branding).</p>
 <table>
 <thead>
 <tr>
 <th>Capability</th>
-<th>Goeman before</th>
+<th>Goemon before</th>
 <th>Status</th>
 <th>The platform</th>
 </tr>
@@ -303,7 +303,7 @@ serves web + iOS + Android without re-implementing each flow per platform — th
 Strivacity sell. The prototype returns real <code>ScreenDescriptor</code>s so the contract is exercised end-to-end.</p>
 <hr>
 <h2 id="4-pillar-3-connector-framework-vendor-marketplace-prototyped">4. Pillar 3 — Connector framework + vendor marketplace <em>(prototyped)</em></h2>
-<p>Goeman&#39;s provider enums (<code>IDV_PROVIDER</code>, <code>SANCTIONS_PROVIDER</code>, …) are <strong>compile-time</strong>. The platform needs
+<p>Goemon&#39;s provider enums (<code>IDV_PROVIDER</code>, <code>SANCTIONS_PROVIDER</code>, …) are <strong>compile-time</strong>. The platform needs
 <strong>runtime connectors</strong> (<code>connectors.ts</code>):</p>
 <ul>
 <li><strong>Registry</strong> — connectors registered by id; a <code>connector</code> step names vendors by id (a builder UI could
@@ -334,7 +334,7 @@ pre-funding fraud — passing whatever context has accumulated. <em>Proven:</em>
 → review, clean → approve (<code>journeys.test.ts</code>).</p>
 <hr>
 <h2 id="6-cross-cutting-the-am-i-missing-features-answer">6. Cross-cutting — the &quot;am I missing features?&quot; answer</h2>
-<p>Beyond your list, a complete platform needs these (each maps to an existing Goeman primitive to reuse):</p>
+<p>Beyond your list, a complete platform needs these (each maps to an existing Goemon primitive to reuse):</p>
 <table>
 <thead>
 <tr>

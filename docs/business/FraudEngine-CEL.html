@@ -2,8 +2,8 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FraudEngine-CEL — Goeman Global Finance</title>
-<style>/* Goeman Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+<title>FraudEngine-CEL — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
    single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
 
 :root {
@@ -160,14 +160,14 @@ tbody tr:nth-child(even) td { background: var(--line-2); }
   <div class="mark">B</div>
   <h1>FraudEngine-CEL</h1>
   
-  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
   <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
 </section>
 <div class="wrap">
   <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-why-cel-fits-this-engine-specifically">1. Why CEL fits this engine specifically</a></li><li class="lvl-2"><a href="#2-the-three-cel-applications-all-prototyped">2. The three CEL applications (all prototyped)</a></li><li class="lvl-3"><a href="#21-rules-as-data-the-headline">2.1 Rules-as-data (the headline)</a></li><li class="lvl-3"><a href="#22-decision-policy">2.2 Decision policy</a></li><li class="lvl-3"><a href="#23-routing-canary-cohort-predicates">2.3 Routing / canary cohort predicates</a></li><li class="lvl-2"><a href="#3-the-production-map-where-cel-sits">3. The production map (where CEL sits)</a></li><li class="lvl-2"><a href="#4-risks-how-the-design-handles-them">4. Risks &amp; how the design handles them</a></li><li class="lvl-2"><a href="#5-what-the-prototype-proves-and-how-its-verified">5. What the prototype proves (and how it&#39;s verified)</a></li><li class="lvl-2"><a href="#6-the-cutover-path">6. The cutover path</a></li></ol></nav>
   <main class="content">
 <h1 id="fraud-engine-google-cel-rules-as-data-decision-policy-cohort-routing">Fraud Engine × Google CEL — rules-as-data, decision policy, cohort routing</h1>
-<p>A review of the Goeman Fraud Engine architecture and how <strong>Google CEL</strong> (Common Expression Language,
+<p>A review of the Goemon Fraud Engine architecture and how <strong>Google CEL</strong> (Common Expression Language,
 cel.dev) makes it better — plus a working prototype that ships CEL rules as a <strong>shadow</strong> model with
 zero risk to the live decision.</p>
 <blockquote>
@@ -297,8 +297,8 @@ skipped, and is surfaced via <code>compileErrors</code> — a bad analyst rule n
 in int64 and within JS&#39;s exact-integer range, so the conversion is lossless; documented in
 <code>src/rules/activation.ts</code>.</li>
 <li><strong>Money-path determinism.</strong> <code>rules-v1</code> stays <strong>prod</strong>; CEL ships <strong>shadow-first</strong> and never changes the
-live decision until someone promotes it. The engine is standalone (Goeman calls it over HTTP), so there
-is zero Goeman money-path risk.</li>
+live decision until someone promotes it. The engine is standalone (Goemon calls it over HTTP), so there
+is zero Goemon money-path risk.</li>
 </ul>
 <hr>
 <h2 id="5-what-the-prototype-proves-and-how-its-verified">5. What the prototype proves (and how it&#39;s verified)</h2>

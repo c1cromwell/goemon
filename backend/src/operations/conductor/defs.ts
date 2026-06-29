@@ -23,7 +23,7 @@ export const taskDefs = [
     timeoutSeconds: 120,
     responseTimeoutSeconds: 110,
     timeoutPolicy: "TIME_OUT_WF",
-    ownerEmail: "ops@goemanglobal.com",
+    ownerEmail: "ops@goemonglobal.com",
   },
   {
     name: RESOLVE_REVIEW_TASK,
@@ -32,7 +32,7 @@ export const taskDefs = [
     timeoutSeconds: 120,
     responseTimeoutSeconds: 110,
     timeoutPolicy: "TIME_OUT_WF",
-    ownerEmail: "ops@goemanglobal.com",
+    ownerEmail: "ops@goemonglobal.com",
   },
 ];
 
@@ -40,7 +40,7 @@ export const operationWorkflowDef = {
   name: OPERATION_WORKFLOW,
   description: "Internal agent operation",
   version: WORKFLOW_VERSION,
-  ownerEmail: "ops@goemanglobal.com",
+  ownerEmail: "ops@goemonglobal.com",
   schemaVersion: 2,
   inputParameters: ["skill", "payload"],
   tasks: [
@@ -58,7 +58,7 @@ export const resolveWorkflowDef = {
   name: RESOLVE_WORKFLOW,
   description: "Resolve a queued agent-operation review",
   version: WORKFLOW_VERSION,
-  ownerEmail: "ops@goemanglobal.com",
+  ownerEmail: "ops@goemonglobal.com",
   schemaVersion: 2,
   inputParameters: ["reviewId", "actor", "decision", "reason"],
   tasks: [

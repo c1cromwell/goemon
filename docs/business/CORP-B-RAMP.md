@@ -18,7 +18,7 @@ Maps Phase A prototype seams to production partners. Each row is a **config flag
 | RWA issuers | `RWA_ISSUER_ENABLED`, `RWA_ISSUER_PROVIDER` | simulated → ondo, securitize, realt | `rwaIssuerService` | B4 securities |
 | CCTP USDC bridge | `CCTP_ENABLED`, `CCTP_PROVIDER` | simulated → circle | `cctpService` | stablecoin |
 | Tokenized equities | `EQUITIES_ENABLED`, `EQUITY_ISSUER` | simulated → dinari, firstparty | Phase 18.6 | BD/TA |
-| Goeman Pay merchants | `GOEMAN_PAY_ENABLED` | prototype | `paymentService` | MSB + escrow |
+| Goemon Pay merchants | `GOEMON_PAY_ENABLED` | prototype | `paymentService` | MSB + escrow |
 | Fraud remote | `FRAUD_ENGINE_URL` | local → fraud-engine service | `fraudClient` | vendor TM |
 | Data warehouse | `DATA_WAREHOUSE_ENABLED`, `WAREHOUSE_SINK` | simulated → bigquery, snowflake | `warehouseExportService` | SOC 2 |
 
@@ -31,7 +31,7 @@ Maps Phase A prototype seams to production partners. Each row is a **config flag
 5. **Travel Rule** — before P2P/off-ramp above $3k
 6. **RWA issuers** — after B4 securities counsel
 7. **Visa debit bridge** — mass-adoption on-ramp per PAYMENT-NETWORK-STRATEGY
-8. **Goeman Pay** — programmable rail wedge
+8. **Goemon Pay** — programmable rail wedge
 
 ## Admin verification endpoints
 

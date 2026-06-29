@@ -34,7 +34,7 @@ export interface ConductorWorkerHandle {
 
 export async function startOperationsConductorWorker(pollMs = 100): Promise<ConductorWorkerHandle> {
   await registerOperationsDefs();
-  const workerId = `goeman-ops-${process.pid}`;
+  const workerId = `goemon-ops-${process.pid}`;
   let running = true;
 
   async function pollOnce(taskType: string): Promise<void> {

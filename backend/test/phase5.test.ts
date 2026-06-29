@@ -254,7 +254,7 @@ describe("Phase 5: USDC on-chain transfer", () => {
     recipientHederaId = rAcct.hedera_account_id!;
   });
 
-  it("transferUsdcOnChain to a Goeman Global Finance user returns transactionId and journalId", async () => {
+  it("transferUsdcOnChain to a Goemon Global Finance user returns transactionId and journalId", async () => {
     const { transferUsdcOnChain } = await import("../src/services/hederaService");
 
     const result = await transferUsdcOnChain({

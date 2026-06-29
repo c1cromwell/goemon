@@ -9,7 +9,7 @@
  * The order route requires an Idempotency-Key (idempotency() middleware). Gated by
  * ONRAMP_ENABLED via the service (ONRAMP_DISABLED when off). No tier gate: the licensed
  * on-ramp provider runs KYC/AML under its own license, so buying the first USDC is the
- * frictionless activation step — Goeman only credits the delivered USDC into the ledger.
+ * frictionless activation step — Goemon only credits the delivered USDC into the ledger.
  */
 
 import { Router } from "express";

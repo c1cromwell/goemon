@@ -4,11 +4,11 @@
 
 ## Question presented
 
-May Goeman Global Finance, LLC list third-party tokenized securities-style RWAs (treasuries, real estate fractions, private credit) on the Invest marketplace under a **Phase A non-custodial software** posture?
+May Goemon Global Finance, LLC list third-party tokenized securities-style RWAs (treasuries, real estate fractions, private credit) on the Invest marketplace under a **Phase A non-custodial software** posture?
 
 ## Facts (fill in)
 
-- Entity: Goeman Global Finance, LLC (Wyoming)
+- Entity: Goemon Global Finance, LLC (Wyoming)
 - Product: non-custodial Hedera wallet + marketplace software
 - Issuance: third-party issuers only at launch (Securitize, Ondo, RealT-style partners)
 - Settlement: user non-custodial wallet; demo securities labeled "not a real offering"

@@ -1,6 +1,6 @@
 /**
  * SQLite store for the fraud engine (better-sqlite3, wrapped in a small async
- * interface so the call sites read like the Goeman backend's `Db`). The engine is
+ * interface so the call sites read like the Goemon backend's `Db`). The engine is
  * SQLite-only by design — it is a prototype-scale stand-in for the north-star
  * lakehouse/feature-store; production would swap this layer wholesale.
  *

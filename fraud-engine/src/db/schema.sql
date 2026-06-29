@@ -1,4 +1,4 @@
--- Goeman Fraud Engine — schema.
+-- Goemon Fraud Engine — schema.
 --
 -- Layer map (see docs/business/FraudEngine.md):
 --   events        → the unified event stream (Kafka topic analog), immutable

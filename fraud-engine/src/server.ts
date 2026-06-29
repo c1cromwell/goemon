@@ -18,7 +18,7 @@ export function buildApp(ctx: Context): Express {
   app.use(pinoHttp({ logger }));
 
   app.get("/health", (_req, res) => {
-    res.json({ status: "ok", service: "goeman-fraud-engine" });
+    res.json({ status: "ok", service: "goemon-fraud-engine" });
   });
 
   app.get("/metrics", async (_req, res) => {

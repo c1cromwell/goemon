@@ -12,7 +12,7 @@ import { getTeenSpendSummary } from "./teenSpendService";
 import { listAuthorizations } from "./cardService";
 
 function assertStarter(): void {
-  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Goeman Starter is currently unavailable");
+  if (!config.TEEN_ENABLED) throw new AppError(ErrorCode.TEEN_DISABLED, "Goemon Starter is currently unavailable");
 }
 
 export interface CoachInsightRow {

@@ -1,5 +1,5 @@
 /**
- * Phase 22 — Goeman Starter API. Mounted at /api/starter.
+ * Phase 22 — Goemon Starter API. Mounted at /api/starter.
  *
  * 22.0 — households + teen linkage
  * 22.1 — teen debit, spend policies, guardian approvals, freeze

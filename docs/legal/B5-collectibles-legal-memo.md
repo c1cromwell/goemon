@@ -4,14 +4,14 @@
 
 ## Question presented
 
-May Goeman list and facilitate purchase of tokenized physical collectibles (graded TCG, memorabilia) where the token is a claim on partner-custodied inventory (Courtyard / Collector Crypt model)?
+May Goemon list and facilitate purchase of tokenized physical collectibles (graded TCG, memorabilia) where the token is a claim on partner-custodied inventory (Courtyard / Collector Crypt model)?
 
 ## Facts
 
 - Token standard: Hedera HTS (native)
-- Custody: partner vault (insured); Goeman does not take possession
+- Custody: partner vault (insured); Goemon does not take possession
 - User funds: non-custodial USDC on Hedera
-- Redemption: partner redemption flow; Goeman routes UX only
+- Redemption: partner redemption flow; Goemon routes UX only
 - KYC: Tier **1+** required to buy collectibles (all lanes); Tier 0 browse-only (Q-ID-003, 2026-06)
 
 ## Analysis (counsel completes)

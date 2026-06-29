@@ -1,3 +1,3 @@
-# Goeman Global Finance
+# Goemon Global Finance
 
-Tokenization-first neobank prototype. Product requirements: `docs/goeman_prdv1/`. Implementation plan: `docs/GOEMAN-PLAN.md`. Brand: `docs/GOEMAN-BRAND.md`.
+Tokenization-first neobank prototype. Product requirements: `docs/goemon_prdv1/`. Implementation plan: `docs/GOEMON-PLAN.md`. Brand: `docs/GOEMON-BRAND.md`.

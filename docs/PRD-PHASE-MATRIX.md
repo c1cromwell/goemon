@@ -1,6 +1,6 @@
 # PRD vs Phase A vs Corp B/C — capability matrix
 
-Single reader guide reconciling [goeman_prdv1/](goeman_prdv1/) (full v1 bank PRD), [LAUNCH.md](LAUNCH.md) (Phase A non-custodial software), phase design docs (17–22), and prototype build status in [CLAUDE.md](../CLAUDE.md).
+Single reader guide reconciling [goemon_prdv1/](goemon_prdv1/) (full v1 bank PRD), [LAUNCH.md](LAUNCH.md) (Phase A non-custodial software), phase design docs (17–22), and prototype build status in [CLAUDE.md](../CLAUDE.md).
 
 ## How to read this
 
@@ -9,7 +9,7 @@ Single reader guide reconciling [goeman_prdv1/](goeman_prdv1/) (full v1 bank PRD
 | **PRD modules 00–11** | Investors, product | Full v1 launch: partner bank, intl corridors, ~15 live RWAs, iOS+Android, Next.js, Go |
 | **Phase A (LAUNCH.md)** | Founders, counsel | Non-custodial software NOW — collectibles first real-money surface; no MTL/BD |
 | **Prototype (Phases 0–22)** | Engineering | TS/React monorepo with simulated partner seams — breadth ahead of launch scope |
-| **Corp B** | Compliance, BD | Partner bank, MSB, Visa debit bridge, real KYC/fraud, Goeman Pay rail |
+| **Corp B** | Compliance, BD | Partner bank, MSB, Visa debit bridge, real KYC/fraud, Goemon Pay rail |
 | **Corp C** | Compliance, BD | Broker-dealer, ATS, lending, production tokenization |
 
 ## Capability matrix
@@ -26,10 +26,10 @@ Single reader guide reconciling [goeman_prdv1/](goeman_prdv1/) (full v1 bank PRD
 | Intl corridors NG/PH/BR | ✅ | ❌ | simulated | corridor partners | expand |
 | Debit card | v2 | ❌ | simulated Marqeta | BIN sponsor | scale |
 | Bill pay | out of v1 PRD | ❌ | simulated | biller network | — |
-| Goeman Pay merchant rail | not in PRD | ❌ | Phase 21 prototype + `/pay` UI | MSB + merchants | scale |
+| Goemon Pay merchant rail | not in PRD | ❌ | Phase 21 prototype + `/pay` UI | MSB + merchants | scale |
 | Trading equities/options | out of v1 PRD | ❌ | Phase 17 simulated | — | BD partner |
 | Tokenized 1:1 equities | brief v2 mention | ❌ | Phase 18.6 seam | Dinari/Backed | BD+TA+ATS |
-| Goeman Starter (teen/family) | not in PRD | ❌ | Phase 22 prototype | COPPA counsel | custodial BD |
+| Goemon Starter (teen/family) | not in PRD | ❌ | Phase 22 prototype | COPPA counsel | custodial BD |
 | Phase 24 production suite | not in PRD | ❌ | design only | x401/x402 + 9 capabilities | Corp A/B/C |
 | Internal agent ops | Module 08 | ✅ draft-only support | Phase 15 built | real-time chat | scale |
 | Fraud platform | vendor TM | stage-1 seam | fraud-engine add-on | Kafka/Flink | lakehouse |
@@ -47,7 +47,7 @@ Single reader guide reconciling [goeman_prdv1/](goeman_prdv1/) (full v1 bank PRD
 
 | Doc | Adds to PRD |
 |---|---|
-| [PAYMENT-NETWORK-STRATEGY.md](business/PAYMENT-NETWORK-STRATEGY.md) | Goeman Pay programmable rail; barbell with Visa |
+| [PAYMENT-NETWORK-STRATEGY.md](business/PAYMENT-NETWORK-STRATEGY.md) | Goemon Pay programmable rail; barbell with Visa |
 | [PHASE-18.6-TOKENIZED-EQUITIES.md](PHASE-18.6-TOKENIZED-EQUITIES.md) | Dividends, redemption, EquityIssuer |
 | [PHASE-22-STARTER-TEEN.md](PHASE-22-STARTER-TEEN.md) | Household / teen wealth product line |
 | [PHASE-17-TRADING-BROKERAGE.md](PHASE-17-TRADING-BROKERAGE.md) | SLA bulkheading, simulated trading |
@@ -63,4 +63,4 @@ Single reader guide reconciling [goeman_prdv1/](goeman_prdv1/) (full v1 bank PRD
 
 - [LAUNCH.md](LAUNCH.md) — test counts and B1 script reference
 - [PHASE-15-INTERNAL-AGENT-OPS.md](PHASE-15-INTERNAL-AGENT-OPS.md) header — prototype is built
-- [GOEMAN-PLAN.md](GOEMAN-PLAN.md) top checklist — see CLAUDE.md for current status
+- [GOEMON-PLAN.md](GOEMON-PLAN.md) top checklist — see CLAUDE.md for current status

@@ -8,15 +8,15 @@
 |---|---|
 | **Firm** | Trail of Bits |
 | **Rationale** | Prior Hedera ecosystem work; strong mobile + cryptography practice |
-| **Scope** | Phase 10 iOS wallet (`GoemanWallet/`), Android fast-follow (`GoemanWalletAndroid/`), Hedera build/sign/submit, OID4VP VP signing, key backup posture |
+| **Scope** | Phase 10 iOS wallet (`GoemonWallet/`), Android fast-follow (`GoemonWalletAndroid/`), Hedera build/sign/submit, OID4VP VP signing, key backup posture |
 | **Second opinion** | Cure53 or NCC Group (optional second pass before broad beta) |
 
 ## In-scope artifacts
 
-- `GoemanWallet/` — Secure Enclave P-256, VP JWT, Hedera non-custodial send
+- `GoemonWallet/` — Secure Enclave P-256, VP JWT, Hedera non-custodial send
 - `backend/src/routes/hedera.ts` — transfer build/submit, device pubkey acceptance
 - `backend/src/services/keyVaultService.ts` — operator key wrap (not user keys)
-- `GoemanWalletAndroid/` — Keystore signing scaffold
+- `GoemonWalletAndroid/` — Keystore signing scaffold
 
 ## Out of scope (Phase A)
 
@@ -50,6 +50,6 @@
 
 ## Related
 
-- `docs/goeman_prdv1/11-open-questions-and-risks.md` — Q-WALLET-001
+- `docs/goemon_prdv1/11-open-questions-and-risks.md` — Q-WALLET-001
 - `docs/LAUNCH.md` — blocker B1, B7
 - `scripts/verify-ios-wallet.sh`

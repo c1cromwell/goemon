@@ -21,10 +21,10 @@ export interface CorporateAgentDef {
 
 export const CORPORATE_AGENTS: CorporateAgentDef[] = [
   {
-    id: "goeman-brain",
-    name: "Goeman Brain",
+    id: "goemon-brain",
+    name: "Goemon Brain",
     charter: "Office of CEO — routes work, convenes agents, owns the approval queue.",
-    skill: "goeman-brain-route",
+    skill: "goemon-brain-route",
     supervision: "human_led",
   },
   {
@@ -176,7 +176,7 @@ export function resolveCorporateIntent(intent: string, payload: Record<string, u
   }
 
   return {
-    agentId: "goeman-brain",
+    agentId: "goemon-brain",
     targetSkill: "cfo-report",
     targetInput: { period: "monthly", note: intent },
     rationale: `Unrecognized intent "${intent}" — defaulting to CFO monthly report for human review.`,

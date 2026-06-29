@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { api, setToken, setAdminRole } from "../api/client";
 
 const DEV_ACCOUNTS = [
-  { role: "CEO", email: "ceo@goemanglobal.com", password: "Ceo1234!", path: "/admin/approvals" },
-  { role: "Chief of Staff", email: "cos@goemanglobal.com", password: "Cos1234!", path: "/admin/approvals" },
-  { role: "Admin", email: "admin@goemanglobal.com", password: "Admin1234!", path: "/admin" },
+  { role: "CEO", email: "ceo@goemonglobal.com", password: "Ceo1234!", path: "/admin/approvals" },
+  { role: "Chief of Staff", email: "cos@goemonglobal.com", password: "Cos1234!", path: "/admin/approvals" },
+  { role: "Admin", email: "admin@goemonglobal.com", password: "Admin1234!", path: "/admin" },
 ] as const;
 
 export function AdminLogin() {
   const nav = useNavigate();
-  const [email, setEmail] = useState("ceo@goemanglobal.com");
+  const [email, setEmail] = useState("ceo@goemonglobal.com");
   const [password, setPassword] = useState("Ceo1234!");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -39,7 +39,7 @@ export function AdminLogin() {
   return (
     <div className="center">
       <form className="card" onSubmit={submit} style={{ width: 420 }}>
-        <h1>Goeman Global Finance Admin</h1>
+        <h1>Goemon Global Finance Admin</h1>
         <p className="muted">CEO Approvals · onboarding · compliance</p>
         <label>Email</label>
         <input value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" />

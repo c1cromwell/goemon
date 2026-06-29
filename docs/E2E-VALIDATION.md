@@ -1,8 +1,8 @@
-# Goeman Global Finance — End-to-End Validation Runbook
+# Goemon Global Finance — End-to-End Validation Runbook
 
 The single, repeatable validation that exercises whole **user journeys across every channel** — not
 per-phase unit invariants (those live in `backend/test/phaseN.test.ts`). Referenced from
-`docs/GOEMAN-PLAN.md` at two anchors: **sub-step 8.12** (gate after Phase 8, `through-phase-8` scope) and
+`docs/GOEMON-PLAN.md` at two anchors: **sub-step 8.12** (gate after Phase 8, `through-phase-8` scope) and
 **Phase 16** (comprehensive pass after the last phase, `full` scope).
 
 > **Status:** Phases 7–16 are not all built yet. The deterministic suite and the skills are authored
@@ -31,7 +31,7 @@ a scope arg:
 - `e2e-validator full` — the Phase 16 comprehensive pass (all journeys × all channels).
 
 The validator runs the deterministic floor, then drives the NL/agent journeys via the
-**`goeman-mcp-test-harness`** skill against a running dev server (`npm run dev` on :3001), and emits a
+**`goemon-mcp-test-harness`** skill against a running dev server (`npm run dev` on :3001), and emits a
 pass/fail report mapped to the journey table in §3.
 
 ---
@@ -42,7 +42,7 @@ pass/fail report mapped to the journey table in §3.
 |---|---|---|
 | **Web** (responsive) | Phase 9 React portal | HTTP flow scripts hit the same API the UI uses; UI smoke is manual until a browser-driver is added |
 | **Mobile** | Phase 10 iOS wallet flows (Secure-Enclave signing, OID4VCI/OID4VP, Hedera send) | API-level validation of the build→sign→submit contract; on-device signing is manual |
-| **Agentic CLI / headless** | SmartChat NL + MCP, no GUI | `goeman-mcp-test-harness` acts as the client |
+| **Agentic CLI / headless** | SmartChat NL + MCP, no GUI | `goemon-mcp-test-harness` acts as the client |
 | **Glasses / minimal-HUD** | text-led rendering of the same IA | validated *as* the CLI/headless text path until a device target exists (per the "one IA, rendered per channel" rule in Phase 9) |
 
 ---
@@ -51,7 +51,7 @@ pass/fail report mapped to the journey table in §3.
 
 Each journey: **preconditions → steps → expected invariants → automation method**. The "Method" column is
 the hybrid split — **DET** = deterministic (vitest+supertest, `backend/test/e2e.test.ts`); **AGT** =
-agent/MCP-driven (`goeman-mcp-test-harness`).
+agent/MCP-driven (`goemon-mcp-test-harness`).
 
 | # | Journey | Phase | Key invariants checked | Method |
 |---|---|---|---|---|
@@ -82,7 +82,7 @@ Asserted across journeys, reusing the Phase-14 / per-phase invariants:
 
 ```
                 deterministic floor (DET)            agent / MCP coverage (AGT)
-                backend/test/e2e.test.ts             goeman-mcp-test-harness skill
+                backend/test/e2e.test.ts             goemon-mcp-test-harness skill
  J1 onboarding         ████                                  ░
  J2 agentic open       ███                                   ██   (sub-agent narrative)
  J3 DID/VC             ████                                   ░

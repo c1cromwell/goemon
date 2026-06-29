@@ -1,10 +1,10 @@
-# Goeman Global Finance — Launch Readiness & Go-To-Market
+# Goemon Global Finance — Launch Readiness & Go-To-Market
 
 The single end-to-end (E2E) launch document: what we ship at launch, the legal posture that keeps it
 shippable, the gates that must be green, and who signs off. It ties the **technical** gate
 (`docs/E2E-VALIDATION.md`) to the **legal/corporate** gate (`docs/business/CORPORATE-STRUCTURE.md`).
 
-> **Read order:** this doc → `PRD-PHASE-MATRIX.md` (PRD vs Phase A vs Corp B/C) → `CORPORATE-STRUCTURE.md` → `E2E-VALIDATION.md` → `GOEMAN-PLAN.md`.
+> **Read order:** this doc → `PRD-PHASE-MATRIX.md` (PRD vs Phase A vs Corp B/C) → `CORPORATE-STRUCTURE.md` → `E2E-VALIDATION.md` → `GOEMON-PLAN.md`.
 
 ---
 
@@ -26,13 +26,13 @@ What keeps us in scope at launch (CORPORATE-STRUCTURE §6, "What you CAN do in P
 
 **Compliance-safe messaging (non-negotiable — the reason for the Argus rebrand).** Per CORPORATE-STRUCTURE
 §1 and §9(4), "bank"/"banking" are regulated terms; using them without a charter invites a
-cease-and-desist. The rebrand from "BankAI" to **Goeman Global Finance** removes that trap. Marketing
+cease-and-desist. The rebrand from "BankAI" to **Goemon Global Finance** removes that trap. Marketing
 copy says: **"tokenized assets," "non-custodial wallet," "agentic finance."** It must **never** say:
 "deposits," "FDIC," "bank account," "your bank," or promise investment returns.
 
 **What we CANNOT do at launch (Phase A):** hold customer USD or crypto, run an exchange/order book as
 intermediary, issue and sell securities to the public, or move money between users as the middleman.
-Those are Phases 17–20 (`GOEMAN-PLAN.md`), gated on the **Corp B/C** ramp.
+Those are Phases 17–20 (`GOEMON-PLAN.md`), gated on the **Corp B/C** ramp.
 
 ---
 
@@ -61,9 +61,9 @@ Run `scripts/launch-gate.sh` for the bundled engineering gate (typecheck, tests,
 | Stage-1 fraud + fraud-engine add-on | ✅ built | graph eval via SantanderAI seam |
 | Internal agent ops + mech-gov | ✅ built | Phase 15; R3 human gate on KYC/compliance; `mechGovService` |
 | Identity Vault (graph features) | ✅ prototype | SQLite edges; Neo4j Aura prod swap |
-| Goeman Pay merchant wedge | ✅ prototype | `/pay` UI + escrow intents; `GOEMAN_PAY_ENABLED` off by default |
+| Goemon Pay merchant wedge | ✅ prototype | `/pay` UI + escrow intents; `GOEMON_PAY_ENABLED` off by default |
 | Admin console + RBAC | ✅ built | compliance surfaces gated |
-| Android wallet | ~ scaffold | `GoemanWalletAndroid/` fast-follow (`WalletScreen.kt`) |
+| Android wallet | ~ scaffold | `GoemonWalletAndroid/` fast-follow (`WalletScreen.kt`) |
 
 ---
 

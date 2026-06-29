@@ -1,5 +1,5 @@
 /**
- * Goeman Starter — teen view (Phase 22.2–22.3): savings, quests, streaks, coach.
+ * Goemon Starter — teen view (Phase 22.2–22.3): savings, quests, streaks, coach.
  */
 import { useEffect, useState } from "react";
 import { userApi, ApiError, newIdempotencyKey, type GamificationState, type StarterCoachDashboard, type StarterSavingsOverview } from "../api/client";
@@ -42,7 +42,7 @@ export function StarterTeen() {
   if (disabled) {
     return (
       <div className="page stack lg">
-        <h1>Goeman Starter</h1>
+        <h1>Goemon Starter</h1>
         <p className="muted">This view is for linked teen accounts. Sign in as a minor or enable Starter in the backend.</p>
       </div>
     );

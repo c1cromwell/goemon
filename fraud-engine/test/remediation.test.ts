@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { freshContext } from "./helpers";
-import { setGoemanClient, type GoemanClient } from "../src/remediation/goemanClient";
+import { setGoemonClient, type GoemonClient } from "../src/remediation/goemonClient";
 import { config } from "../src/config";
 import type { Context } from "../src/context";
 import type { Decision } from "../src/types";
 
-class FakeGoeman implements GoemanClient {
+class FakeGoemon implements GoemonClient {
   freezes: { userId: string; decisionId: string }[] = [];
   unfreezes: { userId: string }[] = [];
   flags: { userId: string }[] = [];
@@ -34,17 +34,17 @@ function freezeDecision(): Decision {
   };
 }
 
-describe("remediation — async callback into Goeman", () => {
+describe("remediation — async callback into Goemon", () => {
   let ctx: Context;
-  let fake: FakeGoeman;
+  let fake: FakeGoemon;
 
   beforeEach(async () => {
     ({ ctx } = await freshContext());
-    fake = new FakeGoeman();
-    setGoemanClient(fake);
+    fake = new FakeGoemon();
+    setGoemonClient(fake);
   });
   afterEach(() => {
-    setGoemanClient(null);
+    setGoemonClient(null);
     (config as { FRAUD_AUTO_REMEDIATE: boolean }).FRAUD_AUTO_REMEDIATE = true;
   });
 
@@ -70,7 +70,7 @@ describe("remediation — async callback into Goeman", () => {
     expect(await ctx.cases.list()).toHaveLength(0);
   });
 
-  it("does not remediate sync-mode decisions (Goeman already gated those)", async () => {
+  it("does not remediate sync-mode decisions (Goemon already gated those)", async () => {
     await ctx.remediation.handle({ ...freezeDecision(), mode: "score" });
     expect(fake.freezes).toHaveLength(0);
   });

@@ -30,7 +30,7 @@ custodial APY. Per `REVENUE-MODEL.md` §6 and `COMPETITIVE-X-MONEY.md` §5, this
 dollars should earn") **without** marketing a custodial yield (the CLARITY-Act trap that threatens X).
 
 **Why it wins the comparison:** X holds your money and pays a yield it can stop/freeze and that may be
-regulated away; Goeman gives you an **asset you own** whose yield is an automatic, ledger-auditable
+regulated away; Goemon gives you an **asset you own** whose yield is an automatic, ledger-auditable
 distribution. "Own a yield-bearing asset, not a balance someone can freeze."
 
 **Maximum reuse:** the yield engine already exists — `corporateActionService.distributeDividend`
@@ -69,7 +69,7 @@ weakness (trust + deplatforming). `selfCustodyService` + `/api/self-custody`:
   disclosed: can be held only for a fraud review under due process — *not* deplatforming), with the
   guarantee statements.
 - **attestation** — the report wrapped in an **issuer-signed, JWKS-verifiable JWT** (`signIssuerJwt`) so
-  anyone can verify Goeman's statement against `/.well-known/jwks.json`.
+  anyone can verify Goemon's statement against `/.well-known/jwks.json`.
 - **export** — the portable **"right to exit"** manifest (wallet DID + credential + Hedera account +
   holdings + instructions), signed — proving there's no lock-in.
 
@@ -79,7 +79,7 @@ toggle). Reuses `vcService`, `hederaService`, `ledgerService`, `accountHoldServi
 
 ## Feature 3 — P2P money requests on the native rail (built)
 
-**What:** "request $X from @user" (or an open request link), settled on **Goeman's own rail** — the
+**What:** "request $X from @user" (or an open request link), settled on **Goemon's own rail** — the
 existing `executeTransfer` path (double-entry ledger / USDC on Hedera), idempotent at the ledger. **No
 Visa, no partner bank, no escrow:** the payer holds their funds until they choose to fulfill, then it
 settles as a direct peer transfer. The differentiator vs. X Money's P2P: instant, **non-custodial, your
@@ -91,7 +91,7 @@ fulfill** and only as a balanced, idempotent journal; directed requests pay only
 Migration `037_payment_requests.sql`; `payment-requests.test.ts` (5): fulfill settles, idempotent (pays
 once), directed-payer guard, decline/cancel move no money, self-request + insufficient-funds rejected.
 
-> **North Star (recorded):** long-term, Goeman should be **its own network rail for all payments / cards /
+> **North Star (recorded):** long-term, Goemon should be **its own network rail for all payments / cards /
 > money movement — minimal partners, self-contained.** Treat Visa/BaaS/Circle as *bridges*, migrate
 > volume to the native USDC-on-Hedera + ledger + escrow + agent-auth rail (the Corp C "own the rails"
 > phase). Every money-movement feature should note its partner dependency and its path to the native rail.
@@ -114,7 +114,7 @@ card authorizes on the native rail.
 
 > **Per the North Star, the Visa card is a BRIDGE, not the destination** — legacy acceptance on day one
 > (Corp B, BIN-sponsor + PCI ⚖), while every transaction that *can* settle on the native rail (USDC
-> funding, native P2P, Goeman Pay) does — migrating volume off Visa over time toward the self-contained rail.
+> funding, native P2P, Goemon Pay) does — migrating volume off Visa over time toward the self-contained rail.
 
 ## Feature 5 — Collector/creator drops (built)
 
@@ -135,7 +135,7 @@ and the ledger primitives (same pattern as the treasury).
 ## Feature 6 — Cross-border send / remittance (built)
 
 **What:** send money to **another user in a different currency/corridor** (e.g. USD/USDC → EURC), settled
-on **Goeman's own rail** — no Visa, no US-only constraint. The global, **dollar-access** audience X Money
+on **Goemon's own rail** — no Visa, no US-only constraint. The global, **dollar-access** audience X Money
 (US-centric via Visa/Cross River/FDIC) **can't serve**. One balanced journal across two currency groups
 joined by the `fx_settlement` treasury, with the FX spread as an explicit fee; idempotent at the ledger.
 

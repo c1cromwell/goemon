@@ -18,7 +18,7 @@ the day **Corp B** unlocks it, then roll out the rest of the suite wave-by-wave 
 
 **Lead with one thing: a "graded slabs" marketplace** — PSA/BGS/SGC/CGC-graded **sports cards and Pokémon
 / TCG** under a single brand. The PRD already picked this wedge ("collectibles have proven consumer pull";
-`goeman_prdv1/01`), and it's the **lowest-securities-risk** real-world asset (a whole graded card is a
+`goemon_prdv1/01`), and it's the **lowest-securities-risk** real-world asset (a whole graded card is a
 *good*, not an investment contract — see §3), which is exactly why it's the safe first surface.
 
 **The honest sequencing — the spine of this plan:**
@@ -161,7 +161,7 @@ its gate clears is how fintechs get a cease-and-desist — so the waves are stri
 | 3 | **Debit cards** | Corp B · `CARDS_ENABLED` (BIN-sponsor + PCI) ⚖ | "Spend from your collection's value." | Holders → daily spend |
 | 4 | **Bank rails / ACH (deposit-withdraw)** | Corp B · `BANK_RAILS_ENABLED` (BaaS + MSB) ⚖ | "Move real dollars in and out." | Everyone → primary-account behavior |
 | 5 | **FX / cross-border** | Corp B/C · `FX_*ENABLED` (MT posture) ⚖ | "Buy from / sell to collectors worldwide." | Sellers → global liquidity |
-| 6 | **Goeman Pay (stablecoin rail)** | Corp B/C · `GOEMAN_PAY_ENABLED` ⚖ | "Pay any merchant, agent-native." | Power users → payments |
+| 6 | **Goemon Pay (stablecoin rail)** | Corp B/C · `GOEMON_PAY_ENABLED` ⚖ | "Pay any merchant, agent-native." | Power users → payments |
 | 7 | **RWA: real estate / treasuries / equities** | Corp B/C · `EQUITIES_ENABLED` + counsel/TA/ATS ⚖ | "Own everything else, same tap." | Broaden the marketplace surface |
 | 8 | **Starter (teen / family)** | Corp B/C · `TEEN_ENABLED` (COPPA, custodial) ⚖ | "Start your kid's collection + savings." | Parents in the collector base |
 
@@ -217,5 +217,5 @@ of the suite into a base that already trusts you, one compliance unlock at a tim
 
 *Companion documents: `LAUNCH-READINESS.md` (gate scorecard + the prod-fatal switches that gate each wave),
 `CORPORATE-STRUCTURE.md` (Corp A/B/C), `GO-LIVE-PLAN.md` §7 (guerrilla channels), `PRODUCTION-STRATEGY.md`
-§8 (positioning), `goeman_prdv1/01`,`/05` (vision + marketplace). Product surface: `sellerCollectibleService`,
+§8 (positioning), `goemon_prdv1/01`,`/05` (vision + marketplace). Product surface: `sellerCollectibleService`,
 `collectiblePurchaseService`, `marketplaceService`, `collectiblesProvider`.*

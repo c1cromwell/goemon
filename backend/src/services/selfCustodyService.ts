@@ -2,7 +2,7 @@
  * X-Money response F2 — self-custody & portability (the anti-deplatforming proof).
  *
  * X Money's #1 weakness (per Shevlin) is trust — and X has a documented pattern of
- * freezing/suspending accounts. This makes Goeman's non-custodial guarantee TANGIBLE
+ * freezing/suspending accounts. This makes Goemon's non-custodial guarantee TANGIBLE
  * and verifiable, honestly:
  *   - the server NEVER holds the wallet's VP signing key (it lives in the Secure
  *     Enclave / device) — so no platform can sign or seize on your behalf;
@@ -12,7 +12,7 @@
  *     and you can always EXPORT and exit with what's yours.
  *
  * The report is wrapped in an issuer-signed attestation (RS256, JWKS-verifiable) so
- * the user — or anyone — can verify Goeman's statement independently. No money moves.
+ * the user — or anyone — can verify Goemon's statement independently. No money moves.
  */
 
 import { config } from "../config";
@@ -81,8 +81,8 @@ export async function getSelfCustodyReport(userId: string): Promise<SelfCustodyR
     },
     frozen,
     guarantee: [
-      "Goeman never holds your wallet's signing key — it lives on your device (Secure Enclave). No one at Goeman can sign or move funds on your behalf.",
-      "Your on-chain / self-custodied assets are yours and cannot be frozen or seized by Goeman.",
+      "Goemon never holds your wallet's signing key — it lives on your device (Secure Enclave). No one at Goemon can sign or move funds on your behalf.",
+      "Your on-chain / self-custodied assets are yours and cannot be frozen or seized by Goemon.",
       "You can export your identity, keys reference, and holdings at any time and leave — there is no lock-in.",
     ],
     generatedAt: new Date().toISOString(),
@@ -111,7 +111,7 @@ export interface ExportManifest {
 
 /**
  * The "right to exit" — a portable, issuer-signed manifest of everything the user
- * needs to control their assets independently of Goeman. Proves there is no lock-in.
+ * needs to control their assets independently of Goemon. Proves there is no lock-in.
  */
 export async function getExportManifest(userId: string): Promise<{ manifest: ExportManifest; signedManifestJwt: string }> {
   const cred = await getCredential(userId);
@@ -127,9 +127,9 @@ export async function getExportManifest(userId: string): Promise<{ manifest: Exp
       : null,
     holdings: portfolio,
     instructions: [
-      "Your wallet signing key is on your device (Secure Enclave) — back it up there; Goeman cannot recover it for you (by design).",
+      "Your wallet signing key is on your device (Secure Enclave) — back it up there; Goemon cannot recover it for you (by design).",
       "Your Hedera account id + public key let you view and control on-chain assets via any Hedera-compatible wallet/explorer.",
-      "This manifest is signed by Goeman's issuer key and verifiable against /.well-known/jwks.json.",
+      "This manifest is signed by Goemon's issuer key and verifiable against /.well-known/jwks.json.",
     ],
     exportedAt: new Date().toISOString(),
   };

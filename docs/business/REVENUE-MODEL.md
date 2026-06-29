@@ -1,6 +1,6 @@
 # Revenue Model — full product suite, phased to the compliance ramp
 
-How Goeman makes money, product by product, gated by the phase that legally unlocks it. Growth-first:
+How Goemon makes money, product by product, gated by the phase that legally unlocks it. Growth-first:
 the collectibles wedge **acquires**, the wallet **retains**, the stack **monetizes** as you cross-sell
 into a trusted base — and the agent-operated cost structure lets you price below incumbents.
 
@@ -26,7 +26,7 @@ attaches to a base that already trusts you. Three structural advantages:
   an RWA is worth multiples of a single-product user — and each attach is a *new revenue line*, not a
   discount.
 - **The agent-operated cost structure** (PRD target **<$0.50/MAU** operating cost) is a durable **margin**
-  advantage: Goeman can undercut incumbents on price and still make money, because the back office is
+  advantage: Goemon can undercut incumbents on price and still make money, because the back office is
   agents, not headcount.
 
 **The honest spine — revenue follows the licence, not the code:**
@@ -52,7 +52,7 @@ goes transactional, consistent with the GTM "audience-now, launch-at-Corp-B" tim
 
 | Line | Mechanism | Benchmark | Gate |
 |---|---|---|---|
-| **Goeman Plus/Pro subscription** | Monthly collector tier (price alerts, agent discovery, portfolio view, priority authentication) | ~$5–15/mo (PRD plans tiers; free tier at launch) | Phase A ✅ |
+| **Goemon Plus/Pro subscription** | Monthly collector tier (price alerts, agent discovery, portfolio view, priority authentication) | ~$5–15/mo (PRD plans tiers; free tier at launch) | Phase A ✅ |
 | **Tokenization / authentication fee** | Flat per-slab fee to mint provenance (a software service, not a sale) | ~$1–5 / slab | Phase A ✅ |
 | **Featured listing / promotion** | Seller pays to boost placement (software) | flat or tiered | Phase A ✅ |
 | **Provenance / data services** | API/report access to authenticated history | per-call / tier | Phase A ✅ |
@@ -70,10 +70,10 @@ goes transactional, consistent with the GTM "audience-now, launch-at-Corp-B" tim
 | **FX spread** | Markup on currency conversion (the built `FX_SPREAD_BPS` ~50bps + cross-border markup) | **~0.5–1.5%** | `FX_ENABLED` / `FX_SETTLEMENT_ENABLED` ⚖ |
 | **Instant/expedited + ACH/wire fees** | Optional fee for instant withdrawal; wire fees | $ flat per txn | `BANK_RAILS_ENABLED` ⚖ |
 | **Bill-pay** | Small fee or float on scheduled payments | $ flat / float | `BILLPAY_ENABLED` ⚖ |
-| **Goeman Pay** | **Zero rail fee** (the wedge — do **not** add interchange) → monetize via **merchant SaaS / premium** | $/merchant/mo | `GOEMAN_PAY_ENABLED` ⚖ |
+| **Goemon Pay** | **Zero rail fee** (the wedge — do **not** add interchange) → monetize via **merchant SaaS / premium** | $/merchant/mo | `GOEMON_PAY_ENABLED` ⚖ |
 
 > The marketplace take rate is the flagship Phase-B line; interchange + NIM + FX are the "boring bank"
-> lines that turn a marketplace user into a primary-account ARPU. **Goeman Pay stays free** — it's an
+> lines that turn a marketplace user into a primary-account ARPU. **Goemon Pay stays free** — it's an
 > acquisition/retention rail, not a revenue line (the wedge from `PAYMENT-NETWORK-STRATEGY.md`).
 
 ### Phase C — licensed: own MTLs, broker-dealer/ATS, transfer agent (compounding)
@@ -103,7 +103,7 @@ Collector only (Phase A):        subscription (a few $)                         
 - **Attach rate is the master lever** — the same MAU is worth 3–5× more when card + balance + FX + RWA
   attach. Growth-first spend should buy *attach*, not just signups.
 - **Margin moat:** with operating cost targeted **<$0.50/MAU** (agents, not headcount; PRD), even thin
-  per-line take rates clear healthy contribution margin — the structural reason Goeman can price under
+  per-line take rates clear healthy contribution margin — the structural reason Goemon can price under
   Robinhood/Chime/eBay and still profit.
 
 ---
@@ -139,7 +139,7 @@ Every line is gated by a prod-fatal switch (`LAUNCH-READINESS.md` §3) and a Cor
 | NIM / float, ACH/wire/instant | `BANK_RAILS_ENABLED` | B ⚖ |
 | FX spread | `FX_ENABLED` / `FX_SETTLEMENT_ENABLED` | B/C ⚖ |
 | Bill-pay | `BILLPAY_ENABLED` | B ⚖ |
-| Goeman Pay (merchant SaaS only) | `GOEMAN_PAY_ENABLED` | B/C ⚖ |
+| Goemon Pay (merchant SaaS only) | `GOEMON_PAY_ENABLED` | B/C ⚖ |
 | Brokerage | `TRADING_ENABLED` | C ⚖ |
 | RWA / equities | `EQUITIES_ENABLED` | B/C ⚖ |
 | Teen/family | `TEEN_ENABLED` | B/C ⚖ |
@@ -168,7 +168,7 @@ Three tempting lines that **conflict with the brand and/or carry regulatory risk
 ## 7. Margin moat & risks
 
 **The moat is margin, not a single line.** The agent-operated back office (support/compliance/ops at
-<$0.50/MAU) lets Goeman run thin take rates profitably — the durable advantage incumbents bolt on later
+<$0.50/MAU) lets Goemon run thin take rates profitably — the durable advantage incumbents bolt on later
 and can't match on cost structure.
 
 | Risk | Mitigation |
@@ -191,5 +191,5 @@ time; and out-margin everyone because the back office is agents, not headcount.*
 
 *Companion documents: `GTM-COLLECTIBLES-LAUNCH.md` (the marketing waves these revenue lines attach to),
 `LAUNCH-READINESS.md` §3 (the prod-fatal switches gating each line), `CORPORATE-STRUCTURE.md` (Corp A/B/C),
-`RAILS-CURRENCY-STRATEGY.md` (the FX spread), `PAYMENT-NETWORK-STRATEGY.md` (the zero-interchange Goeman Pay
-wedge), `goeman_prdv1/00`,`/02` (subscription tiers + fee-structure positioning).*
+`RAILS-CURRENCY-STRATEGY.md` (the FX spread), `PAYMENT-NETWORK-STRATEGY.md` (the zero-interchange Goemon Pay
+wedge), `goemon_prdv1/00`,`/02` (subscription tiers + fee-structure positioning).*

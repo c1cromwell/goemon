@@ -21,7 +21,7 @@ beforeAll(async () => {
   await bootstrapSystemAccounts();
   (config as { X401_ENABLED: boolean }).X401_ENABLED = true;
   (config as { X402_ENABLED: boolean }).X402_ENABLED = true;
-  (config as { GOEMAN_PAY_ENABLED: boolean }).GOEMAN_PAY_ENABLED = true;
+  (config as { GOEMON_PAY_ENABLED: boolean }).GOEMON_PAY_ENABLED = true;
   (config as { CHECKOUT_VP_ENABLED: boolean }).CHECKOUT_VP_ENABLED = true;
   (config as { BORDERLESS_SAVINGS_ENABLED: boolean }).BORDERLESS_SAVINGS_ENABLED = true;
 });

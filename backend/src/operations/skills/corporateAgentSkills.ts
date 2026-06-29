@@ -1,7 +1,7 @@
 /**
  * M5 — Corporate agent fleet as operations runner skills.
  *
- * New workflows: Goeman Brain (router), CFO, CLO, CISO, CPO.
+ * New workflows: Goemon Brain (router), CFO, CLO, CISO, CPO.
  * CMO / CRO / COO reuse existing skills — see corporateAgentCatalog.ts.
  */
 
@@ -264,10 +264,10 @@ export const cpoLaunchWorkflow: WorkflowDef<{ product: string; version: string }
   },
 };
 
-// --- Goeman Brain (orchestrator) ---------------------------------------------
+// --- Goemon Brain (orchestrator) ---------------------------------------------
 
-export const goemanBrainSkill = defineSkill({
-  name: "goeman-brain",
+export const goemonBrainSkill = defineSkill({
+  name: "goemon-brain",
   version: "1.0.0",
   tools: {
     count_pending_gates: {
@@ -293,12 +293,12 @@ export const goemanBrainSkill = defineSkill({
 interface BrainCtx { intent: string; payload: Record<string, unknown> }
 interface BrainRec extends ReturnType<typeof resolveCorporateIntent> {}
 
-export const goemanBrainRouteWorkflow: WorkflowDef<BrainCtx, BrainRec> = {
-  skill: "goeman-brain-route",
+export const goemonBrainRouteWorkflow: WorkflowDef<BrainCtx, BrainRec> = {
+  skill: "goemon-brain-route",
   version: "1.0.0",
   supervision: "human_led",
   scopes: ["brain:read"],
-  skillDef: goemanBrainSkill,
+  skillDef: goemonBrainSkill,
   async gather(input) {
     const i = (input ?? {}) as { intent?: string; payload?: Record<string, unknown> };
     if (!i.intent?.trim()) throw new Error("intent required");
@@ -322,7 +322,7 @@ export const goemanBrainRouteWorkflow: WorkflowDef<BrainCtx, BrainRec> = {
     if (!def) throw new Error(`No workflow registered for ${rec.targetSkill}`);
     const child = await runOperation(def, rec.targetInput);
     await logAudit({
-      action: "goeman_brain.routed",
+      action: "goemon_brain.routed",
       resource: review.workflow_run,
       details: {
         actorAdminId: actor.adminId,
@@ -338,4 +338,4 @@ registerWorkflow(cfoReportWorkflow as WorkflowDef);
 registerWorkflow(cloSignoffWorkflow as WorkflowDef);
 registerWorkflow(cisoPostureWorkflow as WorkflowDef);
 registerWorkflow(cpoLaunchWorkflow as WorkflowDef);
-registerWorkflow(goemanBrainRouteWorkflow as WorkflowDef);
+registerWorkflow(goemonBrainRouteWorkflow as WorkflowDef);

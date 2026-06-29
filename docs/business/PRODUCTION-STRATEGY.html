@@ -2,8 +2,8 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PRODUCTION-STRATEGY — Goeman Global Finance</title>
-<style>/* Goeman Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+<title>PRODUCTION-STRATEGY — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
    single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
 
 :root {
@@ -160,14 +160,14 @@ tbody tr:nth-child(even) td { background: var(--line-2); }
   <div class="mark">B</div>
   <h1>PRODUCTION-STRATEGY</h1>
   
-  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
   <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
 </section>
 <div class="wrap">
   <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-cloud-recommendation-cost-envelope">1. Cloud — recommendation &amp; cost envelope</a></li><li class="lvl-3"><a href="#stage-0-lean-launch-recommended-now">Stage 0 — lean launch (recommended now)</a></li><li class="lvl-3"><a href="#stage-1-consolidate-on-one-hyperscaler-when-trafficcompliance-demands">Stage 1 — consolidate on one hyperscaler (when traffic/compliance demands)</a></li><li class="lvl-3"><a href="#rough-cost-envelope-by-scale">Rough cost envelope by scale</a></li><li class="lvl-2"><a href="#2-reference-production-architecture">2. Reference production architecture</a></li><li class="lvl-2"><a href="#3-the-automation-fabric-agents-mcp-skills-to-run-the-bank">3. The automation fabric — agents, MCP &amp; skills to run the bank</a></li><li class="lvl-3"><a href="#two-planes">Two planes</a></li><li class="lvl-3"><a href="#internal-operating-agent-catalog">Internal operating-agent catalog</a></li><li class="lvl-3"><a href="#skills-claude-agent-sdk-mcp-tools">Skills (Claude Agent SDK / MCP tools)</a></li><li class="lvl-2"><a href="#4-identity-vault-a-neo4j-graph-of-users-associations">4. Identity Vault — a Neo4j graph of users &amp; associations</a></li><li class="lvl-2"><a href="#5-fraud-detection-best-of-breed-built-on-your-orchestration-engine">5. Fraud detection — best-of-breed, built on your orchestration engine</a></li><li class="lvl-2"><a href="#6-constellation-network-digital-evidence-a-later-phase-evaluation">6. Constellation Network &quot;Digital Evidence&quot; — a later-phase evaluation</a></li><li class="lvl-2"><a href="#7-mobile-launch-ios-first">7. Mobile — launch iOS first</a></li><li class="lvl-2"><a href="#8-marketing-go-to-market">8. Marketing &amp; go-to-market</a></li><li class="lvl-2"><a href="#9-tech-gaps-to-close-additive-checklist">9. Tech gaps to close (additive checklist)</a></li><li class="lvl-2"><a href="#10-phased-production-roadmap-aligned-to-the-compliance-ramp">10. Phased production roadmap (aligned to the compliance ramp)</a></li></ol></nav>
   <main class="content">
 <h1 id="production-deployment-technology-strategy">Production Deployment &amp; Technology Strategy</h1>
-<p>How to ship Goeman Global Finance to real users cheaply, run it as an AI-operated bank, and harden it into a
+<p>How to ship Goemon Global Finance to real users cheaply, run it as an AI-operated bank, and harden it into a
 fraud-resistant, compliance-ready platform — grounded in what&#39;s already built in the repo (Hedera
 settlement, the double-entry ledger, DID/VC + OID4VP + MCP, the risk-adaptive onboarding orchestrator,
 and the Phase 15 internal-agent-ops design).</p>
@@ -395,7 +395,7 @@ regulator, or infra tools; a deterministic runner executes and a human gates.</l
 </tbody></table>
 <h3 id="skills-claude-agent-sdk-mcp-tools">Skills (Claude Agent SDK / MCP tools)</h3>
 <p>Mirror the repo&#39;s own dogfooding pattern — it already ships operational skills (<code>e2e-validator</code>,
-<code>goeman-mcp-test-harness</code>) that drive the system as a real client. Extend that idea to <strong>ops skills</strong>
+<code>goemon-mcp-test-harness</code>) that drive the system as a real client. Extend that idea to <strong>ops skills</strong>
 (reconciliation report, compliance-case summarizer, incident triage, release validator) so routine
 operations and CI are agent-automatable, while every state change still flows through the
 deterministic runner with its audit trail.</p>

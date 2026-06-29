@@ -2,8 +2,8 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RAILS-CURRENCY-STRATEGY — Goeman Global Finance</title>
-<style>/* Goeman Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+<title>RAILS-CURRENCY-STRATEGY — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
    single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
 
 :root {
@@ -160,14 +160,14 @@ tbody tr:nth-child(even) td { background: var(--line-2); }
   <div class="mark">B</div>
   <h1>RAILS-CURRENCY-STRATEGY</h1>
   
-  <div class="meta">Goeman Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 29, 2026</b></div>
   <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
 </section>
 <div class="wrap">
   <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-the-thesis-read-this-first">1. The thesis (read this first)</a></li><li class="lvl-2"><a href="#2-instant-payments">2. Instant payments</a></li><li class="lvl-2"><a href="#3-cross-border-stablecoin-rails-the-strategic-wedge">3. Cross-border stablecoin rails (the strategic wedge)</a></li><li class="lvl-2"><a href="#4-multi-currency-fx">4. Multi-currency &amp; FX</a></li><li class="lvl-2"><a href="#5-other-items-to-think-about-the-gaps-you-didnt-ask-about">5. Other items to think about (the gaps you didn&#39;t ask about)</a></li><li class="lvl-2"><a href="#6-whats-built-registry-fx-quote-seam-cross-currency-settlement">6. What&#39;s built: registry + FX quote seam + cross-currency settlement</a></li><li class="lvl-3"><a href="#61-registry-quote-read-only-no-ledger-write">6.1 Registry + quote (read-only; no ledger write)</a></li><li class="lvl-3"><a href="#62-cross-currency-settlement-moves-money-deferred-then-built">6.2 Cross-currency settlement (moves money; deferred-then-built)</a></li><li class="lvl-2"><a href="#7-sequencing-onto-the-compliance-ramp">7. Sequencing onto the compliance ramp</a></li></ol></nav>
   <main class="content">
 <h1 id="rails-currency-instant-payments-strategy">Rails, Currency &amp; Instant-Payments Strategy</h1>
-<p>What Goeman should think about next on <strong>instant payments</strong>, <strong>cross-border stablecoin rails</strong>, and
+<p>What Goemon should think about next on <strong>instant payments</strong>, <strong>cross-border stablecoin rails</strong>, and
 <strong>other currencies</strong> — grounded in what&#39;s already built, with the honest gaps and the licensing posture.</p>
 <blockquote>
 <p><strong>How to read this.</strong> Companion to <code>PAYMENT-NETWORK-STRATEGY.md</code> (the card-brand-vs-network analysis)
@@ -177,7 +177,7 @@ This is strategy, not legal or investment advice.</p>
 </blockquote>
 <hr>
 <h2 id="1-the-thesis-read-this-first">1. The thesis (read this first)</h2>
-<p><strong>The instant, cross-border rail mostly already exists.</strong> Goeman settles in <strong>USDC on Hedera</strong> — ~3s
+<p><strong>The instant, cross-border rail mostly already exists.</strong> Goemon settles in <strong>USDC on Hedera</strong> — ~3s
 finality, fractions-of-a-cent fees, no interchange, no chargeback reversals — wrapped in escrow for
 disputes and authorizable by an AI agent under a scoped, user-signed grant. That <em>is</em> an instant,
 global, programmable payment rail. The work that remains is <strong>not the core</strong> — it&#39;s at two edges:</p>
@@ -205,7 +205,7 @@ enabler for everything else.</p>
 <p><strong>What&#39;s instant today (DO NOW — already shipped):</strong></p>
 <ul>
 <li><strong>On-chain USDC</strong> settles in ~3s via <code>hederaService</code> (build → sign → submit, non-custodial).</li>
-<li><strong>P2P</strong> is built; <strong>Goeman Pay</strong> (Phase 21) settles merchant payments on the same rail, escrow-protected.</li>
+<li><strong>P2P</strong> is built; <strong>Goemon Pay</strong> (Phase 21) settles merchant payments on the same rail, escrow-protected.</li>
 </ul>
 <p><strong>What is <em>not</em> instant (DEFER → Corp B):</strong></p>
 <ul>
@@ -222,7 +222,7 @@ with simulated + <code>tch_rtp</code>/<code>fednow</code> stubs) so the integrat
 as every other seam. ⚖</p>
 <hr>
 <h2 id="3-cross-border-stablecoin-rails-the-strategic-wedge">3. Cross-border stablecoin rails (the strategic wedge)</h2>
-<p>This is where Goeman is genuinely differentiated and ~70% built. <strong>Remittance + B2B payouts settled in
+<p>This is where Goemon is genuinely differentiated and ~70% built. <strong>Remittance + B2B payouts settled in
 USDC</strong>, with local fiat on/off-ramps per corridor.</p>
 <p><strong>Reuses what exists:</strong></p>
 <ul>
@@ -424,7 +424,7 @@ You spend on FX, instant-fiat edges, and corridor licensing only as partners and
 the same lean-now / licensed-later logic as the corporate ramp.</p>
 <hr>
 <p><em>Companion documents: <code>PAYMENT-NETWORK-STRATEGY.md</code> (card brand vs. network; the stablecoin-rail wedge),
-<code>CORPORATE-STRUCTURE.md</code> (the Corp A/B/C ramp), <code>GOEMAN-PLAN.md</code> Phases 19–21 (bank rails, Goeman Pay).
+<code>CORPORATE-STRUCTURE.md</code> (the Corp A/B/C ramp), <code>GOEMON-PLAN.md</code> Phases 19–21 (bank rails, Goemon Pay).
 The registry + FX quote seam and cross-currency settlement referenced in §6 are implemented
 (<code>backend/src/services/currencyRegistry.ts</code>, <code>fxRateService.ts</code>, <code>fxSettlementService.ts</code>, <code>routes/fx.ts</code>,
 <code>test/fx.test.ts</code>; frontend <code>pages/Fx.tsx</code>).</em></p>

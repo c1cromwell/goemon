@@ -1,7 +1,7 @@
 /**
  * X-Money response F3 — non-custodial P2P money requests (request-to-pay).
  *
- * "Request $X from @user" (or an open request link), settled on GOEMAN'S OWN RAIL:
+ * "Request $X from @user" (or an open request link), settled on GOEMON'S OWN RAIL:
  * the existing transfer path (executeTransfer → the double-entry ledger / USDC on
  * Hedera), idempotent at the ledger. No Visa, no partner bank, no escrow — the payer
  * holds their funds until they choose to fulfill, then it settles as a direct peer

@@ -1,5 +1,5 @@
 /**
- * Phase 21 Stage 1 — Goeman Pay routes (the native rail's customer + merchant surface).
+ * Phase 21 Stage 1 — Goemon Pay routes (the native rail's customer + merchant surface).
  *
  * POST   /api/pay/merchants            — register a merchant (Tier 2; you are the settlement account)
  * GET    /api/pay/merchants            — your merchants
@@ -13,7 +13,7 @@
  * POST   /api/pay/intents/:id/cancel   — merchant cancels an unpaid intent
  *
  * Money moves are balanced, idempotent ledger journals via the escrow layer
- * (paymentService → escrowService). Gated by the GOEMAN_PAY_ENABLED kill-switch
+ * (paymentService → escrowService). Gated by the GOEMON_PAY_ENABLED kill-switch
  * inside the service (new intents/payments only — held funds always resolvable).
  */
 

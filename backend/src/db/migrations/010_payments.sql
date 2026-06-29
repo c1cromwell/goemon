@@ -1,8 +1,8 @@
--- Phase 21 Stage 1 — "Goeman Pay": the native stablecoin-settled payment rail
+-- Phase 21 Stage 1 — "Goemon Pay": the native stablecoin-settled payment rail
 -- (docs/business/PAYMENT-NETWORK-STRATEGY.md §4/§8).
 --
 -- Acceptance side: `merchants` are directly-integrated counterparties owned by an
--- Goeman user (the settlement account — everything stays on the existing ledger and
+-- Goemon user (the settlement account — everything stays on the existing ledger and
 -- USDC/Hedera rails). A merchant requests money with a `payment_intent`; the payer
 -- (or an authorized agent, via the pay:merchant MCP scope) pays it.
 --

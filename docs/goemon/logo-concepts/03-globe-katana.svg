@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Goemon logo concept 3  globe and katana arc">
+  <rect width="120" height="120" fill="#0b0d10"/>
+  <ellipse cx="60" cy="54" rx="32" ry="32" fill="none" stroke="#2dd4a7" stroke-width="2"/>
+  <ellipse cx="60" cy="54" rx="32" ry="12" fill="none" stroke="#2dd4a7" stroke-width="1" opacity="0.5"/>
+  <line x1="60" y1="22" x2="60" y2="86" stroke="#2dd4a7" stroke-width="1" opacity="0.5"/>
+  <path d="M 28 54 Q 60 18 92 54" fill="none" stroke="#2dd4a7" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="92" cy="54" r="3" fill="#2dd4a7"/>
+  <text x="60" y="104" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" letter-spacing="0.15em" fill="#6b7480">GLOBAL FINANCE</text>
+</svg>

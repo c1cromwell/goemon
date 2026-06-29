@@ -2,7 +2,7 @@
  * Phase 18.6 — EquityIssuer seam (the swappable backing/redemption provider).
  *
  * A 1:1-backed tokenized equity token represents a REAL share held 1:1 by an issuer —
- * explicitly not a derivative or IOU. Goeman is the on-chain wallet + compliance +
+ * explicitly not a derivative or IOU. Goemon is the on-chain wallet + compliance +
  * distribution layer; the issuer custodies the shares, pays dividends, and settles
  * redemptions. EQUITY_ISSUER selects the provider (same provider-seam pattern as
  * keyVaultService / signerService):
@@ -11,7 +11,7 @@
  *     backing attestation and settles redemptions instantly (issuer cash account).
  *   - "dinari" / "firstparty" — production swaps (NOT_IMPLEMENTED stubs). v1 distributes a
  *     regulated 1:1 issuer (Dinari dShares: SEC-registered transfer agent, on-chain
- *     redemption, dividend pass-through); v2 is first-party issuance (Goeman custodies via a
+ *     redemption, dividend pass-through); v2 is first-party issuance (Goemon custodies via a
  *     partner + transfer agent + ATS). See docs/PHASE-18.6-TOKENIZED-EQUITIES.md.
  */
 

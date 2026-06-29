@@ -1,7 +1,7 @@
 -- X-Money response F6 — cross-border send (remittance) on the native rail.
 --
 -- Send money to another user in a DIFFERENT currency/corridor (e.g. USD/USDC ->
--- EURC), settled on Goeman's own rail: ONE balanced journal across two currency
+-- EURC), settled on Goemon's own rail: ONE balanced journal across two currency
 -- groups joined by the fx_settlement treasury, with the FX spread as a fee. The
 -- global, dollar-access audience X Money (US-only via Visa/Cross River/FDIC) can't
 -- serve. Append-only record; the money lives in the ledger (journal_id).
