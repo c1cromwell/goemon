@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Equity Incentive Plan — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Equity Incentive Plan</h1>
+  <p class="sub">Goemon Global Finance, LLC — Unit Option &amp; Profits Interest Plan</p>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 30, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#why-this-is-a-units-profits-interest-plan-not-a-stock-option-plan">Why this is a &quot;Units &amp; Profits Interest&quot; Plan, not a stock option plan</a></li><li class="lvl-2"><a href="#article-1-purpose-and-definitions">ARTICLE 1 — PURPOSE AND DEFINITIONS</a></li><li class="lvl-2"><a href="#article-2-administration">ARTICLE 2 — ADMINISTRATION</a></li><li class="lvl-2"><a href="#article-3-units-subject-to-the-plan">ARTICLE 3 — UNITS SUBJECT TO THE PLAN</a></li><li class="lvl-2"><a href="#article-4-eligibility">ARTICLE 4 — ELIGIBILITY</a></li><li class="lvl-2"><a href="#article-5-profits-interests-primary-instrument">ARTICLE 5 — PROFITS INTERESTS (primary instrument)</a></li><li class="lvl-2"><a href="#article-6-unit-options">ARTICLE 6 — UNIT OPTIONS</a></li><li class="lvl-2"><a href="#article-7-vesting-forfeiture-and-repurchase">ARTICLE 7 — VESTING, FORFEITURE, AND REPURCHASE</a></li><li class="lvl-2"><a href="#article-8-transfer-restrictions-and-joinder">ARTICLE 8 — TRANSFER RESTRICTIONS AND JOINDER</a></li><li class="lvl-2"><a href="#article-9-valuation-fmv-409a">ARTICLE 9 — VALUATION (FMV / 409A)</a></li><li class="lvl-2"><a href="#article-10-securities-law-posture">ARTICLE 10 — SECURITIES-LAW POSTURE</a></li><li class="lvl-2"><a href="#article-11-amendment-suspension-and-term">ARTICLE 11 — AMENDMENT, SUSPENSION, AND TERM</a></li><li class="lvl-2"><a href="#article-12-conversion-to-a-delaware-c-corporation">ARTICLE 12 — CONVERSION TO A DELAWARE C-CORPORATION</a></li><li class="lvl-2"><a href="#article-13-general">ARTICLE 13 — GENERAL</a></li><li class="lvl-2"><a href="#exhibit-a-form-of-profits-interest-award-agreement">EXHIBIT A — Form of Profits Interest Award Agreement</a></li><li class="lvl-2"><a href="#exhibit-b-form-of-unit-option-agreement">EXHIBIT B — Form of Unit Option Agreement</a></li><li class="lvl-2"><a href="#exhibit-c-83b-election-template">EXHIBIT C — § 83(b) Election (template)</a></li></ol></nav>
+  <main class="content">
+<h1 id="equity-incentive-plan-goemon-global-finance-llc">Equity Incentive Plan — Goemon Global Finance, LLC</h1>
+<p><strong>Unit Option &amp; Profits Interest Plan</strong></p>
+<blockquote>
+<p><strong>Counsel must review and customize before granting any award.</strong> This is an attorney-grade
+<strong>scaffold</strong>, not filed legal advice. Bracketed <code>[•]</code> fields must be completed; items
+tagged <strong>⚖ see counsel</strong> require a Wyoming-licensed attorney and/or CPA before reliance.
+Granting equity implicates securities, tax (IRC §§ 83, 409A; Rev. Procs. 93-27 &amp; 2001-43),
+and valuation rules. Do not grant until counsel and a CPA sign off.</p>
+<p>Companion documents: <code>OPERATING-AGREEMENT.md</code> (Article VIII incorporates this Plan),
+<code>INITIAL-RESOLUTIONS.md</code> (Resolution 7 adopts it); strategy
+<code>docs/business/CORPORATE-STRUCTURE.md</code> §4.</p>
+</blockquote>
+<hr>
+<h2 id="why-this-is-a-units-profits-interest-plan-not-a-stock-option-plan">Why this is a &quot;Units &amp; Profits Interest&quot; Plan, not a stock option plan</h2>
+<p>Goemon Global Finance, LLC is a <strong>Wyoming LLC</strong>, not a corporation. An LLC has no &quot;stock,&quot;
+&quot;shares,&quot; or &quot;shareholders&quot;; its equity is <strong>Units</strong> held by <strong>Members</strong>. The functional
+equivalent of a corporate stock-and-options plan in an LLC is delivered through two
+instruments — <strong>profits interests</strong> (the primary, tax-efficient LLC incentive) and <strong>Unit
+options</strong> — both reserved against the Company&#39;s <strong>9% incentive Pool</strong>. On the Company&#39;s planned
+conversion to a Delaware C-corporation (<code>CORPORATE-STRUCTURE.md</code> §2.2), outstanding awards
+convert into the corporate equivalents (ISOs/NSOs/restricted stock) as set out in § 12. This
+Plan is therefore designed to <em>be</em> the stock-and-options program, in the form the entity
+requires today and convertible to the form investors expect tomorrow.</p>
+<hr>
+<h2 id="article-1-purpose-and-definitions">ARTICLE 1 — PURPOSE AND DEFINITIONS</h2>
+<p><strong>1.1 Purpose.</strong> This Equity Incentive Plan (the &quot;<strong>Plan</strong>&quot;) promotes the long-term success of
+Goemon Global Finance, LLC (the &quot;<strong>Company</strong>&quot;) by enabling it to attract, retain, and motivate
+<strong>employees, officers, advisors, contractors, and venture/strategic partners</strong> through awards
+of equity participation in the Company.</p>
+<p><strong>1.2 Definitions.</strong> Capitalized terms not defined here have the meaning given in the Operating
+Agreement. Key terms:</p>
+<ul>
+<li><strong>&quot;Award&quot;</strong> — a Profits Interest or a Unit Option granted under this Plan.</li>
+<li><strong>&quot;Participant&quot;</strong> — a person who holds an Award.</li>
+<li><strong>&quot;Operating Agreement&quot;</strong> — the Company&#39;s Operating Agreement, as amended.</li>
+<li><strong>&quot;Pool&quot;</strong> — the Units reserved under § 3.1.</li>
+<li><strong>&quot;Fair Market Value&quot; / &quot;FMV&quot;</strong> — the value of a Unit determined in good faith by the
+Administrator, supported by a valuation where required (§ 9). <strong>⚖</strong></li>
+<li><strong>&quot;Threshold Amount&quot; (hurdle)</strong> — for a Profits Interest, the Company&#39;s aggregate
+liquidation value on the grant date, such that the Profits Interest shares only in value
+<strong>above</strong> that amount (Rev. Proc. 93-27).</li>
+<li><strong>&quot;Service&quot;</strong> — service to the Company as an employee, officer, advisor, contractor, or
+partner; &quot;<strong>Termination of Service</strong>&quot; is the cessation thereof.</li>
+<li><strong>&quot;Change of Control&quot;</strong> — <code>[• define: a sale of all/substantially all assets, a merger after which the pre-transaction Members hold &lt;50%, or the Delaware C-corp conversion if the Administrator so designates]</code>. <strong>⚖</strong></li>
+</ul>
+<hr>
+<h2 id="article-2-administration">ARTICLE 2 — ADMINISTRATION</h2>
+<p><strong>2.1 Administrator.</strong> The Plan is administered by the <strong>Manager</strong> (Chad Cromwell), or a
+committee the Manager appoints (the &quot;<strong>Administrator</strong>&quot;). Grants of Awards from the Pool are
+delegated to the Manager under Operating Agreement § 8.2 and <strong>do not require further Member
+consent</strong> so long as aggregate Awards do not exceed the Pool.</p>
+<p><strong>2.2 Authority.</strong> The Administrator may: select Participants; determine the type, size,
+Threshold Amount or exercise price, vesting, and terms of Awards; prescribe award-agreement
+forms; interpret the Plan; and adopt rules. Determinations are final and binding, subject to
+the Operating Agreement and applicable law.</p>
+<p><strong>2.3 Reserved Matters.</strong> Increasing the Pool above 900,000 Units (9%), or amending the Plan in
+a manner that requires Member approval under the Operating Agreement, remains a <strong>Reserved
+Matter</strong> requiring unanimous Member consent (Operating Agreement § 5.4).</p>
+<hr>
+<h2 id="article-3-units-subject-to-the-plan">ARTICLE 3 — UNITS SUBJECT TO THE PLAN</h2>
+<p><strong>3.1 Reserved Pool.</strong> The maximum number of Units issuable under the Plan is <strong>900,000 Units
+(9%</strong> of the Company&#39;s 10,000,000 authorized Units), as reserved in the Operating Agreement and
+the Initial Resolutions.</p>
+<p><strong>3.2 Replenishment.</strong> Units subject to Awards that are forfeited, repurchased, expire, or are
+settled without issuance <strong>return to the Pool</strong> and are again available for grant.</p>
+<p><strong>3.3 No fractional Units.</strong> The Administrator may round down or settle fractions in cash. <strong>⚖</strong></p>
+<p><strong>3.4 Adjustments.</strong> On a Unit split, combination, recapitalization, or similar event, the
+Administrator shall equitably adjust the Pool, outstanding Awards, Threshold Amounts, and
+exercise prices.</p>
+<hr>
+<h2 id="article-4-eligibility">ARTICLE 4 — ELIGIBILITY</h2>
+<p>Awards may be granted to any <strong>employee, officer, advisor, consultant, contractor, or
+venture/strategic partner</strong> of the Company whose participation the Administrator determines
+will benefit the Company. The founders&#39; fully vested Units are <strong>not</strong> granted under this Plan
+(they are issued directly under the Operating Agreement); this Plan governs incentive Awards
+from the Pool.</p>
+<hr>
+<h2 id="article-5-profits-interests-primary-instrument">ARTICLE 5 — PROFITS INTERESTS (primary instrument)</h2>
+<p><strong>5.1 Grant.</strong> The Administrator may grant <strong>Profits Interests</strong> entitling the Participant to
+share in the Company&#39;s <strong>future profits and appreciation above the Threshold Amount</strong> fixed on
+the grant date, and to receive Units representing that interest, subject to vesting.</p>
+<p><strong>5.2 Intended tax treatment.</strong> Profits Interests are intended to qualify as such under <strong>Rev.
+Proc. 93-27</strong> and <strong>Rev. Proc. 2001-43</strong>, so that the grant and vesting are <strong>not taxable
+events</strong> to the Participant if requirements are met (including that the interest is not
+substantially certain and predictable income, is held ≥ 2 years, and the Company does not
+deduct the value). The Participant becomes a <strong>partner for tax purposes</strong> and receives a
+Schedule K-1. <strong>⚖ / CPA — strictly observe the Threshold Amount and holding requirements.</strong></p>
+<p><strong>5.3 § 83(b) election.</strong> Because Profits Interests typically vest over time, each Participant
+<strong>should file a protective § 83(b) election within 30 days</strong> of grant. The Company shall
+provide a form (Exhibit C); <strong>the 30-day deadline is jurisdictional and cannot be cured if
+missed.</strong> The Company does not provide tax advice; Participants should consult their own
+advisor. <strong>⚖</strong></p>
+<p><strong>5.4 Capital account / distributions.</strong> A Profits Interest has an initial capital account of
+<strong>$0</strong> and shares only in post-grant appreciation and profits above the Threshold Amount, per
+Operating Agreement Article IV and Schedule B.</p>
+<p><strong>5.5 Voting.</strong> Profits Interests are <strong>non-voting</strong> unless an award agreement expressly grants
+voting Units. Participants execute a <strong>Joinder</strong> (Operating Agreement Exhibit A) and hold
+subject to all transfer, ROFR, and repurchase terms.</p>
+<hr>
+<h2 id="article-6-unit-options">ARTICLE 6 — UNIT OPTIONS</h2>
+<p><strong>6.1 Grant.</strong> The Administrator may grant <strong>Unit Options</strong> — the right to acquire Units at a
+fixed exercise price.</p>
+<p><strong>6.2 Exercise price.</strong> The exercise price per Unit shall be <strong>no less than the FMV</strong> of a Unit
+on the grant date (to avoid IRC § 409A discount-option problems). <strong>⚖ / valuation (§ 9).</strong></p>
+<p><strong>6.3 Term.</strong> No Option is exercisable more than <strong><code>[• 10]</code> years</strong> after grant; the
+Administrator may set a shorter term.</p>
+<p><strong>6.4 Vesting and exercise.</strong> Options vest per § 7 and are exercised by notice and payment of
+the exercise price (cash or, if permitted, net/cashless settlement). On exercise, the
+Participant receives Units, executes a <strong>Joinder</strong>, and holds subject to this Plan and the
+Operating Agreement.</p>
+<p><strong>6.5 Tax.</strong> Options are generally <strong>non-qualified</strong> for an LLC (no ISO treatment is available
+for LLC interests). The Participant recognizes ordinary income on exercise equal to the
+spread, and the holding may create partner-for-tax status. <strong>⚖ / CPA.</strong></p>
+<hr>
+<h2 id="article-7-vesting-forfeiture-and-repurchase">ARTICLE 7 — VESTING, FORFEITURE, AND REPURCHASE</h2>
+<p><strong>7.1 Default vesting.</strong> Unless an award agreement provides otherwise, Awards vest over <strong>four
+(4) years</strong> with a <strong>one (1)-year cliff</strong> (25% on the first anniversary, then <code>[• monthly / quarterly]</code> over the remaining 36 months), contingent on continued Service.</p>
+<p><strong>7.2 Acceleration.</strong> The Administrator may provide for acceleration on a <strong>Change of Control</strong>
+(single- or double-trigger as specified in the award agreement). <strong>⚖</strong></p>
+<p><strong>7.3 Termination of Service.</strong> On Termination of Service:</p>
+<ul>
+<li><strong>Unvested</strong> Awards are <strong>forfeited</strong> (Profits Interests are cancelled; unvested Options
+lapse).</li>
+<li><strong>Vested</strong> Units acquired under the Plan are subject to the Company&#39;s (then the Members&#39;)
+<strong>repurchase right</strong> at the lesser of cost or FMV for a termination for <strong>cause</strong>, and at
+<strong>FMV</strong> otherwise, exercisable within <code>[• 90]</code> days, per the Operating Agreement. <strong>⚖</strong></li>
+<li><strong>Vested Options</strong> must be exercised within <code>[• 90]</code> days of termination (longer for death or
+disability) or they lapse.</li>
+</ul>
+<p><strong>7.4 Clawback.</strong> Awards are subject to any clawback the Administrator adopts for fraud or
+material restatement. <strong>⚖</strong></p>
+<hr>
+<h2 id="article-8-transfer-restrictions-and-joinder">ARTICLE 8 — TRANSFER RESTRICTIONS AND JOINDER</h2>
+<p><strong>8.1 Non-transferable.</strong> Awards may not be transferred except by will or intestacy, or as the
+Administrator permits, and remain subject to the Operating Agreement&#39;s transfer restrictions,
+<strong>Right of First Refusal</strong>, tag-/drag-along, and consent requirements (Operating Agreement
+Article VII).</p>
+<p><strong>8.2 Mandatory Joinder.</strong> No Units are issued under any Award until the Participant executes a
+<strong>Joinder</strong> to the Operating Agreement (Exhibit A thereto), binding the Participant to this
+Agreement.</p>
+<p><strong>8.3 Non-voting default.</strong> Plan Units are <strong>non-voting</strong> unless expressly designated otherwise.</p>
+<hr>
+<h2 id="article-9-valuation-fmv-409a">ARTICLE 9 — VALUATION (FMV / 409A)</h2>
+<p><strong>9.1 Good-faith valuation.</strong> FMV and Threshold Amounts are determined by the Administrator in
+good faith, supported, where appropriate, by an <strong>independent valuation</strong> (an LLC analogue of a
+<strong>409A valuation</strong>) refreshed at least every 12 months or upon a material event. Options priced
+at or above a reasonable, contemporaneously documented FMV obtain the § 409A presumption of
+reasonableness. <strong>⚖ — engage a valuation provider before pricing Options or setting hurdles.</strong></p>
+<hr>
+<h2 id="article-10-securities-law-posture">ARTICLE 10 — SECURITIES-LAW POSTURE</h2>
+<p><strong>10.1 Exemption.</strong> Awards are intended to be issued in <strong>private transactions exempt</strong> from
+registration under the Securities Act of 1933 and applicable state law, in reliance on <strong>Rule
+701</strong> (compensatory benefit plans), <strong>Section 4(a)(2)</strong> / <strong>Regulation D</strong>, and comparable
+exemptions. The Company shall observe Rule 701 volume limits and disclosure thresholds. <strong>⚖</strong></p>
+<p><strong>10.2 Investment representations.</strong> Each Participant makes customary investment representations
+(acquiring for own account, not for resale; access to information; ability to bear risk) in the
+award agreement.</p>
+<p><strong>10.3 Legends.</strong> Units and award agreements bear restrictive legends referencing the
+securities-law restrictions and the Operating Agreement&#39;s transfer terms.</p>
+<p><strong>10.4 No advice.</strong> The Company provides no securities, tax, or legal advice; Participants must
+consult their own advisors. This Plan is <strong>not an offer</strong> to sell securities.</p>
+<hr>
+<h2 id="article-11-amendment-suspension-and-term">ARTICLE 11 — AMENDMENT, SUSPENSION, AND TERM</h2>
+<p><strong>11.1 Amendment.</strong> The Administrator may amend or suspend the Plan, except that any amendment
+requiring Member approval under the Operating Agreement (including increasing the Pool) is a
+<strong>Reserved Matter</strong> requiring unanimous Member consent. No amendment may materially impair an
+outstanding Award without the Participant&#39;s consent.</p>
+<p><strong>11.2 Term.</strong> The Plan is effective on its adoption date (<code>INITIAL-RESOLUTIONS.md</code>, Resolution
+7) and continues for <strong><code>[• 10]</code> years</strong>, unless earlier terminated; outstanding Awards survive
+termination per their terms.</p>
+<hr>
+<h2 id="article-12-conversion-to-a-delaware-c-corporation">ARTICLE 12 — CONVERSION TO A DELAWARE C-CORPORATION</h2>
+<p><strong>12.1 Conversion.</strong> Upon the Company&#39;s conversion to a Delaware C-corporation
+(<code>CORPORATE-STRUCTURE.md</code> §2.2), <strong>outstanding Awards convert</strong> into economically equivalent
+corporate equity of the successor, on a <strong>1:1</strong> basis (or the conversion ratio applied to all
+Units), as follows, as determined by the Administrator with counsel:</p>
+<ul>
+<li><strong>Vested Profits Interests / Plan Units</strong> → restricted stock or fully vested common stock of
+the successor, preserving the economic value above the Threshold Amount.</li>
+<li><strong>Unvested Awards</strong> → restricted stock or options carrying the <strong>same remaining vesting</strong>.</li>
+<li><strong>Unit Options</strong> → <strong>NSOs or, where eligible, ISOs</strong> of the successor with equivalent
+exercise price and term.</li>
+</ul>
+<p><strong>12.2 Cooperation.</strong> Each Participant agrees to execute the documents reasonably necessary to
+effect the conversion of their Awards, consistent with Operating Agreement § 7.6. <strong>⚖ / CPA —
+structure to be tax-efficient (often a § 351 / assets-up or statutory conversion).</strong></p>
+<hr>
+<h2 id="article-13-general">ARTICLE 13 — GENERAL</h2>
+<p><strong>13.1 No Service rights.</strong> Nothing in the Plan confers a right to continued Service.
+<strong>13.2 Governing law.</strong> Wyoming, consistent with the Operating Agreement.
+<strong>13.3 Tax withholding.</strong> The Company may withhold taxes due on any Award event.
+<strong>13.4 Unfunded.</strong> The Plan is unfunded; Participants are general creditors as to any unissued
+amounts.
+<strong>13.5 Conflicts.</strong> In a conflict between this Plan and the Operating Agreement, the <strong>Operating
+Agreement controls</strong> except as to terms this Plan is expressly authorized to set.</p>
+<hr>
+<h2 id="exhibit-a-form-of-profits-interest-award-agreement">EXHIBIT A — Form of Profits Interest Award Agreement</h2>
+<pre><code>GOEMON GLOBAL FINANCE, LLC — PROFITS INTEREST AWARD AGREEMENT
+
+Participant:            [• name]
+Grant date:            [• date]
+Number of Units:       [• ] Class [• Non-Voting] Units (Profits Interest)
+Threshold Amount:      $[• Company liquidation value on grant date] (interest shares only above this)
+Vesting:               4-year, 1-year cliff (or: [• custom]); contingent on continued Service
+§ 83(b):               Participant SHOULD file within 30 days of grant (Exhibit C); deadline is uncurable
+Voting:                Non-voting unless stated: [• ]
+Conditions:            Execution of Joinder to the Operating Agreement; investment representations;
+                       subject to Plan, Operating Agreement, transfer restrictions, ROFR, repurchase.
+
+Participant: _______________________   Company (by Manager): _______________________
+Date: [• ]                              Chad Cromwell, Manager — Date: [• ]
+</code></pre>
+<h2 id="exhibit-b-form-of-unit-option-agreement">EXHIBIT B — Form of Unit Option Agreement</h2>
+<pre><code>GOEMON GLOBAL FINANCE, LLC — UNIT OPTION AGREEMENT
+
+Optionee:              [• name]
+Grant date:            [• date]
+Units subject to Option: [• ]
+Exercise price/Unit:   $[• ≥ FMV on grant date]
+Type:                  Non-qualified Unit Option
+Term:                  [• 10] years from grant
+Vesting:               4-year, 1-year cliff (or: [• custom]); contingent on continued Service
+Exercise:              Written notice + payment (cash / [• net exercise]); execution of Joinder
+Conditions:            Subject to Plan, Operating Agreement, transfer restrictions, ROFR, securities legends.
+
+Optionee: _______________________      Company (by Manager): _______________________
+Date: [• ]                              Chad Cromwell, Manager — Date: [• ]
+</code></pre>
+<h2 id="exhibit-c-83b-election-template">EXHIBIT C — § 83(b) Election (template)</h2>
+<pre><code>ELECTION UNDER SECTION 83(b) OF THE INTERNAL REVENUE CODE
+
+The undersigned taxpayer elects, under IRC § 83(b) and Treas. Reg. § 1.83-2, to include in
+gross income for the current taxable year the excess (if any) of the fair market value of the
+property described below over the amount paid for it.
+
+1. Taxpayer:           [• name], [• address], TIN [• ]
+2. Property:           [• ] Units (Profits Interest / restricted Units) of Goemon Global
+                       Finance, LLC, a Wyoming LLC.
+3. Date of transfer:   [• grant date]    Taxable year: [• ]
+4. Restrictions:       Subject to vesting and forfeiture on Termination of Service; transfer
+                       restrictions per the Operating Agreement.
+5. FMV at transfer:    $[• ] (for a properly structured Profits Interest, generally $0 over the
+                       Threshold Amount).
+6. Amount paid:        $[• ]
+7. The taxpayer has furnished a copy to the Company.
+
+⚠ FILE WITH THE IRS WITHIN 30 DAYS OF THE GRANT DATE. Keep proof of timely mailing.
+This is a template; consult a tax advisor. ⚖
+
+Signature: _______________________   Date: [• ]
+</code></pre>
+<hr>
+<p><em>This Plan, together with the Operating Agreement and the Initial Resolutions, completes the
+founding governance set. It is the LLC-native expression of the Company&#39;s stock-and-options
+program, reserved against the 9% Pool and convertible to corporate equity at the Delaware
+C-corp step.</em></p>
+
+  </main>
+</div>
+</body></html>

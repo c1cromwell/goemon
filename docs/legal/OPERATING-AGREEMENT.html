@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operating Agreement — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Operating Agreement</h1>
+  <p class="sub">Goemon Global Finance, LLC — A Wyoming Limited Liability Company</p>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 30, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#article-i-formation-name-purpose-term">ARTICLE I — FORMATION, NAME, PURPOSE, TERM</a></li><li class="lvl-2"><a href="#article-ii-members-units-and-capitalization">ARTICLE II — MEMBERS, UNITS, AND CAPITALIZATION</a></li><li class="lvl-2"><a href="#article-iii-capital-contributions">ARTICLE III — CAPITAL CONTRIBUTIONS</a></li><li class="lvl-2"><a href="#article-iv-allocations-and-distributions">ARTICLE IV — ALLOCATIONS AND DISTRIBUTIONS</a></li><li class="lvl-2"><a href="#article-v-management">ARTICLE V — MANAGEMENT</a></li><li class="lvl-2"><a href="#article-vi-voting-and-member-action">ARTICLE VI — VOTING AND MEMBER ACTION</a></li><li class="lvl-2"><a href="#article-vii-transfer-restrictions">ARTICLE VII — TRANSFER RESTRICTIONS</a></li><li class="lvl-2"><a href="#article-viii-equity-incentive-plan">ARTICLE VIII — EQUITY INCENTIVE PLAN</a></li><li class="lvl-2"><a href="#article-ix-tax-matters">ARTICLE IX — TAX MATTERS</a></li><li class="lvl-2"><a href="#article-x-books-records-confidentiality-ip">ARTICLE X — BOOKS, RECORDS, CONFIDENTIALITY, IP</a></li><li class="lvl-2"><a href="#article-xi-dissolution-and-winding-up">ARTICLE XI — DISSOLUTION AND WINDING UP</a></li><li class="lvl-2"><a href="#article-xii-liability-limitation-and-indemnification">ARTICLE XII — LIABILITY LIMITATION AND INDEMNIFICATION</a></li><li class="lvl-2"><a href="#article-xiii-general-provisions">ARTICLE XIII — GENERAL PROVISIONS</a></li><li class="lvl-2"><a href="#execution">EXECUTION</a></li><li class="lvl-2"><a href="#schedule-a-members-capital-contributions-and-units-effective-date">SCHEDULE A — Members, Capital Contributions, and Units (Effective Date)</a></li><li class="lvl-2"><a href="#schedule-b-tax-allocations-appendix">SCHEDULE B — Tax Allocations Appendix</a></li><li class="lvl-2"><a href="#exhibit-a-form-of-joinder-agreement">EXHIBIT A — Form of Joinder Agreement</a></li><li class="lvl-2"><a href="#exhibit-b-equity-incentive-plan">EXHIBIT B — Equity Incentive Plan</a></li><li class="lvl-2"><a href="#exhibit-c-spousal-consent-if-applicable">EXHIBIT C — Spousal Consent (if applicable)</a></li></ol></nav>
+  <main class="content">
+<h1 id="operating-agreement-goemon-global-finance-llc">Operating Agreement — Goemon Global Finance, LLC</h1>
+<blockquote>
+<p><strong>Counsel must review and customize before execution.</strong> This is an attorney-grade
+<strong>scaffold</strong>, not filed legal advice. Bracketed <code>[•]</code> fields must be completed; items
+tagged <strong>⚖ see counsel</strong> require a Wyoming-licensed attorney and/or CPA before reliance.
+Governing law: the <strong>Wyoming Limited Liability Company Act</strong>, Wyo. Stat. §§ 17-29-101
+<em>et seq.</em> (the &quot;<strong>Act</strong>&quot;).</p>
+<p>Companion documents: <code>FORMATION-articles-of-organization.md</code>, <code>INITIAL-RESOLUTIONS.md</code>,
+<code>EQUITY-INCENTIVE-PLAN.md</code>; strategy <code>docs/business/CORPORATE-STRUCTURE.md</code>.</p>
+</blockquote>
+<hr>
+<p><strong>OPERATING AGREEMENT OF GOEMON GLOBAL FINANCE, LLC</strong>
+<strong>A Wyoming Limited Liability Company</strong></p>
+<p>This Operating Agreement (this &quot;<strong>Agreement</strong>&quot;) is entered into and effective as of
+<code>[• Effective Date]</code> (the &quot;<strong>Effective Date</strong>&quot;), by and among the Company and the persons
+executing this Agreement as Members (each a &quot;<strong>Member</strong>&quot; and collectively the &quot;<strong>Members</strong>&quot;).</p>
+<p><strong>RECITALS.</strong> The Company was formed by filing Articles of Organization with the Wyoming
+Secretary of State on <code>[• filing date]</code>. The Members desire to set forth the terms governing
+the Company&#39;s ownership, management, and operation. The Members intend that the Company be
+treated as a <strong>partnership</strong> for U.S. federal income tax purposes (a multi-member LLC) unless
+and until a different election is made under Article IX.</p>
+<hr>
+<h2 id="article-i-formation-name-purpose-term">ARTICLE I — FORMATION, NAME, PURPOSE, TERM</h2>
+<p><strong>1.1 Formation.</strong> The Company was organized as a Wyoming limited liability company under the
+Act. The rights and obligations of the Members are governed by the Act, the Articles of
+Organization, and this Agreement. Where this Agreement differs from a non-mandatory provision
+of the Act, this Agreement controls (Wyo. Stat. § 17-29-110).</p>
+<p><strong>1.2 Name.</strong> The name of the Company is <strong>Goemon Global Finance, LLC</strong>. The Company may
+operate under the brand <strong>&quot;Goemon&quot;</strong> and registered trade names as the Manager directs.</p>
+<p><strong>1.3 Registered agent / office.</strong> As stated in the Articles of Organization. The principal
+office is <code>[• address]</code>.</p>
+<p><strong>1.4 Purpose.</strong> Any lawful business under the Act. The Company&#39;s business is the development
+and licensing of <strong>non-custodial financial software and tokenization infrastructure</strong>. In
+Phase A the Company does not take custody of customer funds and <strong>is not a bank</strong>; regulated
+activity advances deliberately per <code>CORPORATE-STRUCTURE.md</code> §6. <strong>⚖</strong></p>
+<p><strong>1.5 Term.</strong> Perpetual, until dissolved under Article XI.</p>
+<p><strong>1.6 Title to property.</strong> All Company property is owned by the Company as an entity; no
+Member has any individual ownership interest in Company property.</p>
+<hr>
+<h2 id="article-ii-members-units-and-capitalization">ARTICLE II — MEMBERS, UNITS, AND CAPITALIZATION</h2>
+<p><strong>2.1 Units.</strong> Membership interests are denominated in <strong>Units</strong>. The Company is authorized to
+issue up to <strong>10,000,000 Units</strong>. Each issued Unit is, unless designated otherwise, a
+<strong>Class A Voting Unit</strong> carrying identical economic and voting rights pro rata.</p>
+<p><strong>2.2 Members and Percentage Interests.</strong> The names of the Members, their Units, and their
+&quot;<strong>Percentage Interests</strong>&quot; are set forth on <strong>Schedule A</strong>, as amended from time to time by
+the Manager to reflect transactions made in accordance with this Agreement. As of the
+Effective Date:</p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Class</th>
+<th>Units</th>
+<th>Percentage Interest</th>
+<th>Voting</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Chad Cromwell</strong></td>
+<td>Class A Voting</td>
+<td>5,100,000</td>
+<td><strong>51%</strong></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Oran Cromwell</strong></td>
+<td>Class A Voting</td>
+<td>4,000,000</td>
+<td><strong>40%</strong></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Reserved — Equity Incentive Plan pool</strong> <em>(unissued)</em></td>
+<td>(per Plan)</td>
+<td>900,000</td>
+<td><strong>9%</strong></td>
+<td>Per award</td>
+</tr>
+<tr>
+<td><strong>Total authorized</strong></td>
+<td></td>
+<td>10,000,000</td>
+<td>100%</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>The <strong>900,000 reserved Units (9%)</strong> are <strong>not issued</strong> as of the Effective Date. They are
+held in reserve by the Company and may be issued only as awards under the <strong>Equity Incentive
+Plan</strong> (<code>EQUITY-INCENTIVE-PLAN.md</code>, incorporated by Article VIII). Until issued, reserved
+Units are not outstanding, carry no vote, and receive no allocations or distributions.
+<strong>Percentage Interests for governance are computed on issued and outstanding Units</strong>;
+accordingly, as of the Effective Date Chad Cromwell holds <strong>51% / 9,100,000 = 56.04%</strong> and
+Oran Cromwell <strong>40% / 9,100,000 = 43.96%</strong> of the outstanding vote, and all then-outstanding
+Units are held by the two Members. <em>(The 51/40/9 figures express each holder&#39;s share of fully
+diluted, fully reserved capitalization; see <code>INITIAL-RESOLUTIONS.md</code>.)</em> <strong>⚖ confirm the
+governance-denominator convention with counsel and keep Schedule A authoritative.</strong></p>
+<p><strong>2.3 Vesting of founder Units.</strong> The Units issued to Chad Cromwell and Oran Cromwell on the
+Effective Date are <strong>fully vested</strong> and not subject to repurchase for failure to vest. Future
+Plan awards vest under their award agreements.</p>
+<p><strong>2.4 Admission of new Members.</strong> A person becomes a Member only upon (a) issuance of Units or
+admission approved as a <strong>Reserved Matter</strong> (§5.4) — <em>except</em> Plan awards, which the Manager
+may issue from the reserved pool under Article VIII — and (b) execution of a <strong>Joinder</strong>
+(Exhibit A) agreeing to be bound by this Agreement.</p>
+<p><strong>2.5 No certificates (default).</strong> Units are uncertificated unless the Manager elects to issue
+certificates. The Company&#39;s books (Schedule A) are conclusive as to ownership.</p>
+<p><strong>2.6 Liability shield.</strong> No Member or Manager is personally liable for Company obligations
+solely by reason of that status (Wyo. Stat. § 17-29-304). Members shall observe Company
+formalities (separate accounts, no commingling) to preserve the shield.</p>
+<hr>
+<h2 id="article-iii-capital-contributions">ARTICLE III — CAPITAL CONTRIBUTIONS</h2>
+<p><strong>3.1 Initial contributions.</strong> Each Member has contributed the cash and/or property set forth
+on <strong>Schedule A</strong>. The Members acknowledge that initial capital includes:</p>
+<ul>
+<li><strong>Cash contributions</strong> of <code>[• $ amount per Member]</code>; and</li>
+<li><strong>Contributed intellectual property</strong> — the software, source code, designs, the <strong>Goemon</strong>
+marks, domains, and architecture documentation contributed to the Company pursuant to the
+IP / Technology Assignment authorized in <code>INITIAL-RESOLUTIONS.md</code> and described in
+<code>CORPORATE-STRUCTURE.md</code> §5. The agreed value of the contributed IP is <code>[• $ value]</code>. <strong>⚖
+valuation / 721 contribution treatment — confirm with CPA.</strong></li>
+</ul>
+<p><strong>3.2 Capital accounts.</strong> A capital account is maintained for each Member in accordance with
+Treas. Reg. § 1.704-1(b)(2)(iv). <strong>⚖</strong></p>
+<p><strong>3.3 No further contributions.</strong> No Member is obligated to make additional capital
+contributions. Additional contributions, if any, are a <strong>Reserved Matter</strong> (§5.4).</p>
+<p><strong>3.4 No interest; no withdrawal.</strong> No Member earns interest on capital, and no Member may
+withdraw capital except as expressly permitted by this Agreement.</p>
+<hr>
+<h2 id="article-iv-allocations-and-distributions">ARTICLE IV — ALLOCATIONS AND DISTRIBUTIONS</h2>
+<p><strong>4.1 Allocations.</strong> Profits and losses are allocated among the Members in proportion to their
+Percentage Interests, subject to the regulatory allocations (qualified income offset, minimum
+gain chargeback, § 704(b)/(c)) set out in <strong>Schedule B</strong> (tax appendix). Holders of profits
+interests share only in income and appreciation <strong>above</strong> their threshold/hurdle amount per
+Article VIII and their award agreements. <strong>⚖ CPA to finalize Schedule B.</strong></p>
+<p><strong>4.2 Distributions.</strong> Distributions are made at the times and in the amounts the Manager
+determines, pro rata to Percentage Interests, subject to the <strong>Reserved Matter</strong> consent for
+distributions outside the ordinary course (§5.4) and to the solvency limitations of Wyo. Stat.
+§ 17-29-405.</p>
+<p><strong>4.3 Tax distributions.</strong> To the extent of available cash and prudent reserves, the Company
+shall use commercially reasonable efforts to distribute to each Member, pro rata, an amount
+sufficient to cover that Member&#39;s estimated federal and state income tax on the Company&#39;s
+allocated taxable income, at an assumed combined rate of <code>[• %]</code>. Tax distributions are
+advances against, and offset, later distributions under § 4.2. <strong>⚖</strong></p>
+<p><strong>4.4 Withholding.</strong> The Company may withhold and remit taxes as required and treat such
+amounts as distributed to the affected Member.</p>
+<hr>
+<h2 id="article-v-management">ARTICLE V — MANAGEMENT</h2>
+<p><strong>5.1 Manager-managed.</strong> The Company is <strong>manager-managed</strong>. Except for Reserved Matters
+(§5.4), the <strong>Manager</strong> has full and exclusive authority to manage the business and affairs of
+the Company and to bind the Company (Wyo. Stat. § 17-29-407(c)).</p>
+<p><strong>5.2 Initial Manager.</strong> <strong>Chad Cromwell</strong> is the initial and sole Manager, and also serves as
+<strong>Chief Executive Officer</strong>. The Manager serves until resignation, death, incapacity, or
+removal. <strong>Removal or replacement of the Manager is a Reserved Matter</strong> (§5.4) requiring
+unanimous Member consent.</p>
+<p><strong>5.3 Authority of the Manager (ordinary course).</strong> Without limiting § 5.1, the Manager may,
+in the ordinary course: hire and terminate personnel and contractors; set compensation; enter
+contracts and licenses; manage banking and treasury; <strong>issue awards from the reserved Equity
+Incentive Plan pool</strong> (Article VIII); maintain books and the cap table; prosecute and protect
+IP; and operate the product consistent with the Phase-A compliance posture. This codifies the
+operational <strong>&quot;human CEO gate&quot;</strong> reflected in the product architecture (<code>CLAUDE.md</code>,
+<code>docs/GOEMON-BRAND.md</code> §3).</p>
+<p><strong>5.4 Reserved Matters (unanimous Member consent required).</strong> Notwithstanding § 5.1, the
+following actions require the <strong>prior written consent of all Members</strong> (while the Members&#39;
+default voting rule of unanimity under § 6.2 is in effect):</p>
+<ol>
+<li>Amending the Articles of Organization or this Agreement.</li>
+<li>Admitting a new Member or issuing, redeeming, or repurchasing Units <strong>outside the Equity
+Incentive Plan</strong> (issuance of the reserved 900,000 Pool Units as Plan awards is delegated
+to the Manager under Article VIII).</li>
+<li>Increasing or decreasing authorized Units, or creating a new class/series of Units.</li>
+<li>Approving or amending the <strong>Equity Incentive Plan</strong> or increasing the reserved Pool above
+900,000 Units (9%).</li>
+<li>Incurring indebtedness, guaranties, or capital commitments exceeding <strong><code>[$•]</code></strong> in the
+aggregate, or granting a lien on Company assets (including any encumbrance of the IP).</li>
+<li>Selling, licensing exclusively, assigning, or otherwise disposing of all or substantially
+all of the Company&#39;s assets or its core intellectual property.</li>
+<li>A merger, conversion, recapitalization, or reorganization — <strong>including the planned
+conversion to a Delaware C-corporation</strong> (Article VII, § 7.6).</li>
+<li>Dissolving or winding up the Company.</li>
+<li>Any <strong>related-party transaction</strong> between the Company and a Member, Manager, officer, or
+their affiliate or family member.</li>
+<li>Making, changing, or revoking a <strong>material tax election</strong> (including an S-corp or
+entity-classification election) or changing the Partnership Representative.</li>
+<li>Approving distributions other than ordinary-course and tax distributions (§ 4.2–4.3).</li>
+<li>Removing, replacing, or materially changing the authority or compensation of the Manager;
+commencing or settling material litigation; or filing for bankruptcy.</li>
+</ol>
+<p><strong>5.5 Officers.</strong> The Manager may appoint officers (e.g., CEO/President, Treasurer/CFO,
+Secretary) with delegated authority. <strong>Oran Cromwell</strong> is eligible to serve as an officer.
+Officers serve at the Manager&#39;s discretion, subject to § 5.4 where their action would
+constitute a Reserved Matter.</p>
+<p><strong>5.6 Standard of care.</strong> The Manager and officers shall discharge their duties in good faith,
+consistent with the duties owed under the Act as modified by this Agreement. To the maximum
+extent permitted by Wyo. Stat. § 17-29-409, fiduciary duties are as set forth herein and the
+Manager may pursue other ventures <strong>except</strong> that the Manager shall not usurp a Company
+opportunity in the Company&#39;s actual line of business without offering it to the Company. <strong>⚖</strong></p>
+<p><strong>5.7 Reliance and indemnification.</strong> The Manager may rely on experts and is indemnified per
+Article XII.</p>
+<hr>
+<h2 id="article-vi-voting-and-member-action">ARTICLE VI — VOTING AND MEMBER ACTION</h2>
+<p><strong>6.1 Voting power.</strong> Each Member votes in proportion to that Member&#39;s Percentage Interest of
+issued and outstanding Units (Schedule A). Reserved (unissued) Pool Units do not vote.</p>
+<p><strong>6.2 Default rule — unanimity.</strong> As of the Effective Date and until changed under § 6.4, <strong>all
+Member action requires the affirmative vote or written consent of ALL Members.</strong> The Members
+have intentionally chosen unanimous decision-making; both Members hold voting Units and no
+Company action requiring Member approval may be taken without both Members&#39; agreement.</p>
+<p><strong>6.3 Action by written consent; meetings.</strong> Members may act by written (including electronic)
+consent without a meeting. Meetings may be called by the Manager or any Member on <code>[• ]</code> days&#39;
+notice; notice may be waived. Electronic/remote participation is permitted.</p>
+<p><strong>6.4 Fallback voting rule (effective only if unanimity is later removed).</strong> If the Members
+unanimously agree in writing to remove the unanimity requirement of § 6.2 (itself a Reserved
+Matter), then thereafter, unless otherwise agreed: (a) <strong>ordinary matters</strong> are decided by
+Members holding a <strong>majority (&gt;50%)</strong> of the outstanding Percentage Interests — under the
+current cap table this vests ordinary control in <strong>Chad Cromwell (majority Member)</strong>; and (b)
+<strong>fundamental matters</strong> (those listed in § 5.4(1)–(8)) require a <strong>supermajority of <code>[• 75]</code>%</strong>
+of Percentage Interests. This fallback exists so the Company is not permanently exposed to
+deadlock if the Members later choose majority governance.</p>
+<p><strong>6.5 Deadlock and buy-sell.</strong> Because two-Member unanimity creates the possibility of
+deadlock, if the Members are unable to agree on a Reserved Matter that the Manager reasonably
+determines is necessary for the Company&#39;s operation, the following process applies, in order:</p>
+<ol>
+<li><strong>Good-faith negotiation</strong> — the Members confer for <code>[• 30]</code> days.</li>
+<li><strong>Mediation</strong> — non-binding mediation under <code>[• ]</code> rules, costs shared equally.</li>
+<li><strong>Buy-sell (&quot;shotgun&quot;) option</strong> — if still unresolved after <code>[• 60]</code> days, either Member
+may deliver a notice offering to buy the other&#39;s Units at a stated per-Unit price; the
+recipient must, within <code>[• 30]</code> days, elect either to <strong>sell</strong> at that price or to <strong>buy</strong>
+the offeror&#39;s Units at the same per-Unit price. Closing occurs within <code>[• 60]</code> days.</li>
+</ol>
+<p>This mechanism is a backstop, not a default exit; the Members intend to govern by consensus.
+<strong>⚖ — buy-sell terms (valuation, financing, family considerations) should be tailored with
+counsel.</strong></p>
+<hr>
+<h2 id="article-vii-transfer-restrictions">ARTICLE VII — TRANSFER RESTRICTIONS</h2>
+<p><strong>7.1 General restriction.</strong> No Member may sell, assign, pledge, or otherwise transfer any
+Unit or economic interest except as permitted by this Article. Any attempted transfer in
+violation is void.</p>
+<p><strong>7.2 Consent.</strong> Except for Permitted Transfers (§ 7.4), a transfer requires the prior written
+consent of all other Members (a Reserved Matter), and the transferee becomes a <strong>Member</strong> (as
+opposed to a mere economic assignee) only upon such consent and execution of a <strong>Joinder</strong>
+(Exhibit A).</p>
+<p><strong>7.3 Right of First Refusal (ROFR).</strong> Before any transfer to a third party, the transferring
+Member must offer the Units <strong>first to the Company</strong>, then <strong>to the other Members</strong> pro rata,
+on the same terms as the bona fide third-party offer, with <code>[• 30]</code> days to exercise. Units
+not taken up may then be transferred to the third party on no more favorable terms within
+<code>[• 90]</code> days, subject to § 7.2.</p>
+<p><strong>7.4 Permitted Transfers.</strong> A Member may transfer Units, without ROFR but subject to Joinder
+and continued application of this Agreement, to: (a) a revocable trust or estate-planning
+vehicle for the Member&#39;s benefit or immediate family; (b) on death, to the Member&#39;s estate or
+heirs; provided the transferee takes subject to all restrictions, and <strong>voting rights pass
+only with the Manager-/Member-consented admission as a Member</strong>. <strong>⚖ estate-planning tailoring
+(e.g., the father/son ownership).</strong></p>
+<p><strong>7.5 Tag-along / drag-along.</strong> (a) <strong>Tag-along:</strong> if a Member proposes to sell Units to a
+third party, the other Members may participate pro rata on the same terms. (b) <strong>Drag-along:</strong>
+if Members holding <code>[• ]</code>% of Percentage Interests (and, while unanimity is in effect, <strong>all</strong>
+Members) approve a sale of the Company, the remaining Members shall participate on the same
+terms. <strong>⚖</strong></p>
+<p><strong>7.6 Planned Delaware C-corporation conversion.</strong> The Members acknowledge the strategy
+(<code>CORPORATE-STRUCTURE.md</code> §2.2) to <strong>convert the Company to a Delaware C-corporation</strong> upon the
+first institutional financing or the standing-up of a regulated subsidiary. Each Member agrees
+to cooperate in good faith with such conversion (a Reserved Matter) and to exchange Units for
+equivalent shares of the successor corporation in proportion to Percentage Interests, with
+outstanding Plan awards converting as provided in the Equity Incentive Plan.</p>
+<hr>
+<h2 id="article-viii-equity-incentive-plan">ARTICLE VIII — EQUITY INCENTIVE PLAN</h2>
+<p><strong>8.1 Adoption.</strong> The Company has adopted the <strong>Goemon Global Finance, LLC Equity Incentive
+Plan</strong> (the &quot;<strong>Plan</strong>,&quot; <code>EQUITY-INCENTIVE-PLAN.md</code>), incorporated herein by reference.</p>
+<p><strong>8.2 Reserved Pool.</strong> <strong>900,000 Units (9%)</strong> are reserved for issuance as awards under the
+Plan. The Manager may grant <strong>profits interests</strong> and <strong>Unit options</strong> from the Pool to
+eligible employees, advisors, contractors, and venture/strategic partners, <strong>without further
+Member consent</strong>, provided the aggregate awards do not exceed the Pool. Increasing the Pool is
+a Reserved Matter (§ 5.4(4)).</p>
+<p><strong>8.3 Profits interests.</strong> Awards intended to be <strong>profits interests</strong> confer rights only to
+future profits and appreciation above a threshold (hurdle) amount equal to the Company&#39;s
+liquidation value at grant (Rev. Procs. 93-27 and 2001-43). Recipients should file a
+protective <strong>§ 83(b) election within 30 days</strong> of grant. <strong>⚖ / CPA.</strong></p>
+<p><strong>8.4 Joinder; restrictions.</strong> Each award recipient executes a <strong>Joinder</strong> (Exhibit A) and
+holds Units subject to this Agreement, including vesting, repurchase on termination, transfer
+restrictions, ROFR, and (unless an award expressly grants voting Units) <strong>non-voting</strong> status.</p>
+<p><strong>8.5 Conversion.</strong> On the Delaware C-corp conversion (§ 7.6), outstanding awards convert to
+equivalent corporate equity (options / restricted stock) per the Plan.</p>
+<hr>
+<h2 id="article-ix-tax-matters">ARTICLE IX — TAX MATTERS</h2>
+<p><strong>9.1 Classification.</strong> The Company is a multi-member LLC taxed as a <strong>partnership</strong> for U.S.
+federal income tax purposes (Form 1065; Schedule K-1 to each Member). No Member shall take a
+contrary position. A change of classification (e.g., S-corp election) is a Reserved Matter. <strong>⚖
+CPA.</strong></p>
+<p><strong>9.2 Partnership Representative.</strong> <strong>Chad Cromwell</strong> is designated the <strong>Partnership
+Representative</strong> under the centralized partnership audit rules (BBA / IRC § 6223). The
+Partnership Representative shall keep the Members informed and act in their collective interest;
+material audit elections (e.g., push-out) are Reserved Matters.</p>
+<p><strong>9.3 Capital accounts / allocations.</strong> Maintained per Article IV and Schedule B (§ 704(b),
+§ 704(c)). <strong>⚖</strong></p>
+<p><strong>9.4 Returns.</strong> The Company timely files all required returns and furnishes K-1s.</p>
+<hr>
+<h2 id="article-x-books-records-confidentiality-ip">ARTICLE X — BOOKS, RECORDS, CONFIDENTIALITY, IP</h2>
+<p><strong>10.1 Books and records.</strong> The Company maintains complete books at its principal office,
+including the cap table (Schedule A), financials, and the records required by Wyo. Stat.
+§ 17-29-410. Members have inspection rights as provided by the Act, subject to confidentiality
+and reasonable purpose.</p>
+<p><strong>10.2 Fiscal year.</strong> The calendar year, unless the Manager (with CPA advice) elects otherwise.</p>
+<p><strong>10.3 Bank accounts.</strong> Company funds are held in Company accounts; <strong>no commingling</strong> with any
+Member&#39;s personal funds or with customer-adjacent funds (<code>CORPORATE-STRUCTURE.md</code> §7).</p>
+<p><strong>10.4 Confidentiality.</strong> Each Member shall keep confidential all non-public Company
+information, including source code, the architecture, customer data, and business plans, during
+and after membership, except as required by law.</p>
+<p><strong>10.5 Intellectual property.</strong> All work product, inventions, code, and materials created by
+any Member, officer, employee, or contractor for the Company are the <strong>sole property of the
+Company</strong>. Each such person shall execute a present assignment of inventions to the Company
+(the IP / Technology Assignment, authorized in <code>INITIAL-RESOLUTIONS.md</code>). No Member retains any
+personal license to Company IP.</p>
+<hr>
+<h2 id="article-xi-dissolution-and-winding-up">ARTICLE XI — DISSOLUTION AND WINDING UP</h2>
+<p><strong>11.1 Dissolution events.</strong> The Company dissolves only upon (a) the unanimous written consent
+of the Members (a Reserved Matter), or (b) entry of a decree of judicial dissolution under the
+Act. Death, withdrawal, or bankruptcy of a Member does <strong>not</strong> dissolve the Company; the
+remaining Member(s) may continue the business.</p>
+<p><strong>11.2 Winding up.</strong> On dissolution, the Manager (or a liquidator) winds up: collects assets,
+pays creditors (including Member loans), sets aside reserves, and distributes the remainder to
+the Members in accordance with positive capital account balances / Percentage Interests
+(Wyo. Stat. § 17-29-708). <strong>⚖ CPA on liquidation waterfall.</strong></p>
+<p><strong>11.3 Articles of dissolution.</strong> The Company files articles of dissolution with the Wyoming
+SOS when winding up is complete.</p>
+<hr>
+<h2 id="article-xii-liability-limitation-and-indemnification">ARTICLE XII — LIABILITY LIMITATION AND INDEMNIFICATION</h2>
+<p><strong>12.1 Limitation of liability.</strong> To the fullest extent permitted by the Act, no Manager,
+Member, or officer is liable to the Company or the Members for any act or omission, except for
+conduct constituting <strong>willful misconduct, fraud, or a knowing violation of law</strong>, or for any
+transaction from which the person derived an improper personal benefit.</p>
+<p><strong>12.2 Indemnification.</strong> The Company shall indemnify and hold harmless each Manager, Member,
+and officer against losses, liabilities, and expenses (including reasonable attorneys&#39; fees)
+arising from the Company&#39;s business, to the fullest extent permitted by Wyo. Stat. § 17-29-408,
+except for matters described in § 12.1. The Company may advance expenses upon an undertaking to
+repay if indemnification is ultimately unavailable.</p>
+<p><strong>12.3 Insurance.</strong> The Company may purchase D&amp;O and E&amp;O insurance (<code>CORPORATE-STRUCTURE.md</code>
+§9). <strong>⚖</strong></p>
+<hr>
+<h2 id="article-xiii-general-provisions">ARTICLE XIII — GENERAL PROVISIONS</h2>
+<p><strong>13.1 Governing law.</strong> This Agreement is governed by the laws of the <strong>State of Wyoming</strong>,
+without regard to conflicts principles.</p>
+<p><strong>13.2 Dispute resolution.</strong> Disputes are resolved first under § 6.5 (negotiation/mediation),
+then by <code>[• binding arbitration / courts located in Wyoming]</code>. <strong>⚖</strong></p>
+<p><strong>13.3 Amendment.</strong> This Agreement may be amended only by the <strong>written consent of all
+Members</strong> (a Reserved Matter). Schedule A may be updated by the Manager to reflect transactions
+made in accordance with this Agreement without a formal amendment.</p>
+<p><strong>13.4 Entire agreement.</strong> This Agreement, with its Schedules and Exhibits and the Plan, is the
+entire agreement among the Members regarding its subject matter and supersedes prior
+understandings.</p>
+<p><strong>13.5 Severability.</strong> If any provision is invalid, the remainder continues in effect.</p>
+<p><strong>13.6 Notices.</strong> In writing, to the addresses on Schedule A (or by email to addresses the
+Members designate).</p>
+<p><strong>13.7 Counterparts; electronic signatures.</strong> This Agreement may be executed in counterparts
+and by electronic signature (E-SIGN / UETA), each of which is an original.</p>
+<p><strong>13.8 No third-party beneficiaries.</strong> Except for indemnitees under Article XII.</p>
+<p><strong>13.9 Spousal/marital consent.</strong> If required by the Members&#39; state of residence (community
+property), each Member&#39;s spouse executes the <strong>Spousal Consent</strong> (Exhibit C). <strong>⚖</strong></p>
+<hr>
+<h2 id="execution">EXECUTION</h2>
+<p>IN WITNESS WHEREOF, the parties have executed this Operating Agreement as of the Effective Date.</p>
+<p><strong>THE COMPANY:</strong>
+GOEMON GLOBAL FINANCE, LLC</p>
+<p>By: _______________________________
+Name: <strong>Chad Cromwell</strong>
+Title: Manager and Chief Executive Officer
+Date: <code>[• ]</code></p>
+<p><strong>THE MEMBERS:</strong></p>
+<hr>
+<p><strong>Chad Cromwell</strong>, Member — 5,100,000 Class A Voting Units (51%)
+Date: <code>[• ]</code></p>
+<hr>
+<p><strong>Oran Cromwell</strong>, Member — 4,000,000 Class A Voting Units (40%)
+Date: <code>[• ]</code></p>
+<hr>
+<h2 id="schedule-a-members-capital-contributions-and-units-effective-date">SCHEDULE A — Members, Capital Contributions, and Units (Effective Date)</h2>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Address</th>
+<th>Cash contribution</th>
+<th>Non-cash (IP) contribution</th>
+<th>Units</th>
+<th>Class</th>
+<th>Percentage Interest (fully reserved basis)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Chad Cromwell</strong></td>
+<td><code>[• ]</code></td>
+<td><code>[$• ]</code></td>
+<td>Contributed IP (see § 3.1) <code>[$• value]</code></td>
+<td>5,100,000</td>
+<td>Class A Voting</td>
+<td><strong>51%</strong></td>
+</tr>
+<tr>
+<td><strong>Oran Cromwell</strong></td>
+<td><code>[• ]</code></td>
+<td><code>[$• ]</code></td>
+<td><code>[• ]</code></td>
+<td>4,000,000</td>
+<td>Class A Voting</td>
+<td><strong>40%</strong></td>
+</tr>
+<tr>
+<td><strong>Equity Incentive Plan — reserved Pool (unissued)</strong></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>900,000</td>
+<td>Per award</td>
+<td><strong>9%</strong></td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>10,000,000</strong></td>
+<td></td>
+<td><strong>100%</strong></td>
+</tr>
+</tbody></table>
+<p><em>Outstanding Units as of the Effective Date: 9,100,000 (Chad 56.04% / Oran 43.96% of the
+outstanding vote). The 51/40/9 figures express each holder&#39;s share of fully diluted, fully
+reserved capitalization.</em></p>
+<h2 id="schedule-b-tax-allocations-appendix">SCHEDULE B — Tax Allocations Appendix</h2>
+<p><code>[• CPA to complete: § 704(b) regulatory allocations, QIO, minimum gain chargeback, § 704(c) for contributed IP. ⚖]</code></p>
+<h2 id="exhibit-a-form-of-joinder-agreement">EXHIBIT A — Form of Joinder Agreement</h2>
+<p><code>[• Short joinder by which a transferee or Plan award recipient agrees to be bound by this Agreement and becomes a Member or economic interest holder as applicable.]</code></p>
+<h2 id="exhibit-b-equity-incentive-plan">EXHIBIT B — Equity Incentive Plan</h2>
+<p>Incorporated by reference: <code>EQUITY-INCENTIVE-PLAN.md</code>.</p>
+<h2 id="exhibit-c-spousal-consent-if-applicable">EXHIBIT C — Spousal Consent (if applicable)</h2>
+<p><code>[• Consent of a Member&#39;s spouse to be bound by the transfer and buy-sell terms. ⚖ — required in community-property states.]</code></p>
+
+  </main>
+</div>
+</body></html>

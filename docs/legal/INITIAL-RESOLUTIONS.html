@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Initial Resolutions — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Initial Resolutions</h1>
+  <p class="sub">Goemon Global Finance, LLC — Organizational Action by Unanimous Written Consent</p>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 30, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-3"><a href="#1-ratification-of-formation">1. Ratification of formation</a></li><li class="lvl-3"><a href="#2-adoption-of-the-operating-agreement">2. Adoption of the Operating Agreement</a></li><li class="lvl-3"><a href="#3-admission-of-members-and-issuance-of-units">3. Admission of Members and issuance of Units</a></li><li class="lvl-3"><a href="#4-appointment-of-manager-and-officers">4. Appointment of Manager and officers</a></li><li class="lvl-3"><a href="#5-tax-matters-and-partnership-representative">5. Tax matters and Partnership Representative</a></li><li class="lvl-3"><a href="#6-ein-bank-account-and-the-ip-technology-assignment">6. EIN, bank account, and the IP / Technology Assignment</a></li><li class="lvl-3"><a href="#7-adoption-of-the-equity-incentive-plan">7. Adoption of the Equity Incentive Plan</a></li><li class="lvl-3"><a href="#8-regulatory-ip-protection-and-advisory-authorizations">8. Regulatory, IP-protection, and advisory authorizations</a></li><li class="lvl-3"><a href="#9-general-authorization">9. General authorization</a></li><li class="lvl-2"><a href="#execution-unanimous-written-consent">EXECUTION (Unanimous Written Consent)</a></li></ol></nav>
+  <main class="content">
+<h1 id="initial-resolutions-goemon-global-finance-llc">Initial Resolutions — Goemon Global Finance, LLC</h1>
+<blockquote>
+<p><strong>Counsel must review and customize before execution.</strong> This is an attorney-grade
+<strong>scaffold</strong>, not filed legal advice. Bracketed <code>[•]</code> fields must be completed; items
+tagged <strong>⚖ see counsel</strong> require a Wyoming-licensed attorney and/or CPA before reliance.
+Governing law: the <strong>Wyoming Limited Liability Company Act</strong>, Wyo. Stat. §§ 17-29-101
+<em>et seq.</em></p>
+<p>Companion documents: <code>FORMATION-articles-of-organization.md</code>, <code>OPERATING-AGREEMENT.md</code>,
+<code>EQUITY-INCENTIVE-PLAN.md</code>; strategy <code>docs/business/CORPORATE-STRUCTURE.md</code>.</p>
+</blockquote>
+<hr>
+<p><strong>ORGANIZATIONAL ACTION BY UNANIMOUS WRITTEN CONSENT</strong>
+<strong>OF THE ORGANIZER, INITIAL MANAGER, AND MEMBERS OF</strong>
+<strong>GOEMON GLOBAL FINANCE, LLC</strong>
+<strong>(A Wyoming Limited Liability Company)</strong></p>
+<p><strong>Effective Date:</strong> <code>[• date]</code></p>
+<p>The undersigned, being the <strong>organizer</strong>, the <strong>initial Manager</strong>, and <strong>all of the Members</strong>
+of Goemon Global Finance, LLC (the &quot;<strong>Company</strong>&quot;), acting by unanimous written consent in lieu
+of an organizational meeting pursuant to the Wyoming LLC Act and the Company&#39;s Operating
+Agreement, hereby adopt the following resolutions, which shall have the same force as if
+adopted at a duly called and held meeting.</p>
+<hr>
+<h3 id="1-ratification-of-formation">1. Ratification of formation</h3>
+<p><strong>RESOLVED</strong>, that the <strong>Articles of Organization</strong> of the Company, filed with the Wyoming
+Secretary of State on <code>[• filing date]</code> (filing ID <code>[• ]</code>), are in all respects <strong>ratified,
+approved, and confirmed</strong>; and the actions of <strong>Chad Cromwell</strong>, as organizer, in forming the
+Company are ratified.</p>
+<p><strong>RESOLVED FURTHER</strong>, that the appointment of <strong><code>[• registered agent]</code></strong> as the Company&#39;s
+<strong>registered agent</strong> at <strong><code>[• registered office, WY]</code></strong> is approved, and the Manager is
+authorized to maintain or change the registered agent as needed.</p>
+<h3 id="2-adoption-of-the-operating-agreement">2. Adoption of the Operating Agreement</h3>
+<p><strong>RESOLVED</strong>, that the <strong>Operating Agreement</strong> of the Company (<code>OPERATING-AGREEMENT.md</code>), in
+the form presented to and reviewed by the Members, is <strong>adopted and approved</strong> as the governing
+operating agreement of the Company, and each Member is directed to execute it.</p>
+<p><strong>RESOLVED FURTHER</strong>, that the Company is <strong>manager-managed</strong>, and the Members confirm that, as
+provided in the Operating Agreement, <strong>all Member action requires the unanimous consent of the
+Members</strong> until changed in accordance with the Operating Agreement.</p>
+<h3 id="3-admission-of-members-and-issuance-of-units">3. Admission of Members and issuance of Units</h3>
+<p><strong>RESOLVED</strong>, that the Company is authorized to issue up to <strong>10,000,000 Units</strong>; and the
+following persons are <strong>admitted as Members</strong> and the following Units are <strong>issued</strong> to them,
+fully vested, in exchange for their respective capital contributions (cash and contributed
+intellectual property) described in Schedule A of the Operating Agreement and in Resolution 6
+below:</p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Units issued</th>
+<th>Class</th>
+<th>Percentage Interest (fully reserved basis)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Chad Cromwell</strong></td>
+<td><strong>5,100,000</strong></td>
+<td>Class A Voting</td>
+<td><strong>51%</strong></td>
+</tr>
+<tr>
+<td><strong>Oran Cromwell</strong></td>
+<td><strong>4,000,000</strong></td>
+<td>Class A Voting</td>
+<td><strong>40%</strong></td>
+</tr>
+</tbody></table>
+<p><strong>RESOLVED FURTHER</strong>, that <strong>900,000 Units (9%)</strong> are <strong>reserved and held unissued</strong> by the
+Company for issuance solely as awards under the Equity Incentive Plan (Resolution 7); such
+reserved Units are not outstanding, do not vote, and receive no allocations or distributions
+until issued as awards.</p>
+<p><strong>RESOLVED FURTHER</strong>, that the Units issued to Chad Cromwell and Oran Cromwell are <strong>fully
+vested</strong> and not subject to repurchase for failure to vest, and that the Manager shall record
+the foregoing on the Company&#39;s cap table (Schedule A).</p>
+<h3 id="4-appointment-of-manager-and-officers">4. Appointment of Manager and officers</h3>
+<p><strong>RESOLVED</strong>, that <strong>Chad Cromwell</strong> is appointed the <strong>sole Manager</strong> of the Company, to serve
+until resignation, removal, or incapacity in accordance with the Operating Agreement.</p>
+<p><strong>RESOLVED FURTHER</strong>, that the following officers are appointed, each to serve at the
+discretion of the Manager:</p>
+<table>
+<thead>
+<tr>
+<th>Office</th>
+<th>Person</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chief Executive Officer / President</td>
+<td><strong>Chad Cromwell</strong></td>
+</tr>
+<tr>
+<td><code>[• Treasurer / Chief Financial Officer]</code></td>
+<td><code>[• — e.g., Chad Cromwell or Oran Cromwell]</code></td>
+</tr>
+<tr>
+<td><code>[• Secretary]</code></td>
+<td><code>[• ]</code></td>
+</tr>
+</tbody></table>
+<p><em>(Oran Cromwell is eligible to serve as an officer; complete as the Members decide.)</em></p>
+<h3 id="5-tax-matters-and-partnership-representative">5. Tax matters and Partnership Representative</h3>
+<p><strong>RESOLVED</strong>, that the Company shall be treated as a <strong>partnership</strong> for U.S. federal income
+tax purposes (multi-member LLC), and no officer shall make an election to the contrary without
+Member approval as a Reserved Matter.</p>
+<p><strong>RESOLVED FURTHER</strong>, that <strong>Chad Cromwell</strong> is designated the Company&#39;s <strong>Partnership
+Representative</strong> under IRC § 6223 (BBA centralized partnership audit rules).</p>
+<p><strong>RESOLVED FURTHER</strong>, that the fiscal year of the Company is the <strong>calendar year</strong>, subject to
+change on CPA advice. <strong>⚖</strong></p>
+<h3 id="6-ein-bank-account-and-the-ip-technology-assignment">6. EIN, bank account, and the IP / Technology Assignment</h3>
+<p><strong>RESOLVED</strong>, that the appropriate officer is authorized and directed to apply for an
+<strong>Employer Identification Number (EIN)</strong> from the Internal Revenue Service. <code>[• EIN once issued]</code></p>
+<p><strong>RESOLVED FURTHER</strong>, that the Company shall open one or more <strong>corporate bank accounts</strong> at
+<strong><code>[• Mercury / Brex / other fintech-friendly bank]</code></strong> (<code>CORPORATE-STRUCTURE.md</code> §7), that
+<strong>Chad Cromwell</strong> (and <code>[• any additional authorized signatory]</code>) is an authorized signatory,
+and that the bank&#39;s resolution forms are approved; <strong>Company funds shall not be commingled</strong>
+with any Member&#39;s personal funds.</p>
+<p><strong>RESOLVED FURTHER</strong>, that the Company is authorized and directed to accept and the Manager to
+execute the <strong>IP / Technology Assignment Agreement</strong> by which <strong>Chad Cromwell</strong> (and any other
+contributor) <strong>assigns to the Company</strong> all right, title, and interest in the software, source
+code, designs, the <strong>&quot;Goemon&quot;</strong> marks, domains (including goemonglobal.com), and architecture
+documentation comprising the Goemon product (the &quot;<strong>Contributed IP</strong>&quot;), as a capital
+contribution credited to the contributing Member&#39;s capital account at the agreed value of
+<code>[• $ value]</code>. This is the priority post-formation action under <code>CORPORATE-STRUCTURE.md</code> §5.
+<strong>⚖ — confirm IP valuation and § 721 treatment with the CPA; the Assignment is drafted as a
+separate instrument.</strong></p>
+<p><strong>RESOLVED FURTHER</strong>, that the Company shall require every future employee, contractor, and
+contributor to execute a <strong>Confidential Information and Invention Assignment Agreement</strong> before
+performing work.</p>
+<h3 id="7-adoption-of-the-equity-incentive-plan">7. Adoption of the Equity Incentive Plan</h3>
+<p><strong>RESOLVED</strong>, that the <strong>Goemon Global Finance, LLC Equity Incentive Plan (Unit Option &amp;
+Profits Interest Plan)</strong> (<code>EQUITY-INCENTIVE-PLAN.md</code>) is <strong>adopted and approved</strong>, and that
+<strong>900,000 Units (9%)</strong> are reserved for issuance thereunder.</p>
+<p><strong>RESOLVED FURTHER</strong>, that the <strong>Manager is authorized to grant profits interests and Unit
+options</strong> from the reserved Pool to eligible employees, advisors, contractors, and
+venture/strategic partners, and to execute award agreements and joinders, without further
+Member action, provided aggregate awards do not exceed the Pool; and that the Manager shall
+maintain a threshold/hurdle value for each profits interest as of its grant date. <strong>⚖ / CPA —
+profits-interest hurdle valuation and § 83(b) guidance.</strong></p>
+<h3 id="8-regulatory-ip-protection-and-advisory-authorizations">8. Regulatory, IP-protection, and advisory authorizations</h3>
+<p><strong>RESOLVED</strong>, that the appropriate officer is authorized to:</p>
+<ol>
+<li>Determine the Company&#39;s obligations under the <strong>FinCEN Beneficial Ownership Information
+(BOI)</strong> rules and, if applicable, file the BOI report identifying the beneficial owners
+(<strong>Chad Cromwell, 51%; Oran Cromwell, 40%</strong>) and any company applicant. <strong>⚖ — BOI rules
+have shifted; confirm current applicability and deadlines before filing.</strong></li>
+<li><strong>Foreign-qualify</strong> the Company in <code>[• home state of operation]</code> and any other state where
+it transacts business, and appoint registered agents there.</li>
+<li>File <strong>trademark</strong> applications for the &quot;Goemon&quot; marks with the USPTO, company-owned via the
+IP Assignment (Resolution 6).</li>
+<li>Engage a <strong>startup CPA</strong> and <strong>fintech/securities counsel</strong>, and adopt the Phase-A
+compliance posture (non-custodial, no customer funds, not a &quot;bank&quot;) per
+<code>CORPORATE-STRUCTURE.md</code> §6, §9 and <code>docs/GOEMON-BRAND.md</code> §5.</li>
+<li>Procure business, cyber/tech E&amp;O, and D&amp;O insurance as the Manager deems prudent.</li>
+</ol>
+<h3 id="9-general-authorization">9. General authorization</h3>
+<p><strong>RESOLVED</strong>, that the Manager and officers are authorized to take all further actions and
+execute all further documents reasonably necessary to carry out the intent of these
+resolutions; and that all such actions taken prior to the date hereof in furtherance of the
+Company&#39;s organization are <strong>ratified, confirmed, and approved</strong>.</p>
+<hr>
+<h2 id="execution-unanimous-written-consent">EXECUTION (Unanimous Written Consent)</h2>
+<p>The undersigned execute this consent as of the Effective Date.</p>
+<p><strong>ORGANIZER:</strong></p>
+<hr>
+<p><strong>Chad Cromwell</strong>, Organizer — Date <code>[• ]</code></p>
+<p><strong>MANAGER:</strong></p>
+<hr>
+<p><strong>Chad Cromwell</strong>, Manager and Chief Executive Officer — Date <code>[• ]</code></p>
+<p><strong>MEMBERS (all Members; action is unanimous):</strong></p>
+<hr>
+<p><strong>Chad Cromwell</strong>, Member (51%) — Date <code>[• ]</code></p>
+<hr>
+<p><strong>Oran Cromwell</strong>, Member (40%) — Date <code>[• ]</code></p>
+<hr>
+<p><em>These resolutions establish governance. The public formation is the Articles of Organization;
+the contract among the Members is the Operating Agreement; the equity-incentive framework is the
+Equity Incentive Plan — all incorporated by reference above.</em></p>
+
+  </main>
+</div>
+</body></html>

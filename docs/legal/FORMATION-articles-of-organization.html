@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Articles of Organization — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Articles of Organization</h1>
+  <p class="sub">Goemon Global Finance, LLC — Wyoming Formation Document</p>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>June 30, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#filing-cover-sheet-for-reference-not-part-of-the-filed-articles">Filing cover sheet (for reference — not part of the filed Articles)</a></li><li class="lvl-2"><a href="#articles-of-organization-of-goemon-global-finance-llc">ARTICLES OF ORGANIZATION OF GOEMON GLOBAL FINANCE, LLC</a></li><li class="lvl-3"><a href="#article-i-name">Article I — Name</a></li><li class="lvl-3"><a href="#article-ii-registered-agent-and-registered-office">Article II — Registered Agent and Registered Office</a></li><li class="lvl-3"><a href="#article-iii-principal-office-and-mailing-address">Article III — Principal Office and Mailing Address</a></li><li class="lvl-3"><a href="#article-iv-management">Article IV — Management</a></li><li class="lvl-3"><a href="#article-v-purpose">Article V — Purpose</a></li><li class="lvl-3"><a href="#article-vi-duration">Article VI — Duration</a></li><li class="lvl-3"><a href="#article-vii-liability-and-indemnification">Article VII — Liability and Indemnification</a></li><li class="lvl-3"><a href="#article-viii-organizer">Article VIII — Organizer</a></li><li class="lvl-3"><a href="#article-ix-effective-date">Article IX — Effective Date</a></li><li class="lvl-2"><a href="#execution">Execution</a></li><li class="lvl-2"><a href="#post-filing-checklist-do-not-file-this-section-operational-reminders">Post-filing checklist (do not file this section — operational reminders)</a></li></ol></nav>
+  <main class="content">
+<h1 id="articles-of-organization-goemon-global-finance-llc">Articles of Organization — Goemon Global Finance, LLC</h1>
+<blockquote>
+<p><strong>Counsel must review and customize before filing.</strong> This is an attorney-grade
+<strong>scaffold</strong>, not filed legal advice. Bracketed <code>[•]</code> fields must be completed; items
+tagged <strong>⚖ see counsel</strong> require a Wyoming-licensed attorney and/or CPA before reliance.
+File this with the <strong>Wyoming Secretary of State</strong> (online filing or Form). Statutory
+references are to the <strong>Wyoming Limited Liability Company Act</strong>, Wyo. Stat. §§ 17-29-101
+<em>et seq.</em></p>
+<p>Companion strategy: <code>docs/business/CORPORATE-STRUCTURE.md</code> (§2 entity, §3 jurisdiction).
+Companion governance: <code>OPERATING-AGREEMENT.md</code>, <code>INITIAL-RESOLUTIONS.md</code>,
+<code>EQUITY-INCENTIVE-PLAN.md</code>.</p>
+</blockquote>
+<hr>
+<h2 id="filing-cover-sheet-for-reference-not-part-of-the-filed-articles">Filing cover sheet (for reference — not part of the filed Articles)</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Entity type</td>
+<td>Wyoming Limited Liability Company (domestic)</td>
+</tr>
+<tr>
+<td>Filing statute</td>
+<td>Wyo. Stat. § 17-29-201 (Articles of Organization)</td>
+</tr>
+<tr>
+<td>Filer / organizer</td>
+<td>Chad Cromwell</td>
+</tr>
+<tr>
+<td>Filing fee</td>
+<td>$100 (Wyoming SOS, subject to change) — <strong>⚖ confirm current fee</strong></td>
+</tr>
+<tr>
+<td>Annual report / license tax</td>
+<td>Due first day of anniversary month; minimum ~$60/yr — <strong>⚖ confirm</strong></td>
+</tr>
+<tr>
+<td>Effective date</td>
+<td>On filing, or <code>[•]</code> delayed effective date (≤ 90 days)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="articles-of-organization-of-goemon-global-finance-llc">ARTICLES OF ORGANIZATION OF GOEMON GLOBAL FINANCE, LLC</h2>
+<p>The undersigned, acting as organizer under the Wyoming Limited Liability Company Act
+(Wyo. Stat. §§ 17-29-101 <em>et seq.</em>), adopts the following Articles of Organization.</p>
+<h3 id="article-i-name">Article I — Name</h3>
+<p>The name of the limited liability company is:</p>
+<p><strong>Goemon Global Finance, LLC</strong> (the &quot;<strong>Company</strong>&quot;).</p>
+<p>The name complies with Wyo. Stat. § 17-16-401 / § 17-29-108: it contains the words
+&quot;Limited Liability Company&quot; in the abbreviated form &quot;LLC,&quot; and is distinguishable upon the
+records of the Wyoming Secretary of State. *(Confirm availability via the Wyoming SOS name
+search and reserve if needed — <strong>⚖</strong>.)*</p>
+<p><strong>Trade name / DBA:</strong> The Company intends to operate the product and market under the brand
+<strong>&quot;Goemon&quot;</strong> and the domain <strong>goemonglobal.com</strong>; a trade-name (DBA) registration will be
+filed where required. See <code>docs/GOEMON-BRAND.md</code>.</p>
+<h3 id="article-ii-registered-agent-and-registered-office">Article II — Registered Agent and Registered Office</h3>
+<p>The name and physical street address (no P.O. box) of the Company&#39;s registered agent and
+registered office in the State of Wyoming are:</p>
+<ul>
+<li><strong>Registered agent:</strong> <code>[• Registered agent name — e.g., Wyoming Agents, LLC / Northwest Registered Agent]</code></li>
+<li><strong>Registered office (street):</strong> <code>[• Street address, City, WY ZIP]</code></li>
+</ul>
+<p>The registered agent has consented to appointment as required by Wyo. Stat. § 17-28-101
+<em>et seq.</em> (a signed <strong>Consent to Appointment of Registered Agent</strong> is filed with or retained
+alongside these Articles).</p>
+<h3 id="article-iii-principal-office-and-mailing-address">Article III — Principal Office and Mailing Address</h3>
+<ul>
+<li><strong>Principal office (street):</strong> <code>[• Street address, City, State, ZIP]</code></li>
+<li><strong>Mailing address (if different):</strong> <code>[• Address]</code></li>
+</ul>
+<p><em>(Wyoming permits the principal office to be located outside Wyoming. The Company will
+<strong>foreign-qualify</strong> in each state where it transacts business — including the organizer&#39;s
+home state of operation — see <code>CORPORATE-STRUCTURE.md</code> §3, §9.)</em> <strong>⚖ confirm home-state
+foreign-qualification requirement.</strong></p>
+<h3 id="article-iv-management">Article IV — Management</h3>
+<p>The Company is <strong>manager-managed</strong>. Management is vested in one or more managers pursuant
+to Wyo. Stat. § 17-29-407(c) and the Company&#39;s Operating Agreement.</p>
+<ul>
+<li><strong>Initial Manager:</strong> <strong>Chad Cromwell</strong> (also serving as Chief Executive Officer).</li>
+</ul>
+<p>The members have so elected in the Operating Agreement (<code>OPERATING-AGREEMENT.md</code>, Article V)
+and the Initial Resolutions (<code>INITIAL-RESOLUTIONS.md</code>).</p>
+<h3 id="article-v-purpose">Article V — Purpose</h3>
+<p>The Company is organized to engage in <strong>any lawful business, purpose, or activity</strong> for which
+a limited liability company may be organized under the laws of the State of Wyoming.</p>
+<p>For descriptive reference (not a limitation): the Company develops and licenses
+<strong>non-custodial financial software and tokenization infrastructure</strong> — a non-custodial
+wallet, double-entry ledger, decentralized-identity/verifiable-credential systems, and
+agent-native commerce tooling. In <strong>Phase A</strong> the Company does not take custody of customer
+funds, does not move customer money as an intermediary, and <strong>is not a bank</strong>. See
+<code>CORPORATE-STRUCTURE.md</code> §6 and <code>docs/GOEMON-BRAND.md</code> §5. <strong>⚖ regulated-scope counsel.</strong></p>
+<h3 id="article-vi-duration">Article VI — Duration</h3>
+<p>The duration of the Company is <strong>perpetual</strong>, unless dissolved earlier in accordance with the
+Operating Agreement or the Wyoming LLC Act.</p>
+<h3 id="article-vii-liability-and-indemnification">Article VII — Liability and Indemnification</h3>
+<p>No member or manager of the Company is personally liable for the debts, obligations, or
+liabilities of the Company solely by reason of being a member or manager, as provided in
+Wyo. Stat. § 17-29-304. The Company shall indemnify its managers, members, and officers to
+the fullest extent permitted by the Wyoming LLC Act, as further set forth in the Operating
+Agreement (Article XII).</p>
+<h3 id="article-viii-organizer">Article VIII — Organizer</h3>
+<p>The name and address of the organizer executing these Articles is:</p>
+<ul>
+<li><strong>Organizer:</strong> <strong>Chad Cromwell</strong></li>
+<li><strong>Address:</strong> <code>[• Street address, City, State, ZIP]</code></li>
+</ul>
+<p>The organizer is not required to be a member of the Company.</p>
+<h3 id="article-ix-effective-date">Article IX — Effective Date</h3>
+<p>These Articles are effective <strong>upon filing</strong> by the Wyoming Secretary of State, OR on the
+following delayed effective date (not more than 90 days after filing): <code>[• optional date]</code>.</p>
+<hr>
+<h2 id="execution">Execution</h2>
+<p>IN WITNESS WHEREOF, the undersigned organizer has executed these Articles of Organization.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Signature:</td>
+<td>_______________________________</td>
+</tr>
+<tr>
+<td>Name:</td>
+<td><strong>Chad Cromwell</strong></td>
+</tr>
+<tr>
+<td>Capacity:</td>
+<td>Organizer</td>
+</tr>
+<tr>
+<td>Date:</td>
+<td><code>[• date]</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="post-filing-checklist-do-not-file-this-section-operational-reminders">Post-filing checklist (do not file this section — operational reminders)</h2>
+<p>These are authorized in <code>INITIAL-RESOLUTIONS.md</code> and tracked in <code>CORPORATE-STRUCTURE.md</code> §9–§10:</p>
+<ol>
+<li><strong>Obtain EIN</strong> from the IRS (free; gates the corporate bank account). <code>[• EIN: __-_______ once issued]</code></li>
+<li><strong>Adopt the Operating Agreement</strong> — <code>OPERATING-AGREEMENT.md</code> (the governance cornerstone).</li>
+<li><strong>Execute the IP / Technology Assignment</strong> (repo code, designs, Goemon marks, domains →
+the Company). The single highest-priority post-formation action — see
+<code>CORPORATE-STRUCTURE.md</code> §5. <em>(Drafted separately; ⚖.)</em></li>
+<li><strong>FinCEN Beneficial Ownership Information (BOI) report</strong> — confirm current applicability
+and deadline; report the beneficial owners (Chad Cromwell 51%; Oran Cromwell 40%) and
+company applicant if required. <strong>⚖ — BOI rules have shifted; verify current status before
+relying on any deadline.</strong></li>
+<li><strong>Foreign-qualify</strong> in the home state of operation; appoint a registered agent there.</li>
+<li><strong>Open the corporate bank account</strong> (Mercury / Brex per <code>CORPORATE-STRUCTURE.md</code> §7) — no
+commingling; keep customer-adjacent funds (if any ever arise) in separate FBO/escrow.</li>
+<li><strong>File the trademark</strong> for the Goemon marks (USPTO), company-owned via the IP assignment.</li>
+<li><strong>Calendar the Wyoming annual report</strong> (anniversary month) and registered-agent renewal.</li>
+</ol>
+<hr>
+<p><em>These Articles, once filed, establish the Company. Internal governance — ownership,
+management, capital, the equity plan — lives in the Operating Agreement and is adopted by the
+Initial Resolutions, not in this public filing.</em></p>
+
+  </main>
+</div>
+</body></html>
