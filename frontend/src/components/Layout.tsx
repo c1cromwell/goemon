@@ -98,7 +98,7 @@ export function Layout() {
             <BrandMark size={18} />
             <span className="streak-dot" title="Active streak" />
           </span>
-          Goemon Global Finance
+          GOEMON
         </div>
 
         {PRIMARY.map((item) => (

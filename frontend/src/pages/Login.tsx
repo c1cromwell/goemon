@@ -58,7 +58,7 @@ export function Login() {
           <span className="mark">
             <BrandMark size={18} />
           </span>
-          Goemon Global Finance
+          GOEMON
         </div>
         <p className="micro" style={{ margin: "0 0 18px", color: "var(--accent-strong)", letterSpacing: "0.04em", textTransform: "uppercase" }}>
           Every conversation, a proof.
@@ -117,7 +117,7 @@ export function Login() {
         {error ? <p className="error" style={{ marginTop: 14 }}>{error}</p> : null}
 
         <p className="muted small" style={{ marginTop: 22 }}>
-          New to Goemon Global Finance? <Link to="/register" style={{ color: "var(--accent)", fontWeight: 600 }}>Create an account</Link>
+          New to Goemon? <Link to="/register" style={{ color: "var(--accent)", fontWeight: 600 }}>Create an account</Link>
         </p>
       </div>
     </div>

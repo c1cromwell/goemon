@@ -892,6 +892,10 @@ th {
   align-items: center;
   padding: clamp(28px, 6vw, 72px) 0;
 }
+/* Single-column hero (homepage) — no big lockup; that lives only on the waitlist hero. */
+.landing-hero-solo {
+  padding: clamp(32px, 7vw, 84px) 0;
+}
 .eyebrow {
   font-family: var(--mono);
   font-size: 12px;

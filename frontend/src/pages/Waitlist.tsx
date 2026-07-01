@@ -47,11 +47,12 @@ export function Waitlist({ source = "waitlist" }: { source?: string }) {
           <span className="mark">
             <BrandMark size={26} />
           </span>
-          <span>
-            GOEMON <span className="muted" style={{ fontWeight: 500 }}>Global Finance</span>
-          </span>
+          <span>GOEMON</span>
         </div>
-        <a className="micro-link" href="#join">Join waitlist</a>
+        <div className="row" style={{ gap: 18 }}>
+          <Link className="micro-link" to="/login">Log in</Link>
+          <a className="micro-link" href="#join">Join waitlist</a>
+        </div>
       </header>
 
       <section className="landing-hero">

@@ -25,13 +25,16 @@ export function Welcome() {
       <header className="landing-bar">
         <div className="brand">
           <span className="mark"><BrandMark size={26} /></span>
-          <span>GOEMON <span className="muted" style={{ fontWeight: 500 }}>Global Finance</span></span>
+          <span>GOEMON</span>
         </div>
-        <Link className="micro-link" to="/waitlist">Join waitlist</Link>
+        <div className="row" style={{ gap: 18 }}>
+          <Link className="micro-link" to="/login">Log in</Link>
+          <Link className="micro-link" to="/waitlist">Join waitlist</Link>
+        </div>
       </header>
 
-      <section className="landing-hero">
-        <div className="stack" style={{ gap: 18 }}>
+      <section className="landing-hero-solo">
+        <div className="stack" style={{ gap: 18, maxWidth: 760 }}>
           <span className="eyebrow">Every conversation, a proof.</span>
           <h1 className="hero-title">Verifiable finance, keys you control.</h1>
           <p className="hero-sub">
@@ -43,9 +46,6 @@ export function Welcome() {
             <Link to="/waitlist"><button className="lg">Join the waitlist</button></Link>
             <a href="#hold"><button className="ghost lg">See what you can hold</button></a>
           </div>
-        </div>
-        <div className="hero-art" aria-hidden="true">
-          <img src="/brand/hero-light.png" alt="Goemon Global Finance" />
         </div>
       </section>
 

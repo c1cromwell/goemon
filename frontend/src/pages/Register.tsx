@@ -59,7 +59,7 @@ export function Register() {
           <span className="mark">
             <BrandMark size={18} />
           </span>{" "}
-          Goemon Global Finance
+          GOEMON
         </div>
 
         {step === "form" ? (
