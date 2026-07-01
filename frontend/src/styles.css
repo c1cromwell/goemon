@@ -1019,3 +1019,54 @@ th {
 @media (max-width: 720px) {
   .pillars { grid-template-columns: 1fr; }
 }
+
+/* ----------------------------------------------------------------------------
+ * Stepper (issuance console wizard)
+ * ------------------------------------------------------------------------- */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.stepper-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 6px;
+  border-radius: var(--r-pill);
+  color: var(--text-3);
+  font-size: 13px;
+  font-weight: 600;
+}
+.stepper-item.active {
+  color: var(--text);
+  background: var(--accent-weak);
+}
+.stepper-item.done {
+  color: var(--text-2);
+}
+.stepper-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--line);
+}
+.stepper-item.active .stepper-dot {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: transparent;
+}
+.stepper-item.done .stepper-dot {
+  background: var(--accent-strong);
+  color: var(--on-accent);
+  border-color: transparent;
+}
+@media (max-width: 620px) {
+  .stepper-label { display: none; }
+}

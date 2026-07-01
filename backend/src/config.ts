@@ -154,6 +154,12 @@ const schema = z.object({
   EQUITIES_ENABLED: boolish,
   EQUITY_ISSUER: z.enum(["simulated", "dinari", "firstparty"]).default("simulated"),
 
+  // Phase 29 (P1) — self-serve tokenization / issuance console. Off by default; a kill-switch
+  // that gates the issuer surface (create a compliant token from an asset type + compliance
+  // profile, mint, optionally list). Prototype: prod-fatal until per-asset securities counsel
+  // signs off the issuance flow. See docs/TOKENIZATION-MASTER-PLAN.md (P1).
+  ISSUANCE_CONSOLE_ENABLED: boolish,
+
   // X-Money response F1 — tokenized yield-bearing Treasury (prototype seam). Off by default;
   // a kill-switch (prod-fatal — it's a security; real launch needs issuer/transfer-agent/ATS +
   // counsel). The competitive counter to a custodial 6% APY: own a yield-bearing ASSET whose
@@ -401,6 +407,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.EQUITIES_ENABLED) {
     fatal.push("EQUITIES_ENABLED must be false in production — the Phase-18.6 tokenized-equities seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");
+  }
+  if (c.ISSUANCE_CONSOLE_ENABLED) {
+    fatal.push("ISSUANCE_CONSOLE_ENABLED must be false in production — the Phase-29 issuance console is a prototype; per-asset securities counsel + issuer/transfer-agent sign-off is required before self-serve tokenization.");
   }
   if (c.ONRAMP_ENABLED && c.ONRAMP_PROVIDER === "simulated") {
     fatal.push("ONRAMP_ENABLED with ONRAMP_PROVIDER=simulated must not run in production — wire a licensed on-ramp (moonpay/stripe/coinbase) that takes the fiat + KYC under its own license.");

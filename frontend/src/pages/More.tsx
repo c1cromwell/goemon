@@ -25,6 +25,7 @@ const GROUPS: Array<{ title: string; links: Array<{ to: string; label: string }>
     links: [
       { to: "/trade", label: "Trade" },
       { to: "/drops", label: "Drops" },
+      { to: "/issuer", label: "Tokenize" },
     ],
   },
   {

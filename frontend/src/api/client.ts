@@ -1231,3 +1231,54 @@ export const waitlistApi = {
   join: (email: string, source?: string) =>
     http<{ ok: boolean }>("/waitlist", { method: "POST", body: { email, source } }),
 };
+
+// Issuance console (Phase 29 P1).
+export interface IssuerAssetType {
+  kind: string;
+  defaultTokenStandard: string;
+  isSecurity: boolean;
+  complianceProfile: string;
+  label: string;
+  enabled: boolean;
+}
+export interface IssuerComplianceProfile {
+  name: string;
+  label: string;
+  description: string;
+  dimensions: string[];
+}
+export interface IssuerOptions {
+  enabled: boolean;
+  assetTypes: IssuerAssetType[];
+  complianceProfiles: IssuerComplianceProfile[];
+}
+export interface IssuedAsset {
+  id: string;
+  kind: string;
+  name: string;
+  symbol: string | null;
+  tokenStandard: string;
+  isSecurity: boolean;
+  totalSupply: string;
+  status?: string;
+}
+export interface IssueAssetInput {
+  kind: string;
+  name: string;
+  symbol?: string;
+  decimals?: number;
+  complianceProfile?: string;
+  minTier?: number;
+  jurisdictionAllow?: string[];
+  holderCap?: number;
+  whitelist?: string[];
+  metadata?: Record<string, unknown>;
+  initialSupply: string;
+  listing?: { surface: "invest" | "collect"; priceMinor: string; priceSource?: string };
+}
+export const issuerApi = {
+  options: () => uget<IssuerOptions>("/issuer/options"),
+  mine: () => uget<{ assets: IssuedAsset[] }>("/issuer/assets"),
+  create: (body: IssueAssetInput, key: string) =>
+    umoney<{ asset: IssuedAsset; listed: boolean; complianceProfile: string }>("/issuer/assets", body, key),
+};

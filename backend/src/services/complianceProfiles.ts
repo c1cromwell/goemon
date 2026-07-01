@@ -111,6 +111,48 @@ export function resolveComplianceProfile(asset: Asset): string {
   return asset.isSecurity ? "security-erc3643" : "exempt-basic";
 }
 
+/** Plain-language descriptions for the issuance console (P1) — customers aren't compliance lawyers. */
+export interface ComplianceProfileInfo {
+  name: string;
+  label: string;
+  description: string;
+  dimensions: string[];
+}
+
+const PROFILE_META: Record<string, { label: string; description: string }> = {
+  "exempt-basic": {
+    label: "Open (no securities rules)",
+    description: "Anyone verified can hold or receive. For collectibles and non-security assets.",
+  },
+  "security-erc3643": {
+    label: "Regulated security",
+    description: "Recipients must meet the tier, allowed jurisdictions, and the investor-count limit.",
+  },
+  "security-whitelisted": {
+    label: "Private placement (whitelist)",
+    description: "Only pre-approved wallets on the asset's whitelist may hold — plus the security rules.",
+  },
+  "security-accredited": {
+    label: "Accredited investors only",
+    description: "Recipients must be verified accredited investors — plus the security rules.",
+  },
+};
+
+/** All named compliance profiles with plain-language labels (for the type/profile pickers). */
+export function listComplianceProfiles(): ComplianceProfileInfo[] {
+  return Object.keys(PROFILES).map((name) => ({
+    name,
+    label: PROFILE_META[name]?.label ?? name,
+    description: PROFILE_META[name]?.description ?? "",
+    dimensions: PROFILES[name]!,
+  }));
+}
+
+/** True if the profile name is known. */
+export function isKnownComplianceProfile(name: string): boolean {
+  return name in PROFILES;
+}
+
 /** Run a profile's dimensions in order, short-circuiting on the first failure. */
 export async function runComplianceProfile(profileName: string, ctx: DimensionCtx): Promise<ComplianceResult> {
   const dims = PROFILES[profileName] ?? PROFILES["exempt-basic"]!;
