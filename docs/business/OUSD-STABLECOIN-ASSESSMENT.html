@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open USD (OUSD) — Stablecoin Assessment — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Open USD (OUSD) — Stablecoin Assessment</h1>
+  <p class="sub">Goemon Global Finance — decision memo (prepare &amp; position, not a pivot)</p>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>July 1, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-tldr-recommendation">1. TL;DR / recommendation</a></li><li class="lvl-2"><a href="#2-verified-facts-cited">2. Verified facts (cited)</a></li><li class="lvl-2"><a href="#3-why-this-is-not-a-pivot">3. Why this is not a &quot;pivot&quot;</a></li><li class="lvl-2"><a href="#4-strategic-fit-upside">4. Strategic fit / upside</a></li><li class="lvl-2"><a href="#5-risks-open-questions-must-resolve-before-adopting">5. Risks &amp; open questions (must resolve before adopting)</a></li><li class="lvl-2"><a href="#6-what-we-did-now-readiness-not-integration">6. What we did now (readiness, not integration)</a></li><li class="lvl-2"><a href="#7-recommendation-restated">7. Recommendation (restated)</a></li></ol></nav>
+  <main class="content">
+<h1 id="open-usd-ousd-stablecoin-assessment-for-goemon-global-finance">Open USD (OUSD) — Stablecoin Assessment for Goemon Global Finance</h1>
+<blockquote>
+<p><strong>Decision memo.</strong> Question posed: <em>should Goemon pivot to Open USD (OUSD)?</em> Short answer:
+<strong>No — and it isn&#39;t a &quot;pivot.&quot;</strong> OUSD is a <em>settlement-stablecoin option</em> that fits Goemon&#39;s
+existing &quot;distribute, don&#39;t issue&quot; thesis. Recommendation: <strong>prepare &amp; position</strong> — stay on
+Hedera + USDC today, build OUSD-readiness, <strong>apply to Open Standard&#39;s partner program now</strong>,
+and adopt when OUSD is live <em>and</em> its openness/yield-share terms are confirmed.</p>
+<p>Prepared 2026-07-01. OUSD was announced 2026-06-30 (one day prior) — treat everything below as
+an <strong>announcement of a design</strong>, not an operating product. Facts adversarially verified via a
+multi-source deep-research pass (21 confirmed / 4 refuted claims). Not legal or investment
+advice. ⚖ counsel for any regulated step.</p>
+</blockquote>
+<hr>
+<h2 id="1-tldr-recommendation">1. TL;DR / recommendation</h2>
+<ul>
+<li><strong>Do not pivot.</strong> Goemon is tokenization-first with a <strong>swappable stablecoin settlement layer</strong>
+(currently USDC-on-Hedera). OUSD is a candidate settlement asset, not a change of strategy.</li>
+<li><strong>It aligns with the brand.</strong> OUSD returns <strong>most reserve yield to the businesses that
+distribute it</strong> (vs Circle/Tether, who keep it). That is literally Goemon&#39;s
+&quot;resist-extractive-intermediaries&quot; ethos — and a potential <strong>new revenue line</strong> (reserve-yield
+as a distributor).</li>
+<li><strong>But it&#39;s not investable yet:</strong> OUSD is <strong>not live</strong> (launches &quot;later in 2026&quot;), and the
+single most decision-relevant fact — <strong>can a small non-consortium fintech actually integrate,
+mint/redeem, and earn the yield-share, or is it gated to the 140 members?</strong> — is <strong>unverified</strong>
+(sources say &quot;approved businesses,&quot; which <em>hints</em> at gating).</li>
+<li><strong>Action:</strong> (a) <strong>apply to Open Standard&#39;s partner / early-access program now</strong> to resolve the
+open questions in §5; (b) keep <strong>Hedera + USDC</strong> as the shipping default; (c) land the
+readiness code (§6) — done in this change; (d) revisit the Base/Solana <strong>multi-chain settlement
+refactor</strong> only when OUSD is live and terms are confirmed favorable.</li>
+</ul>
+<hr>
+<h2 id="2-verified-facts-cited">2. Verified facts (cited)</h2>
+<p>Confidence and adversarial vote noted per item; primary source is the consortium&#39;s own site
+(self-interested) plus reputable trade/financial press.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Claim</th>
+<th>Confidence</th>
+<th>Vote</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Operated by <strong>Open Standard</strong>, an independent company with <strong>consortium/partner-board governance</strong>; <strong>CEO Zach Abrams</strong> (co-founder of Bridge, acquired by Stripe ~$1.1B). (&quot;founding&quot; vs &quot;interim&quot; CEO varies by outlet.)</td>
+<td>High</td>
+<td>3-0</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>140+ partners.</strong> All ten from the original brief <strong>confirmed</strong>: Visa, Mastercard, Stripe, BlackRock, Google, Shopify, Coinbase, Ripple, BNY, Western Union — plus Solana, DoorDash, Amex, Discover, Adyen, Fiserv, Standard Chartered, Klarna, Chime, MetaMask, Aave, Fireblocks, and more.</td>
+<td>High</td>
+<td>3-0</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Economics:</strong> zero-fee mint/redeem at <strong>1:1, no volume caps</strong> (&quot;even at scale&quot;); <strong>nearly all reserve yield shared with adoption/distribution partners</strong>, minus a <strong>small (undisclosed) management fee</strong> to Open Standard (the issuer of record). <em>Stated design, not operationally proven.</em></td>
+<td>High</td>
+<td>3-0</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Blockchain-agnostic, multi-chain.</strong> <strong>Base + Solana</strong> appear across nearly all reports; Ethereum / Tempo / Stellar / Polygon vary by outlet. Goes <strong>live &quot;later in 2026&quot;</strong> — an announcement, not a product.</td>
+<td>Medium</td>
+<td>2-1</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Circle (USDC), Tether (USDT), and PayPal are NOT participating.</strong> OUSD is explicitly positioned as a rival that redirects reserve profits away from Circle/Tether; <strong>Circle stock fell ~8–15%</strong> on the news.</td>
+<td>High</td>
+<td>3-0</td>
+</tr>
+</tbody></table>
+<p><strong>Refuted / excluded (adversarially killed):</strong> a &quot;150+ companies&quot; figure (1-2); a claim that
+<strong>PayPal</strong> is a partner (0-3 — it is not); a &quot;Solana-only, no Base&quot; chain list (0-3); a
+&quot;Solana/Stellar/Base/Polygon&quot; definitive list (1-2). Treat any single article&#39;s partner roster
+or chain list as incomplete.</p>
+<p><strong>Key sources:</strong> joinopenstandard.com (primary) · americanbanker.com · fortune.com ·
+bloomberg.com · theblock.co · coindesk.com · cryptobriefing.com · fxstreet.com. (Full source set
+in the research run; lower-tier crypto outlets used only for corroboration.)</p>
+<hr>
+<h2 id="3-why-this-is-not-a-pivot">3. Why this is not a &quot;pivot&quot;</h2>
+<ul>
+<li><strong>Goemon already is a stablecoin-settled, non-custodial platform.</strong> It settles in <strong>USDC on
+Hedera</strong> and its double-entry ledger is <strong>multi-currency at the core</strong> — currencies are
+registry-driven (<code>backend/src/services/currencyRegistry.ts</code>); adding a stablecoin on Hedera is
+a ~2-line change.</li>
+<li><strong>Goemon&#39;s stated posture is already &quot;distribute stablecoins, don&#39;t issue&quot;</strong>
+(<code>RAILS-CURRENCY-STRATEGY.md</code>, <code>RWA-NEOBANK-COMPETITIVE-REVIEW.md</code> §3). OUSD is simply another —
+arguably better-aligned — stablecoin to <em>distribute</em>. Goemon would <strong>never be the issuer</strong>;
+Open Standard is the issuer of record and bears the stablecoin regime (GENIUS Act, reserves).</li>
+<li>So the real decision is narrow: <strong>which settlement stablecoin(s) does Goemon distribute, and
+when</strong> — not &quot;should we become something else.&quot;</li>
+</ul>
+<hr>
+<h2 id="4-strategic-fit-upside">4. Strategic fit / upside</h2>
+<ul>
+<li><strong>Yield-share = revenue + brand fit.</strong> As a distributor, Goemon could capture a share of
+reserve yield it cannot get from USDC (Circle keeps it). This both adds a revenue line and
+embodies the Goemon ethos (return economics to the ecosystem, not the intermediary).</li>
+<li><strong>The consortium <em>is</em> Goemon&#39;s Phase-B partner set.</strong> Stripe, Visa, Coinbase, Western Union,
+Adyen, Standard Chartered, Chime — many are exactly the on-ramp / rail / BaaS partners Goemon&#39;s
+compliance ramp already depends on. If mainstream payments standardize on OUSD, settling in
+OUSD buys <strong>ecosystem interoperability</strong>.</li>
+<li><strong>Concentration hedge.</strong> A second, credibly-backed settlement stablecoin reduces single-issuer
+(USDC/Circle) dependence — consistent with the existing &quot;monitor de-peg / diversify&quot; note in
+<code>RAILS-CURRENCY-STRATEGY.md</code>.</li>
+</ul>
+<hr>
+<h2 id="5-risks-open-questions-must-resolve-before-adopting">5. Risks &amp; open questions (must resolve before adopting)</h2>
+<ul>
+<li><strong>Not live.</strong> Everything is an announced design; none of the zero-fee / no-cap / yield-share
+terms are operational or audited. Day-one hype ≠ execution.</li>
+<li><strong>⚑ Openness is the make-or-break unknown (verified unknown, 3-0).</strong> No primary source
+confirms a small non-consortium fintech can permissionlessly integrate/mint/redeem or earn the
+yield-share. &quot;Approved businesses&quot; language hints at <strong>gating</strong>. If gated to the 140 members,
+Goemon can only distribute <em>delivered</em> OUSD via on-ramp partners (Phase-A posture) — <strong>no
+direct yield-share</strong>, which removes much of the upside.</li>
+<li><strong>Undisclosed economics.</strong> The &quot;small&quot; management fee % and the yield-split formula are not
+public. &quot;Nearly all&quot; ≠ 100%; Open Standard still extracts a cut.</li>
+<li><strong>Chain mismatch → real cost.</strong> OUSD is <strong>Base/Solana</strong>; Goemon is <strong>Hedera-locked for v1</strong>.
+Native OUSD settlement would need the deferred <strong>multi-chain refactor</strong> (chain-agnostic
+settlement seam over <code>hederaService.ts</code>, real CCTP in <code>cctpService.ts</code>, multi-chain
+reconciliation) — roughly a <strong>4–6 week</strong> effort plus per-chain compliance. Interim reach is
+possible via CCTP once wired.</li>
+<li><strong>Regulatory posture unverified.</strong> Reserve custody, issuer-of-record specifics, and GENIUS-Act
+/ US charter status are unaddressed in current sources.</li>
+</ul>
+<p><strong>Questions to put to Open Standard (via the partner program):</strong></p>
+<ol>
+<li>Can a non-consortium fintech integrate, and mint/redeem, permissionlessly — or is it gated /
+&quot;approved&quot; / membership- or equity-tiered? What is the application process?</li>
+<li>Does <strong>reserve-yield sharing extend to non-founding distributors</strong>, and on what formula? What
+is the management-fee %?</li>
+<li>Who is the <strong>issuer of record</strong>, who <strong>custodies reserves</strong>, and what is the <strong>GENIUS-Act / US
+regulatory</strong> posture (bank / trust / MSB; state vs federal)?</li>
+<li>Definitive <strong>initial chain set</strong> and <strong>go-live date</strong> (Base + Solana confirmed; others vary);
+any <strong>Hedera</strong> support on the roadmap?</li>
+<li>KYC/AML, reserve, and capital requirements to become a <strong>minting/redeeming or distributing</strong>
+partner.</li>
+</ol>
+<hr>
+<h2 id="6-what-we-did-now-readiness-not-integration">6. What we did now (readiness, not integration)</h2>
+<p>Non-breaking prep so Goemon can move fast <em>if</em> the terms check out — runtime behavior unchanged
+(USDC-on-Hedera remains the only live settlement rail; verified by typecheck + tests):</p>
+<ul>
+<li><strong><code>currencyRegistry.ts</code></strong> — added an <strong><code>OUSD</code> entry, <code>enabled: false</code></strong> (ready to flip) and a
+<strong><code>settlementStablecoin()</code></strong> helper (the single seam future settlement code should read instead
+of the hardcoded <code>const ASSET = &quot;USDC&quot;</code> in <code>onRampService.ts</code> / <code>offRampService.ts</code>) — exported
+but intentionally <strong>not yet wired</strong>.</li>
+<li><strong><code>config.ts</code></strong> — added <strong><code>SETTLEMENT_STABLECOIN</code></strong> (<code>usdc</code> | <code>ousd</code> | <code>usdt</code>, default <code>usdc</code>);
+any non-<code>usdc</code> value is <strong>prod-fatal</strong> today (settlement of non-USDC isn&#39;t implemented).</li>
+<li><strong><code>db/money.ts</code></strong> — added <code>OUSD: 6</code> to <code>KNOWN_DECIMALS</code> for consistency.</li>
+</ul>
+<p><strong>Explicit future step (NOT done, gated on §5 answers + OUSD live):</strong> wire <code>settlementStablecoin()</code>
+into the on/off-ramp and pay paths, enable the registry entry, and — if native OUSD on Base/Solana
+is required — do the multi-chain settlement refactor.</p>
+<hr>
+<h2 id="7-recommendation-restated">7. Recommendation (restated)</h2>
+<p><strong>Prepare &amp; position.</strong> Keep shipping on Hedera + USDC. Apply to Open Standard&#39;s partner program
+now to resolve openness and yield-share eligibility — that answer, more than anything else,
+determines whether OUSD is a revenue-positive alignment or merely another stablecoin Goemon
+passively distributes. Re-evaluate the multi-chain refactor only when OUSD is live and the terms
+are confirmed favorable. Track here; revisit when Open Standard responds or at OUSD go-live.</p>
+<p><em>Companion docs: <code>RAILS-CURRENCY-STRATEGY.md</code> (settlement currency), <code>PAYMENT-NETWORK-STRATEGY.md</code>
+(Goemon Pay), <code>RWA-NEOBANK-COMPETITIVE-REVIEW.md</code> (stablecoin partner posture),
+<code>GOEMON-NEOBANK-ROADMAP.md</code> (waves).</em></p>
+
+  </main>
+</div>
+</body></html>

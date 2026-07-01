@@ -117,6 +117,15 @@ Cross-cutting thesis, echoed by every archetype: **the winning move for a non-cu
 
 **What to avoid / partner rather than build:** the US securities stack (BD/ATS/transfer agent — Ondo *bought* one; partner a Securitize-like); a bank-grade fiat stablecoin (SG-Forge shows the EMI/MiCA cost — partner Circle/SG-Forge); underwriting institutional credit (wrap Maple, don't originate); originating real-estate deeds (RealT's per-entity overhead — partner the issuer). And the commoditized layer — generic "RWA tokenization development" (Blockchain App Factory, BlockRidge's SaaS-only disclaimer) — is *the opposite* of Goemon's thesis: the moat is being a **regulated-posture, non-custodial operator that takes on the compliance burden**, not a vendor that disclaims it.
 
+**Update — the settlement stablecoin itself (Open USD / OUSD, announced 2026-06-30).** Beyond RWA
+issuers, a new **consortium stablecoin** (Open Standard; Visa/Mastercard/Stripe/BlackRock/Coinbase +
+140 partners) reframes the "partner Circle" call: OUSD promises zero-fee mint/redeem and **returns
+most reserve yield to distributors** (vs Circle keeping it) — better-aligned with Goemon's
+"distribute, don't issue" thesis *and* a potential revenue line. Still an announcement (live "later
+in 2026"), and whether a small fintech can integrate + earn the yield-share is unverified. Treat OUSD
+as a **settlement-stablecoin partner target**, not a build. Full analysis:
+[`OUSD-STABLECOIN-ASSESSMENT.md`](./OUSD-STABLECOIN-ASSESSMENT.md).
+
 ---
 
 ## §4 — Consolidated Sources

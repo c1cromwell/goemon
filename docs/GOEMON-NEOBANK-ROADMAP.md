@@ -99,6 +99,12 @@ broker-dealer / transfer-agent registration where unit economics justify recaptu
 | 1 | Treasury yield, SMB payments, trading, consumer banking/cards, agentic PM | **BaaS partner + FinCEN MSB**; broker-dealer/market-data partner for live trading; fund + custodian for treasury yield |
 | 2 | Credit card, tokenized-equity venue, real-estate issuance, own rails | **State MTLs / broker-dealer / ATS / transfer-agent registration**; issuer/placement partners |
 
+**Settlement stablecoin (cross-cutting).** All waves settle on Goemon's swappable stablecoin layer
+(USDC-on-Hedera today). **Open USD (OUSD)** — the 140-partner consortium stablecoin with
+distributor yield-sharing — is tracked as a **Wave-1+ settlement-stablecoin option** (prepare &
+position; not adopted until live + terms confirmed). See
+[`business/OUSD-STABLECOIN-ASSESSMENT.md`](./business/OUSD-STABLECOIN-ASSESSMENT.md).
+
 > This roadmap is strategy, not legal advice. Every gate must be confirmed with fintech/securities
 > counsel before launch (⚖). Figures and competitor facts are cited in
 > `docs/business/RWA-NEOBANK-COMPETITIVE-REVIEW.md` (with uncertainty flags).

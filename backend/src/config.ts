@@ -232,6 +232,13 @@ const schema = z.object({
   HEDERA_OPERATOR_KEY: z.string().optional(),
   HEDERA_USDC_TOKEN_ID: z.string().optional(),
 
+  // Settlement stablecoin selector — READINESS ONLY, not yet wired into the settlement
+  // paths (on/off-ramp/pay still settle USDC-on-Hedera). Tracks the Open USD (OUSD)
+  // assessment (docs/business/OUSD-STABLECOIN-ASSESSMENT.md): keep `usdc` until OUSD is
+  // live AND its openness/yield-share terms are confirmed, then enable the registry entry
+  // and wire the seam. Any non-usdc value is prod-fatal today (see productionFatals).
+  SETTLEMENT_STABLECOIN: z.enum(["usdc", "ousd", "usdt"]).default("usdc"),
+
   // Wallet extensions (competitive gap plan) — CCTP bridge, mirror polling, push, partners.
   CCTP_ENABLED: boolish,
   CCTP_PROVIDER: z.enum(["simulated", "circle"]).default("simulated"),
@@ -385,6 +392,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.FX_SETTLEMENT_ENABLED && c.FX_RATE_PROVIDER === "simulated") {
     fatal.push("FX_SETTLEMENT_ENABLED with FX_RATE_PROVIDER=simulated must not run in production — cross-currency settlement at a simulated rate is a prototype.");
+  }
+  if (c.SETTLEMENT_STABLECOIN !== "usdc") {
+    fatal.push("SETTLEMENT_STABLECOIN must be 'usdc' in production — non-USDC settlement (e.g. OUSD) is a readiness flag, not yet wired into the settlement paths. See docs/business/OUSD-STABLECOIN-ASSESSMENT.md.");
   }
   if (c.TREASURY_ENABLED) {
     fatal.push("TREASURY_ENABLED must be false in production — the tokenized-treasury seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");

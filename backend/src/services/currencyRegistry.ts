@@ -16,6 +16,7 @@
 
 import { z } from "zod";
 import { AppError, ErrorCode } from "../errors";
+import { config } from "../config";
 
 export type CurrencyKind = "fiat" | "stablecoin";
 
@@ -38,6 +39,10 @@ const REGISTRY: Record<string, CurrencyDef> = {
   USDC: { code: "USDC", decimals: 6, kind: "stablecoin", enabled: true, label: "USD Coin" },
   USDT: { code: "USDT", decimals: 6, kind: "stablecoin", enabled: true, label: "Tether USD" },
   EURC: { code: "EURC", decimals: 6, kind: "stablecoin", enabled: false, label: "Euro Coin" },
+  // Open USD (OUSD) — the 140-partner consortium stablecoin (Open Standard). DISABLED:
+  // readiness only, gated on OUSD being live + its openness/yield-share terms confirmed.
+  // See docs/business/OUSD-STABLECOIN-ASSESSMENT.md.
+  OUSD: { code: "OUSD", decimals: 6, kind: "stablecoin", enabled: false, label: "Open USD" },
 };
 
 function norm(code: string): string {
@@ -101,4 +106,19 @@ export function optionalCurrencySchema() {
 export function __setEnabledForTest(code: string, enabled: boolean): void {
   const c = REGISTRY[norm(code)];
   if (c) c.enabled = enabled;
+}
+
+/**
+ * The settlement-stablecoin seam (readiness only). Returns the currency code the
+ * money surface would settle on-chain in, from `SETTLEMENT_STABLECOIN` (default
+ * "USDC"). This is the SINGLE point future settlement code should read instead of
+ * the hardcoded `const ASSET = "USDC"` in onRampService/offRampService — but it is
+ * intentionally NOT wired into those paths yet: USDC-on-Hedera remains the only live
+ * settlement rail. Enabling OUSD requires (a) flipping its registry entry, (b) OUSD
+ * being live with confirmed openness/yield-share terms, and (c) the multi-chain
+ * (Base/Solana) settlement work. See docs/business/OUSD-STABLECOIN-ASSESSMENT.md.
+ * A non-usdc value is prod-fatal today (config.productionFatals).
+ */
+export function settlementStablecoin(): string {
+  return config.SETTLEMENT_STABLECOIN.toUpperCase();
 }

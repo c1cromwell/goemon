@@ -133,6 +133,12 @@ EUR stablecoins → **MiCA**. Multiple stablecoins also raise **de-peg / reserve
 | 10 | **Travel Rule at scale** | Per-jurisdiction originator/beneficiary data on cross-border | seam exists; wire a vendor at Corp B ⚖ |
 | 11 | **Treasury custody** | Multi-currency/stablecoin treasury keys — KMS/HSM + multisig (built for Hedera) | extend per chain |
 | 12 | **Dust / rounding** | 2dp fiat vs 6dp tokens; floor-rounding on conversion creates dust | handled by `Money.decimals`; define a dust policy at settlement |
+| 13 | **Consortium stablecoin (Open USD / OUSD)** | 140-partner (Visa/Mastercard/Stripe/BlackRock/Coinbase…) stablecoin that **returns reserve yield to distributors** (vs Circle keeping it) — a settlement-asset + revenue alignment, and a USDC-concentration hedge | **Prepare & position** — stay USDC-on-Hedera; readiness flag `SETTLEMENT_STABLECOIN` + disabled `OUSD` registry entry landed; **apply to Open Standard's partner program** to resolve openness/yield-share; adopt when live + terms confirmed (Base/Solana → multi-chain refactor). Full memo: [`OUSD-STABLECOIN-ASSESSMENT.md`](./OUSD-STABLECOIN-ASSESSMENT.md) |
+
+> **Open USD note.** OUSD (announced 2026-06-30, live "later in 2026") is **not a pivot** — it's a
+> candidate settlement stablecoin that fits Goemon's "distribute, don't issue" posture. The
+> make-or-break unknown is whether a small non-consortium fintech can integrate + earn the
+> yield-share, or whether it's gated to the 140 members. See the assessment memo.
 
 ---
 

@@ -102,7 +102,7 @@ Recommended order note: the plan lists Phase 2 next, but **Phase 4 (double-entry
 
 ## Locked architecture decisions
 
-- Blockchain: **Hedera** (single chain for v1).
+- Blockchain: **Hedera** (single chain for v1). Settlement stablecoin = **USDC on Hedera**; the money layer is registry-driven and swappable (`SETTLEMENT_STABLECOIN` readiness flag). **Open USD (OUSD)** — the 140-partner consortium stablecoin — is tracked as a settlement-stablecoin option, **not adopted** (gated on it going live + confirmed openness/yield-share terms); see `docs/business/OUSD-STABLECOIN-ASSESSMENT.md`.
 - Wallet: **native build** — keys in Secure Enclave / Android Keystore; server never holds a user's private key. (Vendor key-custody like Fireblocks Dynamic is a v2 review point.)
 - Token standards: ERC-3643 (HSCS) for securities; HTS native for collectibles and stablecoin ops.
 - Backend: **Go is the long-term target per the PRD**, but this prototype rebuild is **TypeScript/Node** for velocity. Treat the TS backend as the prototype; a Go reimplementation of money-critical services is a later decision.
