@@ -1,11 +1,12 @@
 /*
- * Goemon Global Finance — "Quiet Premium" design system (Phase 9).
+ * Goemon Global Finance — "Ink & Seal" design system.
  *
- * Monochrome surfaces + ONE accent. Type-led hierarchy (weight/size carries
- * structure, not color or emoji). Generous whitespace, card-based. Dark is the
- * default MODE, not the identity — a light palette is available via
- * <html data-theme="light">. Gamification is quiet: tier dots, a streak dot, a
- * progress ring; never confetti/XP/badges.
+ * Paper + ink carry everything; the Japanese-hanko SEAL RED is used sparingly —
+ * the mark's core, primary actions, and moments of emphasis. Deep wine is the
+ * quieter register for verified/pressed states. Type-led hierarchy: Space Grotesk
+ * (display) over Hanken Grotesk (body), JetBrains Mono for keys/DIDs. Light paper
+ * is the default MODE; an "on-dark" variant is available via <html data-theme="dark">.
+ * Gamification stays quiet: tier dots, a streak dot, a progress ring — never confetti.
  *
  * The Phase 5A admin pages reuse the bare element/utility selectors
  * (.page .card .bar button input label table .badge .muted .error) so they
@@ -13,33 +14,35 @@
  */
 
 /* ----------------------------------------------------------------------------
- * Tokens
+ * Tokens — Ink & Seal (light paper, default)
  * ------------------------------------------------------------------------- */
 :root {
-  /* Surfaces (dark, default) */
-  --bg: #0b0d10;
-  --bg-elev: #101317;
-  --surface: #15181d;
-  --surface-2: #1b1f26;
-  --line: #262b33;
-  --line-strong: #333a45;
+  /* Surfaces (paper, default) */
+  --bg: #f4f0e7;         /* paper */
+  --bg-elev: #fbf8f2;    /* lifted paper */
+  --surface: #ffffff;    /* elevated card */
+  --surface-2: #f0eadb;  /* subtle warm panel */
+  --line: #e5dfd0;       /* warm hairline */
+  --line-strong: #d6cfbe;
 
-  /* Text */
-  --text: #f3f5f8;
-  --text-2: #9aa3b0;
-  --text-3: #6b7480;
+  /* Ink */
+  --text: #1a1b19;       /* ink */
+  --text-2: #6b6f69;     /* ink muted */
+  --text-3: #8a8f86;
 
-  /* One accent (jade — "money", premium, quiet) */
-  --accent: #2dd4a7;
-  --accent-hover: #34e0b1;
-  --accent-weak: rgba(45, 212, 167, 0.13);
-  --on-accent: #04130d;
+  /* Seal red — sparing: primary actions, the mark, emphasis */
+  --accent: #b4362b;
+  --accent-hover: #9c2f25;
+  --accent-weak: rgba(180, 54, 43, 0.1);
+  --accent-strong: #6e203c; /* deep wine — verified/pressed */
+  --on-accent: #ffffff;
+  --ok: var(--accent-strong); /* positive/confirmed states (Ink & Seal has no green) */
 
   /* Status */
-  --danger: #f0616d;
-  --danger-weak: rgba(240, 97, 109, 0.13);
-  --warn: #e3b341;
-  --warn-weak: rgba(227, 179, 65, 0.14);
+  --danger: #a32820;
+  --danger-weak: rgba(163, 40, 32, 0.1);
+  --warn: #9a6b00;
+  --warn-weak: rgba(154, 107, 0, 0.12);
 
   /* Radius */
   --r-sm: 8px;
@@ -48,37 +51,44 @@
   --r-xl: 22px;
   --r-pill: 999px;
 
-  /* Elevation */
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-2: 0 6px 24px rgba(0, 0, 0, 0.35);
+  /* Elevation (warm ink shadows) */
+  --shadow-1: 0 1px 2px rgba(26, 27, 25, 0.06);
+  --shadow-2: 0 10px 30px rgba(26, 27, 25, 0.1);
 
   /* Type */
-  --font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --font: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Space Grotesk", var(--font);
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  color-scheme: dark;
+  color-scheme: light;
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-:root[data-theme="light"] {
-  --bg: #f6f7f9;
-  --bg-elev: #ffffff;
-  --surface: #ffffff;
-  --surface-2: #f1f3f6;
-  --line: #e4e7ec;
-  --line-strong: #d3d8e0;
-  --text: #0c0f14;
-  --text-2: #5b6470;
-  --text-3: #8a929e;
-  --accent: #11a37f;
-  --accent-hover: #0e8e6e;
-  --accent-weak: rgba(17, 163, 127, 0.1);
+/* On-dark Ink & Seal — dark ground, paper text, brightened seal red. */
+:root[data-theme="dark"] {
+  --bg: #141416;
+  --bg-elev: #1a1b1d;
+  --surface: #1e1f22;
+  --surface-2: #26272b;
+  --line: #303236;
+  --line-strong: #3d4045;
+  --text: #f4f0e7;       /* paper */
+  --text-2: #a7aba2;
+  --text-3: #8a8f86;
+  --accent: #ce4635;     /* seal red, brightened for dark */
+  --accent-hover: #dc5647;
+  --accent-weak: rgba(206, 70, 53, 0.16);
+  --accent-strong: #8a2a48;
   --on-accent: #ffffff;
-  --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --shadow-2: 0 10px 30px rgba(16, 24, 40, 0.1);
-  color-scheme: light;
+  --danger: #e0574c;
+  --danger-weak: rgba(224, 87, 76, 0.16);
+  --warn: #e3b341;
+  --warn-weak: rgba(227, 179, 65, 0.14);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 6px 24px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
 }
 
 * {
@@ -111,13 +121,15 @@ a {
  * Type-led hierarchy
  * ------------------------------------------------------------------------- */
 .display {
+  font-family: var(--font-display);
   font-size: 34px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin: 0;
 }
 h1 {
+  font-family: var(--font-display);
   font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -461,15 +473,10 @@ th {
 }
 .brand .mark {
   position: relative;
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  background: var(--accent);
-  color: var(--on-accent);
-  display: grid;
+  display: inline-grid;
   place-items: center;
-  font-size: 14px;
-  font-weight: 800;
+  color: var(--text); /* the mark's ink tile follows the ink/paper text color */
+  line-height: 0;
 }
 /* Streak dot by the logo — quiet earned signal. */
 .streak-dot {
@@ -848,4 +855,163 @@ th {
   .bottom-nav .nav-item.active {
     background: transparent;
   }
+}
+
+/* ----------------------------------------------------------------------------
+ * Landing / marketing (Waitlist + Welcome) — Ink & Seal, public pages
+ * ------------------------------------------------------------------------- */
+.landing {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  padding: 0 clamp(18px, 5vw, 64px) 64px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.landing-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0;
+}
+.landing-bar .brand {
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+.micro-link {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--accent);
+}
+.landing-hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(24px, 5vw, 56px);
+  align-items: center;
+  padding: clamp(28px, 6vw, 72px) 0;
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(30px, 5vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.hero-sub {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--text-2);
+  margin: 0;
+  max-width: 46ch;
+}
+.join-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 420px;
+}
+.join-form input {
+  padding: 13px 15px;
+  font-size: 15px;
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.chip {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 6px 12px;
+}
+.hero-art {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
+  padding: 18px;
+  display: grid;
+  place-items: center;
+}
+.hero-art img {
+  width: 100%;
+  height: auto;
+  max-width: 420px;
+  border-radius: var(--r-lg);
+}
+.landing-section {
+  padding: clamp(28px, 5vw, 56px) 0 0;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(20px, 3vw, 28px);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--text);
+  margin: 0 0 18px;
+}
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.pillar-k {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--accent-strong);
+}
+.cta {
+  display: inline-block;
+  margin-top: 20px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 13px 22px;
+  border-radius: var(--r-md);
+}
+.cta:hover {
+  background: var(--accent-hover);
+}
+.landing-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  justify-content: space-between;
+  margin-top: 56px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+.landing-foot .brand {
+  padding: 0;
+  font-family: var(--font-display);
+  gap: 8px;
+}
+.landing-foot a {
+  color: var(--accent);
+  font-weight: 600;
+}
+@media (max-width: 860px) {
+  .landing-hero { grid-template-columns: 1fr; }
+  .hero-art { order: -1; }
+}
+@media (max-width: 720px) {
+  .pillars { grid-template-columns: 1fr; }
 }

@@ -58,7 +58,14 @@ Do **not** use exploitative ninja caricature in regulated copy. Prefer abstract 
 | Explain agent permissions in plain language | Imply agents can act without user grant |
 | Integer money, source/as-of on quotes | Floats, hidden fees |
 
-**Quiet Premium** design system (Phase 9): monochrome surfaces, single jade accent `#2dd4a7`, type-led hierarchy, dark default.
+**"Ink & Seal"** design system (adopted; supersedes the Phase-9 "Quiet Premium" jade-on-dark).
+Paper `#F4F0E7` + ink `#1A1B19` carry everything; the Japanese-hanko **seal red `#B4362B`** is used
+sparingly (the mark's core, primary actions, emphasis); **deep wine `#6E203C`** is the quiet register
+for verified/pressed states. Type: **Space Grotesk** (display) over **Hanken Grotesk** (body),
+**JetBrains Mono** for keys/DIDs. **Light paper is the default mode**; an "on-dark" variant remains via
+`data-theme="dark"`. Mark: a faceted shield that reads as a **G** holding a **seal-square (hanko)** at its
+core. Foundation: `docs/designs/` (Figma exports); tokens live in `frontend/src/styles.css`. Tagline:
+*"Every conversation, a proof."*
 
 ---
 

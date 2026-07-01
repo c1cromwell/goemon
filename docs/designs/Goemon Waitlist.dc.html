@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F4F0E7; }
+  input::placeholder { color: #A7ABA2; }
+  .gm-input:focus { outline: none; box-shadow: inset 0 0 0 2px #B4362B; }
+  .gm-btn:hover { filter: brightness(1.06); }
+  .gm-btn:active { transform: scale(0.98); }
+  @media (max-width: 860px) { .gm-hero { grid-template-columns: 1fr !important; } .gm-heroimg { order: -1; } }
+  @media (max-width: 720px) { .gm-pillars { grid-template-columns: 1fr !important; } }
+</style>
+</helmet>
+<div style="min-height:100vh;background:#F4F0E7;color:#1A1B19;font-family:'Hanken Grotesk',sans-serif;">
+
+  <!-- NAV -->
+  <div style="position:sticky;top:0;z-index:20;backdrop-filter:saturate(160%) blur(18px);background:rgba(244,240,231,.78);border-bottom:1px solid rgba(26,27,25,.08);">
+    <div style="max-width:1120px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;gap:14px;">
+      <div style="width:30px;height:30px;border-radius:8px;background:#1A1B19;display:flex;align-items:center;justify-content:center;"><div style="width:12px;height:12px;border-radius:4px;background:#B4362B;"></div></div>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;letter-spacing:.08em;">GOEMON</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:#8A8F86;text-transform:uppercase;padding-top:2px;">Global Finance</span>
+      <a href="#join" style="margin-left:auto;font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:13.5px;color:#1A1B19;text-decoration:none;background:#F4F0E7;padding:9px 16px;border-radius:9px;box-shadow:inset 0 0 0 1px rgba(26,27,25,.14);">Join waitlist</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div style="max-width:1120px;margin:0 auto;padding:72px 32px 40px;">
+    <div class="gm-hero" style="display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#6E203C;background:#FFFFFF;padding:7px 13px;border-radius:999px;box-shadow:0 4px 14px rgba(26,27,25,.06);margin-bottom:26px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#B4362B;"></span>Early access · Phase A
+        </div>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:clamp(36px,5vw,56px);line-height:1.04;letter-spacing:-.015em;margin:0 0 22px;">Verifiable finance.<br><span style="font-weight:600;">Helping build assets you control.</span></h1>
+        <p style="font-size:17px;line-height:1.6;color:#5C5F58;max-width:480px;margin:0 0 32px;">Tokenization &amp; asset platform for the modern &amp; future of finance.</p>
+
+        <!-- JOIN FORM -->
+        <div id="join">
+          <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{ onSubmit }}" style="display:flex;gap:10px;max-width:480px;flex-wrap:wrap;">
+              <input class="gm-input" type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="you@company.com" aria-label="Email address" style="flex:1;min-width:220px;font-family:'Hanken Grotesk',sans-serif;font-size:16px;color:#1A1B19;background:#FFFFFF;border:none;border-radius:11px;padding:15px 18px;box-shadow:inset 0 0 0 1px rgba(26,27,25,.12);"/>
+              <button class="gm-btn" type="submit" style="font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;background:#B4362B;border:none;border-radius:11px;padding:15px 24px;cursor:pointer;box-shadow:0 6px 18px rgba(180,54,43,.24);">Join the waitlist</button>
+            </form>
+            <sc-if value="{{ error }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:12px;font-size:13.5px;color:#B4362B;">{{ error }}</div>
+            </sc-if>
+            <div style="margin-top:14px;font-size:13px;color:#8A8F86;">No spam. We'll email you once, when early access opens.</div>
+          </sc-if>
+          <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
+            <div style="max-width:480px;background:#FFFFFF;border-radius:14px;padding:22px 24px;box-shadow:0 8px 24px rgba(26,27,25,.08);display:flex;gap:16px;align-items:flex-start;">
+              <div style="width:34px;height:34px;border-radius:9px;background:#1F7A5A;flex:none;display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+              <div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;margin-bottom:4px;">You're on the list.</div>
+                <div style="font-size:14px;color:#5C5F58;line-height:1.55;">We saved <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1B19;">{{ email }}</span>. You'll hear from us when Phase A opens — nothing before then.</div>
+                <button class="gm-btn" onClick="{{ reset }}" style="margin-top:14px;font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:13px;color:#1A1B19;background:#F4F0E7;border:none;border-radius:9px;padding:9px 16px;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(26,27,25,.12);">Add another email</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- trust chips -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:30px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#5C5F58;background:#FBF8F2;padding:8px 13px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(26,27,25,.07);">Non-custodial keys</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#5C5F58;background:#FBF8F2;padding:8px 13px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(26,27,25,.07);">Hedera settlement</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#5C5F58;background:#FBF8F2;padding:8px 13px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(26,27,25,.07);">Append-only audit</span>
+        </div>
+      </div>
+
+      <!-- hero logo card -->
+      <div class="gm-heroimg" style="display:flex;align-items:center;justify-content:center;padding:12px;">
+        <img src="assets/goemon-lockup-transparent.png" alt="Goemon Global Finance" style="width:100%;max-width:460px;height:auto;display:block;"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- PILLARS -->
+  <div style="max-width:1120px;margin:0 auto;padding:56px 32px 24px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;color:#8A8F86;text-transform:uppercase;margin-bottom:24px;">What you're joining</div>
+    <div class="gm-pillars" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div style="background:#FFFFFF;border-radius:16px;padding:26px;box-shadow:0 8px 24px rgba(26,27,25,.06);">
+        <div style="width:42px;height:42px;border-radius:11px;background:#F4F0E7;display:flex;align-items:center;justify-content:center;margin-bottom:18px;color:#1A1B19;">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/><path d="M3 8v5"/><path d="M21 8v5"/></svg>
+        </div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;margin-bottom:8px;">Build</div>
+        <div style="color:#5C5F58;font-size:14.5px;line-height:1.6;">Wealth tools — tokenized assets, savings, agent-native commerce and a marketplace.</div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:16px;padding:26px;box-shadow:0 8px 24px rgba(26,27,25,.06);">
+        <div style="width:42px;height:42px;border-radius:11px;background:#F4F0E7;display:flex;align-items:center;justify-content:center;margin-bottom:18px;color:#B4362B;">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.2-7 8-4-.8-7-3.5-7-8V6z"/><path d="M9.5 12l2 2 3.5-3.5"/></svg>
+        </div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;margin-bottom:8px;">Protect</div>
+        <div style="color:#5C5F58;font-size:14.5px;line-height:1.6;">Keys, scopes, fraud freeze and reconciliation — security designed as the product.</div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:16px;padding:26px;box-shadow:0 8px 24px rgba(26,27,25,.06);">
+        <div style="width:42px;height:42px;border-radius:11px;background:#F4F0E7;display:flex;align-items:center;justify-content:center;margin-bottom:18px;color:#1A1B19;">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><path d="M6 21h12"/><path d="M4 8h16"/><path d="M4 8l-2 6a3 3 0 006 0z"/><path d="M20 8l-2 6a3 3 0 006 0z"/></svg>
+        </div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;margin-bottom:8px;">Preserve</div>
+        <div style="color:#5C5F58;font-size:14.5px;line-height:1.6;">Ledger truth, an append-only audit trail, and human gates on money and legal.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REASSURANCE -->
+  <div style="max-width:1120px;margin:0 auto;padding:40px 32px 72px;">
+    <div style="background:#1A1B1D;border-radius:20px;padding:40px;display:flex;flex-wrap:wrap;align-items:center;gap:28px;justify-content:space-between;">
+      <div style="max-width:560px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:300;font-size:clamp(22px,3vw,30px);line-height:1.2;color:#F4F0E7;">Software and rails — not a bank. In Phase A, regulated partners move fiat when required.</div>
+      </div>
+      <a href="#join" style="font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:15px;color:#fff;background:#B4362B;padding:14px 26px;border-radius:11px;text-decoration:none;box-shadow:0 6px 18px rgba(180,54,43,.28);white-space:nowrap;">Request early access</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="border-top:1px solid rgba(26,27,25,.10);">
+    <div style="max-width:1120px;margin:0 auto;padding:32px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;">
+      <div style="width:26px;height:26px;border-radius:7px;background:#1A1B19;display:flex;align-items:center;justify-content:center;"><div style="width:10px;height:10px;border-radius:3px;background:#B4362B;"></div></div>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;">GOEMON</span>
+      <span style="font-size:12.5px;color:#8A8F86;">Goemon Global Finance, LLC · Wyoming · Not a bank.</span>
+      <div style="margin-left:auto;display:flex;gap:22px;">
+        <a href="#" style="font-size:13px;color:#5C5F58;text-decoration:none;">Privacy</a>
+        <a href="#" style="font-size:13px;color:#5C5F58;text-decoration:none;">Terms</a>
+        <a href="#" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5C5F58;text-decoration:none;"><span class="__cf_email__" data-cfemail="9df5f8f1f1f2ddfaf2f8f0f2f3faf1f2fffcf1b3fef2f0">[email&#160;protected]</span></a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { email: '', submitted: false, error: '' };
+
+  onEmail = (e) => this.setState({ email: e.target.value, error: '' });
+
+  onSubmit = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const email = (this.state.email || '').trim();
+    const ok = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+    if (!ok) { this.setState({ error: 'Please enter a valid email address.' }); return; }
+    try {
+      const k = 'goemon_waitlist';
+      const cur = JSON.parse(localStorage.getItem(k) || '[]');
+      if (!cur.includes(email)) { cur.push(email); localStorage.setItem(k, JSON.stringify(cur)); }
+    } catch (_) {}
+    this.setState({ submitted: true, error: '' });
+  };
+
+  reset = () => this.setState({ submitted: false, email: '', error: '' });
+
+  renderVals() {
+    return {
+      email: this.state.email,
+      error: this.state.error,
+      submitted: this.state.submitted,
+      notSubmitted: !this.state.submitted,
+      onEmail: this.onEmail,
+      onSubmit: this.onSubmit,
+      reset: this.reset,
+    };
+  }
+}
+</script>
+</body>
+</html>

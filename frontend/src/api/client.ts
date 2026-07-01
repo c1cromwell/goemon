@@ -1225,3 +1225,9 @@ export interface ProductSquadAgentDef {
   pdlcPhase?: string;
   reused?: boolean;
 }
+
+// Pre-launch waitlist — public, no auth. Idempotent on email server-side.
+export const waitlistApi = {
+  join: (email: string, source?: string) =>
+    http<{ ok: boolean }>("/waitlist", { method: "POST", body: { email, source } }),
+};

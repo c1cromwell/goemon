@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224 48" width="224" height="48" role="img" aria-label="Goemon">
+  <defs></defs>
+  <rect x="2" y="9" width="30" height="30" rx="8" fill="#1A1B19"></rect>
+  <rect x="12" y="19" width="10" height="10" rx="3" fill="#B4362B"></rect>
+  <text x="46" y="25" dominant-baseline="central" font-family="&#39;Space Grotesk&#39;,&#39;Arial&#39;,sans-serif" font-weight="600" font-size="20" letter-spacing="1.8" fill="#1A1B19">GOEMON</text>
+</svg>

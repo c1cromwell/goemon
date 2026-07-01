@@ -7,9 +7,10 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { Icon } from "./Icon";
+import { BrandMark } from "./BrandMark";
 
 const PRIMARY = [
-  { to: "/", label: "Home", icon: "home" as const, end: true },
+  { to: "/home", label: "Home", icon: "home" as const, end: true },
   { to: "/invest", label: "Invest", icon: "invest" as const },
   { to: "/collect", label: "Collect", icon: "collect" as const },
   { to: "/agent", label: "Agent", icon: "agent" as const },
@@ -34,7 +35,7 @@ const SECONDARY = [
 ];
 
 function useTheme(): [string, () => void] {
-  const [theme, setTheme] = useState<string>(() => localStorage.getItem("goemon_theme") ?? "dark");
+  const [theme, setTheme] = useState<string>(() => localStorage.getItem("goemon_theme") ?? "light");
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("goemon_theme", theme);
@@ -94,7 +95,8 @@ export function Layout() {
       <aside className="sidebar">
         <div className="brand">
           <span className="mark">
-            B<span className="streak-dot" title="Active streak" />
+            <BrandMark size={18} />
+            <span className="streak-dot" title="Active streak" />
           </span>
           Goemon Global Finance
         </div>

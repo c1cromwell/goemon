@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, RequireAuth, RequireTier } from "./auth/AuthContext";
+import { AuthProvider, RequireAuth, RequireTier, useAuth } from "./auth/AuthContext";
 import { ToastProvider } from "./components/Toast";
 import { Layout } from "./components/Layout";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
+import { Welcome } from "./pages/Welcome";
+import { Waitlist } from "./pages/Waitlist";
 import { Dashboard } from "./pages/Dashboard";
 import { Invest, Collect } from "./pages/Market";
 import { AssetDetail } from "./pages/AssetDetail";
@@ -44,7 +46,18 @@ import { SelfCustody } from "./pages/SelfCustody";
 import "./styles.css";
 
 // Apply the persisted theme before first paint.
-document.documentElement.setAttribute("data-theme", localStorage.getItem("goemon_theme") ?? "dark");
+document.documentElement.setAttribute("data-theme", localStorage.getItem("goemon_theme") ?? "light");
+
+/**
+ * Public default at "/": the marketing homepage. Authenticated users are routed to
+ * the app dashboard at /home. This is the pre-launch posture — the public sees the
+ * homepage/waitlist; the team can still sign in at /login and use the app.
+ */
+function PublicHome() {
+  const { authenticated, loading } = useAuth();
+  if (loading) return null;
+  return authenticated ? <Navigate to="/home" replace /> : <Welcome />;
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -52,6 +65,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <ToastProvider>
         <AuthProvider>
           <Routes>
+            {/* Public marketing / pre-launch — the homepage is the public default at "/".
+                Authenticated users are sent to the app dashboard at /home. */}
+            <Route path="/" element={<PublicHome />} />
+            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/waitlist" element={<Waitlist />} />
+
             {/* Public auth */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -70,7 +89,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 </RequireAuth>
               }
             >
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/home" element={<Dashboard />} />
               <Route path="/invest" element={<Invest />} />
               <Route path="/collect" element={<Collect />} />
               <Route path="/collect/sell" element={<CollectSell />} />

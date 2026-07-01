@@ -1390,6 +1390,37 @@ catalog (honest hours per SKU), and **borderless savings**.
 
 ---
 
+# Neobank + RWA expansion — Phases 25–28 (competitor-informed; tokenization stays the MVP)
+
+Added from the **competitor + RWA teardown** (`docs/business/RWA-NEOBANK-COMPETITIVE-REVIEW.md`) and
+the **`docs/GOEMON-NEOBANK-ROADMAP.md`** (waves on the A→B→C ramp). These fold Chime/Revolut/Robinhood
+feature lines + a deep RWA menu into the plan **without displacing the Phase-A tokenization launch**.
+Governing lesson: *be the distribution / wallet / ledger layer, not the issuer* — adopt ERC-3643 +
+ONCHAINID (license-free) and partner the regulated stack. All DESIGN (not built).
+
+## Phase 25 — SMB / Small-Business Banking → **Corp B/C** (DESIGN)
+Business entity accounts (checking/savings), loans, payments/payroll/invoicing; reuses the ledger,
+Phase-19 bank rails + cards, and Phase-21 Goemon Pay. KYB + BOI + never-commingle.
+**Design: `docs/PHASE-25-SMB-BUSINESS-BANKING.md`.**
+
+## Phase 26 — Agentic Trading & Portfolio Management → **Corp C** (DESIGN)
+Agent-driven trading + portfolio management (rebalancing, tax-loss harvesting, DCA) on SmartChat +
+the Phase-15 runner — **advise → gate → deterministic execute** through Phase-17 `tradingService`; no
+second order path. RIA posture ⚖. **Design: `docs/PHASE-26-AGENTIC-TRADING-PORTFOLIO.md`.**
+
+## Phase 27 — Virtual & Credit Cards (customer + agent-issued) → **Corp B/C** (DESIGN)
+Virtual/disposable cards, a consumer **credit** card, and **agent-issued programmable cards** (per-agent
+ceiling ∧ card control, burn-after-use); extends Phase-19.4 `cardService`/`CardProcessor`.
+**Design: `docs/PHASE-27-VIRTUAL-CREDIT-CARDS.md`.**
+
+## Phase 28 — RWA Expansion → **Corp A/B/C** (DESIGN)
+Tokenized-treasury yield ("cash that earns" — the retail wedge, Ondo/Franklin model), private-credit
+yield (Maple wrap), issuance-as-a-service (Tokeny ERC-3643 + Securitize-style partner), tokenized
+funds/equities (Phase 18.6), tokenized real estate (RealT-style issuer partner). Distribute + reconcile;
+don't issue. **Design: `docs/PHASE-28-RWA-EXPANSION.md`.**
+
+---
+
 ## Quick Start (After Build)
 
 ```bash

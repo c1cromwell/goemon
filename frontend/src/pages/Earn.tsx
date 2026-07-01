@@ -70,7 +70,7 @@ export function Earn() {
               <span className="muted small">Your Treasury</span>
               <span className="pill">{(pos!.apyBps / 100).toFixed(2)}% APY</span>
             </div>
-            <div style={{ fontSize: 32, fontWeight: 600 }}>{formatMoney(pos!.valueMinor, "USD")}</div>
+            <div style={{ fontSize: 32, fontWeight: 500, fontFamily: "var(--font-display)", letterSpacing: "-0.02em" }}>{formatMoney(pos!.valueMinor, "USD")}</div>
             <span className="muted micro">{pos!.qtyBase} {pos!.symbol} · $1.00 each · held in your name, redeemable anytime</span>
           </div>
 
@@ -93,7 +93,7 @@ export function Earn() {
                 {pos!.recentAccruals.map((a, i) => (
                   <div key={i} className="list-row">
                     <span className="muted micro">{new Date(a.as_of).toLocaleDateString()} · {formatUnits(a.per_unit_minor, 2)}/token</span>
-                    <span style={{ color: "var(--ok)" }}>paid to {a.holders_paid} holder{a.holders_paid === 1 ? "" : "s"}</span>
+                    <span style={{ color: "var(--accent-strong)" }}>paid to {a.holders_paid} holder{a.holders_paid === 1 ? "" : "s"}</span>
                   </div>
                 ))}
               </div>

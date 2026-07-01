@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neobank + RWA Roadmap — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>Neobank + RWA Roadmap</h1>
+  <p class="sub">Goemon Global Finance — tokenization MVP + phased neobank expansion</p>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>July 1, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-what-already-exists-reposition-do-not-rebuild">1. What already exists (reposition — do not rebuild)</a></li><li class="lvl-2"><a href="#2-what-is-genuinely-net-new-this-roadmap-adds-it">2. What is genuinely net-new (this roadmap adds it)</a></li><li class="lvl-2"><a href="#3-rwa-products-to-offer-from-the-competitive-review">3. RWA products to offer (from the competitive review)</a></li><li class="lvl-2"><a href="#4-phased-rollout-waves-on-the-compliance-ramp">4. Phased rollout (waves on the compliance ramp)</a></li><li class="lvl-2"><a href="#5-compliance-gate-summary">5. Compliance-gate summary</a></li></ol></nav>
+  <main class="content">
+<h1 id="goemon-neobank-rwa-roadmap">Goemon — Neobank + RWA Roadmap</h1>
+<p><strong>Thesis:</strong> Goemon launches as a <strong>tokenization-first, non-custodial</strong> product (the Phase-A MVP,
+already built) and layers on the neobank feature set that Chime / Revolut / Robinhood have proven
+— <strong>without displacing tokenization as the wedge</strong>. Every added feature slots into the existing
+<strong>A → B → C compliance ramp</strong> (<code>docs/business/CORPORATE-STRUCTURE.md</code>): A = non-custodial software,
+B = partnered (BaaS + FinCEN MSB), C = licensed (MTLs / broker-dealer / transfer agent).</p>
+<p>Competitor + RWA teardown (cited, current): <strong><code>docs/business/RWA-NEOBANK-COMPETITIVE-REVIEW.md</code></strong>.
+The single most important lesson from that review: <strong>be the distribution / wallet / ledger layer,
+not the issuer</strong> — adopt the license-free compliance standard (ERC-3643 + ONCHAINID) and <em>partner</em>
+the regulated stack (BD / ATS / transfer agent / fund wrapper) rather than build it. Ondo <em>bought</em> a
+broker-dealer; Franklin pairs infra with a licensed fund manager; Goemon&#39;s non-custodial + ledger⇄chain
+reconciliation design already fits &quot;hold the token, mirror the position, partner the issuer.&quot;</p>
+<hr>
+<h2 id="1-what-already-exists-reposition-do-not-rebuild">1. What already exists (reposition — do not rebuild)</h2>
+<p>Most requested feature lines exist as <strong>simulated Stage-1 seams</strong> with prod-fatal kill-switches
+(see <code>CLAUDE.md</code> build status). The roadmap <strong>repositions</strong> them under a competitor-framed
+narrative and hardens them via partners; it does not restart them.</p>
+<table>
+<thead>
+<tr>
+<th>Feature line</th>
+<th>Answers</th>
+<th>Today (phase / status)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>High-Yield Savings</td>
+<td>Chime HYSA</td>
+<td><strong>Earn / Treasury (ATB)</strong> built (Phase 19/Treasury sim); tokenized-yield model, not a bank APY</td>
+</tr>
+<tr>
+<td>Kids &amp; Teens</td>
+<td>Chime / Greenlight</td>
+<td><strong>Phase 22 Goemon Starter</strong> built as sim stubs (households, teen debit, savings/goals, gamification, credit-builder, custodial)</td>
+</tr>
+<tr>
+<td>Trading — crypto &amp; stocks</td>
+<td>Robinhood</td>
+<td><strong>Phase 17</strong> trading sim (Stage 1–2) + <strong>Phase 18.6</strong> tokenized equities sim</td>
+</tr>
+<tr>
+<td>Cards (debit)</td>
+<td>Chime / Revolut</td>
+<td><strong>Phase 19.4</strong> debit-card lifecycle sim (<code>cardService</code>)</td>
+</tr>
+<tr>
+<td>Bank rails / on-off-ramp / bill-pay / lending</td>
+<td>Chime / Revolut</td>
+<td><strong>Phase 19</strong> built as sim seams</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td>Revolut / Cash App</td>
+<td><strong>Phase 21 Goemon Pay</strong> (merchant intents + escrow) sim</td>
+</tr>
+<tr>
+<td>SmartChat (conversational money)</td>
+<td>— (differentiator)</td>
+<td><strong>Phase 6</strong> built + <strong>Phase 15</strong> human-gated agent ops built</td>
+</tr>
+<tr>
+<td>Tokenized RWA marketplace</td>
+<td>Securitize / RealT</td>
+<td><strong>Phase 8</strong> built (Invest/Collect), compliance-gated ledger holdings</td>
+</tr>
+</tbody></table>
+<h2 id="2-what-is-genuinely-net-new-this-roadmap-adds-it">2. What is genuinely net-new (this roadmap adds it)</h2>
+<p>Four new phases, design-stubbed now, built in later waves:</p>
+<table>
+<thead>
+<tr>
+<th>New phase</th>
+<th>What</th>
+<th>Reuses</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Phase 25 — SMB / Business Banking</strong></td>
+<td>Business entity accounts, checking/savings, loans, payments/payroll/invoicing</td>
+<td>Ledger, Phase-19 bank rails + cards, Phase-21 Pay</td>
+</tr>
+<tr>
+<td><strong>Phase 26 — Agentic Trading &amp; Portfolio Mgmt</strong></td>
+<td>Agent-driven trading + portfolio management on SmartChat + the Phase-15 runner (advise → gate → deterministic execute)</td>
+<td>Phase 6/15/17, new scoped MCP tools</td>
+</tr>
+<tr>
+<td><strong>Phase 27 — Virtual &amp; Credit Cards</strong></td>
+<td>Virtual cards, a consumer <strong>credit</strong> card, and <strong>agent-issued programmable cards</strong> (per-agent limits, burn-after-use)</td>
+<td>Phase 19.4 <code>cardService</code> / <code>CardProcessor</code></td>
+</tr>
+<tr>
+<td><strong>Phase 28 — RWA Expansion</strong></td>
+<td>Tokenized treasuries, private credit, real estate, tokenized funds/equities, issuance-as-a-service</td>
+<td>Phase 8 / 18.6 marketplace + compliance + reconciliation</td>
+</tr>
+</tbody></table>
+<p>Design docs: <code>docs/PHASE-25-SMB-BUSINESS-BANKING.md</code>, <code>docs/PHASE-26-AGENTIC-TRADING-PORTFOLIO.md</code>,
+<code>docs/PHASE-27-VIRTUAL-CREDIT-CARDS.md</code>, <code>docs/PHASE-28-RWA-EXPANSION.md</code>.</p>
+<h2 id="3-rwa-products-to-offer-from-the-competitive-review">3. RWA products to offer (from the competitive review)</h2>
+<p>Prioritized menu; each tagged with the model it follows and its compliance gate. <strong>Goemon holds the
+token, mirrors the position, and partners the issuer</strong> — it does not become the fund/BD/TA.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Product</th>
+<th>Model to follow</th>
+<th>Gate</th>
+<th>Ramp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Tokenized-treasury yield</strong> (&quot;cash that earns&quot;) — the #1 retail wedge</td>
+<td>Ondo <strong>USDY</strong> (Reg S yieldcoin) / Franklin <strong>BENJI</strong> (’40-Act MMF token) — distribute, don&#39;t issue the wrapper</td>
+<td>Reg S distribution / partner the registered fund + custodian; Goemon&#39;s reconciliation = the transfer-agent pattern</td>
+<td>A→B</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Private-credit yield</strong> (higher-yield savings tier)</td>
+<td><strong>Maple</strong> <code>syrupUSDC</code> (~8% APY) — wrap the composable token, don&#39;t underwrite</td>
+<td>Partner/wrap; disclosure</td>
+<td>B</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Security-token issuance-as-a-service</strong></td>
+<td><strong>Tokeny ERC-3643 + ONCHAINID</strong> (adopt, license-free) + <strong>Securitize-style</strong> BD/TA/ATS (partner)</td>
+<td>Standard is Phase A; primary/secondary needs partner BD/ATS + transfer agent</td>
+<td>A→C</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Tokenized funds / equities</strong></td>
+<td>Centrifuge <strong>SPXA</strong> index / Dinari-style 1:1 equities (Goemon&#39;s Phase 18.6 seam)</td>
+<td>Reg S / index license; 1:1 equity needs issuer + BD/TA/custodian/ATS</td>
+<td>B→C</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Tokenized real estate</strong></td>
+<td>RealT LLC-per-property + rent-in-stablecoin — surface via an <strong>issuer partner</strong>, don&#39;t originate deeds</td>
+<td>Reg D (accredited) / Reg S; per-entity legal overhead</td>
+<td>B→C</td>
+</tr>
+</tbody></table>
+<p><strong>Patterns to steal (Phase A, no license):</strong> transfer-agent pattern (Franklin — chain as record,
+reconciled to authoritative ledger; Goemon already has it); composable-but-compliant wrappers
+(Securitize sToken / Centrifuge deRWA → maps to Goemon&#39;s compliance-gated holdings + Phase 18.6);
+deposit-token vs stablecoin framing (Kinexys); <strong>EU/MiCA-first regulatory arbitrage</strong> (Robinhood
+shipped tokenized stocks in the EU first). <strong>Avoid / partner:</strong> the US securities stack, a bank-grade
+fiat stablecoin (partner Circle/SG-Forge), underwriting credit, originating deeds, and the commoditized
+&quot;RWA tokenization dev-shop&quot; layer (Blockchain App Factory / BlockRidge disclaim the compliance burden —
+the opposite of Goemon&#39;s moat).</p>
+<h2 id="4-phased-rollout-waves-on-the-compliance-ramp">4. Phased rollout (waves on the compliance ramp)</h2>
+<p><strong>Wave 0 — MVP launch (ship now, Phase A).</strong> The built tokenization product: non-custodial wallet,
+DID/VC identity, SmartChat, Invest/Collect marketplace, external agents, internal ops. No customer
+fiat custody, no MSB. Revenue: software/tokenization fees. <em>(Unchanged by this roadmap.)</em></p>
+<p><strong>Wave 1 — first post-MVP (the user&#39;s chosen priorities).</strong> Runs in parallel where gates differ:</p>
+<ul>
+<li><strong>RWA deepening (Phase 28)</strong> — lead with <strong>tokenized-treasury yield</strong> (product #1): distribute a
+yieldcoin / MMF token as &quot;cash that earns,&quot; reusing Phase-8 holdings + reconciliation. Adopt
+ERC-3643 + ONCHAINID as the issuance standard (Phase A). <em>Gate: Reg S distribution / fund + custodian
+partner (B).</em></li>
+<li><strong>Trading + Agentic portfolio (Phase 17 + 26)</strong> — harden the trading seam and add agent-driven
+trading/portfolio management (advise → gate → execute). <em>Gate: broker-dealer / clearing + market-data
+partner (C); agentic layer is Phase A software on top.</em></li>
+<li><strong>SMB start (Phase 25)</strong> — business entity accounts + payments first (reuse Goemon Pay + bank rails).
+<em>Gate: BaaS partner + FinCEN MSB (B).</em></li>
+<li><strong>Consumer-banking fast-follow</strong> — HYSA (product #1/#2), debit + <strong>virtual cards (Phase 27)</strong>, teens
+(Phase 22) — mostly built; hardens via the same BaaS partner as SMB. <em>Gate: BaaS + MSB (B).</em></li>
+</ul>
+<p><strong>Wave 2 — licensed / own-rails (Phase C).</strong> Consumer <strong>credit</strong> card (Phase 27), 1:1 tokenized
+equities + secondary resale venue (Phase 18.6 → ATS), real-estate issuance (Phase 28 #5), own MTLs /
+broker-dealer / transfer-agent registration where unit economics justify recapturing margin.</p>
+<h2 id="5-compliance-gate-summary">5. Compliance-gate summary</h2>
+<table>
+<thead>
+<tr>
+<th>Wave</th>
+<th>Unlocks</th>
+<th>Hard gate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Tokenization MVP (software)</td>
+<td>Entity + AML policy + terms (done)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Treasury yield, SMB payments, trading, consumer banking/cards, agentic PM</td>
+<td><strong>BaaS partner + FinCEN MSB</strong>; broker-dealer/market-data partner for live trading; fund + custodian for treasury yield</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Credit card, tokenized-equity venue, real-estate issuance, own rails</td>
+<td><strong>State MTLs / broker-dealer / ATS / transfer-agent registration</strong>; issuer/placement partners</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>This roadmap is strategy, not legal advice. Every gate must be confirmed with fintech/securities
+counsel before launch (⚖). Figures and competitor facts are cited in
+<code>docs/business/RWA-NEOBANK-COMPETITIVE-REVIEW.md</code> (with uncertainty flags).</p>
+</blockquote>
+
+  </main>
+</div>
+</body></html>

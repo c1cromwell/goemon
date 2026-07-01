@@ -64,8 +64,11 @@ export function Dashboard() {
       <div className="card accent pad-lg">
         <div className="metric">
           <div className="label">Available cash</div>
-          <div className="value lg">
+          <div className="value lg" style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.02em" }}>
             {balances ? <Money minor={balances.cash.amount} currency={balances.cash.currency} /> : "—"}
+          </div>
+          <div className="micro" style={{ fontFamily: "var(--mono)", color: "var(--text-3)", marginTop: 6 }}>
+            Reconciled · double-entry ledger
           </div>
         </div>
         <div className="row wrap" style={{ marginTop: 18 }}>

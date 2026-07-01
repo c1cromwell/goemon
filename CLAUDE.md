@@ -55,6 +55,12 @@ The build proceeds **phase by phase**. The full plan is in `docs/GOEMON-PLAN.md`
 - [ ] **Phase 23** — Internal Ops Command Center (CEO/SRE/SOC/compliance dashboards) → Corp A/B. **Design: `docs/PHASE-23-OPS-COMMAND-CENTER.md`** — extend `/admin/command/*`; `opsMetricsService` + read-only `/api/admin/command/*`; not built.
 - [~] **Phase 24** — Production launch suite: **24.8a–24.9a + 24.4/24.5/24.7/24.1c/d/24.2c/24.3a/24.6a BUILT**; partner-only steps remain (BaaS, Dinari, Circle). **`docs/PHASE-24-PRODUCTION-LAUNCH.md`**
 
+**Neobank + RWA expansion (Phases 25–28 — competitor-informed; tokenization stays the MVP; all DESIGN, not built). Roadmap: `docs/GOEMON-NEOBANK-ROADMAP.md`; review: `docs/business/RWA-NEOBANK-COMPETITIVE-REVIEW.md`:**
+- [ ] **Phase 25** — SMB / Business Banking (checking/savings/loans/payments/payroll/invoicing; reuse ledger + Phase-19 rails/cards + Phase-21 Pay; KYB+BOI). → Corp B/C. **`docs/PHASE-25-SMB-BUSINESS-BANKING.md`**
+- [ ] **Phase 26** — Agentic Trading & Portfolio Management (rebalancing/TLH/DCA on SmartChat + the Phase-15 runner; advise→gate→execute via Phase-17 `tradingService`; RIA ⚖). → Corp C. **`docs/PHASE-26-AGENTIC-TRADING-PORTFOLIO.md`**
+- [ ] **Phase 27** — Virtual & Credit Cards, customer + **agent-issued** (extend Phase-19.4 `cardService`; per-agent ceiling ∧ card control, burn-after-use; consumer credit line). → Corp B/C. **`docs/PHASE-27-VIRTUAL-CREDIT-CARDS.md`**
+- [ ] **Phase 28** — RWA Expansion (tokenized-treasury yield [Ondo/Franklin], private credit [Maple], issuance-as-a-service [Tokeny ERC-3643 + Securitize partner], funds/equities [18.6], real estate [RealT] — distribute+reconcile, don't issue). → Corp A/B/C. **`docs/PHASE-28-RWA-EXPANSION.md`**
+
 ## Commands (run inside `backend/`)
 
 ```bash

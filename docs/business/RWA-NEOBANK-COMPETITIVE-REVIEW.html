@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RWA + Neobank Competitive Review — Goemon Global Finance</title>
+<style>/* Goemon Global Finance strategy-doc print theme — "Quiet Premium": monochrome surfaces, a
+   single jade accent, type-led hierarchy. Tuned for Letter PDF + standalone HTML. */
+
+:root {
+  --ink: #14171a;
+  --ink-2: #3a4147;
+  --ink-3: #6b747c;
+  --line: #e3e6e8;
+  --line-2: #f0f2f3;
+  --accent: #1f7a5a;      /* jade */
+  --accent-weak: #e9f4ef;
+  --accent-ink: #145239;
+  --warn: #9a6b00;
+  --warn-weak: #fbf3e0;
+  --surface: #f7f8f8;
+  --max: 760px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+/* ---- Cover ---------------------------------------------------------------- */
+.cover {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 64px;
+  page-break-after: always;
+  border-left: 6px solid var(--accent);
+}
+.cover .mark {
+  display: inline-grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--accent); color: #fff;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-weight: 800; font-size: 24px; margin-bottom: 30px;
+}
+.cover h1 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 33pt; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 14px; color: var(--ink); border: 0; padding: 0;
+}
+.cover .sub { font-size: 14pt; color: var(--ink-2); margin: 0 0 34px; max-width: 30em; }
+.cover .meta { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 9.5pt; color: var(--ink-3); letter-spacing: 0.02em; text-transform: uppercase; }
+.cover .meta b { color: var(--ink); font-weight: 600; }
+
+.disclaimer {
+  margin-top: 30px; padding: 14px 16px;
+  background: var(--warn-weak); border: 1px solid #efe2bf; border-radius: 8px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 8.6pt; line-height: 1.5; color: #6c4f10; max-width: 40em;
+}
+
+/* ---- Headings ------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+h1 { font-size: 21pt; margin: 0 0 6px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h2 {
+  font-size: 15.5pt; margin: 30px 0 10px; padding-top: 6px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+  page-break-after: avoid;
+}
+h3 { font-size: 12.5pt; margin: 20px 0 6px; color: var(--accent-ink); page-break-after: avoid; }
+h4 { font-size: 11pt; margin: 16px 0 4px; color: var(--ink-2); }
+
+p { margin: 0 0 11px; }
+strong { color: var(--ink); font-weight: 700; }
+em { color: var(--ink-2); }
+a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--accent-weak); }
+
+ul, ol { margin: 0 0 12px; padding-left: 22px; }
+li { margin: 3px 0; }
+li::marker { color: var(--accent); }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+
+blockquote {
+  margin: 12px 0; padding: 10px 16px;
+  background: var(--accent-weak); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  color: var(--accent-ink);
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10pt;
+}
+blockquote p { margin: 0; }
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 9.4pt; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1px 5px; color: var(--accent-ink);
+}
+pre {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--ink-2); font-size: 8.8pt; line-height: 1.5; }
+
+/* ---- Tables --------------------------------------------------------------- */
+table {
+  width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9.6pt;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  page-break-inside: avoid;
+}
+thead th {
+  text-align: left; background: var(--ink); color: #fff; font-weight: 600;
+  padding: 7px 10px; font-size: 8.8pt; letter-spacing: 0.01em;
+}
+tbody td { padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+tbody tr:nth-child(even) td { background: var(--line-2); }
+
+/* ---- TOC ------------------------------------------------------------------ */
+.toc { page-break-after: always; padding-top: 8px; }
+.toc h2 { border: 0; padding: 0; margin: 0 0 12px; }
+.toc ol { list-style: none; padding: 0; counter-reset: toc; }
+.toc li { counter-increment: toc; margin: 5px 0; font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; font-size: 10.5pt; }
+.toc li.lvl-3 { padding-left: 24px; font-size: 9.6pt; color: var(--ink-2); }
+.toc a { border: 0; color: var(--ink); }
+.toc li.lvl-2 a::before { content: counter(toc) ".  "; color: var(--accent); font-weight: 700; }
+
+/* ---- Section number badges via h2 ---------------------------------------- */
+.content { counter-reset: h2; }
+.content h2 { counter-increment: h2; }
+.content h2::before {
+  content: counter(h2); display: inline-grid; place-items: center;
+  width: 24px; height: 24px; margin-right: 10px; border-radius: 6px;
+  background: var(--accent-weak); color: var(--accent-ink);
+  font-size: 11pt; font-weight: 700; vertical-align: middle;
+}
+
+@page { margin: 18mm 0; }
+@media print {
+  .wrap { padding: 0 18mm; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, pre, blockquote, figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="mark">B</div>
+  <h1>RWA + Neobank Competitive Review</h1>
+  <p class="sub">Goemon Global Finance — cited competitor teardown</p>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>July 1, 2026</b></div>
+  <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
+</section>
+<div class="wrap">
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-neobank-teardown-robinhood-revolut-chime">§1 — Neobank Teardown (Robinhood · Revolut · Chime)</a></li><li class="lvl-3"><a href="#feature-matrix">Feature matrix</a></li><li class="lvl-3"><a href="#robinhood">Robinhood</a></li><li class="lvl-3"><a href="#revolut">Revolut</a></li><li class="lvl-3"><a href="#chime">Chime</a></li><li class="lvl-2"><a href="#2-rwa-landscape-14-firms-by-archetype">§2 — RWA Landscape (14 firms by archetype)</a></li><li class="lvl-3"><a href="#master-comparison-table">Master comparison table</a></li><li class="lvl-3"><a href="#tokenized-treasuries-mmf-ondo-franklin-benji-libeara">Tokenized treasuries / MMF — Ondo · Franklin BENJI · Libeara</a></li><li class="lvl-3"><a href="#private-credit-centrifuge-maple">Private credit — Centrifuge · Maple</a></li><li class="lvl-3"><a href="#real-estate-realt">Real estate — RealT</a></li><li class="lvl-3"><a href="#security-token-issuance-infra-erc-3643-securitize-tokeny-sg-forge-kinexysonyx">Security-token issuance infra / ERC-3643 — Securitize · Tokeny · SG-Forge · Kinexys(Onyx)</a></li><li class="lvl-3"><a href="#build-shops-emerging-uncertain-blockchain-app-factory-vottun-blockridge-verta">Build-shops / emerging / uncertain — Blockchain App Factory · Vottun · BlockRidge · Verta</a></li><li class="lvl-2"><a href="#3-what-goemon-should-offer-prioritized-rwa-product-menu">§3 — What Goemon Should Offer (prioritized RWA product menu)</a></li><li class="lvl-2"><a href="#4-consolidated-sources">§4 — Consolidated Sources</a></li><li class="lvl-3"><a href="#key-uncertainties-flagged-for-the-decision-maker">Key uncertainties (flagged for the decision-maker)</a></li></ol></nav>
+  <main class="content">
+<h1 id="rwa-neobank-competitive-review-goemon-global-finance">RWA &amp; Neobank Competitive Review — Goemon Global Finance</h1>
+<blockquote>
+<p>Sources are cited inline; figures current as of <strong>July 2026</strong> (research pass). RWA AUM/TVL figures move fast and often disagree across sources — where they conflict this document reports a range and flags it. Claims that could not be verified against a primary source are marked <strong>UNVERIFIED</strong>.</p>
+</blockquote>
+<p>Goemon is a tokenization-first, non-custodial neobank: Hedera settlement, a native (Secure-Enclave) wallet, a double-entry ledger as the source of truth, W3C Verifiable Credentials + OID4VP + MCP for agent access, and tokenized real-world assets. This review teardowns the consumer/SMB neobank incumbents, maps the 14 RWA/tokenization players Goemon must position against, and synthesizes a prioritized product menu tied to a Phase A→B→C compliance ramp.</p>
+<ul>
+<li><strong>Phase A</strong> = non-custodial software only (no license needed; the user&#39;s own wallet holds keys; Goemon is UX + ledger mirror).</li>
+<li><strong>Phase B</strong> = partnered / MSB (BaaS partner bank, FinCEN MSB, licensed on/off-ramp and fund-distribution partners bear the regulated function).</li>
+<li><strong>Phase C</strong> = licensed / broker-dealer / transfer-agent / ATS (Goemon or a &quot;Corp C&quot; holds the securities licenses; the hard, slow, expensive tier).</li>
+</ul>
+<hr>
+<h2 id="1-neobank-teardown-robinhood-revolut-chime">§1 — Neobank Teardown (Robinhood · Revolut · Chime)</h2>
+<h3 id="feature-matrix">Feature matrix</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Banking / HYSA</th>
+<th>Cards</th>
+<th>Trading / Crypto</th>
+<th>Teens</th>
+<th>SMB / Business</th>
+<th>Agentic / AI</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Robinhood</strong></td>
+<td>Yes — Robinhood Banking (checking + savings) for Gold, ~3.5% APY, via Coastal Community Bank (not a chartered bank)</td>
+<td>Yes — Gold Card (credit), 300k+ holders</td>
+<td>Yes (core) — stocks/ETFs/options, crypto, staking, EU perpetual futures, <strong>tokenized stocks (EU/MiCA)</strong></td>
+<td>Partial — custodial UGMA/UTMA; no standalone teen product</td>
+<td>No — retail investing focus</td>
+<td>Yes — <strong>Cortex</strong> AI investing assistant + Digests; chat-to-trade rolling out to Gold</td>
+</tr>
+<tr>
+<td><strong>Revolut</strong></td>
+<td>Yes — full <strong>UK banking licence (Mar 2026)</strong>, FSCS-protected; EU bank via Lithuania; savings/interest</td>
+<td>Yes — debit + credit, multi-currency</td>
+<td>Yes — crypto (250+ tokens, Revolut X, MiCA CASP), stocks, commodities; <strong>self-custody via Trust Wallet</strong></td>
+<td>Yes — Kids &amp; Teens (6–15) + 16–17 account</td>
+<td>Yes — Revolut Business, 767k accounts, ~30k companies/mo onboarding</td>
+<td>Yes — in-app AI assistant; AI fraud platform (10x case throughput)</td>
+</tr>
+<tr>
+<td><strong>Chime</strong></td>
+<td>Yes — no-fee checking/savings via The Bancorp Bank &amp; Stride Bank (not a chartered bank); early direct deposit</td>
+<td>Yes — debit; <strong>Chime Card</strong> secured credit-builder (Sept 2025)</td>
+<td>No — no trading, no crypto</td>
+<td>No — 18+ only</td>
+<td>No — consumer only</td>
+<td>Limited — ML for underwriting/risk; no marketed consumer AI agent</td>
+</tr>
+</tbody></table>
+<h3 id="robinhood">Robinhood</h3>
+<p>US-listed (HOOD) broker-dealer that has grown into a financial super-app: commission-free stocks/ETFs/options/crypto, a Gold subscription (record 3.5M subscribers Q2 2025), the Gold Card, wealth &quot;Strategies,&quot; and <strong>Robinhood Banking</strong> delivered through Coastal Community Bank (Robinhood is a fintech, not a chartered bank). Its standout tokenization move: <strong>tokenized US equities</strong> launched June 30, 2025 in Cannes for EU/EEA users under a MiCA license, expanding toward 2,000+ &quot;Classic Stock Tokens,&quot; alongside a revealed 3-phase tokenization plan and its own L2 (&quot;Robinhood Chain&quot;) (<a href="https://robinhood.com/us/en/newsroom/robinhood-launches-stock-tokens-reveals-layer-2-blockchain-and-expands-crypto-suite-in-eu-and-us-with-perpetual-futures-and-staking/">Robinhood newsroom</a>; <a href="https://www.coindesk.com/business/2025/11/18/permissionless-assets-robinhood-s-3-phase-tokenization-plan-to-disrupt-tradfi">3-phase plan, CoinDesk Nov 2025</a>). AI: <strong>Cortex</strong> investing assistant with chat-to-trade rolling out to Gold (<a href="https://robinhood.com/us/en/newsroom/introducing-strategies-banking-and-cortex/">Robinhood newsroom</a>).</p>
+<ul>
+<li><strong>Lesson for Goemon:</strong> Robinhood is the closest analog to the tokenization-first vision and validates that tokenized equities + an own chain + agentic trading is a real market, and that <strong>launching in the EU under MiCA first is the practical regulatory-arbitrage path</strong>. But its tokens are custodial and issuer-permissioned — Goemon&#39;s <strong>non-custodial, wallet-native</strong> angle is the differentiator Robinhood does not offer.</li>
+</ul>
+<h3 id="revolut">Revolut</h3>
+<p>The largest and most diversified incumbent: <strong>68.3M retail customers, $6B revenue (+46%), $2.3B profit (+57%) in FY2025</strong> (<a href="https://www.revolut.com/en-US/news/revolut_reports_record_profit_of_2_3bn_for_2025_as_revenue_surges_to_6bn/">Revolut FY25 results</a>; <a href="https://www.coindesk.com/business/2026/03/24/crypto-friendly-fintech-revolut-sees-profit-soar-57-to-usd2-3-billion-in-2025">CoinDesk Mar 2026</a>). A genuine multi-product bank/super-app: everyday banking, multi-currency cards, FX/remittance, savings, trading, one of the deepest crypto stacks (250+ tokens, Revolut X, EU MiCA CASP), real teens and business franchises. Regulated as a bank in 30+ markets (EU license via Lithuania since 2021), <strong>received its full UK banking license March 2026</strong>, and has filed for a US banking license. In Dec 2025 it partnered with <strong>Trust Wallet for instant self-custody crypto buys</strong> in the EEA (<a href="https://www.coindesk.com/business/2025/12/11/revolut-and-trust-wallet-launch-instant-crypto-buys-in-eu-with-self-custody-focus">CoinDesk</a>).</p>
+<ul>
+<li><strong>Lesson for Goemon:</strong> Revolut proves the super-app breadth playbook and that a licensed-bank posture unlocks scale/trust — but breadth + real licenses is <em>its</em> moat. A tokenization-first entrant must <strong>pick a wedge, not match all 11 revenue lines</strong>. Its Trust Wallet self-custody integration signals even incumbents see non-custodial demand; Goemon can lead there rather than bolt it on.</li>
+</ul>
+<h3 id="chime">Chime</h3>
+<p>US mass-market consumer neobank positioned on fee avoidance: no-fee checking/savings, no overdraft (SpotMe), early direct deposit. Crucially <strong>not a chartered bank</strong> — runs through The Bancorp Bank and Stride Bank, staying Durbin-exempt so <del>67% of revenue is debit interchange. **IPO&#39;d June 11, 2025 (</del>$11.6B valuation, $864M raised)**, reporting <strong>FY revenue +31% to $2.2B, 9.5M active members</strong> (<a href="https://www.chime.com/newsroom/news/2025-letter-to-shareholders/">2025 shareholder letter</a>). Launched the <strong>Chime Card</strong> secured credit-builder in Sept 2025 (<a href="https://www.chime.com/credit/credit-builder/">Chime</a>). No trading, no crypto, no teens, no business — deliberately narrow.</p>
+<ul>
+<li><strong>Lesson for Goemon:</strong> Chime shows a focused single-segment neobank can reach 9.5M users and a public listing <strong>without a charter, trading, or crypto</strong> — the BaaS + interchange model works at scale (validates Goemon&#39;s Phase B posture). But interchange-dependence and the total absence of crypto/tokenization is exactly the ceiling Goemon aims past. Takeaway: discipline (nail one wedge, own the fee narrative), not product mimicry.</li>
+</ul>
+<hr>
+<h2 id="2-rwa-landscape-14-firms-by-archetype">§2 — RWA Landscape (14 firms by archetype)</h2>
+<h3 id="master-comparison-table">Master comparison table</h3>
+<table>
+<thead>
+<tr>
+<th>Firm</th>
+<th>Archetype</th>
+<th>What they offer</th>
+<th>Model</th>
+<th>Chains / standards</th>
+<th>Regulated posture</th>
+<th>Segment</th>
+<th>Traction (cited, dated)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Ondo Finance</strong></td>
+<td>Tokenized treasuries</td>
+<td>OUSG, USDY yieldcoin, Ondo Global Markets, Ondo Chain (L1)</td>
+<td>Issuer + B2B infra + regulated venue</td>
+<td>Ethereum, Solana, BNB, Aptos, Polygon; own L1</td>
+<td>OUSG = Reg D 506(c)/3(c)(7); USDY = Reg S + FinCEN MSB; <strong>bought Oasis Pro → SEC BD + ATS + TA</strong></td>
+<td>Institutions/accredited; non-US retail; devs</td>
+<td>~$1.6B tokenized AUM (Oasis Pro close, Oct 2025); some cite $1.8–2.75B (varies)</td>
+</tr>
+<tr>
+<td><strong>Franklin Templeton BENJI / FOBXX</strong></td>
+<td>Tokenized MMF</td>
+<td>FOBXX &#39;40-Act govt MMF; BENJI onchain share token; Benji app</td>
+<td>Fund issuer + own transfer agent; B2C app + B2B</td>
+<td>Stellar, Polygon, Arbitrum, Aptos, Avalanche, Base, Solana, Ethereum (8 chains)</td>
+<td>US-registered <strong>&#39;40-Act MMF</strong>; blockchain = transfer-agent record, reconciled daily; allowlist only</td>
+<td>US retail + institutions</td>
+<td>~$828M AUM Q1 2026 (secondary source); first US-registered fund on public chain (2021)</td>
+</tr>
+<tr>
+<td><strong>Libeara</strong> (SC Ventures)</td>
+<td>Tokenized treasuries</td>
+<td>Delta platform; SGD Delta bond fund, Delta Wellington ULTRA, tokenized gold</td>
+<td>B2B tokenization infra + fund-enablement</td>
+<td>Ethereum, Stellar; ULTRA → Arbitrum, Avalanche, Solana</td>
+<td>Singapore-centric; funds issued by licensed mgrs (FundBridge); <strong>Standard Chartered custody</strong>; whitelist</td>
+<td>Institutional / professional</td>
+<td>&gt;$1B tokenized AUM powered (late 2025); ULTRA $100M+ (Dec 2025), AAA (Particula)</td>
+</tr>
+<tr>
+<td><strong>Centrifuge</strong></td>
+<td>Private credit / infra</td>
+<td>Tokenization infra, deRWA wrappers, Anemoy funds; SPXA tokenized S&amp;P 500</td>
+<td>B2B infra + asset-mgmt arm</td>
+<td>Ethereum, Base, Arbitrum, Avalanche, BNB; deRWA on Solana/Stellar; ERC-20</td>
+<td>Funds off-chain (Cayman SPs via Anemoy/Janus Henderson); S&amp;P DJI license; not a US BD</td>
+<td>Institutions, asset mgrs, DeFi</td>
+<td>~$1.34–1.8B TVL (source-dependent); JAAA &gt;$1B; partners S&amp;P DJI, Janus Henderson, Apollo</td>
+</tr>
+<tr>
+<td><strong>Maple Finance</strong></td>
+<td>Private credit</td>
+<td>Institutional lending; <strong>syrupUSDC/USDT</strong> yield stablecoins; BTC-backed loans</td>
+<td>Lending protocol / on-chain credit manager</td>
+<td>Ethereum + Solana (Chainlink CCIP); Arbitrum, Base, Plasma; ERC-20/SPL</td>
+<td>Permissioned KYC-gated borrower pools; syrupUSDC permissionless; no stated US BD</td>
+<td>Institutions/funds; retail holds syrupUSDC</td>
+<td>TVL ~$2.1B (May 2026); $4B+ deposits / $4.6B+ AUM; $20B+ cumulative originations</td>
+</tr>
+<tr>
+<td><strong>RealT (RealToken)</strong></td>
+<td>Real estate</td>
+<td>Fractional tokenized US rental homes ($50+); rent in stablecoin; RMM lending</td>
+<td>B2C issuer / marketplace (LLC-per-property)</td>
+<td>Ethereum + <strong>Gnosis Chain</strong> (primary); ERC-20 = LLC membership</td>
+<td><strong>Reg D</strong> (US accredited) + <strong>Reg S</strong>; Delaware/Wyoming LLC per property; FINRA placement agent</td>
+<td>Global retail; US must be accredited</td>
+<td>700+ properties, ~$130M asset value; Gnosis TVL ~$146M (Jun 2025)</td>
+</tr>
+<tr>
+<td><strong>Securitize</strong></td>
+<td>Security-token infra</td>
+<td>End-to-end tokenization + transfer agency + ATS + fund admin; DS Protocol; sToken</td>
+<td>B2B infra + agent-of-record + venue operator</td>
+<td>Ethereum + 8 networks (Avalanche, Solana, BNB, TRON); DS Protocol; sToken = ERC-4626</td>
+<td>SEC-registered <strong>BD, transfer agent, fund admin, ATS</strong> (subsidiaries)</td>
+<td>Institutional + accredited</td>
+<td><strong>&gt;$4B AUM</strong> (May 2026); BUIDL ~$3.07B; going public NYSE &quot;SECZ&quot; (Jul 2026)</td>
+</tr>
+<tr>
+<td><strong>Tokeny Solutions</strong></td>
+<td>Security-token infra</td>
+<td>T-REX platform; open <strong>ERC-3643</strong> standard; ONCHAINID; T-REX Ledger</td>
+<td>B2B software toolkit (white-label)</td>
+<td>EVM (Ethereum, Polygon, Avalanche); <strong>ERC-3643 / T-REX</strong>; ONCHAINID</td>
+<td>Software vendor (not BD/TA); compliance in-contract; <strong>Apex-owned</strong> (May 2025)</td>
+<td>Issuers, TAs, fund admins, devs</td>
+<td>Origin of ERC-3643; Apex ($3T+ AUA) targets $100B tokenized by 2027</td>
+</tr>
+<tr>
+<td><strong>SG-Forge</strong></td>
+<td>Security-token infra / stablecoin</td>
+<td><strong>EURCV</strong> &amp; <strong>USDCV</strong> MiCA stablecoins (CoinVertible)</td>
+<td>Bank-subsidiary settlement-asset issuer</td>
+<td>Ethereum, Solana, Stellar, XRP Ledger; 100% cash-backed</td>
+<td>SocGen subsidiary; <strong>MiFID2 firm, EMI under MiCA, French DASP</strong></td>
+<td>Institutions, exchanges, MMs</td>
+<td>EURCV MiCA-compliant since Jul 2024; USDCV launched Jun 2025</td>
+</tr>
+<tr>
+<td><strong>Kinexys (ex-Onyx, J.P. Morgan)</strong></td>
+<td>Security-token infra / bank platform</td>
+<td>Kinexys Digital Payments (ex-JPM Coin), Digital Assets; <strong>JPMD</strong> deposit token</td>
+<td>Bank-operated permissioned platform</td>
+<td>Permissioned chain; <strong>JPMD on Base</strong>; intent on Canton</td>
+<td>Regulated bank; deposit token = bank liability, not stablecoin</td>
+<td>Large institutions, corporates</td>
+<td><strong>Onyx→Kinexys rebrand confirmed Nov 2024</strong>; &gt;$1.5–2T notional; JPMD live on Base</td>
+</tr>
+<tr>
+<td><strong>Blockchain App Factory</strong></td>
+<td>Build-shop</td>
+<td>RWA tokenization <em>development services</em></td>
+<td>Dev shop / white-label builder (not an issuer)</td>
+<td>ETH, BSC, Polygon, Avalanche, Algorand, NEAR, Hedera; ERC-20/721/1155, 1400, 3643, SPL</td>
+<td>Builds for clients; no regulated status itself</td>
+<td>Clients wanting a build</td>
+<td><strong>Confirmed dev-shop</strong>; scale claims (800+ projects) <strong>unverified</strong></td>
+</tr>
+<tr>
+<td><strong>Vottun</strong></td>
+<td>Emerging infra</td>
+<td>Blockchain infra/API-SDK; VTN token</td>
+<td>Infra / API provider</td>
+<td>Multi-chain (ETH, Stellar, Algorand, Bitcoin, BSC per site)</td>
+<td>Spanish regulatory sandbox (PwC + Stellar)</td>
+<td>Developers</td>
+<td><strong>Partial</strong> — ~$440K raised credible; <strong>HQ conflicting</strong> (Spain vs LA)</td>
+</tr>
+<tr>
+<td><strong>BlockRidge</strong></td>
+<td>Emerging infra</td>
+<td>Tokenization SaaS + cap-table + advisory (Valuit Technology LLC)</td>
+<td>SaaS + consulting (explicitly &quot;SaaS only&quot;)</td>
+<td>Claims ERC-3643 + KYC/AML/GDPR</td>
+<td><strong>Explicitly disclaims</strong> being adviser/broker/dealer/bank</td>
+<td>Family offices, VC/PE, individuals</td>
+<td><strong>Partial</strong> — Delaware entity + site real; traction claims <strong>unverified</strong></td>
+</tr>
+<tr>
+<td><strong>Verta</strong></td>
+<td>Uncertain</td>
+<td>No distinct RWA firm confirmed under this exact name</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>UNVERIFIED</strong> — likely a name collision (Vertalo / VERT Capital)</td>
+</tr>
+</tbody></table>
+<p><em>(That is the 14: Ondo, Franklin/BENJI, Libeara, Centrifuge, Maple, RealT, Securitize, Tokeny, SG-Forge, Kinexys/Onyx, Blockchain App Factory, Vottun, BlockRidge, Verta.)</em></p>
+<h3 id="tokenized-treasuries-mmf-ondo-franklin-benji-libeara">Tokenized treasuries / MMF — Ondo · Franklin BENJI · Libeara</h3>
+<p><strong>Ondo Finance</strong> is the largest pure-play tokenized-treasury issuer and is vertically integrating into a regulated stack. <strong>OUSG</strong> (short-term Treasuries) is a Reg D 506(c) / 3(c)(7) private fund for accredited investors + QPs, largely custodying via BlackRock&#39;s BUIDL; <strong>USDY</strong> (a yield-bearing note) is offered under Reg S to non-US persons with the issuer registered as a FinCEN MSB (<a href="https://bitcoinethereumnews.com/tech/inside-ondo-finance-how-ousg-and-usdy-tokenize-us-treasuries-through-distinct-legal-frameworks/">legal-framework analysis</a>). Ondo announced <strong>Ondo Chain</strong>, a permissioned-validator L1 for institutional RWAs, in Feb 2025 (<a href="https://www.coindesk.com/business/2025/02/06/ondo-finance-unveils-layer-1-network-for-tokenized-assets">CoinDesk</a>), and completed the <strong>acquisition of Oasis Pro</strong> (an SEC-registered broker-dealer, ATS, and transfer agent) in Oct 2025 — buying, rather than building, the compliant US securities path (<a href="https://blockworks.co/news/ondo-finance-finalizes-oasis-pro-acquisition">Blockworks</a>; <a href="https://www.theblock.co/post/361120/ondo-finance-to-acquire-us-regulated-broker-oasis-pro-for-tokenized-securities-expansion">The Block</a>). AUM is cited ~$1.6B (best-anchored, at the Oasis Pro close) up to $1.8–2.75B in promotional late-2025/early-2026 numbers — treat the higher figures as unverified.</p>
+<p><strong>Franklin Templeton BENJI / FOBXX</strong> is the gold standard for a <em>retail-eligible</em> tokenized MMF. BENJI is the onchain share token of <strong>FOBXX</strong>, a genuine US-registered <strong>&#39;40-Act</strong> government money market fund — the first US-registered mutual fund to use a public blockchain as its system of record (Stellar, 2021) (<a href="https://stellar.org/press/franklin-templeton-stellar-development-foundation-mark-five-years-of-benji-the-first-u-s-registered-tokenized-money-market-fund">Stellar press</a>; <a href="https://www.sec.gov/Archives/edgar/data/1786958/000174177325000031/c485bpos.htm">SEC 485BPOS</a>). The blockchain is a <strong>transfer-agent record, not custody</strong> — reconciled daily to the official register, with only allowlisted wallets able to hold BENJI (<a href="https://eco.com/support/en/articles/15254016-benji-deep-dive-2026-franklin-templeton-s-tokenized-money-market">BENJI deep dive</a>). It spans 8 chains and reported ~$828M AUM in Q1 2026 (secondary source; the fund&#39;s own page is the primary check).</p>
+<p><strong>Libeara</strong> is a <strong>B2B tokenization platform</strong> incubated by <strong>SC Ventures</strong> (Standard Chartered&#39;s venture arm), launched Nov 2023 (<a href="https://scventures.io/sc-ventures-launches-libeara-to-provide-tokenisation-platform/">SC Ventures</a>). Its <strong>Delta</strong> platform runs subscription/issuance/transfer/redemption; licensed managers (notably <strong>FundBridge Capital</strong>) are issuers of record and <strong>Standard Chartered provides custody</strong>. First fund: a tokenized SGD government bond fund rated <strong>AA by Moody&#39;s</strong> (<a href="https://www.ledgerinsights.com/moodys-rates-fund-tokenization-libeara-stanchart/">Ledger Insights</a>). In Dec 2025 the <strong>Delta Wellington ULTRA</strong> short-Treasury fund drew <strong>$100M+</strong> commitments (Stable + Theo) and an AAA rating from Particula (<a href="https://www.coindesk.com/markets/2025/12/03/stable-theo-anchor-usd100m-in-libeara-backed-tokenized-treasury-fund-ultra">CoinDesk</a>). <strong>UNVERIFIED:</strong> a briefed <strong>Libeara–DBS partnership</strong> could not be confirmed — all sources attribute custody/backing to Standard Chartered, not DBS.</p>
+<h3 id="private-credit-centrifuge-maple">Private credit — Centrifuge · Maple</h3>
+<p><strong>Centrifuge</strong> is the clearest &quot;picks-and-shovels&quot; RWA play: whitelabel tokenization infra, <strong>deRWA</strong> wrappers that turn permissioned institutional fund tokens (deJTRSY, deJAAA) into freely-transferable DeFi-composable ERC-20s, and <strong>Anemoy</strong>, its in-house fund-structuring arm. Its marquee 2025 move was the <strong>S&amp;P Dow Jones Indices collaboration</strong> producing <strong>SPXA</strong>, the first S&amp;P-licensed tokenized S&amp;P 500 index fund, live on Base in Sept 2025 (<a href="https://centrifuge.io/blog/centrifuge-launches-spxa">Centrifuge blog</a>; <a href="https://www.spglobal.com/spdji/en/education/article/the-sp-500-onchain/">S&amp;P DJI</a>). TVL diverges by source — Centrifuge&#39;s own site shows ~$1.8B / 1,768 assets while late-2025/2026 press cites ~$1.34B (&quot;third-largest RWA issuer&quot;), JAAA crossing $1B; partners include Janus Henderson, Apollo, New York Life, Coinbase.</p>
+<p><strong>Maple Finance</strong> is an on-chain <strong>institutional credit marketplace</strong> where professional &quot;delegates&quot; (Maple Direct, Room40, AQRU) underwrite USDC loans to KYC&#39;d borrowers. Its most Goemon-relevant primitive is <strong>syrupUSDC / syrupUSDT</strong>: a permissionless, composable yield-bearing stablecoin packaging the yield of the <em>permissioned</em> loan book (~8% APY) so retail holders get institutional credit yield without passing the pool&#39;s KYC gate. In 2025 Maple went cross-chain to Solana via Chainlink CCIP (plus Arbitrum, Base, Plasma) and integrated with Aave, Pendle, Kamino (<a href="https://maple.finance/insights/2025-data-review">Maple 2025 review</a>; <a href="https://crypto.news/maple-finance-expands-solana-with-chainlink-ccip-2025/">Solana expansion</a>). Scale (source/date-dependent, distinct metrics): TVL ~$2.1B (May 2026), $4B+ deposits / $4.6B+ AUM, $20B+ cumulative originations since 2019.</p>
+<h3 id="real-estate-realt">Real estate — RealT</h3>
+<p><strong>RealT (RealToken)</strong> is the pioneer B2C tokenized-real-estate issuer (2019), selling fractional shares of US rental homes from ~$50 with rent paid in stablecoin. The legal spine is <strong>one LLC per property</strong> (Delaware/Wyoming) holding the deed, with the ERC-20 token representing an LLC membership interest. Posture: <strong>Reg D</strong> (US accredited) + <strong>Reg S</strong> (offshore), KYC/AML, a FINRA-member placement agent; tokens run on Ethereum and primarily <strong>Gnosis Chain</strong> (low-fee rent distribution + the RMM lending market) (<a href="https://tokenizedliving.com/index.php/2024/07/07/realt-legal-compliance-with-u-s-law-in-real-estate-tokenization/">legal/compliance overview</a>; <a href="https://faq.realt.co/en/article/what-is-realt-who-can-invest-how-do-i-invest-1yyc5h5/">RealT FAQ</a>). Traction: 700+ properties, ~$130M asset value, Gnosis TVL ~$146M (Jun 2025). The <strong>LLC-per-property + rent-in-stablecoin</strong> model is the proven template, but the property-ops/title/per-entity legal overhead is enormous.</p>
+<h3 id="security-token-issuance-infra-erc-3643-securitize-tokeny-sg-forge-kinexysonyx">Security-token issuance infra / ERC-3643 — Securitize · Tokeny · SG-Forge · Kinexys(Onyx)</h3>
+<p><strong>Securitize</strong> is the US market leader precisely because it owns the full <strong>regulated stack</strong> through subsidiaries — SEC-registered broker-dealer, digital transfer agent, fund administrator, and an SEC-regulated <strong>ATS</strong>. It is the tokenization platform + transfer agent for BlackRock&#39;s <strong>BUIDL</strong> (<del>$3.07B, the largest tokenized MMF) and serves Apollo, KKR, Hamilton Lane, VanEck, BNY, with <strong>&gt;$4B total AUM</strong> (May 2026). Its <strong>sToken</strong> (ERC-4626 wrapper) produced sBUIDL — RWA yield that becomes DeFi collateral. Securitize is going public on the NYSE under ticker <strong>SECZ</strong> (</del>$400M raise, July 2026) (<a href="https://securitize.io/learn/press/Securitize-To-Become-Public-Company">Securitize press</a>; <a href="https://www.prnewswire.com/news-releases/blackrocks-buidl-tokenized-by-securitize-now-accepted-as-collateral-for-trading-on-binance-and-launches-on-bnb-chain-302613374.html">BUIDL collateral</a>).</p>
+<p><strong>Tokeny Solutions</strong> (Luxembourg, 2017) is the creator and maintainer of <strong>ERC-3643</strong> (the T-REX protocol) — the exact permissioned-token standard Goemon&#39;s PRD names — plus <strong>ONCHAINID</strong> on-chain identity. It is B2B software (not a licensed BD/TA); compliance is enforced at the contract level. In <strong>May 2025 Apex Group</strong> (fund admin, $3T+ AUA, targeting $100B tokenized by June 2027) took a majority stake, and Tokeny/Apex unveiled the <strong>T-REX Ledger</strong> (a Polygon-stack reference chain) (<a href="https://tokeny.com/erc3643/">ERC-3643</a>; <a href="https://www.theblock.co/post/394284/apex-group-taps-polygon-trex-ledger">Apex/T-REX Ledger</a>). Closest architectural fit to Goemon&#39;s stack.</p>
+<p><strong>SG-Forge</strong> (Société Générale-FORGE) is a bank subsidiary and one of the first regulated banks to issue <strong>MiCA-compliant stablecoins</strong>: <strong>EURCV</strong> (compliant since MiCA&#39;s stablecoin rules took effect Jul 1, 2024) and <strong>USDCV</strong> (launched Jun 25, 2025), both 100% cash-backed and 1:1 redeemable, deployed on Ethereum, Solana, Stellar, and XRP Ledger. It is regulated as a <strong>MiFID2 investment firm, an EMI under MiCA, and a French DASP</strong> (<a href="https://www.sgforge.com/product/coinvertible/">CoinVertible</a>; <a href="https://www.coindesk.com/business/2025/06/10/socgen-s-crypto-arm-unveils-dollar-stablecoin-on-ethereum-and-solana">USDCV, CoinDesk</a>). It is a settlement-asset issuer, not a tokenization platform.</p>
+<p><strong>Kinexys (ex-Onyx by J.P. Morgan).</strong> <strong>Confirmed: Onyx was rebranded to Kinexys in November 2024</strong> (<a href="https://www.jpmorgan.com/insights/payments/blockchain-digital-assets/introducing-kinexys">J.P. Morgan</a>; <a href="https://www.ledgerinsights.com/jp-morgan-rebrands-blockchain-unit-to-kinexys/">Ledger Insights</a>). Product lines: <strong>Kinexys Digital Payments</strong> (renamed JPM Coin — &gt;$1.5–2T notional since inception, ~$2–3B average daily), <strong>Kinexys Digital Assets</strong> (tokenization/collateral), and <strong>Kinexys Labs</strong>. In June 2025 it piloted <strong>JPMD</strong>, a permissioned <strong>USD deposit token</strong> — explicitly a <em>bank deposit liability, not a stablecoin</em> — on <strong>Base</strong> (Coinbase&#39;s public L2), with intent to issue natively on the Canton Network (<a href="https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients">JPMD</a>). Closed, bank-owned — not infrastructure Goemon can build on; the transferable idea is the <strong>deposit-token vs stablecoin</strong> distinction.</p>
+<h3 id="build-shops-emerging-uncertain-blockchain-app-factory-vottun-blockridge-verta">Build-shops / emerging / uncertain — Blockchain App Factory · Vottun · BlockRidge · Verta</h3>
+<p><strong>Blockchain App Factory (Confirmed as a dev shop, not a platform).</strong> A blockchain-development agency (India — Appstars Applications Pvt Ltd, Chennai + Singapore) that builds tokenization platforms, smart contracts, KYC/AML integration, and white-label products <em>for clients</em> across real estate, private credit, funds, equity, and royalties, advertising ~8 chains and ERC-3643/ERC-1400 support (<a href="https://www.blockchainappfactory.com/real-world-asset-tokenization">RWA services page</a>). The <em>nature</em> of the business is verifiable; the self-reported scale metrics (12+ years, 800+ projects, 250+ experts) are marketing figures with no independent corroboration. Not an issuer, custodian, or regulated entity.</p>
+<p><strong>Vottun (Partial).</strong> A genuine blockchain-infrastructure company offering REST APIs/SDKs so Web2 firms can build tokenization dApps, with concrete RWA examples (carbon-credit tokenization) and a VTN token (<a href="https://vottun.com/">site</a>). Funding is small — Tracxn reports ~$440K across 3 rounds (seed, May 2023; investors incl. Draper B1, LLYC Venturing, Stellar) (<a href="https://tracxn.com/d/companies/vottun/__R1_Lhv5TOPDTnOhGJm4ogXkPxUD65st6BeWL7nIJwHU">Tracxn</a>). <strong>Discrepancy:</strong> Tracxn lists Vottun in Los Angeles with a CEO &quot;Rohan Hall,&quot; conflicting with strong Spain signals (Spanish regulatory sandbox with PwC + Stellar; Spanish investor LLYC) — treat HQ/leadership as unconfirmed.</p>
+<p><strong>BlockRidge (Partial).</strong> A real but small SaaS + advisory play (operated by Valuit Technology Delaware LLC) positioning as &quot;tokenization infrastructure for the onchain economy&quot; — tokenization, cap-table management, and consulting (<a href="https://blockridge.com/">site</a>; <a href="https://www.rwa.io/post/blockridge-tokenized-asset-platform-overview">rwa.io overview</a>). Its own site is explicit that it provides <strong>&quot;SaaS technology solutions only&quot;</strong> and is <strong>not</strong> an adviser/broker/dealer/bank — compliance is pushed to the customer. Third-party summaries attribute ERC-3643 + KYC/AML/GDPR support. Traction claims (30+ companies, 100K+ users) are self-reported and <strong>unverified</strong>.</p>
+<p><strong>Verta (UNVERIFIED).</strong> No distinct, standalone RWA/tokenization firm could be confirmed under the exact name &quot;Verta.&quot; A search snippet (&quot;Verta simplifies the lifecycle of digital securities&quot;) could not be traced to a primary source. What actually exists under similar names: <strong>Vertalo</strong> (a real SEC-registered digital transfer agent / tokenization platform, Austin, 2017 — <a href="https://www.vertalo.com/">vertalo.com</a>); <strong>VERT Capital</strong> (a Brazilian securitizer tokenizing structured credit on XRPL/XDC, planning up to $1B — <a href="https://www.coindesk.com/business/2025/07/29/brazil-s-vert-capital-to-tokenize-usd1b-in-real-world-assets-on-xdc-network">CoinDesk</a>); and the unrelated <strong>Verta.ai</strong> ML company. Honest assessment: &quot;Verta&quot; as briefed is most plausibly a garbled reference to <strong>Vertalo</strong> or <strong>VERT Capital</strong>; flagged UNVERIFIED rather than invented.</p>
+<hr>
+<h2 id="3-what-goemon-should-offer-prioritized-rwa-product-menu">§3 — What Goemon Should Offer (prioritized RWA product menu)</h2>
+<p>Cross-cutting thesis, echoed by every archetype: <strong>the winning move for a non-custodial, tokenization-first neobank is to be the distribution/wallet/UX/ledger layer over regulated issuers — not the issuer of record.</strong> Ondo bought a broker-dealer rather than build one; Centrifuge and Maple are integrate-and-wrap partners; Franklin/Libeara pair infra with a licensed fund manager + custodian; RealT shows the real-estate legal cost. Goemon&#39;s non-custodial wallet + double-entry ledger + ledger⇄chain reconciliation invariant fits the <strong>&quot;hold the token, mirror the position, let a licensed partner be issuer&quot;</strong> model already in the repo&#39;s ERC-3643/compliance-module design.</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Product</th>
+<th>Model to follow</th>
+<th>Compliance gate</th>
+<th>Phase</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1</strong></td>
+<td><strong>Tokenized-treasury yield (retail wedge)</strong> — distribute a yieldcoin / retail MMF token as the default &quot;cash that earns&quot;</td>
+<td>USDY (Reg S) or BENJI (&#39;40-Act) — <em>distribute, don&#39;t issue</em></td>
+<td>Non-US retail via a Reg S yieldcoin, or allowlisted &#39;40-Act fund token via partner TA; copy Franklin&#39;s &quot;blockchain = record, reconciled daily&quot; (already Goemon&#39;s reconciliation invariant)</td>
+<td><strong>A→B</strong></td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td><strong>Private-credit yield primitive</strong> — wrap an institutional-credit yield token as a higher-yield option</td>
+<td>Maple <strong>syrupUSDC</strong> — wrap the permissionless yield token, don&#39;t underwrite</td>
+<td>None to <em>hold/distribute</em> a permissionless composable token; disclosure + suitability screening</td>
+<td><strong>A</strong></td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td><strong>Security-token issuance-as-a-service</strong> — let partners issue compliant tokens through Goemon&#39;s rails</td>
+<td><strong>Tokeny ERC-3643 + ONCHAINID</strong> (adopt the standard) + <strong>Securitize-style</strong> TA/BD/ATS (partner)</td>
+<td>Standard is license-free to adopt (Phase A); primary issuance / secondary resale needs a partner BD/ATS + transfer agent</td>
+<td><strong>A</strong> (standard) → <strong>C</strong> (venue)</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td><strong>Tokenized funds / equities</strong> — tokenized S&amp;P 500 / equity exposure</td>
+<td>Centrifuge <strong>SPXA</strong> (index fund) / Dinari-style 1:1 tokenized equities (Goemon&#39;s Phase 18.6 seam)</td>
+<td>Reg S / index-license for funds; 1:1 equity tokenization needs issuer + BD/TA/custodian/ATS</td>
+<td><strong>B→C</strong></td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td><strong>Tokenized real estate</strong> — fractional income-producing property</td>
+<td>RealT <strong>LLC-per-property + rent-in-stablecoin</strong> — surface via an issuer partner, do NOT originate deeds</td>
+<td>Reg D (accredited) / Reg S; LLC-per-property legal overhead; partner the issuer/placement agent</td>
+<td><strong>B→C</strong></td>
+</tr>
+</tbody></table>
+<p><strong>Design patterns to steal (Phase A, no license):</strong></p>
+<ul>
+<li><strong>Transfer-agent pattern, not custody claim</strong> (Franklin): blockchain as the <em>record</em>, reconciled to an authoritative ledger — Goemon already has this.</li>
+<li><strong>Composable-but-compliant wrapper</strong> (Securitize sToken / Centrifuge deRWA): keep issuance-level transfer restrictions while making the token usable — maps to Goemon&#39;s compliance-gated ledger-derived holdings and Phase 18.6.</li>
+<li><strong>Deposit-token vs stablecoin framing</strong> (Kinexys): a design idea for how Goemon models its own cash liability on-chain.</li>
+<li><strong>EU/MiCA-first regulatory arbitrage</strong> (Robinhood): launch the boldest tokenization features where a MiCA/CASP path exists before the US securities path is ready.</li>
+</ul>
+<p><strong>What to avoid / partner rather than build:</strong> the US securities stack (BD/ATS/transfer agent — Ondo <em>bought</em> one; partner a Securitize-like); a bank-grade fiat stablecoin (SG-Forge shows the EMI/MiCA cost — partner Circle/SG-Forge); underwriting institutional credit (wrap Maple, don&#39;t originate); originating real-estate deeds (RealT&#39;s per-entity overhead — partner the issuer). And the commoditized layer — generic &quot;RWA tokenization development&quot; (Blockchain App Factory, BlockRidge&#39;s SaaS-only disclaimer) — is <em>the opposite</em> of Goemon&#39;s thesis: the moat is being a <strong>regulated-posture, non-custodial operator that takes on the compliance burden</strong>, not a vendor that disclaims it.</p>
+<hr>
+<h2 id="4-consolidated-sources">§4 — Consolidated Sources</h2>
+<p><strong>Neobanks</strong></p>
+<ul>
+<li><a href="https://robinhood.com/us/en/newsroom/robinhood-launches-stock-tokens-reveals-layer-2-blockchain-and-expands-crypto-suite-in-eu-and-us-with-perpetual-futures-and-staking/">https://robinhood.com/us/en/newsroom/robinhood-launches-stock-tokens-reveals-layer-2-blockchain-and-expands-crypto-suite-in-eu-and-us-with-perpetual-futures-and-staking/</a></li>
+<li><a href="https://robinhood.com/us/en/newsroom/introducing-strategies-banking-and-cortex/">https://robinhood.com/us/en/newsroom/introducing-strategies-banking-and-cortex/</a></li>
+<li><a href="https://www.coindesk.com/business/2025/11/18/permissionless-assets-robinhood-s-3-phase-tokenization-plan-to-disrupt-tradfi">https://www.coindesk.com/business/2025/11/18/permissionless-assets-robinhood-s-3-phase-tokenization-plan-to-disrupt-tradfi</a></li>
+<li><a href="https://www.revolut.com/en-US/news/revolut_reports_record_profit_of_2_3bn_for_2025_as_revenue_surges_to_6bn/">https://www.revolut.com/en-US/news/revolut_reports_record_profit_of_2_3bn_for_2025_as_revenue_surges_to_6bn/</a></li>
+<li><a href="https://www.coindesk.com/business/2026/03/24/crypto-friendly-fintech-revolut-sees-profit-soar-57-to-usd2-3-billion-in-2025">https://www.coindesk.com/business/2026/03/24/crypto-friendly-fintech-revolut-sees-profit-soar-57-to-usd2-3-billion-in-2025</a></li>
+<li><a href="https://www.coindesk.com/business/2025/12/11/revolut-and-trust-wallet-launch-instant-crypto-buys-in-eu-with-self-custody-focus">https://www.coindesk.com/business/2025/12/11/revolut-and-trust-wallet-launch-instant-crypto-buys-in-eu-with-self-custody-focus</a></li>
+<li><a href="https://www.chime.com/newsroom/news/2025-letter-to-shareholders/">https://www.chime.com/newsroom/news/2025-letter-to-shareholders/</a></li>
+<li><a href="https://www.chime.com/credit/credit-builder/">https://www.chime.com/credit/credit-builder/</a></li>
+</ul>
+<p><strong>Tokenized treasuries / MMF</strong></p>
+<ul>
+<li><a href="https://ondo.finance/ousg">https://ondo.finance/ousg</a> · <a href="https://ondo.finance/usdy">https://ondo.finance/usdy</a> · <a href="https://ondo.finance/ondo-chain">https://ondo.finance/ondo-chain</a></li>
+<li><a href="https://bitcoinethereumnews.com/tech/inside-ondo-finance-how-ousg-and-usdy-tokenize-us-treasuries-through-distinct-legal-frameworks/">https://bitcoinethereumnews.com/tech/inside-ondo-finance-how-ousg-and-usdy-tokenize-us-treasuries-through-distinct-legal-frameworks/</a></li>
+<li><a href="https://www.coindesk.com/business/2025/02/06/ondo-finance-unveils-layer-1-network-for-tokenized-assets">https://www.coindesk.com/business/2025/02/06/ondo-finance-unveils-layer-1-network-for-tokenized-assets</a></li>
+<li><a href="https://blockworks.co/news/ondo-finance-finalizes-oasis-pro-acquisition">https://blockworks.co/news/ondo-finance-finalizes-oasis-pro-acquisition</a></li>
+<li><a href="https://www.theblock.co/post/361120/ondo-finance-to-acquire-us-regulated-broker-oasis-pro-for-tokenized-securities-expansion">https://www.theblock.co/post/361120/ondo-finance-to-acquire-us-regulated-broker-oasis-pro-for-tokenized-securities-expansion</a></li>
+<li><a href="https://eco.com/support/en/articles/15254016-benji-deep-dive-2026-franklin-templeton-s-tokenized-money-market">https://eco.com/support/en/articles/15254016-benji-deep-dive-2026-franklin-templeton-s-tokenized-money-market</a></li>
+<li><a href="https://stellar.org/press/franklin-templeton-stellar-development-foundation-mark-five-years-of-benji-the-first-u-s-registered-tokenized-money-market-fund">https://stellar.org/press/franklin-templeton-stellar-development-foundation-mark-five-years-of-benji-the-first-u-s-registered-tokenized-money-market-fund</a></li>
+<li><a href="https://www.sec.gov/Archives/edgar/data/1786958/000174177325000031/c485bpos.htm">https://www.sec.gov/Archives/edgar/data/1786958/000174177325000031/c485bpos.htm</a></li>
+<li><a href="https://www.coindesk.com/markets/2025/12/03/stable-theo-anchor-usd100m-in-libeara-backed-tokenized-treasury-fund-ultra">https://www.coindesk.com/markets/2025/12/03/stable-theo-anchor-usd100m-in-libeara-backed-tokenized-treasury-fund-ultra</a></li>
+<li><a href="https://scventures.io/sc-ventures-launches-libeara-to-provide-tokenisation-platform/">https://scventures.io/sc-ventures-launches-libeara-to-provide-tokenisation-platform/</a></li>
+<li><a href="https://www.ledgerinsights.com/moodys-rates-fund-tokenization-libeara-stanchart/">https://www.ledgerinsights.com/moodys-rates-fund-tokenization-libeara-stanchart/</a></li>
+</ul>
+<p><strong>Private credit / real estate</strong></p>
+<ul>
+<li><a href="https://centrifuge.io/">https://centrifuge.io/</a> · <a href="https://centrifuge.io/blog/centrifuge-launches-spxa">https://centrifuge.io/blog/centrifuge-launches-spxa</a></li>
+<li><a href="https://www.spglobal.com/spdji/en/education/article/the-sp-500-onchain/">https://www.spglobal.com/spdji/en/education/article/the-sp-500-onchain/</a></li>
+<li><a href="https://www.coindesk.com/business/2025/09/25/centrifuge-launches-tokenized-s-and-p-500-index-fund-on-coinbase-s-base-network">https://www.coindesk.com/business/2025/09/25/centrifuge-launches-tokenized-s-and-p-500-index-fund-on-coinbase-s-base-network</a></li>
+<li><a href="https://maple.finance/">https://maple.finance/</a> · <a href="https://maple.finance/insights/2025-data-review">https://maple.finance/insights/2025-data-review</a> · <a href="https://maple.finance/insights/syrupusdc-and-syrupusdt-built-for-scale">https://maple.finance/insights/syrupusdc-and-syrupusdt-built-for-scale</a></li>
+<li><a href="https://crypto.news/maple-finance-expands-solana-with-chainlink-ccip-2025/">https://crypto.news/maple-finance-expands-solana-with-chainlink-ccip-2025/</a></li>
+<li><a href="https://faq.realt.co/en/article/what-is-realt-who-can-invest-how-do-i-invest-1yyc5h5/">https://faq.realt.co/en/article/what-is-realt-who-can-invest-how-do-i-invest-1yyc5h5/</a></li>
+<li><a href="https://tokenizedliving.com/index.php/2024/07/07/realt-legal-compliance-with-u-s-law-in-real-estate-tokenization/">https://tokenizedliving.com/index.php/2024/07/07/realt-legal-compliance-with-u-s-law-in-real-estate-tokenization/</a></li>
+</ul>
+<p><strong>Security-token infra / ERC-3643</strong></p>
+<ul>
+<li><a href="https://own.securitize.io/">https://own.securitize.io/</a> · <a href="https://securitize.io/learn/press/Securitize-To-Become-Public-Company">https://securitize.io/learn/press/Securitize-To-Become-Public-Company</a></li>
+<li><a href="https://www.prnewswire.com/news-releases/blackrocks-buidl-tokenized-by-securitize-now-accepted-as-collateral-for-trading-on-binance-and-launches-on-bnb-chain-302613374.html">https://www.prnewswire.com/news-releases/blackrocks-buidl-tokenized-by-securitize-now-accepted-as-collateral-for-trading-on-binance-and-launches-on-bnb-chain-302613374.html</a></li>
+<li><a href="https://tokeny.com/erc3643/">https://tokeny.com/erc3643/</a> · <a href="https://www.erc3643.org/">https://www.erc3643.org/</a> · <a href="https://www.theblock.co/post/394284/apex-group-taps-polygon-trex-ledger">https://www.theblock.co/post/394284/apex-group-taps-polygon-trex-ledger</a></li>
+<li><a href="https://www.sgforge.com/product/coinvertible/">https://www.sgforge.com/product/coinvertible/</a> · <a href="https://www.coindesk.com/business/2025/06/10/socgen-s-crypto-arm-unveils-dollar-stablecoin-on-ethereum-and-solana">https://www.coindesk.com/business/2025/06/10/socgen-s-crypto-arm-unveils-dollar-stablecoin-on-ethereum-and-solana</a></li>
+<li><a href="https://www.jpmorgan.com/insights/payments/blockchain-digital-assets/introducing-kinexys">https://www.jpmorgan.com/insights/payments/blockchain-digital-assets/introducing-kinexys</a></li>
+<li><a href="https://www.ledgerinsights.com/jp-morgan-rebrands-blockchain-unit-to-kinexys/">https://www.ledgerinsights.com/jp-morgan-rebrands-blockchain-unit-to-kinexys/</a></li>
+<li><a href="https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients">https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients</a></li>
+</ul>
+<p><strong>Niche / uncertain</strong></p>
+<ul>
+<li><a href="https://www.blockchainappfactory.com/real-world-asset-tokenization">https://www.blockchainappfactory.com/real-world-asset-tokenization</a></li>
+<li><a href="https://vottun.com/">https://vottun.com/</a> · <a href="https://tracxn.com/d/companies/vottun/__R1_Lhv5TOPDTnOhGJm4ogXkPxUD65st6BeWL7nIJwHU">https://tracxn.com/d/companies/vottun/__R1_Lhv5TOPDTnOhGJm4ogXkPxUD65st6BeWL7nIJwHU</a></li>
+<li><a href="https://blockridge.com/">https://blockridge.com/</a> · <a href="https://www.rwa.io/post/blockridge-tokenized-asset-platform-overview">https://www.rwa.io/post/blockridge-tokenized-asset-platform-overview</a></li>
+<li><a href="https://www.vertalo.com/">https://www.vertalo.com/</a> · <a href="https://www.coindesk.com/business/2025/07/29/brazil-s-vert-capital-to-tokenize-usd1b-in-real-world-assets-on-xdc-network">https://www.coindesk.com/business/2025/07/29/brazil-s-vert-capital-to-tokenize-usd1b-in-real-world-assets-on-xdc-network</a></li>
+</ul>
+<h3 id="key-uncertainties-flagged-for-the-decision-maker">Key uncertainties (flagged for the decision-maker)</h3>
+<ul>
+<li><strong>Ondo AUM</strong> is cited $1.6B–$2.75B across late-2025/2026; ~$1.6B (Oasis Pro close) is best-anchored, higher figures are promotional.</li>
+<li><strong>Franklin FOBXX AUM</strong> (~$828M, Q1 2026) is from a secondary source; the fund&#39;s own page is the primary check.</li>
+<li><strong>Libeara–DBS partnership: UNVERIFIED</strong> — sources attribute custody to Standard Chartered, not DBS.</li>
+<li><strong>Centrifuge TVL</strong> ($1.34B press vs $1.8B own site) and <strong>Maple</strong> TVL/deposits/AUM ($2.1B/$4B/$4.6B) are distinct metrics at different dates — treat as ranges.</li>
+<li><strong>RealT</strong> property count / asset value are mid-2025 secondary figures.</li>
+<li><strong>Vottun</strong> HQ (Spain vs LA) and leadership are unconfirmed.</li>
+<li><strong>BlockRidge</strong> traction claims are self-reported and unverified.</li>
+<li><strong>Verta</strong> is UNVERIFIED as a distinct RWA firm (likely a collision with Vertalo / VERT Capital).</li>
+</ul>
+
+  </main>
+</div>
+</body></html>

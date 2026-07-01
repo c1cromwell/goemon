@@ -24,6 +24,7 @@ import { registry, httpRequestDuration } from "./observability/metrics";
 import { apiLimiter } from "./middleware/rateLimit";
 import { errorHandler } from "./errors";
 import { credentialsRouter } from "./routes/credentials";
+import { waitlistRouter } from "./routes/waitlist";
 import { authRouter } from "./routes/auth";
 import { identityRouter } from "./routes/identity";
 import { agentsRouter } from "./routes/agents";
@@ -287,6 +288,7 @@ async function bootstrap(): Promise<void> {
   app.use("/api/admin/collectibles", collectiblesAdminRouter);
   app.use("/api/admin", identityVaultAdminRouter);
   app.use("/api/identity-vault", identityVaultRouter);
+  app.use("/api/waitlist", waitlistRouter);
 
   // ---- Phase 20 fraud add-on — remediation callbacks from the fraud engine ----
   // Service-bearer auth (FRAUD_ENGINE_API_KEY), not user sessions. The engine calls

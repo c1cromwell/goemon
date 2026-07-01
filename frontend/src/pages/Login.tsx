@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { userApi } from "../api/client";
 import { passkeysSupported } from "../lib/webauthn";
+import { BrandMark } from "../components/BrandMark";
 
 export function Login() {
   const { loginPasskey, loginPassword } = useAuth();
@@ -28,7 +29,7 @@ export function Login() {
     setError(null);
     try {
       await loginPasskey(email.trim());
-      navigate("/");
+      navigate("/home");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Passkey sign-in failed");
     } finally {
@@ -42,7 +43,7 @@ export function Login() {
     setError(null);
     try {
       await loginPassword(email.trim(), password);
-      navigate("/");
+      navigate("/home");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Sign-in failed");
     } finally {
@@ -53,9 +54,15 @@ export function Login() {
   return (
     <div className="center">
       <div className="card pad-lg narrow" style={{ width: "100%" }}>
-        <div className="brand" style={{ padding: "0 0 18px" }}>
-          <span className="mark">B</span> Goemon Global Finance
+        <div className="brand" style={{ padding: "0 0 6px" }}>
+          <span className="mark">
+            <BrandMark size={18} />
+          </span>
+          Goemon Global Finance
         </div>
+        <p className="micro" style={{ margin: "0 0 18px", color: "var(--accent-strong)", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+          Every conversation, a proof.
+        </p>
         <h1>Welcome back</h1>
         <p className="muted small" style={{ marginTop: 0 }}>
           Sign in with your passkey.

@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { userApi } from "../api/client";
 import { enrollPasskey, passkeysSupported } from "../lib/webauthn";
+import { BrandMark } from "../components/BrandMark";
 
 export function Register() {
   const { register } = useAuth();
@@ -55,7 +56,10 @@ export function Register() {
     <div className="center">
       <div className="card pad-lg narrow" style={{ width: "100%" }}>
         <div className="brand" style={{ padding: "0 0 18px" }}>
-          <span className="mark">B</span> Goemon Global Finance
+          <span className="mark">
+            <BrandMark size={18} />
+          </span>{" "}
+          Goemon Global Finance
         </div>
 
         {step === "form" ? (

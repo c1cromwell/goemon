@@ -51,7 +51,7 @@ In Japanese folklore, Goemon robbed the rich and powerful and redistributed to t
 
 > **Build | Protect | Preserve** — *Your Trust & Your Assets*
 
-| Pillar | Product proof |
+| Pillar | Product proof | Trust
 |---|---|
 | **Build** | Tokenized assets, savings, agent commerce, wealth tools |
 | **Protect** | Non-custodial keys, VP/MCP scopes, fraud, reconciliation gates |
@@ -107,7 +107,7 @@ Automated scan (June 2026): **~250+ files** contain `argus` / `Argus` / `ARGUS` 
 | `ARGUS_PAY_ENABLED` | `GOEMON_PAY_ENABLED` |
 | `GOEMON-PLAN.md` | `GOEMON-PLAN.md` |
 | `docs/AGENTIC-OS.md` | Retitle → **Goemon Agentic OS** (content pass) |
-| Quiet Premium jade `#2dd4a7` | **Keep** or shift to deeper 誠-green — design pass after logo pick |
+| Quiet Premium jade `#2dd4a7` | **Superseded** → adopted **"Ink & Seal"** (paper `#F4F0E7` + ink `#1A1B19` + seal-red `#B4362B` + deep wine `#6E203C`; Space Grotesk / Hanken Grotesk / JetBrains Mono). See `docs/GOEMON-BRAND.md` §5, `docs/designs/`, `frontend/src/styles.css`. |
 
 ---
 
