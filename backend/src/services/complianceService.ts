@@ -15,50 +15,27 @@
  */
 
 import { getProfile } from "./identityService";
-import { getAssetHolderCount, getAssetBalance } from "./ledgerService";
 import type { Asset } from "./tokenizationService";
+import { resolveComplianceProfile, runComplianceProfile } from "./complianceProfiles";
 
-export interface ComplianceResult {
-  allowed: boolean;
-  reason?: string;
-}
-
-const OK: ComplianceResult = { allowed: true };
+// Re-exported for backward compatibility (the type now lives in complianceProfiles).
+export type { ComplianceResult } from "./complianceProfiles";
 
 /**
  * Decide whether `toUserId` may RECEIVE `qtyBase` of `asset`.
  * `qtyBase` is informational here (cap logic only counts holders, not size).
+ *
+ * The dimensions live in a data-driven **compliance-profile registry**
+ * (complianceProfiles.ts). The default profiles reproduce the historical behavior
+ * exactly: `exempt-basic` (identity + tier) for non-securities, `security-erc3643`
+ * (identity + tier + jurisdiction + holder-cap) for securities. An asset may opt into
+ * a richer profile (e.g. whitelist/accreditation) via `metadata.complianceProfile`.
  */
-export async function checkTransfer(asset: Asset, toUserId: string): Promise<ComplianceResult> {
+export async function checkTransfer(asset: Asset, toUserId: string): ReturnType<typeof runComplianceProfile> {
   const profile = await getProfile(toUserId);
 
-  // Identity Registry: the recipient must be a known identity.
+  // Identity Registry: the recipient must be a known identity (applies to every profile).
   if (!profile) return { allowed: false, reason: "Recipient is not on the identity registry" };
 
-  // Minimum tier applies to every asset class.
-  if (profile.tier < asset.minTier) {
-    return { allowed: false, reason: `Recipient tier ${profile.tier} is below required tier ${asset.minTier}` };
-  }
-
-  // Beyond the tier check, only securities carry jurisdiction + holder-cap rules.
-  if (!asset.isSecurity) return OK;
-
-  // Jurisdiction: empty allow-list means all jurisdictions are permitted.
-  const jurisdiction = (profile as { jurisdiction?: string }).jurisdiction ?? "US";
-  if (asset.jurisdictionAllow.length > 0 && !asset.jurisdictionAllow.includes(jurisdiction)) {
-    return { allowed: false, reason: `Recipient jurisdiction ${jurisdiction} is not permitted for this security` };
-  }
-
-  // Holder-count cap: only blocks if this would add a NEW holder beyond the cap.
-  if (asset.holderCap !== null && asset.holderCap !== undefined) {
-    const alreadyHolds = (await getAssetBalance(toUserId, asset.id)) > 0n;
-    if (!alreadyHolds) {
-      const holders = await getAssetHolderCount(asset.id);
-      if (holders >= asset.holderCap) {
-        return { allowed: false, reason: `Asset has reached its holder cap of ${asset.holderCap}` };
-      }
-    }
-  }
-
-  return OK;
+  return runComplianceProfile(resolveComplianceProfile(asset), { asset, toUserId, profile });
 }

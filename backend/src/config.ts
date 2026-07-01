@@ -393,7 +393,7 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   if (c.FX_SETTLEMENT_ENABLED && c.FX_RATE_PROVIDER === "simulated") {
     fatal.push("FX_SETTLEMENT_ENABLED with FX_RATE_PROVIDER=simulated must not run in production — cross-currency settlement at a simulated rate is a prototype.");
   }
-  if (c.SETTLEMENT_STABLECOIN !== "usdc") {
+  if (c.SETTLEMENT_STABLECOIN && c.SETTLEMENT_STABLECOIN !== "usdc") {
     fatal.push("SETTLEMENT_STABLECOIN must be 'usdc' in production — non-USDC settlement (e.g. OUSD) is a readiness flag, not yet wired into the settlement paths. See docs/business/OUSD-STABLECOIN-ASSESSMENT.md.");
   }
   if (c.TREASURY_ENABLED) {

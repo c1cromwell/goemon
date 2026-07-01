@@ -25,6 +25,7 @@ import {
   getBalance,
   postJournal,
 } from "./ledgerService";
+import { isSecurityKind } from "./assetTypeRegistry";
 
 export type AssetKind = "security" | "collectible" | "gaming" | "equity" | "treasury";
 export type TokenStandard = "erc3643" | "hts";
@@ -84,7 +85,7 @@ export function toAsset(row: AssetRow): Asset {
     holderCap: row.holder_cap,
     totalSupply: BigInt(row.total_supply ?? 0),
     status: row.status,
-    isSecurity: row.kind === "security" || row.kind === "equity" || row.token_standard === "erc3643",
+    isSecurity: isSecurityKind(row.kind, row.token_standard),
   };
 }
 
