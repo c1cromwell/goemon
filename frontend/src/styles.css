@@ -1070,3 +1070,19 @@ th {
 @media (max-width: 620px) {
   .stepper-label { display: none; }
 }
+
+/* Issuance console — wizard + sticky live-summary rail */
+.issuer-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  align-items: start;
+}
+.issuer-rail {
+  position: sticky;
+  top: 24px;
+}
+@media (max-width: 860px) {
+  .issuer-layout { grid-template-columns: 1fr; }
+  .issuer-rail { display: none; }
+}

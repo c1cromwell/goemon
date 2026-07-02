@@ -4,7 +4,8 @@
  * A guided wizard that turns the asset-type + compliance-profile registries into a
  * "tokenize anything" flow: pick a type (smart defaults) → details → compliance
  * (the form adapts to the chosen profile's dimensions) → supply & listing → review.
- * Plain language over jargon; the engine does the rest.
+ * The landing lists your existing tokens; a sticky right-rail summary keeps you
+ * oriented through the wizard. Plain language over jargon; the engine does the rest.
  */
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,11 +15,13 @@ import {
   ApiError,
   type IssuerOptions,
   type IssuerComplianceProfile,
+  type IssuedAsset,
 } from "../api/client";
 import { Loading } from "../components/ui";
 import { useToast } from "../components/Toast";
 
 const STEPS = ["Type", "Details", "Compliance", "Supply", "Review"];
+const TIER_LABEL = ["Any", "Tier 1", "Tier 2"];
 
 type Form = {
   kind: string;
@@ -27,9 +30,9 @@ type Form = {
   description: string;
   complianceProfile: string;
   minTier: number;
-  jurisdictions: string; // comma-separated; empty = all
-  holderCap: string; // optional
-  whitelist: string; // comma/newline user ids
+  jurisdictions: string;
+  holderCap: string;
+  whitelist: string;
   supply: string;
   list: boolean;
   surface: "invest" | "collect";
@@ -46,13 +49,17 @@ export function Issuer() {
   const toast = useToast();
   const navigate = useNavigate();
   const [options, setOptions] = useState<IssuerOptions | null>(null);
+  const [mine, setMine] = useState<IssuedAsset[]>([]);
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<Form>(EMPTY);
   const [busy, setBusy] = useState(false);
   const [created, setCreated] = useState<{ symbol: string | null; name: string; listed: boolean; profile: string } | null>(null);
 
+  const refreshMine = () => issuerApi.mine().then((r) => setMine(r.assets)).catch(() => setMine([]));
+
   useEffect(() => {
     issuerApi.options().then(setOptions).catch(() => setOptions({ enabled: false, assetTypes: [], complianceProfiles: [] }));
+    refreshMine();
   }, []);
 
   const set = (patch: Partial<Form>) => setForm((f) => ({ ...f, ...patch }));
@@ -62,6 +69,7 @@ export function Issuer() {
     [options, form.complianceProfile]
   );
   const dims = profile?.dimensions ?? [];
+  const typeLabel = options?.assetTypes.find((t) => t.kind === form.kind)?.label ?? form.kind;
 
   if (options === null) return <div className="page"><Loading /></div>;
 
@@ -94,7 +102,7 @@ export function Issuer() {
           </div>
         </div>
         <div className="row wrap" style={{ gap: 10 }}>
-          <button onClick={() => { setCreated(null); setForm(EMPTY); setStep(0); }}>Issue another</button>
+          <button onClick={() => { setCreated(null); setForm(EMPTY); setStep(0); refreshMine(); }}>Issue another</button>
           {created.listed ? <button className="ghost" onClick={() => navigate("/invest")}>View marketplace</button> : null}
         </div>
       </div>
@@ -146,8 +154,10 @@ export function Issuer() {
     }
   }
 
+  const showRail = step >= 1; // orient the issuer once they've committed to a type
+
   return (
-    <div className="page stack lg" style={{ maxWidth: 720 }}>
+    <div className="page stack lg" style={{ maxWidth: showRail ? 940 : 720 }}>
       <div>
         <h1>Tokenize</h1>
         <p className="muted small" style={{ margin: 0 }}>Create a compliant token in a few steps. We apply the right rules for you.</p>
@@ -163,145 +173,187 @@ export function Issuer() {
         ))}
       </div>
 
-      {/* Step 0 — Type */}
-      {step === 0 && (
-        <div className="grid cols-2">
-          {options.assetTypes.map((t) => (
-            <div
-              key={t.kind}
-              className={`card tappable ${form.kind === t.kind ? "accent" : ""}`}
-              onClick={() => pickType(t.kind)}
-            >
-              <div className="spread">
-                <div className="title">{t.label}</div>
-                <span className="pill">{t.isSecurity ? "Security" : "Open"}</span>
-              </div>
-              <p className="muted small" style={{ margin: "8px 0 0" }}>
-                {t.isSecurity ? "Regulated — transfer rules apply." : "Freely held by verified users."}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Step 1 — Details */}
-      {step === 1 && (
-        <div className="card stack">
-          <div className="field">
-            <label>Name</label>
-            <input value={form.name} onChange={(e) => set({ name: e.target.value })} placeholder="e.g. 123 Maple St LLC Units" />
-          </div>
-          <div className="field">
-            <label>Symbol (optional)</label>
-            <input value={form.symbol} onChange={(e) => set({ symbol: e.target.value.toUpperCase() })} placeholder="MAPLE" maxLength={16} />
-          </div>
-          <div className="field">
-            <label>Description (optional)</label>
-            <textarea rows={3} value={form.description} onChange={(e) => set({ description: e.target.value })} placeholder="What does this token represent?" />
-          </div>
-        </div>
-      )}
-
-      {/* Step 2 — Compliance (adapts to the chosen profile's dimensions) */}
-      {step === 2 && (
-        <div className="card stack">
-          <div className="field">
-            <label>Who can hold this?</label>
-            <select value={form.complianceProfile} onChange={(e) => set({ complianceProfile: e.target.value })}>
-              {options.complianceProfiles.map((p) => (
-                <option key={p.name} value={p.name}>{p.label}</option>
+      <div className={showRail ? "issuer-layout" : ""}>
+        <div className="issuer-main stack lg">
+          {/* Step 0 — Type */}
+          {step === 0 && (
+            <div className="grid cols-2">
+              {options.assetTypes.map((t) => (
+                <div key={t.kind} className={`card tappable ${form.kind === t.kind ? "accent" : ""}`} onClick={() => pickType(t.kind)}>
+                  <div className="spread">
+                    <div className="title">{t.label}</div>
+                    <span className="pill">{t.isSecurity ? "Security" : "Open"}</span>
+                  </div>
+                  <p className="muted small" style={{ margin: "8px 0 0" }}>
+                    {t.isSecurity ? "Regulated — transfer rules apply." : "Freely held by verified users."}
+                  </p>
+                </div>
               ))}
-            </select>
-            {profile ? <p className="muted small" style={{ margin: "6px 0 0" }}>{profile.description}</p> : null}
-          </div>
+            </div>
+          )}
 
-          {dims.includes("minTier") && (
-            <div className="field">
-              <label>Minimum verification level</label>
-              <select value={form.minTier} onChange={(e) => set({ minTier: parseInt(e.target.value, 10) })}>
-                <option value={0}>Any verified user</option>
-                <option value={1}>Tier 1 (phone verified)</option>
-                <option value={2}>Tier 2 (full KYC)</option>
-              </select>
-            </div>
-          )}
-          {dims.includes("jurisdictionAllow") && (
-            <div className="field">
-              <label>Allowed jurisdictions (optional)</label>
-              <input value={form.jurisdictions} onChange={(e) => set({ jurisdictions: e.target.value })} placeholder="US, CA — leave blank for all" />
-            </div>
-          )}
-          {dims.includes("holderCap") && (
-            <div className="field">
-              <label>Maximum number of investors (optional)</label>
-              <input inputMode="numeric" value={form.holderCap} onChange={(e) => set({ holderCap: e.target.value.replace(/\D/g, "") })} placeholder="e.g. 99" />
-            </div>
-          )}
-          {dims.includes("whitelist") && (
-            <div className="field">
-              <label>Whitelist — allowed holders</label>
-              <textarea rows={3} value={form.whitelist} onChange={(e) => set({ whitelist: e.target.value })} placeholder="user ids, one per line or comma-separated" />
-            </div>
-          )}
-          {dims.includes("accreditation") && (
-            <span className="pill">Accredited investors only</span>
-          )}
-        </div>
-      )}
-
-      {/* Step 3 — Supply & listing */}
-      {step === 3 && (
-        <div className="card stack">
-          <div className="field">
-            <label>How many units to create?</label>
-            <input inputMode="numeric" value={form.supply} onChange={(e) => set({ supply: e.target.value.replace(/\D/g, "") })} placeholder="e.g. 1000" />
-          </div>
-          <label className="row" style={{ gap: 8, cursor: "pointer" }}>
-            <input type="checkbox" checked={form.list} onChange={(e) => set({ list: e.target.checked })} style={{ width: "auto" }} />
-            <span>List on the marketplace now</span>
-          </label>
-          {form.list && (
-            <>
+          {/* Step 1 — Details */}
+          {step === 1 && (
+            <div className="card stack">
               <div className="field">
-                <label>Marketplace</label>
-                <select value={form.surface} onChange={(e) => set({ surface: e.target.value as "invest" | "collect" })}>
-                  <option value="invest">Invest (securities / RWA)</option>
-                  <option value="collect">Collect (collectibles)</option>
+                <label>Name</label>
+                <input value={form.name} onChange={(e) => set({ name: e.target.value })} placeholder="e.g. 123 Maple St LLC Units" />
+              </div>
+              <div className="field">
+                <label>Symbol (optional)</label>
+                <input value={form.symbol} onChange={(e) => set({ symbol: e.target.value.toUpperCase() })} placeholder="MAPLE" maxLength={16} />
+              </div>
+              <div className="field">
+                <label>Description (optional)</label>
+                <textarea rows={3} value={form.description} onChange={(e) => set({ description: e.target.value })} placeholder="What does this token represent?" />
+              </div>
+            </div>
+          )}
+
+          {/* Step 2 — Compliance (adapts to the chosen profile's dimensions) */}
+          {step === 2 && (
+            <div className="card stack">
+              <div className="field">
+                <label>Who can hold this?</label>
+                <select value={form.complianceProfile} onChange={(e) => set({ complianceProfile: e.target.value })}>
+                  {options.complianceProfiles.map((p) => (
+                    <option key={p.name} value={p.name}>{p.label}</option>
+                  ))}
                 </select>
+                {profile ? <p className="muted small" style={{ margin: "6px 0 0" }}>{profile.description}</p> : null}
               </div>
-              <div className="field">
-                <label>Price per unit (USD)</label>
-                <input inputMode="decimal" value={form.priceDollars} onChange={(e) => set({ priceDollars: e.target.value })} placeholder="e.g. 50.00" />
-              </div>
-            </>
+
+              {dims.includes("minTier") && (
+                <div className="field">
+                  <label>Minimum verification level</label>
+                  <select value={form.minTier} onChange={(e) => set({ minTier: parseInt(e.target.value, 10) })}>
+                    <option value={0}>Any verified user</option>
+                    <option value={1}>Tier 1 (phone verified)</option>
+                    <option value={2}>Tier 2 (full KYC)</option>
+                  </select>
+                </div>
+              )}
+              {dims.includes("jurisdictionAllow") && (
+                <div className="field">
+                  <label>Allowed jurisdictions (optional)</label>
+                  <input value={form.jurisdictions} onChange={(e) => set({ jurisdictions: e.target.value })} placeholder="US, CA — leave blank for all" />
+                </div>
+              )}
+              {dims.includes("holderCap") && (
+                <div className="field">
+                  <label>Maximum number of investors (optional)</label>
+                  <input inputMode="numeric" value={form.holderCap} onChange={(e) => set({ holderCap: e.target.value.replace(/\D/g, "") })} placeholder="e.g. 99" />
+                </div>
+              )}
+              {dims.includes("whitelist") && (
+                <div className="field">
+                  <label>Whitelist — allowed holders</label>
+                  <textarea rows={3} value={form.whitelist} onChange={(e) => set({ whitelist: e.target.value })} placeholder="user ids, one per line or comma-separated" />
+                </div>
+              )}
+              {dims.includes("accreditation") && <span className="pill">Accredited investors only</span>}
+            </div>
           )}
-        </div>
-      )}
 
-      {/* Step 4 — Review */}
-      {step === 4 && (
-        <div className="card stack sm">
-          <Row k="Type" v={options.assetTypes.find((t) => t.kind === form.kind)?.label ?? form.kind} />
-          <Row k="Name" v={form.name + (form.symbol ? ` · ${form.symbol}` : "")} />
-          <Row k="Who can hold" v={profile?.label ?? form.complianceProfile} />
-          {dims.includes("minTier") ? <Row k="Min level" v={["Any", "Tier 1", "Tier 2"][form.minTier] ?? String(form.minTier)} /> : null}
-          {dims.includes("jurisdictionAllow") && form.jurisdictions.trim() ? <Row k="Jurisdictions" v={form.jurisdictions} /> : null}
-          {dims.includes("holderCap") && form.holderCap ? <Row k="Max investors" v={form.holderCap} /> : null}
-          <Row k="Supply" v={form.supply ? `${Number(form.supply).toLocaleString()} units` : "—"} />
-          <Row k="Listing" v={form.list ? `${form.surface} · $${form.priceDollars || "0"} / unit` : "Not listed"} />
-        </div>
-      )}
+          {/* Step 3 — Supply & listing */}
+          {step === 3 && (
+            <div className="card stack">
+              <div className="field">
+                <label>How many units to create?</label>
+                <input inputMode="numeric" value={form.supply} onChange={(e) => set({ supply: e.target.value.replace(/\D/g, "") })} placeholder="e.g. 1000" />
+              </div>
+              <label className="row" style={{ gap: 8, cursor: "pointer" }}>
+                <input type="checkbox" checked={form.list} onChange={(e) => set({ list: e.target.checked })} style={{ width: "auto" }} />
+                <span>List on the marketplace now</span>
+              </label>
+              {form.list && (
+                <>
+                  <div className="field">
+                    <label>Marketplace</label>
+                    <select value={form.surface} onChange={(e) => set({ surface: e.target.value as "invest" | "collect" })}>
+                      <option value="invest">Invest (securities / RWA)</option>
+                      <option value="collect">Collect (collectibles)</option>
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label>Price per unit (USD)</label>
+                    <input inputMode="decimal" value={form.priceDollars} onChange={(e) => set({ priceDollars: e.target.value })} placeholder="e.g. 50.00" />
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
-      {/* Nav */}
-      <div className="row" style={{ justifyContent: "space-between" }}>
-        <button className="ghost" disabled={step === 0 || busy} onClick={() => setStep((s) => Math.max(0, s - 1))}>Back</button>
-        {step < STEPS.length - 1 ? (
-          <button disabled={!canNext || busy} onClick={() => setStep((s) => s + 1)}>Next</button>
-        ) : (
-          <button disabled={busy} onClick={submit}>{busy ? "Creating…" : "Create token"}</button>
+          {/* Step 4 — Review */}
+          {step === 4 && (
+            <div className="card stack sm">
+              <SummaryRows form={form} typeLabel={typeLabel} profile={profile} dims={dims} />
+            </div>
+          )}
+
+          {/* Your issued tokens (landing only) */}
+          {step === 0 && (
+            <div className="card">
+              <h2 style={{ marginBottom: mine.length ? 12 : 4 }}>Your tokens</h2>
+              {mine.length === 0 ? (
+                <p className="muted small" style={{ margin: 0 }}>No tokens yet — pick a type above to create your first.</p>
+              ) : (
+                mine.map((a) => (
+                  <div className="list-row tappable" key={a.id} onClick={() => navigate(`/asset/${a.id}`)}>
+                    <div className="grow">
+                      <div className="title">{a.name}{a.symbol ? <span className="muted"> · {a.symbol}</span> : null}</div>
+                      <div className="micro">{a.isSecurity ? "Security" : "Open"} · {a.tokenStandard}</div>
+                    </div>
+                    <div className="right">
+                      <div className="amount">{Number(a.totalSupply).toLocaleString()}</div>
+                      <div className="micro">{a.status ?? "active"}</div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+
+          {/* Nav */}
+          <div className="row" style={{ justifyContent: "space-between" }}>
+            <button className="ghost" disabled={step === 0 || busy} onClick={() => setStep((s) => Math.max(0, s - 1))}>Back</button>
+            {step < STEPS.length - 1 ? (
+              <button disabled={!canNext || busy} onClick={() => setStep((s) => s + 1)}>Next</button>
+            ) : (
+              <button disabled={busy} onClick={submit}>{busy ? "Creating…" : "Create token"}</button>
+            )}
+          </div>
+        </div>
+
+        {/* Live summary rail (wide screens, during the wizard) */}
+        {showRail && (
+          <aside className="issuer-rail">
+            <div className="card stack sm">
+              <h2 style={{ margin: 0 }}>Summary</h2>
+              <SummaryRows form={form} typeLabel={typeLabel} profile={profile} dims={dims} />
+            </div>
+          </aside>
         )}
       </div>
     </div>
+  );
+}
+
+function SummaryRows({ form, typeLabel, profile, dims }: {
+  form: Form; typeLabel: string; profile?: IssuerComplianceProfile; dims: string[];
+}) {
+  return (
+    <>
+      <Row k="Type" v={form.kind ? typeLabel : "—"} />
+      <Row k="Name" v={form.name.trim() ? form.name.trim() + (form.symbol ? ` · ${form.symbol}` : "") : "—"} />
+      <Row k="Who can hold" v={profile?.label ?? "—"} />
+      {dims.includes("minTier") ? <Row k="Min level" v={TIER_LABEL[form.minTier] ?? String(form.minTier)} /> : null}
+      {dims.includes("jurisdictionAllow") ? <Row k="Jurisdictions" v={form.jurisdictions.trim() || "All"} /> : null}
+      {dims.includes("holderCap") ? <Row k="Max investors" v={form.holderCap || "No limit"} /> : null}
+      {dims.includes("whitelist") ? <Row k="Whitelist" v={form.whitelist.trim() ? `${form.whitelist.split(/[\n,]/).filter((s) => s.trim()).length} holders` : "—"} /> : null}
+      <Row k="Supply" v={form.supply ? `${Number(form.supply).toLocaleString()} units` : "—"} />
+      <Row k="Listing" v={form.list ? `${form.surface} · $${form.priceDollars || "0"} / unit` : "Not listed"} />
+    </>
   );
 }
 
