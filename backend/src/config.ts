@@ -160,6 +160,12 @@ const schema = z.object({
   // signs off the issuance flow. See docs/TOKENIZATION-MASTER-PLAN.md (P1).
   ISSUANCE_CONSOLE_ENABLED: boolish,
 
+  // Phase 29 (P4) — employee equity compensation (grants, vesting, 83(b), option exercise,
+  // cap table over an `equity` asset). Off by default; prototype, prod-fatal — private-company
+  // securities (Rule 701 / Reg D) + 409A valuation + counsel required. Ties to
+  // docs/legal/EQUITY-INCENTIVE-PLAN.md. See docs/TOKENIZATION-MASTER-PLAN.md (P4).
+  EQUITY_COMP_ENABLED: boolish,
+
   // X-Money response F1 — tokenized yield-bearing Treasury (prototype seam). Off by default;
   // a kill-switch (prod-fatal — it's a security; real launch needs issuer/transfer-agent/ATS +
   // counsel). The competitive counter to a custodial 6% APY: own a yield-bearing ASSET whose
@@ -407,6 +413,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.EQUITIES_ENABLED) {
     fatal.push("EQUITIES_ENABLED must be false in production — the Phase-18.6 tokenized-equities seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");
+  }
+  if (c.EQUITY_COMP_ENABLED) {
+    fatal.push("EQUITY_COMP_ENABLED must be false in production — the Phase-29 equity-compensation seam is a prototype (private-company securities: Rule 701 / Reg D, 409A valuation, and counsel required).");
   }
   if (c.ISSUANCE_CONSOLE_ENABLED) {
     fatal.push("ISSUANCE_CONSOLE_ENABLED must be false in production — the Phase-29 issuance console is a prototype; per-asset securities counsel + issuer/transfer-agent sign-off is required before self-serve tokenization.");

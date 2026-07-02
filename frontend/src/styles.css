@@ -1086,3 +1086,17 @@ th {
   .issuer-layout { grid-template-columns: 1fr; }
   .issuer-rail { display: none; }
 }
+
+/* Vesting progress bar (My equity) */
+.vbar {
+  height: 8px;
+  background: var(--surface-2);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.vbar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--r-pill);
+  transition: width 0.3s ease;
+}

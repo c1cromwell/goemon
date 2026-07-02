@@ -19,6 +19,7 @@ const PRIMARY = [
 const SECONDARY = [
   { to: "/activity", label: "Activity" },
   { to: "/portfolio", label: "Portfolio" },
+  { to: "/equity", label: "My equity" },
   { to: "/issuer", label: "Tokenize" },
   { to: "/bank", label: "Bank" },
   { to: "/cards", label: "Cards" },

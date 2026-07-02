@@ -1320,3 +1320,33 @@ export const portfolioApi = {
   distributions: () => uget<{ distributions: Distribution[] }>("/portfolio/distributions"),
   taxSummary: (year: number) => uget<TaxSummary>(`/portfolio/tax-summary?year=${year}`),
 };
+
+// Employee equity compensation (Phase 29 P4).
+export interface EquityGrantView {
+  id: string;
+  assetId: string;
+  assetName?: string | null;
+  assetSymbol?: string | null;
+  awardType: "unit_award" | "profits_interest" | "option";
+  unitsTotal: string;
+  unitsReleased: string;
+  vested: string;
+  releasable: string;
+  exercisable: string;
+  exercisePriceMinor: string;
+  thresholdMinor: string;
+  currency: string;
+  vestStart: string;
+  cliffMonths: number;
+  durationMonths: number;
+  eightyThreeBFiled: boolean;
+  eightyThreeBDeadline: string | null;
+  status: string;
+}
+export const equityApi = {
+  mine: () => uget<{ grants: EquityGrantView[] }>("/equity/grants"),
+  release: (id: string) => upost<EquityGrantView>(`/equity/grants/${id}/release`),
+  exercise: (id: string, qty: string, key: string) =>
+    umoney<EquityGrantView>(`/equity/grants/${id}/exercise`, { qty }, key),
+  file83b: (id: string) => upost<EquityGrantView>(`/equity/grants/${id}/file-83b`),
+};
