@@ -78,11 +78,12 @@ export const DIMENSIONS: Record<string, Dimension> = {
     return OK;
   },
 
-  // Accredited-investor gate (Reg D). Reads a profile flag; absent → not accredited.
-  accreditation: ({ profile }) => {
-    const accredited = (profile as { accredited?: boolean }).accredited === true;
-    return accredited ? OK : { allowed: false, reason: "Recipient is not an accredited investor" };
-  },
+  // Accredited-investor gate (Reg D). Reads the profile's accredited flag (0/1),
+  // set by compliance/admin; absent/0 → not accredited.
+  accreditation: ({ profile }) =>
+    Number(profile.accredited) === 1
+      ? OK
+      : { allowed: false, reason: "Recipient is not an accredited investor" },
 };
 
 /**

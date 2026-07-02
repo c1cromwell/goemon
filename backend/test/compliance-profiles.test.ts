@@ -133,4 +133,29 @@ describe("compliance profiles — extensibility (opt-in whitelist dimension)", (
     expect(bobRes.allowed).toBe(false);
     expect(bobRes.reason).toMatch(/whitelist/i);
   });
+
+  it("security-accredited gates on the real accredited flag (P2 depth)", async () => {
+    const { createAsset } = await import("../src/services/tokenizationService");
+    const { setAccreditation } = await import("../src/services/identityService");
+    const user = await makeUser(2, "US");
+
+    const asset = await createAsset({
+      kind: "security", tokenStandard: "erc3643", name: "Accredited Only", symbol: "ACCR",
+      minTier: 0, jurisdictionAllow: [], initialSupply: 100n,
+      metadata: { complianceProfile: "security-accredited" },
+    });
+
+    // Not accredited by default → blocked.
+    const before = await check(asset.id, user);
+    expect(before.allowed).toBe(false);
+    expect(before.reason).toMatch(/accredited/i);
+
+    // Compliance marks the user accredited → now allowed.
+    await setAccreditation(user, true);
+    expect((await check(asset.id, user)).allowed).toBe(true);
+
+    // Revoking accreditation blocks again.
+    await setAccreditation(user, false);
+    expect((await check(asset.id, user)).allowed).toBe(false);
+  });
 });

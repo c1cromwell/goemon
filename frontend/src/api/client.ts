@@ -1282,3 +1282,41 @@ export const issuerApi = {
   create: (body: IssueAssetInput, key: string) =>
     umoney<{ asset: IssuedAsset; listed: boolean; complianceProfile: string }>("/issuer/assets", body, key),
 };
+
+// Holder portfolio / investment-management tools (Phase 29 P3).
+export interface PortfolioHolding {
+  assetId: string;
+  name: string;
+  symbol: string | null;
+  kind: string;
+  qtyBase: string;
+  priceMinor: string | null;
+  valueMinor: string | null;
+  currency: string | null;
+}
+export interface Portfolio {
+  cashMinor: string;
+  holdings: PortfolioHolding[];
+  holdingsValueMinor: string;
+  totalValueMinor: string;
+}
+export interface Distribution {
+  journalId: string;
+  label: string;
+  description: string;
+  amountMinor: string;
+  currency: string;
+  createdAt: string;
+}
+export interface TaxSummary {
+  year: number;
+  count: number;
+  totalsByCurrency: Record<string, string>;
+  byAsset: { label: string; currency: string; totalMinor: string }[];
+  disclaimer: string;
+}
+export const portfolioApi = {
+  positions: () => uget<Portfolio>("/portfolio"),
+  distributions: () => uget<{ distributions: Distribution[] }>("/portfolio/distributions"),
+  taxSummary: (year: number) => uget<TaxSummary>(`/portfolio/tax-summary?year=${year}`),
+};

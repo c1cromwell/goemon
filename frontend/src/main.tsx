@@ -11,6 +11,7 @@ import { Waitlist } from "./pages/Waitlist";
 import { Dashboard } from "./pages/Dashboard";
 import { Invest, Collect } from "./pages/Market";
 import { Issuer } from "./pages/Issuer";
+import { PortfolioPage } from "./pages/Portfolio";
 import { AssetDetail } from "./pages/AssetDetail";
 import { Agent } from "./pages/Agent";
 import { Onboarding } from "./pages/Onboarding";
@@ -93,6 +94,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="/home" element={<Dashboard />} />
               <Route path="/invest" element={<Invest />} />
               <Route path="/issuer" element={<Issuer />} />
+              <Route path="/portfolio" element={<PortfolioPage />} />
               <Route path="/collect" element={<Collect />} />
               <Route path="/collect/sell" element={<CollectSell />} />
               <Route path="/collect/purchases" element={<CollectPurchases />} />

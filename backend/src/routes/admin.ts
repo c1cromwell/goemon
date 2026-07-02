@@ -89,6 +89,27 @@ adminRouter.post(
   }
 );
 
+// Phase 29 P2 — set/clear the Reg-D accredited-investor flag (drives the
+// "accreditation" compliance dimension). Compliance/admin only.
+adminRouter.post(
+  "/identities/:userId/accreditation",
+  requireAdmin,
+  requireRole("compliance", "admin"),
+  async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.params.userId;
+      const { accredited } = req.body as { accredited?: boolean };
+      if (!userId) throw new AppError(ErrorCode.VALIDATION, "userId required");
+      if (typeof accredited !== "boolean") throw new AppError(ErrorCode.VALIDATION, "accredited (boolean) required");
+      const { setAccreditation } = await import("../services/identityService");
+      await setAccreditation(userId, accredited);
+      res.json({ userId, accredited });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
 adminRouter.post("/simulations", requireAdmin, async (req: AdminRequest, res: Response, next: NextFunction) => {
   try {
     const { profiles } = req.body as { profiles?: string[] };

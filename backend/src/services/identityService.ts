@@ -36,6 +36,8 @@ export interface IdentityProfile {
   dob: string | null;
   is_minor: number;
   household_id: string | null;
+  /** Reg-D accredited-investor flag (0/1); set by compliance/admin. */
+  accredited: number;
 }
 
 const TIER_OPS: Record<number, string[]> = {
@@ -69,6 +71,15 @@ export async function getProfile(userId: string): Promise<IdentityProfile | null
     "SELECT * FROM identity_profiles WHERE user_id = ?",
     [userId]
   );
+}
+
+/** Set (or clear) the Reg-D accredited-investor flag. Compliance/admin only. */
+export async function setAccreditation(userId: string, accredited: boolean): Promise<void> {
+  const res = await getDb().execute(
+    "UPDATE identity_profiles SET accredited = ?, updated_at = ? WHERE user_id = ?",
+    [accredited ? 1 : 0, new Date().toISOString(), userId]
+  );
+  void res;
 }
 
 export async function ensureProfile(userId: string): Promise<IdentityProfile> {
