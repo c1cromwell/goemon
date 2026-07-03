@@ -45,6 +45,12 @@ const REGISTRY: Record<string, AssetTypeDef> = {
   security: { kind: "security", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", label: "Security", enabled: true },
   equity: { kind: "equity", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", label: "Equity (1:1 backed)", enabled: true },
   treasury: { kind: "treasury", defaultTokenStandard: "erc3643", isSecurity: false, complianceProfile: "security-erc3643", label: "Treasury", enabled: true },
+  // First onboarded RWA vertical (Phase 29): land / farmland / apartments. A tokenized
+  // real-estate interest is a security → ERC-3643, full compliance. Sub-type + property
+  // details live in metadata (propertyType, address, valuationMinor, incomeMinor). This entry
+  // is the ENTIRE vertical at the engine level — issuance/compliance/raise/secondary/cockpit
+  // all work unchanged. See docs/TOKENIZATION-MASTER-PLAN.md.
+  real_estate: { kind: "real_estate", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", label: "Real estate", enabled: true },
 };
 
 /** Look up a type definition (enabled or not), or undefined for an unknown kind. */

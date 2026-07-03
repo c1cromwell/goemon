@@ -14,6 +14,7 @@
     "seed:users": "tsx src/scripts/seed-demo-users.ts",
     "seed:marketplace": "tsx src/scripts/seed-marketplace-demo.ts",
     "seed:products": "tsx src/scripts/seed-demo-products.ts",
+    "seed:realestate": "tsx src/scripts/seed-real-estate.ts",
     "seed:demo": "npm run setup && npm run seed:marketplace && npm run seed:products",
     "seed:e2e": "npm run setup && npm run seed:marketplace",
     "reset:auth": "tsx src/scripts/reset-auth-failures.ts",

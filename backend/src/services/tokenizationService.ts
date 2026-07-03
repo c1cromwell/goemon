@@ -27,7 +27,7 @@ import {
 } from "./ledgerService";
 import { isSecurityKind } from "./assetTypeRegistry";
 
-export type AssetKind = "security" | "collectible" | "gaming" | "equity" | "treasury";
+export type AssetKind = "security" | "collectible" | "gaming" | "equity" | "treasury" | "real_estate";
 export type TokenStandard = "erc3643" | "hts";
 
 export interface AssetRow {

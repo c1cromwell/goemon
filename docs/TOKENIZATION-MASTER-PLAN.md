@@ -58,6 +58,21 @@ Format per item: **what · why/underserved · model to follow · Goemon reuse ·
 
 ### Part A — Platform capabilities (what makes it "one-size-fits-all")
 
+> **STATUS — Part A is BUILT (P1–P6, prototype seams, each behind a prod-fatal kill-switch).**
+> The engine layer from §6 is real: an issuer can create a compliant token, raise capital on it,
+> grant equity to employees, and holders can trade it on a secondary book and track everything —
+> all on the one asset-agnostic engine.
+> - **P1** issuance console — `issuanceService` + `assetTypeRegistry` + `complianceProfiles`; routes `/api/issuer/*`; UI `/issuer`. (`ISSUANCE_CONSOLE_ENABLED`)
+> - **P2** compliance-as-a-service — `complianceProfiles` (composable dimensions incl. real **accreditation**, whitelist, lockup); admin `/api/admin/identities/:id/accreditation`.
+> - **P3** holder cockpit — `portfolioService` (positions/distributions/tax summary); routes `/api/portfolio/*`; UI `/portfolio`.
+> - **P4** employee equity comp — `equityCompService` (grants, cliff+linear vesting, 83(b), option exercise, cap table); `/api/equity/*`; UI `/equity`. (`EQUITY_COMP_ENABLED`) Ties to `docs/legal/EQUITY-INCENTIVE-PLAN.md`.
+> - **P5** capital formation — `capitalRaiseService` (offerings, escrowed commitments, settle/refund at target, Reg CF/D/A + accreditation gate); `/api/raise/*`; UI `/raise`. (`CAPITAL_RAISE_ENABLED`)
+> - **P6** secondary market — `secondaryMarketService` (peer-to-peer limit order book + matching engine, escrow, compliance-checked fills); `/api/market/*`; UI `/exchange`. (`SECONDARY_MARKET_ENABLED`)
+>
+> **First onboarded vertical: Real estate** (land / farmland / apartments) — added as an
+> `assetTypeRegistry` entry + property metadata, **zero engine changes** (`npm run seed:realestate`).
+> This is the proof of §6: a new vertical is "onboard a profile," not a project.
+
 **P1 — Self-serve compliant issuance console ("tokenize anything").**
 - *What:* a guided console where any issuer creates a compliant token in minutes — pick asset kind,
   jurisdiction rules, holder cap, transfer restrictions, docs, price source; mint to treasury; list.

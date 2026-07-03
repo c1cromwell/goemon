@@ -28,6 +28,9 @@ type Form = {
   name: string;
   symbol: string;
   description: string;
+  propertyType: string;
+  address: string;
+  valuation: string;
   complianceProfile: string;
   minTier: number;
   jurisdictions: string;
@@ -40,7 +43,7 @@ type Form = {
 };
 
 const EMPTY: Form = {
-  kind: "", name: "", symbol: "", description: "", complianceProfile: "",
+  kind: "", name: "", symbol: "", description: "", propertyType: "land", address: "", valuation: "", complianceProfile: "",
   minTier: 0, jurisdictions: "", holderCap: "", whitelist: "",
   supply: "", list: false, surface: "invest", priceDollars: "",
 };
@@ -139,7 +142,14 @@ export function Issuer() {
         whitelist: dims.includes("whitelist") && form.whitelist.trim()
           ? form.whitelist.split(/[\n,]/).map((s) => s.trim()).filter(Boolean)
           : undefined,
-        metadata: form.description.trim() ? { description: form.description.trim() } : undefined,
+        metadata: {
+          ...(form.description.trim() ? { description: form.description.trim() } : {}),
+          ...(form.kind === "real_estate" ? {
+            propertyType: form.propertyType,
+            ...(form.address.trim() ? { address: form.address.trim() } : {}),
+            ...(form.valuation.trim() ? { valuationMinor: String(Math.round(parseFloat(form.valuation) * 100)) } : {}),
+          } : {}),
+        },
         initialSupply: form.supply,
         listing: form.list
           ? { surface: form.surface, priceMinor: String(Math.round(parseFloat(form.priceDollars) * 100)) }
@@ -207,6 +217,28 @@ export function Issuer() {
                 <label>Description (optional)</label>
                 <textarea rows={3} value={form.description} onChange={(e) => set({ description: e.target.value })} placeholder="What does this token represent?" />
               </div>
+
+              {form.kind === "real_estate" && (
+                <>
+                  <div className="field">
+                    <label>Property type</label>
+                    <select value={form.propertyType} onChange={(e) => set({ propertyType: e.target.value })}>
+                      <option value="land">Land (raw / undeveloped)</option>
+                      <option value="farmland">Farmland</option>
+                      <option value="apartment">Apartment building</option>
+                      <option value="commercial">Commercial</option>
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label>Address / location</label>
+                    <input value={form.address} onChange={(e) => set({ address: e.target.value })} placeholder="123 Maple St, Columbus, OH" />
+                  </div>
+                  <div className="field">
+                    <label>Estimated value (USD, optional)</label>
+                    <input inputMode="decimal" value={form.valuation} onChange={(e) => set({ valuation: e.target.value })} placeholder="6200000" />
+                  </div>
+                </>
+              )}
             </div>
           )}
 

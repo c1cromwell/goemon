@@ -159,8 +159,8 @@ tbody tr:nth-child(even) td { background: var(--line-2); }
 <section class="cover">
   <div class="mark">B</div>
   <h1>Tokenization Master Plan</h1>
-  <p class="sub">Goemon Global Finance — one engine, many verticals</p>
-  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>July 1, 2026</b></div>
+  <p class="sub">Goemon Global Finance — one engine, many verticals (P1–P6 built)</p>
+  <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>July 3, 2026</b></div>
   <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
 </section>
 <div class="wrap">
@@ -256,6 +256,23 @@ equity, capital formation, secondary/ATS) you flagged.</p>
 <h2 id="3-the-top-15-mini-business-case-each">3. The Top 15 — mini business-case each</h2>
 <p>Format per item: <strong>what · why/underserved · model to follow · Goemon reuse · compliance gate · ramp.</strong></p>
 <h3 id="part-a-platform-capabilities-what-makes-it-one-size-fits-all">Part A — Platform capabilities (what makes it &quot;one-size-fits-all&quot;)</h3>
+<blockquote>
+<p><strong>STATUS — Part A is BUILT (P1–P6, prototype seams, each behind a prod-fatal kill-switch).</strong>
+The engine layer from §6 is real: an issuer can create a compliant token, raise capital on it,
+grant equity to employees, and holders can trade it on a secondary book and track everything —
+all on the one asset-agnostic engine.</p>
+<ul>
+<li><strong>P1</strong> issuance console — <code>issuanceService</code> + <code>assetTypeRegistry</code> + <code>complianceProfiles</code>; routes <code>/api/issuer/*</code>; UI <code>/issuer</code>. (<code>ISSUANCE_CONSOLE_ENABLED</code>)</li>
+<li><strong>P2</strong> compliance-as-a-service — <code>complianceProfiles</code> (composable dimensions incl. real <strong>accreditation</strong>, whitelist, lockup); admin <code>/api/admin/identities/:id/accreditation</code>.</li>
+<li><strong>P3</strong> holder cockpit — <code>portfolioService</code> (positions/distributions/tax summary); routes <code>/api/portfolio/*</code>; UI <code>/portfolio</code>.</li>
+<li><strong>P4</strong> employee equity comp — <code>equityCompService</code> (grants, cliff+linear vesting, 83(b), option exercise, cap table); <code>/api/equity/*</code>; UI <code>/equity</code>. (<code>EQUITY_COMP_ENABLED</code>) Ties to <code>docs/legal/EQUITY-INCENTIVE-PLAN.md</code>.</li>
+<li><strong>P5</strong> capital formation — <code>capitalRaiseService</code> (offerings, escrowed commitments, settle/refund at target, Reg CF/D/A + accreditation gate); <code>/api/raise/*</code>; UI <code>/raise</code>. (<code>CAPITAL_RAISE_ENABLED</code>)</li>
+<li><strong>P6</strong> secondary market — <code>secondaryMarketService</code> (peer-to-peer limit order book + matching engine, escrow, compliance-checked fills); <code>/api/market/*</code>; UI <code>/exchange</code>. (<code>SECONDARY_MARKET_ENABLED</code>)</li>
+</ul>
+<p><strong>First onboarded vertical: Real estate</strong> (land / farmland / apartments) — added as an
+<code>assetTypeRegistry</code> entry + property metadata, <strong>zero engine changes</strong> (<code>npm run seed:realestate</code>).
+This is the proof of §6: a new vertical is &quot;onboard a profile,&quot; not a project.</p>
+</blockquote>
 <p><strong>P1 — Self-serve compliant issuance console (&quot;tokenize anything&quot;).</strong></p>
 <ul>
 <li><em>What:</em> a guided console where any issuer creates a compliant token in minutes — pick asset kind,

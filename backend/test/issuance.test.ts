@@ -49,7 +49,7 @@ describe("issuance console — pickers", () => {
     const { issuanceOptions } = await import("../src/services/issuanceService");
     const opts = issuanceOptions();
     expect(opts.enabled).toBe(true);
-    expect(opts.assetTypes.map((t) => t.kind).sort()).toEqual(["collectible", "equity", "gaming", "security", "treasury"]);
+    expect(opts.assetTypes.map((t) => t.kind).sort()).toEqual(["collectible", "equity", "gaming", "real_estate", "security", "treasury"]);
     const profiles = opts.complianceProfiles.map((p) => p.name);
     expect(profiles).toContain("exempt-basic");
     expect(profiles).toContain("security-erc3643");
