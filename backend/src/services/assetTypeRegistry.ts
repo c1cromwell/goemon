@@ -26,6 +26,8 @@ export interface AssetTypeDef {
   isSecurity: boolean;
   /** The default compliance profile (complianceProfiles.ts) the issuance console suggests for this kind. */
   complianceProfile: string;
+  /** Supports pro-rata corporate-action distributions (dividends / rent / royalties). */
+  distributes: boolean;
   label: string;
   /** When false, the registry knows the type but the issuance surface won't offer it. */
   enabled: boolean;
@@ -40,17 +42,22 @@ export interface AssetTypeDef {
  *    (`kind === "security" || kind === "equity" || token_standard === "erc3643"`).
  */
 const REGISTRY: Record<string, AssetTypeDef> = {
-  collectible: { kind: "collectible", defaultTokenStandard: "hts", isSecurity: false, complianceProfile: "exempt-basic", label: "Collectible", enabled: true },
-  gaming: { kind: "gaming", defaultTokenStandard: "hts", isSecurity: false, complianceProfile: "exempt-basic", label: "Gaming asset", enabled: true },
-  security: { kind: "security", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", label: "Security", enabled: true },
-  equity: { kind: "equity", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", label: "Equity (1:1 backed)", enabled: true },
-  treasury: { kind: "treasury", defaultTokenStandard: "erc3643", isSecurity: false, complianceProfile: "security-erc3643", label: "Treasury", enabled: true },
-  // First onboarded RWA vertical (Phase 29): land / farmland / apartments. A tokenized
-  // real-estate interest is a security → ERC-3643, full compliance. Sub-type + property
-  // details live in metadata (propertyType, address, valuationMinor, incomeMinor). This entry
-  // is the ENTIRE vertical at the engine level — issuance/compliance/raise/secondary/cockpit
-  // all work unchanged. See docs/TOKENIZATION-MASTER-PLAN.md.
-  real_estate: { kind: "real_estate", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", label: "Real estate", enabled: true },
+  collectible: { kind: "collectible", defaultTokenStandard: "hts", isSecurity: false, complianceProfile: "exempt-basic", distributes: false, label: "Collectible", enabled: true },
+  gaming: { kind: "gaming", defaultTokenStandard: "hts", isSecurity: false, complianceProfile: "exempt-basic", distributes: false, label: "Gaming asset", enabled: true },
+  security: { kind: "security", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", distributes: true, label: "Security", enabled: true },
+  equity: { kind: "equity", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", distributes: true, label: "Equity (1:1 backed)", enabled: true },
+  treasury: { kind: "treasury", defaultTokenStandard: "erc3643", isSecurity: false, complianceProfile: "security-erc3643", distributes: true, label: "Treasury", enabled: true },
+  // RWA verticals (Phase 29) — each is JUST a registry entry + metadata; the engine
+  // (issuance/compliance/raise/secondary/cockpit/distributions) works unchanged. See
+  // docs/TOKENIZATION-MASTER-PLAN.md.
+  //   real_estate — land / farmland / apartments; income (rent) distributes pro-rata.
+  real_estate: { kind: "real_estate", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", distributes: true, label: "Real estate", enabled: true },
+  //   commodity — gold / silver / energy / timber; 1:1-backed good, freely tradeable (HTS,
+  //   tier-only), proof-of-reserve in metadata (custodyAttestationUri). Not income-producing.
+  commodity: { kind: "commodity", defaultTokenStandard: "hts", isSecurity: false, complianceProfile: "exempt-basic", distributes: false, label: "Commodity", enabled: true },
+  //   royalty — music / film / patent / publishing income share; a security whose royalty
+  //   stream distributes pro-rata via corporate actions.
+  royalty: { kind: "royalty", defaultTokenStandard: "erc3643", isSecurity: true, complianceProfile: "security-erc3643", distributes: true, label: "IP royalty", enabled: true },
 };
 
 /** Look up a type definition (enabled or not), or undefined for an unknown kind. */
@@ -80,4 +87,9 @@ export function isSecurityKind(kind: string, tokenStandard: string): boolean {
 /** The default compliance profile for a kind (used by the issuance console). */
 export function defaultComplianceProfile(kind: string): string {
   return REGISTRY[kind]?.complianceProfile ?? "exempt-basic";
+}
+
+/** Whether a kind supports pro-rata corporate-action distributions (dividends / rent / royalties). */
+export function assetKindDistributes(kind: string): boolean {
+  return REGISTRY[kind]?.distributes ?? false;
 }

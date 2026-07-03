@@ -31,6 +31,10 @@ type Form = {
   propertyType: string;
   address: string;
   valuation: string;
+  commodityType: string;
+  ipType: string;
+  title: string;
+  rightsHolder: string;
   complianceProfile: string;
   minTier: number;
   jurisdictions: string;
@@ -43,7 +47,8 @@ type Form = {
 };
 
 const EMPTY: Form = {
-  kind: "", name: "", symbol: "", description: "", propertyType: "land", address: "", valuation: "", complianceProfile: "",
+  kind: "", name: "", symbol: "", description: "", propertyType: "land", address: "", valuation: "",
+  commodityType: "gold", ipType: "music", title: "", rightsHolder: "", complianceProfile: "",
   minTier: 0, jurisdictions: "", holderCap: "", whitelist: "",
   supply: "", list: false, surface: "invest", priceDollars: "",
 };
@@ -149,6 +154,12 @@ export function Issuer() {
             ...(form.address.trim() ? { address: form.address.trim() } : {}),
             ...(form.valuation.trim() ? { valuationMinor: String(Math.round(parseFloat(form.valuation) * 100)) } : {}),
           } : {}),
+          ...(form.kind === "commodity" ? { commodityType: form.commodityType } : {}),
+          ...(form.kind === "royalty" ? {
+            ipType: form.ipType,
+            ...(form.title.trim() ? { title: form.title.trim() } : {}),
+            ...(form.rightsHolder.trim() ? { rightsHolder: form.rightsHolder.trim() } : {}),
+          } : {}),
         },
         initialSupply: form.supply,
         listing: form.list
@@ -236,6 +247,40 @@ export function Issuer() {
                   <div className="field">
                     <label>Estimated value (USD, optional)</label>
                     <input inputMode="decimal" value={form.valuation} onChange={(e) => set({ valuation: e.target.value })} placeholder="6200000" />
+                  </div>
+                </>
+              )}
+
+              {form.kind === "commodity" && (
+                <div className="field">
+                  <label>Commodity</label>
+                  <select value={form.commodityType} onChange={(e) => set({ commodityType: e.target.value })}>
+                    <option value="gold">Gold</option>
+                    <option value="silver">Silver</option>
+                    <option value="energy">Energy</option>
+                    <option value="timber">Timber</option>
+                  </select>
+                </div>
+              )}
+
+              {form.kind === "royalty" && (
+                <>
+                  <div className="field">
+                    <label>Royalty type</label>
+                    <select value={form.ipType} onChange={(e) => set({ ipType: e.target.value })}>
+                      <option value="music">Music</option>
+                      <option value="film">Film</option>
+                      <option value="patent">Patent</option>
+                      <option value="publishing">Publishing</option>
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label>Title / work</label>
+                    <input value={form.title} onChange={(e) => set({ title: e.target.value })} placeholder="Midnight Roads" />
+                  </div>
+                  <div className="field">
+                    <label>Rights holder</label>
+                    <input value={form.rightsHolder} onChange={(e) => set({ rightsHolder: e.target.value })} placeholder="Aurora Records LLC" />
                   </div>
                 </>
               )}

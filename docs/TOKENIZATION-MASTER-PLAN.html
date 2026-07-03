@@ -159,7 +159,7 @@ tbody tr:nth-child(even) td { background: var(--line-2); }
 <section class="cover">
   <div class="mark">B</div>
   <h1>Tokenization Master Plan</h1>
-  <p class="sub">Goemon Global Finance — one engine, many verticals (P1–P6 built)</p>
+  <p class="sub">Goemon Global Finance — one engine, many verticals (P1–P6 + verticals built)</p>
   <div class="meta">Goemon Global Finance &nbsp;·&nbsp; Confidential — Founder &nbsp;·&nbsp; <b>July 3, 2026</b></div>
   <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
 </section>
@@ -269,9 +269,15 @@ all on the one asset-agnostic engine.</p>
 <li><strong>P5</strong> capital formation — <code>capitalRaiseService</code> (offerings, escrowed commitments, settle/refund at target, Reg CF/D/A + accreditation gate); <code>/api/raise/*</code>; UI <code>/raise</code>. (<code>CAPITAL_RAISE_ENABLED</code>)</li>
 <li><strong>P6</strong> secondary market — <code>secondaryMarketService</code> (peer-to-peer limit order book + matching engine, escrow, compliance-checked fills); <code>/api/market/*</code>; UI <code>/exchange</code>. (<code>SECONDARY_MARKET_ENABLED</code>)</li>
 </ul>
-<p><strong>First onboarded vertical: Real estate</strong> (land / farmland / apartments) — added as an
-<code>assetTypeRegistry</code> entry + property metadata, <strong>zero engine changes</strong> (<code>npm run seed:realestate</code>).
-This is the proof of §6: a new vertical is &quot;onboard a profile,&quot; not a project.</p>
+<p><strong>Onboarded verticals (proof of §6 — each is a registry entry + metadata, ZERO engine changes):</strong></p>
+<ul>
+<li><strong>Real estate</strong> — land / farmland / apartments (ERC-3643 security; rent distributes). <code>npm run seed:realestate</code></li>
+<li><strong>Commodities</strong> — gold / silver / energy / timber (HTS, exempt/freely-tradeable; proof-of-reserve metadata). <code>npm run seed:verticals</code></li>
+<li><strong>IP royalties</strong> — music / film / patent / publishing (ERC-3643 security; royalty stream distributes pro-rata via corporate actions). <code>npm run seed:verticals</code></li>
+</ul>
+<p>All three appear automatically in the P1 issuance console type picker and the marketplace, and
+flow through P5 raises, P6 secondary trading, and (for income assets) P3 distributions — with no
+new engine code. A new vertical is &quot;onboard a profile,&quot; not a project.</p>
 </blockquote>
 <p><strong>P1 — Self-serve compliant issuance console (&quot;tokenize anything&quot;).</strong></p>
 <ul>

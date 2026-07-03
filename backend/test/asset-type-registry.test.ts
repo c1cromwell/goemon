@@ -19,7 +19,7 @@ import {
 describe("asset-type registry", () => {
   it("registers the current kinds, all enabled", () => {
     const kinds = listAssetTypes().map((t) => t.kind).sort();
-    expect(kinds).toEqual(["collectible", "equity", "gaming", "real_estate", "security", "treasury"]);
+    expect(kinds).toEqual(["collectible", "commodity", "equity", "gaming", "real_estate", "royalty", "security", "treasury"]);
     for (const k of kinds) expect(isKnownAssetKind(k)).toBe(true);
     expect(isKnownAssetKind("does-not-exist")).toBe(false);
     expect(getAssetType("collectible")?.defaultTokenStandard).toBe("hts");

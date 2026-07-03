@@ -69,9 +69,14 @@ Format per item: **what · why/underserved · model to follow · Goemon reuse ·
 > - **P5** capital formation — `capitalRaiseService` (offerings, escrowed commitments, settle/refund at target, Reg CF/D/A + accreditation gate); `/api/raise/*`; UI `/raise`. (`CAPITAL_RAISE_ENABLED`)
 > - **P6** secondary market — `secondaryMarketService` (peer-to-peer limit order book + matching engine, escrow, compliance-checked fills); `/api/market/*`; UI `/exchange`. (`SECONDARY_MARKET_ENABLED`)
 >
-> **First onboarded vertical: Real estate** (land / farmland / apartments) — added as an
-> `assetTypeRegistry` entry + property metadata, **zero engine changes** (`npm run seed:realestate`).
-> This is the proof of §6: a new vertical is "onboard a profile," not a project.
+> **Onboarded verticals (proof of §6 — each is a registry entry + metadata, ZERO engine changes):**
+> - **Real estate** — land / farmland / apartments (ERC-3643 security; rent distributes). `npm run seed:realestate`
+> - **Commodities** — gold / silver / energy / timber (HTS, exempt/freely-tradeable; proof-of-reserve metadata). `npm run seed:verticals`
+> - **IP royalties** — music / film / patent / publishing (ERC-3643 security; royalty stream distributes pro-rata via corporate actions). `npm run seed:verticals`
+>
+> All three appear automatically in the P1 issuance console type picker and the marketplace, and
+> flow through P5 raises, P6 secondary trading, and (for income assets) P3 distributions — with no
+> new engine code. A new vertical is "onboard a profile," not a project.
 
 **P1 — Self-serve compliant issuance console ("tokenize anything").**
 - *What:* a guided console where any issuer creates a compliant token in minutes — pick asset kind,

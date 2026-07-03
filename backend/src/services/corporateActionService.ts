@@ -17,6 +17,7 @@ import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
 import { equityDividendTotal } from "../observability/metrics";
 import { requireAsset } from "./tokenizationService";
+import { assetKindDistributes } from "./assetTypeRegistry";
 import { assertCorporateActionsEnabled } from "./equityIssuerService";
 import {
   assetLedgerCode,
@@ -52,8 +53,8 @@ export interface CorporateActionRow {
 export async function declareCorporateAction(input: DeclareCorporateActionInput): Promise<CorporateActionRow> {
   assertCorporateActionsEnabled();
   const asset = await requireAsset(input.assetId);
-  if (asset.kind !== "equity" && asset.kind !== "treasury") {
-    throw new AppError(ErrorCode.VALIDATION, "Corporate actions apply to equity/treasury assets only");
+  if (!assetKindDistributes(asset.kind)) {
+    throw new AppError(ErrorCode.VALIDATION, "Corporate actions apply only to income-producing assets (equity, treasury, real estate, royalty, security)");
   }
   const id = uuidv4();
   const currency = input.currency ?? "USD";
