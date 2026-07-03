@@ -40,6 +40,7 @@ export default defineConfig({
       ISSUANCE_CONSOLE_ENABLED: "false",
       EQUITY_COMP_ENABLED: "false",
       CAPITAL_RAISE_ENABLED: "false",
+      SECONDARY_MARKET_ENABLED: "false",
       SETTLEMENT_STABLECOIN: "usdc",
     },
   },

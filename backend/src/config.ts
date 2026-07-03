@@ -172,6 +172,12 @@ const schema = z.object({
   // issuer) or refund at the target. See docs/TOKENIZATION-MASTER-PLAN.md (P5).
   CAPITAL_RAISE_ENABLED: boolish,
 
+  // Phase 29 (P6) — secondary market: a peer-to-peer limit order book (the liquidity unlock).
+  // Off by default; prototype, prod-fatal — secondary trading of securities as a venue needs a
+  // registered broker-dealer + ATS (partner first). Units/cash escrow at order time; price-time
+  // matching; compliance-checked fills. See docs/TOKENIZATION-MASTER-PLAN.md (P6).
+  SECONDARY_MARKET_ENABLED: boolish,
+
   // X-Money response F1 — tokenized yield-bearing Treasury (prototype seam). Off by default;
   // a kill-switch (prod-fatal — it's a security; real launch needs issuer/transfer-agent/ATS +
   // counsel). The competitive counter to a custodial 6% APY: own a yield-bearing ASSET whose
@@ -425,6 +431,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.CAPITAL_RAISE_ENABLED) {
     fatal.push("CAPITAL_RAISE_ENABLED must be false in production — the Phase-29 capital-raise seam is a prototype (a real offering needs a funding portal / broker-dealer, transfer agent, and securities counsel).");
+  }
+  if (c.SECONDARY_MARKET_ENABLED) {
+    fatal.push("SECONDARY_MARKET_ENABLED must be false in production — the Phase-29 secondary order book is a prototype (secondary trading of securities as a venue needs a registered broker-dealer + ATS).");
   }
   if (c.ISSUANCE_CONSOLE_ENABLED) {
     fatal.push("ISSUANCE_CONSOLE_ENABLED must be false in production — the Phase-29 issuance console is a prototype; per-asset securities counsel + issuer/transfer-agent sign-off is required before self-serve tokenization.");

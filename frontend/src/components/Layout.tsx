@@ -22,6 +22,7 @@ const SECONDARY = [
   { to: "/equity", label: "My equity" },
   { to: "/issuer", label: "Tokenize" },
   { to: "/raise", label: "Raise" },
+  { to: "/exchange", label: "Exchange" },
   { to: "/bank", label: "Bank" },
   { to: "/cards", label: "Cards" },
   { to: "/bills", label: "Bills" },

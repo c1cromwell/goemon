@@ -29,6 +29,7 @@ const GROUPS: Array<{ title: string; links: Array<{ to: string; label: string }>
       { to: "/portfolio", label: "Portfolio" },
       { to: "/equity", label: "My equity" },
       { to: "/raise", label: "Raise" },
+      { to: "/exchange", label: "Exchange" },
     ],
   },
   {

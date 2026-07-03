@@ -1395,3 +1395,23 @@ export const raiseApi = {
   close: (id: string) => upost<{ status: string; raisedMinor: string; settled: number; refunded: number }>(`/raise/offerings/${id}/close`),
   cancel: (id: string) => upost<{ status: string; refunded: number }>(`/raise/offerings/${id}/cancel`),
 };
+
+// Secondary market — order book (Phase 29 P6).
+export interface MarketAsset { id: string; name: string; symbol: string | null; kind: string }
+export interface BookLevel { priceMinor: string; qty: string }
+export interface MarketOrder {
+  id: string; assetId: string; side: "buy" | "sell"; qtyTotal: string; qtyRemaining: string;
+  limitPriceMinor: string; currency: string; status: string; createdAt: string;
+}
+export interface MarketTrade {
+  id: string; assetId: string; qty: string; priceMinor: string; currency: string; buyerUserId: string; sellerUserId: string; createdAt: string;
+}
+export const marketApi = {
+  assets: () => uget<{ assets: MarketAsset[] }>("/market/assets"),
+  book: (assetId: string) => uget<{ bids: BookLevel[]; asks: BookLevel[] }>(`/market/book/${assetId}`),
+  trades: (assetId: string) => uget<{ trades: MarketTrade[] }>(`/market/trades/${assetId}`),
+  myOrders: () => uget<{ orders: MarketOrder[] }>("/market/orders"),
+  place: (body: { assetId: string; side: "buy" | "sell"; qty: string; limitPriceMinor: string }, key: string) =>
+    umoney<{ order: MarketOrder; fills: MarketTrade[] }>("/market/orders", body, key),
+  cancel: (id: string) => upost<MarketOrder>(`/market/orders/${id}/cancel`),
+};
