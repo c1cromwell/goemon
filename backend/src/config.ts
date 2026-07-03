@@ -166,6 +166,12 @@ const schema = z.object({
   // docs/legal/EQUITY-INCENTIVE-PLAN.md. See docs/TOKENIZATION-MASTER-PLAN.md (P4).
   EQUITY_COMP_ENABLED: boolish,
 
+  // Phase 29 (P5) — capital formation / primary-raise rails (Reg CF / D 506(c) / A+). Off by
+  // default; prototype, prod-fatal — a real raise needs a funding portal (CF) or broker-dealer
+  // (D/A+), transfer agent, and counsel. Escrowed commitments settle (deliver units + release to
+  // issuer) or refund at the target. See docs/TOKENIZATION-MASTER-PLAN.md (P5).
+  CAPITAL_RAISE_ENABLED: boolish,
+
   // X-Money response F1 — tokenized yield-bearing Treasury (prototype seam). Off by default;
   // a kill-switch (prod-fatal — it's a security; real launch needs issuer/transfer-agent/ATS +
   // counsel). The competitive counter to a custodial 6% APY: own a yield-bearing ASSET whose
@@ -416,6 +422,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.EQUITY_COMP_ENABLED) {
     fatal.push("EQUITY_COMP_ENABLED must be false in production — the Phase-29 equity-compensation seam is a prototype (private-company securities: Rule 701 / Reg D, 409A valuation, and counsel required).");
+  }
+  if (c.CAPITAL_RAISE_ENABLED) {
+    fatal.push("CAPITAL_RAISE_ENABLED must be false in production — the Phase-29 capital-raise seam is a prototype (a real offering needs a funding portal / broker-dealer, transfer agent, and securities counsel).");
   }
   if (c.ISSUANCE_CONSOLE_ENABLED) {
     fatal.push("ISSUANCE_CONSOLE_ENABLED must be false in production — the Phase-29 issuance console is a prototype; per-asset securities counsel + issuer/transfer-agent sign-off is required before self-serve tokenization.");

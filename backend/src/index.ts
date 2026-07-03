@@ -43,6 +43,7 @@ import { marketplaceRouter } from "./routes/marketplace";
 import { issuerRouter } from "./routes/issuer";
 import { portfolioRouter } from "./routes/portfolio";
 import { equityRouter } from "./routes/equity";
+import { raiseRouter } from "./routes/raise";
 import { marketplaceAdminRouter } from "./routes/marketplaceAdmin";
 import { tradingRouter } from "./routes/trading";
 import { tradingAdminRouter } from "./routes/tradingAdmin";
@@ -215,6 +216,7 @@ async function bootstrap(): Promise<void> {
   app.use("/api/issuer", issuerRouter);
   app.use("/api/portfolio", portfolioRouter);
   app.use("/api/equity", equityRouter);
+  app.use("/api/raise", raiseRouter);
   app.use("/api/admin", marketplaceAdminRouter);
 
   // ---- Phase 17 Stage 1 — trading (isolated; service-gated by TRADING_ENABLED) ----

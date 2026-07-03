@@ -13,6 +13,7 @@ import { Invest, Collect } from "./pages/Market";
 import { Issuer } from "./pages/Issuer";
 import { PortfolioPage } from "./pages/Portfolio";
 import { Equity } from "./pages/Equity";
+import { Raise } from "./pages/Raise";
 import { AssetDetail } from "./pages/AssetDetail";
 import { Agent } from "./pages/Agent";
 import { Onboarding } from "./pages/Onboarding";
@@ -97,6 +98,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="/issuer" element={<Issuer />} />
               <Route path="/portfolio" element={<PortfolioPage />} />
               <Route path="/equity" element={<Equity />} />
+              <Route path="/raise" element={<Raise />} />
               <Route path="/collect" element={<Collect />} />
               <Route path="/collect/sell" element={<CollectSell />} />
               <Route path="/collect/purchases" element={<CollectPurchases />} />

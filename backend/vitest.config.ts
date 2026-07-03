@@ -39,6 +39,7 @@ export default defineConfig({
       TEEN_CUSTODIAL_ENABLED: "false",
       ISSUANCE_CONSOLE_ENABLED: "false",
       EQUITY_COMP_ENABLED: "false",
+      CAPITAL_RAISE_ENABLED: "false",
       SETTLEMENT_STABLECOIN: "usdc",
     },
   },

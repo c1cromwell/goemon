@@ -1350,3 +1350,48 @@ export const equityApi = {
     umoney<EquityGrantView>(`/equity/grants/${id}/exercise`, { qty }, key),
   file83b: (id: string) => upost<EquityGrantView>(`/equity/grants/${id}/file-83b`),
 };
+
+// Capital formation / primary raises (Phase 29 P5).
+export interface OfferingView {
+  id: string;
+  assetId: string;
+  issuerUserId: string;
+  assetName: string | null;
+  assetSymbol: string | null;
+  exemption: "reg_cf" | "reg_d_506c" | "reg_a";
+  priceMinor: string;
+  currency: string;
+  targetMinor: string;
+  capMinor: string;
+  minInvestmentMinor: string;
+  maxInvestmentMinor: string | null;
+  status: string;
+  raisedMinor: string;
+  investorCount: number;
+  unitsSold: string;
+  committedCount: number;
+  openedAt: string;
+  closesAt: string | null;
+  closedAt: string | null;
+}
+export interface RaiseInvestment {
+  id: string; offeringId: string; units: string; amountMinor: string; status: string; createdAt: string;
+}
+export interface OpenOfferingBody {
+  assetId: string;
+  exemption: "reg_cf" | "reg_d_506c" | "reg_a";
+  priceMinor: string;
+  targetMinor: string;
+  capMinor: string;
+  minInvestmentMinor?: string;
+  maxInvestmentMinor?: string;
+}
+export const raiseApi = {
+  offerings: () => uget<{ offerings: OfferingView[] }>("/raise/offerings"),
+  myInvestments: () => uget<{ investments: RaiseInvestment[] }>("/raise/my-investments"),
+  open: (body: OpenOfferingBody) => upost<OfferingView>("/raise/offerings", body),
+  invest: (id: string, units: string, key: string) =>
+    umoney<RaiseInvestment>(`/raise/offerings/${id}/invest`, { units }, key),
+  close: (id: string) => upost<{ status: string; raisedMinor: string; settled: number; refunded: number }>(`/raise/offerings/${id}/close`),
+  cancel: (id: string) => upost<{ status: string; refunded: number }>(`/raise/offerings/${id}/cancel`),
+};
