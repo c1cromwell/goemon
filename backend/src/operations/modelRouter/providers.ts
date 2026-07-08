@@ -70,10 +70,16 @@ async function invokeAnthropic(entry: RegistryEntry, req: ModelInvokeRequest): P
   };
 }
 
-async function invokeOpenAi(entry: RegistryEntry, req: ModelInvokeRequest): Promise<ModelInvokeResult> {
-  if (!config.OPENAI_API_KEY) {
-    throw new AppError(ErrorCode.INTERNAL, "OPENAI_API_KEY required for openai provider");
-  }
+/**
+ * Shared OpenAI-compatible chat-completions call. OpenAI and Chutes (Bittensor SN64) speak
+ * the same protocol, so both providers funnel through here — only the endpoint, key, error
+ * label, and the key under which the raw response is stashed differ.
+ */
+async function invokeOpenAiCompatible(
+  entry: RegistryEntry,
+  req: ModelInvokeRequest,
+  opts: { url: string; apiKey: string; providerLabel: string; rawKey: string }
+): Promise<ModelInvokeResult> {
   const started = Date.now();
   const body: Record<string, unknown> = {
     model: entry.model,
@@ -88,17 +94,20 @@ async function invokeOpenAi(entry: RegistryEntry, req: ModelInvokeRequest): Prom
   const toolChoice = mapOpenAiToolChoice(req.toolChoice);
   if (toolChoice) body.tool_choice = toolChoice;
 
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+  const res = await fetch(opts.url, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${config.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${opts.apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
   });
   if (!res.ok) {
     const errText = await res.text();
-    throw new AppError(ErrorCode.INTERNAL, `OpenAI API error ${res.status}: ${errText.slice(0, 200)}`);
+    throw new AppError(
+      ErrorCode.INTERNAL,
+      `${opts.providerLabel} API error ${res.status}: ${errText.slice(0, 200)}`
+    );
   }
   const message = (await res.json()) as {
     choices?: Array<{ message?: { content?: string | null; tool_calls?: Array<{ function?: { name?: string; arguments?: string } }> } }>;
@@ -122,12 +131,42 @@ async function invokeOpenAi(entry: RegistryEntry, req: ModelInvokeRequest): Prom
     modelId: entry.id,
     vendor: entry.vendor,
     tier: entry.tier,
-    raw: { content: rawContent, openai: message },
+    raw: { content: rawContent, [opts.rawKey]: message },
     inputTokens,
     outputTokens,
     latencyMs,
     costMicroUsd: microCost(entry, inputTokens, outputTokens),
   };
+}
+
+async function invokeOpenAi(entry: RegistryEntry, req: ModelInvokeRequest): Promise<ModelInvokeResult> {
+  if (!config.OPENAI_API_KEY) {
+    throw new AppError(ErrorCode.INTERNAL, "OPENAI_API_KEY required for openai provider");
+  }
+  return invokeOpenAiCompatible(entry, req, {
+    url: "https://api.openai.com/v1/chat/completions",
+    apiKey: config.OPENAI_API_KEY,
+    providerLabel: "OpenAI",
+    rawKey: "openai",
+  });
+}
+
+/**
+ * Chutes / Bittensor Subnet 64 — opt-in, best-effort decentralized inference over an
+ * OpenAI-compatible endpoint. Consumed with a fiat-billed API key (no TAO). The router only
+ * ever routes the non-PII marketing_draft task here, with Anthropic/OpenAI as the fallback.
+ */
+async function invokeChutes(entry: RegistryEntry, req: ModelInvokeRequest): Promise<ModelInvokeResult> {
+  const apiKey = process.env.CHUTES_API_KEY ?? config.CHUTES_API_KEY;
+  if (!apiKey) {
+    throw new AppError(ErrorCode.INTERNAL, "CHUTES_API_KEY required for chutes provider");
+  }
+  return invokeOpenAiCompatible(entry, req, {
+    url: `${config.CHUTES_BASE_URL.replace(/\/$/, "")}/chat/completions`,
+    apiKey,
+    providerLabel: "Chutes",
+    rawKey: "chutes",
+  });
 }
 
 async function invokeCursor(entry: RegistryEntry, req: ModelInvokeRequest): Promise<ModelInvokeResult> {
@@ -200,6 +239,8 @@ export async function invokeProvider(entry: RegistryEntry, req: ModelInvokeReque
       return invokeOpenAi(entry, req);
     case "cursor":
       return invokeCursor(entry, req);
+    case "chutes":
+      return invokeChutes(entry, req);
     case "google":
       return stubProvider("Google");
     case "local":

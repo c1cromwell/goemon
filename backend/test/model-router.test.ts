@@ -69,6 +69,40 @@ describe("model router", () => {
     expect(preview.find((p) => p.taskClass === "triage")?.tier).toBe("fast");
   });
 
+  it("routes the marketing_draft pilot task to chutes when configured, with anthropic fallback", async () => {
+    process.env.CHUTES_API_KEY = "test-chutes";
+    const { selectModels } = await import("../src/operations/modelRouter/router");
+    const chain = selectModels("marketing_draft");
+    expect(chain[0]?.vendor).toBe("chutes");
+    // Anthropic/OpenAI must remain in the chain as the guaranteed fallback.
+    expect(chain.some((m) => m.vendor === "anthropic")).toBe(true);
+    delete process.env.CHUTES_API_KEY;
+  });
+
+  it("NEVER routes chutes to a compliance-pinned task, even when configured", async () => {
+    process.env.CHUTES_API_KEY = "test-chutes";
+    process.env.OPENAI_API_KEY = "test-openai";
+    const { selectModels } = await import("../src/operations/modelRouter/router");
+    for (const task of ["kyc_review", "compliance_analysis", "legal_draft", "launch_decision"] as const) {
+      const chain = selectModels(task);
+      expect(chain.every((m) => m.vendor === "anthropic")).toBe(true);
+      expect(chain.some((m) => m.vendor === "chutes")).toBe(false);
+    }
+    // And chutes must not leak into non-pilot general tasks either.
+    expect(selectModels("summary").some((m) => m.vendor === "chutes")).toBe(false);
+    delete process.env.CHUTES_API_KEY;
+    delete process.env.OPENAI_API_KEY;
+  });
+
+  it("falls back to anthropic for marketing_draft when chutes is unconfigured", async () => {
+    delete process.env.CHUTES_API_KEY;
+    const { selectModels } = await import("../src/operations/modelRouter/router");
+    const chain = selectModels("marketing_draft");
+    expect(chain.length).toBeGreaterThan(0);
+    expect(chain.every((m) => m.vendor !== "chutes")).toBe(true);
+    expect(chain[0]?.vendor).toBe("anthropic");
+  });
+
   it("falls back across vendors on provider error", async () => {
     vi.resetModules();
     vi.doMock("../src/operations/modelRouter/providers", () => ({

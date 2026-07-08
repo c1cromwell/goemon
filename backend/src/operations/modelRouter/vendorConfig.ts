@@ -19,6 +19,11 @@ export const TASK_VENDOR_PREFERENCE: Partial<Record<TaskClass, ModelVendor[]>> =
   general: ["anthropic", "openai", "cursor"],
   summary: ["anthropic", "openai", "cursor"],
   triage: ["anthropic", "openai", "cursor"],
+  // Chutes is reachable from this task class ONLY (cheap open-model drafting of non-PII
+  // internal content). It is deliberately absent from every other task's preference and from
+  // COMPLIANCE_PINNED_TASKS, so it can never serve customer data or a regulated decision.
+  // Anthropic/OpenAI remain in the chain as the guaranteed fallback when Chutes is down/unset.
+  marketing_draft: ["chutes", "anthropic", "openai"],
 };
 
 export function cursorSdkInstalled(): boolean {
@@ -39,6 +44,8 @@ export function isVendorConfigured(vendor: ModelVendor): boolean {
       return !!(process.env.OPENAI_API_KEY ?? config.OPENAI_API_KEY);
     case "cursor":
       return !!(process.env.CURSOR_API_KEY ?? config.CURSOR_API_KEY) && cursorSdkInstalled();
+    case "chutes":
+      return !!(process.env.CHUTES_API_KEY ?? config.CHUTES_API_KEY);
     case "google":
     case "local":
       return false;

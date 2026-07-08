@@ -4,7 +4,7 @@
 
 export type CapabilityTier = "high" | "standard" | "fast";
 
-export type ModelVendor = "anthropic" | "openai" | "google" | "local" | "cursor";
+export type ModelVendor = "anthropic" | "openai" | "google" | "local" | "cursor" | "chutes";
 
 export type TaskClass =
   | "legal_draft"
@@ -14,7 +14,10 @@ export type TaskClass =
   | "kyc_review"
   | "triage"
   | "summary"
-  | "general";
+  | "general"
+  // Non-PII pilot task — internal marketing/content drafting. The one task class that may
+  // route to Chutes (Bittensor SN64); never carries customer data. See vendorConfig.
+  | "marketing_draft";
 
 export interface RegistryEntry {
   id: string;

@@ -15,6 +15,7 @@ export const TASK_TIER: Record<TaskClass, CapabilityTier> = {
   triage: "fast",
   summary: "fast",
   general: "fast",
+  marketing_draft: "standard",
 };
 
 /** Default registry — vendors enabled when API keys (+ @cursor/sdk for cursor) are present. */
@@ -94,6 +95,19 @@ export const MODEL_REGISTRY: RegistryEntry[] = [
     inputMicroUsdPer1k: 500,
     outputMicroUsdPer1k: 2_500,
     latencyClass: "fast",
+    enabled: true,
+  },
+  {
+    // Chutes / Bittensor SN64 — opt-in, enabled only when CHUTES_API_KEY is set
+    // (isVendorConfigured gate). Reachable solely from the marketing_draft task class.
+    id: "chutes-deepseek-v3",
+    vendor: "chutes",
+    tier: "standard",
+    model: config.CHUTES_MODEL,
+    contextWindow: 128_000,
+    inputMicroUsdPer1k: 300,
+    outputMicroUsdPer1k: 1_200,
+    latencyClass: "normal",
     enabled: true,
   },
   {

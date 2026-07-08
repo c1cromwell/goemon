@@ -38,6 +38,15 @@ const schema = z.object({
   OPENAI_FAST_MODEL: z.string().default("gpt-4o-mini"),
   CURSOR_API_KEY: z.string().optional(),
   CURSOR_MODEL: z.string().default("composer-2.5"),
+  // Chutes (Bittensor Subnet 64) — OPTIONAL, opt-in, best-effort decentralized inference,
+  // fiat-billed (no TAO). Wired into the model router as one more OpenAI-compatible vendor,
+  // and structurally excluded from compliance-pinned tasks (see modelRouter/vendorConfig).
+  // Feed NON-PII / de-identified content only. Absent key = vendor simply not configured.
+  CHUTES_API_KEY: z.string().optional(),
+  // Default is a currently-live catalog id; the -TEE (confidential-compute) variant fits the
+  // non-PII posture. Override via CHUTES_MODEL — pick from GET https://llm.chutes.ai/v1/models.
+  CHUTES_MODEL: z.string().default("deepseek-ai/DeepSeek-V3.2-TEE"),
+  CHUTES_BASE_URL: z.string().default("https://llm.chutes.ai/v1"),
   JWT_SECRET: z.string().min(1),
 
   DATABASE_URL: z.string().optional(),
