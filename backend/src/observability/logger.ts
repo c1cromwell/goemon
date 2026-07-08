@@ -30,10 +30,24 @@ export const logger = pino({
     ],
     censor: "[redacted]",
   },
-  transport: config.isProd
-    ? undefined
-    : { target: "pino-pretty", options: { colorize: true, translateTime: "SYS:HH:MM:ss" } },
+  transport: prettyTransport(),
 });
+
+/**
+ * Pretty (human) logs in non-production — but only if pino-pretty is actually
+ * installed. A production image built with `--omit=dev` has no pino-pretty; if
+ * such an image is run with NODE_ENV!=production (e.g. a local Docker smoke test),
+ * requesting the transport would crash at import. Fall back to plain JSON instead.
+ */
+function prettyTransport(): pino.TransportSingleOptions | undefined {
+  if (config.isProd) return undefined;
+  try {
+    require.resolve("pino-pretty");
+    return { target: "pino-pretty", options: { colorize: true, translateTime: "SYS:HH:MM:ss" } };
+  } catch {
+    return undefined;
+  }
+}
 
 export const httpLogger = pinoHttp({
   logger,

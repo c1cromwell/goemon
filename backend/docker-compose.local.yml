@@ -1,0 +1,39 @@
+# Local end-to-end smoke stack: backend image + Postgres.
+# Proves the production image builds, boots, and talks to Postgres (dialect=postgres).
+#
+#   docker compose -f docker-compose.local.yml up --build
+#   curl localhost:3001/api/health   # -> {"status":"ok","dialect":"postgres",...}
+#
+# Runs NODE_ENV=development on purpose: a true production boot is prod-fatal on
+# KMS_PROVIDER=local and demands a real GCP KMS key + secrets, which belong in the
+# cloud, not a local smoke test. Dev mode auto-applies migrations at startup.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: goemon
+      POSTGRES_PASSWORD: goemon
+      POSTGRES_DB: goemon
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goemon -d goemon"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      PORT: "3001"
+      DATABASE_URL: postgres://goemon:goemon@db:5432/goemon
+      KMS_PROVIDER: local
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy

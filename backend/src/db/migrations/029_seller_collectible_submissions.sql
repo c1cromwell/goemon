@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS seller_collectible_submissions (
   reviewed_by       TEXT,
   reviewed_at       TEXT,
   asset_id          TEXT,
-  created_at        TEXT NOT NULL DEFAULT (datetime('now')),
-  updated_at        TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at        TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at        TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_seller_collectibles_seller ON seller_collectible_submissions(seller_user_id);

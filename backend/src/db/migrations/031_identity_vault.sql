@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS identity_vault_edges (
   relationship    TEXT NOT NULL CHECK (relationship IN ('TRANSACTED_WITH', 'SHARES_DEVICE', 'SHARES_BENEFICIARY', 'BOUND_WALLET')),
   weight_minor    TEXT NOT NULL DEFAULT '0',
   metadata_json   TEXT NOT NULL DEFAULT '{}',
-  last_seen_at    TEXT NOT NULL DEFAULT (datetime('now')),
-  created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+  last_seen_at    TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_at      TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(from_user_id, to_user_id, relationship)
 );
 

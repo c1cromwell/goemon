@@ -1,0 +1,16 @@
+# Copy to terraform.tfvars and fill in. Do NOT commit terraform.tfvars.
+project_id = "goemon-prod-123456"
+region     = "us-central1"
+
+# On the very first apply the image must already exist in Artifact Registry, OR
+# apply the registry first (terraform apply -target=google_artifact_registry_repository.backend),
+# push an image, then set this and apply the rest.
+image = "us-central1-docker.pkg.dev/goemon-prod-123456/goemon-backend/backend:bootstrap"
+
+# Production defaults; drop to ZONAL + db-f1-micro for a cheap staging stack.
+db_tier              = "db-custom-1-3840"
+db_availability_type = "REGIONAL"
+min_instances        = 1
+max_instances        = 4
+
+cors_origin = "https://app.goemonglobal.com"

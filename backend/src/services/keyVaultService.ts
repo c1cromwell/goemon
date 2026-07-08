@@ -10,15 +10,22 @@
  *                            strictly better than plaintext, but it is NOT on-device
  *                            / HSM custody — so it is REFUSED in production
  *                            (see config.productionFatals).
- *   - awsKmsProvider() / gcpKmsProvider() — interface stubs for the production swap.
- *                            They throw NOT_IMPLEMENTED until real creds are wired;
- *                            the point is the seam (call sites never change).
+ *   - gcpKmsProvider()     — REAL: wraps/unwraps via Google Cloud KMS symmetric
+ *                            encrypt/decrypt (the crypto key never leaves KMS;
+ *                            the DB holds only KMS ciphertext). Lazy-requires
+ *                            @google-cloud/kms so the app typechecks/tests without
+ *                            the dep. Selected by KMS_PROVIDER=gcp + KMS_KEY_NAME.
+ *   - awsKmsProvider()     — interface stub for the AWS swap (throws NOT_IMPLEMENTED
+ *                            until wired); the point is the seam (call sites never change).
  *
  * Mirrors the injectable-provider pattern in reconciliationService
  * (setChainBalanceProvider). Tests inject a fake via setKeyVaultProvider().
  *
  * Wrapped format (versioned, self-describing so legacy plaintext is unambiguous):
- *   gcm.v1.<ivB64url>.<tagB64url>.<ciphertextB64url>
+ *   local:  gcm.v1.<ivB64url>.<tagB64url>.<ciphertextB64url>
+ *   gcp:    gcm.v1.gcp.<kmsCiphertextB64url>
+ * Both share the WRAP_PREFIX so isWrapped()/config's operator-key check treat any
+ * provider's output as "wrapped"; the second segment discriminates the scheme.
  *
  * AAD (additional authenticated data) binds each ciphertext to its row identity
  * (a userId for Hedera keys, a kid for DID keys) so a ciphertext cannot be lifted
@@ -156,7 +163,96 @@ export function awsKmsProvider(): KeyVaultProvider {
   return notImplemented("aws");
 }
 
-/** Production swap target — wrap/unwrap delegate to GCP KMS. Stub for now. */
-export function gcpKmsProvider(): KeyVaultProvider {
-  return notImplemented("gcp");
+/** Discriminator segment for gcp-wrapped blobs: gcm.v1.gcp.<ct> */
+const GCP_SCHEME = "gcp";
+const GCP_PREFIX = WRAP_PREFIX + GCP_SCHEME + ".";
+
+/**
+ * REAL GCP provider — wrap/unwrap via Cloud KMS symmetric encrypt/decrypt.
+ *
+ * The crypto key lives in KMS (hardware-backed, never exported); the DB stores
+ * only KMS ciphertext, closing invariant *m* for real (not just encryption-at-rest
+ * under a server-held master key). `context.aad` is passed as KMS
+ * additionalAuthenticatedData, preserving the row-binding guarantee.
+ *
+ * The @google-cloud/kms client is lazy-required so `tsc`/vitest run without the
+ * dep installed (mirrors the Temporal/Conductor adapters). Credentials resolve via
+ * ADC — GOOGLE_APPLICATION_CREDENTIALS locally, the attached service account on
+ * Cloud Run/GKE. KMS_KEY_NAME must be the full cryptoKey resource name.
+ */
+export function gcpKmsProvider(opts?: { keyName?: string; client?: KmsClient }): KeyVaultProvider {
+  const keyName = opts?.keyName ?? config.KMS_KEY_NAME;
+  if (!keyName) {
+    throw new AppError(
+      ErrorCode.INTERNAL,
+      "KMS_PROVIDER=gcp requires KMS_KEY_NAME (projects/.../cryptoKeys/...)"
+    );
+  }
+
+  // Lazily constructed, then cached across calls. A test may inject a fake client.
+  let clientPromise: Promise<KmsClient> | null = opts?.client ? Promise.resolve(opts.client) : null;
+  const getClient = (): Promise<KmsClient> => {
+    if (!clientPromise) {
+      clientPromise = (async () => {
+        let mod: { KeyManagementServiceClient: new () => KmsClient };
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          mod = require("@google-cloud/kms");
+        } catch {
+          throw new AppError(
+            ErrorCode.INTERNAL,
+            "@google-cloud/kms is not installed — `npm i @google-cloud/kms` to use the gcp KMS provider"
+          );
+        }
+        return new mod.KeyManagementServiceClient();
+      })();
+    }
+    return clientPromise;
+  };
+
+  return {
+    async wrap(plaintext: string, context: { aad: string }): Promise<string> {
+      const client = await getClient();
+      const [res] = await client.encrypt({
+        name: keyName,
+        plaintext: Buffer.from(plaintext, "utf8"),
+        additionalAuthenticatedData: Buffer.from(context.aad, "utf8"),
+      });
+      if (!res.ciphertext) {
+        throw new AppError(ErrorCode.INTERNAL, "GCP KMS encrypt returned no ciphertext");
+      }
+      return GCP_PREFIX + Buffer.from(res.ciphertext).toString("base64url");
+    },
+    async unwrap(wrapped: string, context: { aad: string }): Promise<string> {
+      if (!wrapped.startsWith(GCP_PREFIX)) {
+        throw new AppError(ErrorCode.INTERNAL, "Value is not a gcp-wrapped key");
+      }
+      const ciphertext = Buffer.from(wrapped.slice(GCP_PREFIX.length), "base64url");
+      const client = await getClient();
+      const [res] = await client.decrypt({
+        name: keyName,
+        ciphertext,
+        additionalAuthenticatedData: Buffer.from(context.aad, "utf8"),
+      });
+      if (!res.plaintext) {
+        // AAD mismatch, wrong key, or tamper — KMS refuses. Never fall through.
+        throw new AppError(ErrorCode.INTERNAL, "GCP KMS decrypt returned no plaintext");
+      }
+      return Buffer.from(res.plaintext).toString("utf8");
+    },
+  };
+}
+
+/** Minimal shape of the Cloud KMS client we use (avoids a hard type dep). */
+interface KmsClient {
+  encrypt(req: {
+    name: string;
+    plaintext: Buffer;
+    additionalAuthenticatedData?: Buffer;
+  }): Promise<[{ ciphertext?: Uint8Array | string | null }]>;
+  decrypt(req: {
+    name: string;
+    ciphertext: Buffer;
+    additionalAuthenticatedData?: Buffer;
+  }): Promise<[{ plaintext?: Uint8Array | string | null }]>;
 }

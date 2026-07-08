@@ -1,0 +1,17 @@
+node_modules
+dist
+data
+*.db
+*.db-journal
+.env
+.env.*
+!.env.example
+test
+**/*.test.ts
+coverage
+.vitest
+docker-compose*.yml
+Dockerfile
+.dockerignore
+npm-debug.log*
+.DS_Store

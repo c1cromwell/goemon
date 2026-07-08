@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS collectible_purchases (
   shipped_at        TEXT,
   completed_at      TEXT,
   idempotency_key   TEXT NOT NULL UNIQUE,
-  created_at        TEXT NOT NULL DEFAULT (datetime('now')),
-  updated_at        TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at        TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at        TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_collectible_purchases_asset ON collectible_purchases(asset_id);

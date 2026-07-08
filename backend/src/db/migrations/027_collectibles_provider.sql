@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS collectibles_sync_runs (
   items_upserted INTEGER NOT NULL DEFAULT 0,
   status        TEXT NOT NULL DEFAULT 'completed',
   error_message TEXT,
-  created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at    TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS external_collectible_listings (
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS external_collectible_listings (
   grade           TEXT,
   metadata_json   TEXT NOT NULL DEFAULT '{}',
   status          TEXT NOT NULL DEFAULT 'active',
-  synced_at       TEXT NOT NULL DEFAULT (datetime('now')),
+  synced_at       TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(provider, external_id)
 );
 

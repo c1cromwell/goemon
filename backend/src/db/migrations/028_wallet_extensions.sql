@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS cctp_transfers (
   status              TEXT NOT NULL DEFAULT 'pending',
   external_ref        TEXT,
   idempotency_key     TEXT UNIQUE,
-  created_at          TEXT NOT NULL DEFAULT (datetime('now')),
+  created_at          TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   completed_at        TEXT
 );
 
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS push_device_tokens (
   user_id     TEXT NOT NULL,
   platform    TEXT NOT NULL CHECK (platform IN ('ios', 'android', 'web')),
   token       TEXT NOT NULL,
-  created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+  created_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   revoked_at  TEXT,
   UNIQUE(user_id, token)
 );
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS mirror_inbound_events (
   token_id            TEXT,
   consensus_at        TEXT,
   notified_at         TEXT,
-  created_at          TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at          TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_mirror_inbound_user ON mirror_inbound_events(user_id, created_at);
@@ -44,5 +44,5 @@ CREATE TABLE IF NOT EXISTS travel_rule_transmissions (
   transmission_id TEXT NOT NULL,
   amount_minor    TEXT NOT NULL,
   currency        TEXT NOT NULL,
-  created_at      TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at      TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

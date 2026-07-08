@@ -295,6 +295,11 @@ const schema = z.object({
   // (aws|gcp); see productionFatals.
   KMS_PROVIDER: z.enum(["local", "aws", "gcp"]).default("local"),
   KMS_MASTER_KEY: z.string().optional(), // base64, ≥32 bytes — only used by the local provider
+  // GCP Cloud KMS crypto-key resource name — REQUIRED when KMS_PROVIDER=gcp.
+  //   projects/<p>/locations/<l>/keyRings/<r>/cryptoKeys/<k>
+  // The gcp provider wraps/unwraps via KMS symmetric encrypt/decrypt (AAD-bound);
+  // credentials come from ADC (GOOGLE_APPLICATION_CREDENTIALS or the runtime SA).
+  KMS_KEY_NAME: z.string().optional(),
 
   // Phase 20 — how a user's Hedera transaction is signed (custody level):
   //   keyvault — unwrap + sign in-process (encryption-at-rest; default)
@@ -401,6 +406,10 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   // rest, not HSM/on-device custody. Production must wrap keys with a real KMS.
   if (c.KMS_PROVIDER === "local") {
     fatal.push("KMS_PROVIDER=local (AES stand-in) must not be used in production; use a real KMS (aws|gcp).");
+  }
+  // The gcp provider needs the crypto-key resource name to wrap/unwrap at all.
+  if (c.KMS_PROVIDER === "gcp" && !c.KMS_KEY_NAME) {
+    fatal.push("KMS_PROVIDER=gcp requires KMS_KEY_NAME (projects/.../cryptoKeys/...).");
   }
   if (c.TRADING_ENABLED) {
     fatal.push("TRADING_ENABLED must be false in production — the Phase-17 Stage-1 broker is simulated only.");
