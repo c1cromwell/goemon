@@ -277,6 +277,14 @@ const schema = z.object({
   HEDERA_OPERATOR_ID: z.string().optional(),
   HEDERA_OPERATOR_KEY: z.string().optional(),
   HEDERA_USDC_TOKEN_ID: z.string().optional(),
+  // Phase 1 — operator KMS signing (the key never enters the process). When
+  // HEDERA_OPERATOR_KMS_KEY is set, the operator is an ECDSA secp256k1 key held in Cloud KMS:
+  // the client is wired via setOperatorWith and escrow signing via signWith, so no operator
+  // private key is ever unwrapped in-process. HEDERA_OPERATOR_KMS_KEY is the full crypto-key
+  // VERSION resource (…/cryptoKeyVersions/N); HEDERA_OPERATOR_PUBLIC_KEY is its ECDSA public
+  // key (DER/hex). See docs/PHASE-1-HEDERA-MAINNET-PLAN.md.
+  HEDERA_OPERATOR_KMS_KEY: z.string().optional(),
+  HEDERA_OPERATOR_PUBLIC_KEY: z.string().optional(),
 
   // Settlement stablecoin selector — READINESS ONLY, not yet wired into the settlement
   // paths (on/off-ramp/pay still settle USDC-on-Hedera). Tracks the Open USD (OUSD)
@@ -416,12 +424,21 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   if (c.ALLOW_PASSWORD_AUTH) {
     fatal.push("ALLOW_PASSWORD_AUTH must be false in production (passkeys only).");
   }
-  if (c.HEDERA_ENABLED && (!c.HEDERA_OPERATOR_ID || !c.HEDERA_OPERATOR_KEY)) {
-    fatal.push("HEDERA_ENABLED=true requires HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY.");
+  // Operator custody: either a KMS-signing operator (key never in memory — preferred) OR a
+  // vault-wrapped operator private key. HEDERA_OPERATOR_ID is always required when enabled.
+  const kmsOperator = !!c.HEDERA_OPERATOR_KMS_KEY;
+  if (c.HEDERA_ENABLED && !c.HEDERA_OPERATOR_ID) {
+    fatal.push("HEDERA_ENABLED=true requires HEDERA_OPERATOR_ID.");
   }
-  // The paymaster/operator key must not be raw plaintext in production — wrap it via
-  // the key vault (gcm.v1.) so it is encrypted at rest like per-user keys.
-  if (c.HEDERA_ENABLED && c.HEDERA_OPERATOR_KEY && !c.HEDERA_OPERATOR_KEY.startsWith("gcm.v1.")) {
+  if (c.HEDERA_ENABLED && kmsOperator && !c.HEDERA_OPERATOR_PUBLIC_KEY) {
+    fatal.push("HEDERA_OPERATOR_KMS_KEY requires HEDERA_OPERATOR_PUBLIC_KEY (the operator's ECDSA public key).");
+  }
+  if (c.HEDERA_ENABLED && !kmsOperator && !c.HEDERA_OPERATOR_KEY) {
+    fatal.push("HEDERA_ENABLED=true requires HEDERA_OPERATOR_KEY (or HEDERA_OPERATOR_KMS_KEY for KMS signing).");
+  }
+  // A vault-wrapped operator key must not be raw plaintext in production. (The KMS-signing
+  // operator holds no in-process private key at all, so this does not apply to it.)
+  if (c.HEDERA_ENABLED && !kmsOperator && c.HEDERA_OPERATOR_KEY && !c.HEDERA_OPERATOR_KEY.startsWith("gcm.v1.")) {
     fatal.push("HEDERA_OPERATOR_KEY must be KMS-wrapped (gcm.v1.) in production, not raw plaintext.");
   }
   // Custody: the local AES stand-in is a server-held master key — encryption at

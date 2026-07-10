@@ -36,6 +36,8 @@
     "@anthropic-ai/sdk": "^0.32.1",
     "@google-cloud/kms": "^5.5.1",
     "@hashgraph/sdk": "^2.81.0",
+    "@noble/curves": "^1.9.7",
+    "@noble/hashes": "^1.8.0",
     "@simplewebauthn/server": "^11.0.0",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.3.0",

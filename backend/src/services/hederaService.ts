@@ -26,6 +26,7 @@ import {
   AccountCreateTransaction,
   AccountBalanceQuery,
   TransferTransaction,
+  Transaction,
 } from "@hashgraph/sdk";
 import { config } from "../config";
 import { getDb } from "../db";
@@ -37,6 +38,7 @@ import { getUserById } from "./authService";
 import { assertSettlementUngated } from "./reconciliationService";
 import { getKeyVault, isWrapped } from "./keyVaultService";
 import { hasSignerKey, getHederaSigner } from "./signerService";
+import { hederaKmsSigner, gcpKmsDigestSigner } from "./kmsSignerBackend";
 import { parseDevicePublicKey, publicKeyToStoredDer } from "./hederaPublicKey";
 import { hederaAccountToEvmAddress } from "../utils/hip583";
 
@@ -63,6 +65,19 @@ export interface HederaAccountRow {
 
 let hederaClient: Client | null = null;
 let operatorKey: PrivateKey | null = null;
+// Phase 1 — when the operator is a KMS-held key, we hold only its public key + a signer
+// closure (the private key never enters the process). See kmsSignerBackend.
+let operatorPublicKey: PublicKey | null = null;
+let operatorSigner: ((message: Uint8Array) => Promise<Uint8Array>) | null = null;
+
+/**
+ * Sign a frozen transaction with the operator: via KMS (key never in memory) when configured,
+ * otherwise with the vault-unwrapped operator private key.
+ */
+async function signWithOperator(tx: Transaction): Promise<Transaction> {
+  if (operatorSigner && operatorPublicKey) return tx.signWith(operatorPublicKey, operatorSigner);
+  return tx.sign(getOperatorKey());
+}
 
 export function isHederaEnabled(): boolean {
   return config.HEDERA_ENABLED;
@@ -97,7 +112,6 @@ export async function initHedera(): Promise<void> {
   if (!config.HEDERA_ENABLED) return;
 
   const operatorId = AccountId.fromString(config.HEDERA_OPERATOR_ID!);
-  operatorKey = await resolveOperatorKey();
 
   switch (config.HEDERA_NETWORK) {
     case "mainnet":
@@ -110,7 +124,19 @@ export async function initHedera(): Promise<void> {
       hederaClient = Client.forTestnet();
   }
 
-  hederaClient.setOperator(operatorId, operatorKey);
+  if (config.HEDERA_OPERATOR_KMS_KEY) {
+    // KMS operator signing — the ECDSA private key stays in Cloud KMS; we hold only the
+    // public key + a signer closure and wire the client via setOperatorWith.
+    if (!config.HEDERA_OPERATOR_PUBLIC_KEY) {
+      throw new AppError(ErrorCode.VALIDATION, "HEDERA_OPERATOR_KMS_KEY requires HEDERA_OPERATOR_PUBLIC_KEY");
+    }
+    operatorPublicKey = PublicKey.fromString(config.HEDERA_OPERATOR_PUBLIC_KEY);
+    operatorSigner = hederaKmsSigner(gcpKmsDigestSigner(), config.HEDERA_OPERATOR_KMS_KEY);
+    hederaClient.setOperatorWith(operatorId, operatorPublicKey, operatorSigner);
+  } else {
+    operatorKey = await resolveOperatorKey();
+    hederaClient.setOperator(operatorId, operatorKey);
+  }
 }
 
 /** Fetch the user's Hedera account row from the DB, or null if none. */
@@ -558,11 +584,11 @@ export async function submitEscrowSettleOnChain(recipientUserId: string, amountM
   const tokenId = usdcTokenId();
   const recipient = await getOrCreateUserHederaAccount(recipientUserId); // ensure they can receive USDC
   const amount = Number(amountMicro);
-  const signed = await new TransferTransaction()
+  const frozen = new TransferTransaction()
     .addTokenTransfer(tokenId, AccountId.fromString(config.HEDERA_OPERATOR_ID!), -amount)
     .addTokenTransfer(tokenId, AccountId.fromString(recipient.hedera_account_id!), amount)
-    .freezeWith(client)
-    .sign(getOperatorKey());
+    .freezeWith(client);
+  const signed = await signWithOperator(frozen);
   try {
     const resp = await signed.execute(client);
     await resp.getReceipt(client);

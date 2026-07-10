@@ -38,7 +38,16 @@ step except the literal network call.
 
 ## Build sequence (code touch-points)
 
-**1 — KMS signer backend (buildable now).** New `src/services/kmsSignerBackend.ts`:
+> **Status (2026-07-10): steps 1–2 BUILT.** `src/services/kmsSignerBackend.ts` (keccak digest,
+> `derToRawSignature` low-S normalize, injectable `KmsDigestSigner`, GCP lazy-require, `hederaKmsSigner`
+> + `kmsHsmBackend`); operator wired via `setOperatorWith` + escrow `signWith` in `hederaService`
+> (guarded by `HEDERA_OPERATOR_KMS_KEY`/`HEDERA_OPERATOR_PUBLIC_KEY`, config prod-fatals updated).
+> **De-risked locally:** `kms-signer.test.ts` proves a KMS-path signature is accepted by Hedera's own
+> `PublicKey.verify`. `@noble/curves` pinned to v1 (Hedera-bundled) for interop. Backend 481 pass/3 todo.
+> Steps 3–6 (Mirror-Node provider, test-token mint, threshold KeyList, mainnet live-check) remain —
+> the live-check is gated on a real GCP project + funded mainnet operator.
+
+**1 — KMS signer backend (buildable now). ✅ BUILT.** New `src/services/kmsSignerBackend.ts`:
 - `gcpKmsSignerBackend()` implementing the existing `HsmBackend` interface
   (`signerService.ts:32`) — lazy-requires `@google-cloud/kms`, signs the keccak digest via
   `asymmetricSign`, returns raw `r‖s`.
