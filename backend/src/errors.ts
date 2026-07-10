@@ -65,6 +65,7 @@ export enum ErrorCode {
   // Collateralized lending (PRD v2 prototype)
   LENDING_DISABLED = "LENDING_DISABLED",
   LTV_EXCEEDED = "LTV_EXCEEDED",
+  TOKENIZED_DEPOSITS_DISABLED = "TOKENIZED_DEPOSITS_DISABLED",
 
   // Reconciliation (Phase 20 — ledger⇄chain drift gates on-chain settlement)
   RECONCILIATION_HOLD = "RECONCILIATION_HOLD",
@@ -136,6 +137,7 @@ const DEFAULT_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.OFFRAMP_DISABLED]: 503,
   [ErrorCode.LENDING_DISABLED]: 503,
   [ErrorCode.LTV_EXCEEDED]: 422,
+  [ErrorCode.TOKENIZED_DEPOSITS_DISABLED]: 503,
   [ErrorCode.AGENT_DISABLED]: 503,
   [ErrorCode.EQUITIES_DISABLED]: 503,
   [ErrorCode.BANK_RAILS_DISABLED]: 503,

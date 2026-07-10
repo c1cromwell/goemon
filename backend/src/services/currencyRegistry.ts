@@ -18,7 +18,7 @@ import { z } from "zod";
 import { AppError, ErrorCode } from "../errors";
 import { config } from "../config";
 
-export type CurrencyKind = "fiat" | "stablecoin";
+export type CurrencyKind = "fiat" | "stablecoin" | "tokenized_deposit";
 
 export interface CurrencyDef {
   code: string;
@@ -43,6 +43,11 @@ const REGISTRY: Record<string, CurrencyDef> = {
   // remain USD/USDC-pinned by design — MXNe is a ledger/FX-layer prototype, not yet a
   // settlement rail. See docs/business/STABLECOIN-LATAM-REPORT-IMPLICATIONS.md.
   MXNE: { code: "MXNE", decimals: 6, kind: "stablecoin", enabled: true, label: "MXNe (Mexican Peso Coin)" },
+  // USDd — readiness seam for a partner-bank-issued TOKENIZED DEPOSIT (an insured, yield-bearing
+  // bank liability on-chain), custodied/mirrored like USDC. Goemon is NOT the issuer — a bank is;
+  // issue/redeem/accrual are gated by TOKENIZED_DEPOSITS_ENABLED. See
+  // docs/business/SWIFT-SHARED-LEDGER-ASSESSMENT.md. Enabled at the ledger layer so it transfers.
+  USDD: { code: "USDD", decimals: 6, kind: "tokenized_deposit", enabled: true, label: "USDd (Partner-Bank Deposit Token)" },
   EURC: { code: "EURC", decimals: 6, kind: "stablecoin", enabled: false, label: "Euro Coin" },
   // Open USD (OUSD) — the 140-partner consortium stablecoin (Open Standard). DISABLED:
   // readiness only, gated on OUSD being live + its openness/yield-share terms confirmed.

@@ -200,6 +200,13 @@ const schema = z.object({
   TREASURY_ENABLED: boolish,
   TREASURY_APY_BPS: z.coerce.number().int().nonnegative().max(10_000).default(450),
 
+  // Tokenized-deposit readiness seam (custody/mirror a partner-bank-issued deposit token — an
+  // insured, yield-bearing bank liability on-chain — like USDC). Goemon is NOT the issuer; a bank
+  // is. Off by default, prod-fatal (no partner issuer wired). TOKENIZED_DEPOSIT_APY_BPS is the
+  // yield differentiator vs a stablecoin. See docs/business/SWIFT-SHARED-LEDGER-ASSESSMENT.md.
+  TOKENIZED_DEPOSITS_ENABLED: boolish,
+  TOKENIZED_DEPOSIT_APY_BPS: z.coerce.number().int().nonnegative().max(10_000).default(400),
+
   // Phase 19 Stage-1 — full-bank rails (fiat on/off-ramp + ACH/wire payouts). Off by
   // default; a kill-switch that gates deposits/withdrawals. BANK_RAIL_PROVIDER selects the
   // partner-bank provider (simulated stand-in; column/treasuryprime/unit are prod swaps).
@@ -446,6 +453,9 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
   }
   if (c.TREASURY_ENABLED) {
     fatal.push("TREASURY_ENABLED must be false in production — the tokenized-treasury seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");
+  }
+  if (c.TOKENIZED_DEPOSITS_ENABLED) {
+    fatal.push("TOKENIZED_DEPOSITS_ENABLED must be false in production — the tokenized-deposit seam is a readiness custody prototype (no partner-bank issuer wired; a tokenized deposit is a chartered bank's liability).");
   }
   if (c.EQUITIES_ENABLED) {
     fatal.push("EQUITIES_ENABLED must be false in production — the Phase-18.6 tokenized-equities seam is a prototype (regulated issuer/transfer-agent/ATS + securities counsel pending).");
