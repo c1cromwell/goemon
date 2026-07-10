@@ -67,3 +67,46 @@ jobs:
         run: |
           URL="$(gcloud run services describe "${SERVICE}" --region "${REGION}" --format='value(status.url)')"
           curl -fsS "${URL}/api/health" | tee /dev/stderr | grep -q '"status":"ok"'
+
+  frontend:
+    needs: deploy # deploy the web app after the backend is live
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      REGION: ${{ vars.GCP_REGION }}
+      PROJECT: ${{ vars.GCP_PROJECT_ID }}
+      SERVICE: ${{ vars.CLOUD_RUN_SERVICE }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: image
+        run: echo "ref=${REGION}-docker.pkg.dev/${PROJECT}/${SERVICE}/frontend:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SA }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
+
+      - name: Build & push frontend image
+        # VITE_API_BASE (repo variable) = the backend's public /api URL; Vite inlines it at build.
+        run: |
+          docker build --build-arg VITE_API_BASE="${{ vars.VITE_API_BASE }}" \
+            -t "${{ steps.image.outputs.ref }}" frontend
+          docker push "${{ steps.image.outputs.ref }}"
+
+      - name: Deploy frontend revision
+        run: |
+          gcloud run services update "${SERVICE}-web" \
+            --image "${{ steps.image.outputs.ref }}" --region "${REGION}" --quiet
+
+      - name: Smoke check
+        run: |
+          URL="$(gcloud run services describe "${SERVICE}-web" --region "${REGION}" --format='value(status.url)')"
+          curl -fsS "${URL}" -o /dev/null

@@ -75,13 +75,28 @@ docker push  ${REGION}-docker.pkg.dev/${PROJECT}/goemon-backend/backend:bootstra
 ### 3. Apply the rest
 ```bash
 terraform apply
-# note the outputs: service_url, kms_key_name, sql_connection_name, migrate_job_name
+# note the outputs: service_url, frontend_url, kms_key_name, sql_connection_name, migrate_job_name
 ```
 
 ### 4. Run migrations, then confirm health
 ```bash
 gcloud run jobs execute goemon-backend-migrate --region ${REGION} --wait
 curl -fsS "$(terraform output -raw service_url)/api/health"   # {"status":"ok","dialect":"postgres","env":"production"}
+```
+
+### 5. Frontend (the web app — its own Cloud Run service)
+The frontend is served by nginx on Cloud Run (`infra/frontend.tf`, service `goemon-backend-web`). Vite inlines
+`VITE_API_BASE` at build time, so the image is built with the backend's public `/api` URL as a build arg.
+```bash
+API_BASE="$(terraform output -raw service_url)/api"
+docker build --build-arg VITE_API_BASE="${API_BASE}" \
+  -t ${REGION}-docker.pkg.dev/${PROJECT}/goemon-backend/frontend:bootstrap ../frontend
+docker push ${REGION}-docker.pkg.dev/${PROJECT}/goemon-backend/frontend:bootstrap
+# set frontend_image = "...frontend:bootstrap" in terraform.tfvars, then: terraform apply
+# then CORS-wire the frontend origin into the backend:
+gcloud run services update goemon-backend --region ${REGION} \
+  --update-env-vars CORS_ORIGIN="$(terraform output -raw frontend_url)"
+curl -fsS "$(terraform output -raw frontend_url)" -o /dev/null && echo "frontend up"
 ```
 
 ---
@@ -115,8 +130,10 @@ Details in the strategy doc §7.2.
    `roles/run.admin`, `roles/artifactregistry.writer`, `roles/iam.serviceAccountUser`,
    `roles/cloudsql.client`.
 3. Add repo **Variables**: `GCP_PROJECT_ID`, `GCP_REGION`, `GCP_WIF_PROVIDER`,
-   `GCP_DEPLOY_SA`, `CLOUD_RUN_SERVICE=goemon-backend`.
-4. Merges to `main` now build → push → run the migrate job → deploy → smoke-check `/api/health`.
+   `GCP_DEPLOY_SA`, `CLOUD_RUN_SERVICE=goemon-backend`, and **`VITE_API_BASE`** (the backend's public
+   `/api` URL, e.g. `https://goemon-backend-XXXX.run.app/api`) for the frontend build.
+4. Merges to `main` now build → push → migrate → deploy the **backend**, then build (with `VITE_API_BASE`) →
+   push → deploy the **frontend** (`goemon-backend-web`) → smoke-check both. (The frontend job `needs: deploy`.)
 
 > **CI note:** `scripts/launch-gate.sh` is the *local/macOS* gate (it also verifies the iOS
 > wallet, which needs Xcode). Linux CI runs the portable subset (typecheck · test · build ·

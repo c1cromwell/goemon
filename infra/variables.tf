@@ -25,6 +25,17 @@ variable "image" {
   EOT
 }
 
+variable "frontend_image" {
+  type        = string
+  description = <<-EOT
+    Full container image ref for the frontend Cloud Run service, e.g.
+    us-central1-docker.pkg.dev/PROJECT/goemon-backend/frontend:GIT_SHA
+    Built with a VITE_API_BASE build-arg = the backend's public /api URL (Vite inlines it).
+    Placeholder on first apply; CI updates the revision.
+  EOT
+  default     = "us-docker.pkg.dev/cloudrun/container/hello" # harmless placeholder until CI pushes a real image
+}
+
 variable "db_tier" {
   type        = string
   description = "Cloud SQL machine tier. db-custom-1-3840 = 1 vCPU / 3.75GB (a sane small-prod floor)."

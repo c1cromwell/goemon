@@ -38,18 +38,61 @@ export function setChainBalanceProvider(p: ChainBalanceProvider | null): void {
   provider = p;
 }
 
-/** Hedera Mirror Node REST provider (read-only; no SDK client/keys needed). */
-export function mirrorNodeProvider(): ChainBalanceProvider {
+/** Test/tuning knobs for the Mirror Node provider (defaults are the production values). */
+export interface MirrorNodeOptions {
+  baseUrl?: string;
+  fetchImpl?: typeof fetch;
+  sleep?: (ms: number) => Promise<void>;
+  attempts?: number;
+  timeoutMs?: number;
+}
+
+/**
+ * Hedera Mirror Node REST provider (read-only; no SDK client/keys needed).
+ *
+ * The public node is rate-limited (~50 req/s) and returns transient 429/5xx, so requests use a
+ * bounded exponential backoff (200ms·400ms…, capped) with a per-attempt timeout; 4xx (other than
+ * 429) fail fast. Injectable fetch/sleep make it unit-testable without network or real delays.
+ */
+export function mirrorNodeProvider(opts: MirrorNodeOptions = {}): ChainBalanceProvider {
   const base =
-    config.HEDERA_NETWORK === "mainnet"
+    opts.baseUrl ??
+    (config.HEDERA_NETWORK === "mainnet"
       ? "https://mainnet-public.mirrornode.hedera.com"
-      : `https://${config.HEDERA_NETWORK}.mirrornode.hedera.com`;
+      : `https://${config.HEDERA_NETWORK}.mirrornode.hedera.com`);
+  const doFetch = opts.fetchImpl ?? fetch;
+  const sleep = opts.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
+  const attempts = opts.attempts ?? 3;
+  const timeoutMs = opts.timeoutMs ?? 8000;
+
+  async function getJson(url: string): Promise<unknown> {
+    let lastErr: unknown;
+    for (let i = 0; i < attempts; i++) {
+      if (i > 0) await sleep(Math.min(2000, 200 * 2 ** (i - 1)));
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+      try {
+        const res = await doFetch(url, { signal: ctrl.signal });
+        if (res.status === 429 || res.status >= 500) {
+          lastErr = new AppError(ErrorCode.INTERNAL, `Mirror node ${res.status}`);
+          continue; // transient — retry
+        }
+        if (!res.ok) throw new AppError(ErrorCode.INTERNAL, `Mirror node ${res.status}`); // 4xx — fail fast
+        return await res.json();
+      } catch (e) {
+        if (e instanceof AppError) throw e; // non-retryable
+        lastErr = e; // network/timeout — retry
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    throw lastErr instanceof Error ? lastErr : new AppError(ErrorCode.INTERNAL, "Mirror node request failed");
+  }
+
   return {
     async getUsdcBalanceMicro(hederaAccountId: string): Promise<bigint> {
       const url = `${base}/api/v1/accounts/${hederaAccountId}/tokens?token.id=${config.HEDERA_USDC_TOKEN_ID}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`Mirror node ${res.status} for ${hederaAccountId}`);
-      const body = (await res.json()) as { tokens?: { balance?: number | string }[] };
+      const body = (await getJson(url)) as { tokens?: { balance?: number | string }[] };
       const balance = body.tokens?.[0]?.balance;
       return balance == null ? 0n : BigInt(balance);
     },

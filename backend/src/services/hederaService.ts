@@ -107,6 +107,11 @@ function assertEnabled(): Client {
   return hederaClient;
 }
 
+/** The initialized Hedera client (operator set). Throws if Hedera is disabled. For ops scripts. */
+export function getHederaClient(): Client {
+  return assertEnabled();
+}
+
 /** Call once during server bootstrap when HEDERA_ENABLED=true. */
 export async function initHedera(): Promise<void> {
   if (!config.HEDERA_ENABLED) return;

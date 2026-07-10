@@ -21,6 +21,7 @@
     "reset:auth": "tsx src/scripts/reset-auth-failures.ts",
     "encrypt-keys": "tsx src/scripts/encrypt-keys.ts",
     "wrap-secret": "tsx src/scripts/wrap-secret.ts",
+    "hedera:mint-test-usdc": "tsx src/scripts/mint-test-usdc.ts",
     "temporal:worker": "tsx src/operations/temporal/worker.ts",
     "temporal:live-check": "tsx src/scripts/temporal-live-check.ts",
     "conductor:worker": "tsx src/operations/conductor/worker.ts",
