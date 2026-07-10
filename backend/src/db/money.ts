@@ -33,6 +33,7 @@ const KNOWN_DECIMALS: Record<string, number> = {
   USDC: 6,
   USDT: 6,
   OUSD: 6,
+  MXNE: 6,
   HBAR: 8,
 };
 

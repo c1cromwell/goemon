@@ -12,6 +12,7 @@ import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
 import { screenTransfer } from "./fraudService";
 import { isAccountFrozen } from "./accountHoldService";
+import { assertSupported } from "./currencyRegistry";
 import {
   getOrCreateUserAccount,
   getBalance,
@@ -38,9 +39,10 @@ export async function transfer(input: TransferInput): Promise<TransferResult> {
   if (input.amountMinor <= 0n) {
     throw new AppError(ErrorCode.VALIDATION, "Transfer amount must be positive");
   }
-  if (input.currency !== "USD" && input.currency !== "USDC") {
-    throw new AppError(ErrorCode.VALIDATION, "Unsupported currency");
-  }
+  // Any registry-enabled currency may transfer at the ledger layer (USD/USDC/USDT/MXNe).
+  // On-chain settlement + ramps remain USD/USDC-pinned; those guards live in their own
+  // services (hederaService/on-off-ramp), not here.
+  assertSupported(input.currency);
 
   const db = getDb();
 

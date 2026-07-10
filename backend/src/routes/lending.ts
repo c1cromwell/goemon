@@ -32,8 +32,8 @@ function big(v: string | number, field: string): bigint {
 
 lendingRouter.post("/quote", requireAuth, async (req: AuthRequest, res, next) => {
   try {
-    const body = z.object({ collateralAssetId: z.string(), collateralQtyBase: z.union([z.string(), z.number()]) }).parse(req.body);
-    res.json(await borrowingPower(body.collateralAssetId, big(body.collateralQtyBase, "collateralQtyBase")));
+    const body = z.object({ collateralAssetId: z.string(), collateralQtyBase: z.union([z.string(), z.number()]), borrowCurrency: z.string().optional() }).parse(req.body);
+    res.json(await borrowingPower(body.collateralAssetId, big(body.collateralQtyBase, "collateralQtyBase"), body.borrowCurrency));
   } catch (e) {
     next(e);
   }
@@ -46,6 +46,7 @@ lendingRouter.post("/loans", requireAuth, idempotency(), async (req: AuthRequest
         collateralAssetId: z.string(),
         collateralQtyBase: z.union([z.string(), z.number()]),
         borrowMinor: z.union([z.string(), z.number()]),
+        borrowCurrency: z.string().optional(),
       })
       .parse(req.body);
     const loan = await openLoan({
@@ -53,6 +54,7 @@ lendingRouter.post("/loans", requireAuth, idempotency(), async (req: AuthRequest
       collateralAssetId: body.collateralAssetId,
       collateralQtyBase: big(body.collateralQtyBase, "collateralQtyBase"),
       borrowMinor: big(body.borrowMinor, "borrowMinor"),
+      borrowCurrency: body.borrowCurrency,
       idempotencyKey: req.header("Idempotency-Key")!,
     });
     res.status(201).json(loan);

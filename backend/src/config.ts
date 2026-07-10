@@ -72,6 +72,12 @@ const schema = z.object({
   SANCTIONS_PROVIDER: z.enum(["simulated", "trm"]).default("simulated"),
   PERSONA_API_KEY: z.string().optional(),
   TRM_API_KEY: z.string().optional(),
+  // Feature A — Agent-Personhood Attestation. The "verified human authorized this
+  // agent" claim is ALWAYS minted (best-effort) at grant time and surfaced on the
+  // scoped token. When this is on, a client that requires user approval is DENIED a
+  // scoped token unless a valid personhood attestation exists (off by default so it
+  // never breaks existing agent flows; opt-in hardening).
+  AGENT_PERSONHOOD_ENFORCED: boolish,
 
   // Phase 5A — Agentic account opening (risk-adaptive onboarding).
   // The orchestrator that fuses signals into a confidence + required steps:

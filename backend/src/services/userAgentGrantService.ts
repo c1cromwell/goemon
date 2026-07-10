@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getDb } from "../db";
 import { AppError, ErrorCode } from "../errors";
 import { logAudit } from "./auditService";
+import { mintAttestation, revokeAttestation } from "./agentPersonhoodService";
 
 export interface UserAgentGrantRow {
   id: string;
@@ -122,6 +123,9 @@ export async function grantAgent(input: GrantInput): Promise<UserAgentGrant> {
     resource: input.agentDid,
     details: { allowedFunctions: input.allowedFunctions, maxTransferMinor: input.maxTransferMinor.toString() },
   });
+  // Feature A — mint a "verified human authorized this agent" attestation (best-effort;
+  // no-op if the granting user is not KYC-verified).
+  await mintAttestation({ userId: input.userId, agentDid: input.agentDid, scope: input.allowedFunctions });
   return (await getActiveGrant(input.userId, input.agentDid))!;
 }
 
@@ -154,6 +158,8 @@ export async function revokeGrant(userId: string, agentDid: string, reason = "us
     [new Date().toISOString(), reason, userId, agentDid]
   );
   await logAudit({ userId, action: "agent.revoke", resource: agentDid, details: { reason }, status: "blocked" });
+  // Feature A — the personhood attestation is only valid while the grant is.
+  await revokeAttestation(userId, agentDid);
 }
 
 /** Stamp last_used_at after a successful presentation (best-effort). */

@@ -29,6 +29,7 @@ import { mintScopedToken, getJWKS } from "../utils/tokenFactory";
 import { getCredentialBySubject } from "./vcService";
 import { getClient } from "./mcpClientRegistry";
 import { getActiveGrant, touchGrant } from "./userAgentGrantService";
+import { getActiveAttestation } from "./agentPersonhoodService";
 import { logAudit } from "./auditService";
 
 const SCOPED_TOKEN_TTL_SECS = 90;
@@ -75,6 +76,8 @@ export interface ScopedTokenResult {
   clientDid: string;
   /** The single-use nonce this VP consumed — the relay correlation key (Phase 10). */
   nonce: string;
+  /** Feature A — 'verified_human' if a KYC-verified human authorized this agent, else 'unverified'. */
+  personhood: "verified_human" | "unverified";
 }
 
 interface VpPayload {
@@ -247,9 +250,27 @@ export async function verifyPresentation(input: VerifyPresentationInput): Promis
     throw new AppError(ErrorCode.SCOPE_DENIED, "No scope is permitted by all of credential, client, request, and grant");
   }
 
+  // --- 7. Personhood (Feature A): is a KYC-verified human behind this agent? ---
+  // The claim is always surfaced. Enforcement (deny without it) is opt-in via
+  // AGENT_PERSONHOOD_ENFORCED + the client's require_user_approval flag, so existing
+  // agent flows are unaffected until a deployment turns it on.
+  const attestation = await getActiveAttestation(userId, clientDid);
+  const personhood: "verified_human" | "unverified" = attestation ? "verified_human" : "unverified";
+  if (config.AGENT_PERSONHOOD_ENFORCED && client.requireUserApproval && !attestation) {
+    await logAudit({
+      userId,
+      action: "agent.present",
+      resource: clientDid,
+      status: "blocked",
+      ipAddress,
+      details: { reason: "personhood_required" },
+    });
+    throw new AppError(ErrorCode.PERSONHOOD_REQUIRED, "A verified human must authorize this agent");
+  }
+
   // --- Mint the 90s scoped token + record the presentation ----------------
   const jti = uuidv4();
-  const accessToken = await mintScopedToken(jti, walletDid, clientDid, effectiveScope, SCOPED_TOKEN_TTL_SECS);
+  const accessToken = await mintScopedToken(jti, walletDid, clientDid, effectiveScope, SCOPED_TOKEN_TTL_SECS, personhood);
 
   await db.execute(
     `INSERT INTO vp_presentations (id, user_id, client_did, vp_hash, nonce, scope_issued, token_jti, ip_address, presented_at)
@@ -276,6 +297,7 @@ export async function verifyPresentation(input: VerifyPresentationInput): Promis
     userId,
     clientDid,
     nonce,
+    personhood,
   };
 }
 

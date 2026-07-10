@@ -68,6 +68,8 @@ const SIM_USD_MICRO: Record<string, bigint> = {
   USDT: 1_000_000n,
   EUR: 1_080_000n,
   EURC: 1_080_000n,
+  // ~18.2 MXN per USD → one MXNe ≈ $0.055. Simulated only (no licensed feed).
+  MXNE: 55_000n,
 };
 
 function simulatedProvider(): FxProvider {

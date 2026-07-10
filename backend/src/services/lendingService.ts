@@ -37,8 +37,12 @@ import {
   type LedgerEntryInput,
 } from "./ledgerService";
 import { requireAsset } from "./tokenizationService";
+import { assertSupported, getCurrency } from "./currencyRegistry";
+import { getFxProvider, convertAmountMinor } from "./fxRateService";
 
-const BORROW_CURRENCY = "USD";
+/** Collateral par (asset.metadata.parMinor) is USD-denominated; loans may borrow another currency. */
+const COLLATERAL_PAR_CURRENCY = "USD";
+const DEFAULT_BORROW_CURRENCY = "USD";
 
 function assertEnabled(): void {
   if (!config.LENDING_ENABLED) throw new AppError(ErrorCode.LENDING_DISABLED, "Lending is currently unavailable");
@@ -50,7 +54,11 @@ function assertEnabled(): void {
  * ATB carries it). Assets without a par price are not eligible as collateral in the
  * prototype (a real product would use the marketplace pricing service).
  */
-async function valueCollateral(assetId: string, qtyBase: bigint): Promise<bigint> {
+async function valueCollateral(
+  assetId: string,
+  qtyBase: bigint,
+  borrowCurrency: string = DEFAULT_BORROW_CURRENCY
+): Promise<bigint> {
   const asset = await requireAsset(assetId);
   const parRaw = asset.metadata?.parMinor;
   const parMinor = typeof parRaw === "string" || typeof parRaw === "number" ? BigInt(parRaw) : null;
@@ -58,8 +66,17 @@ async function valueCollateral(assetId: string, qtyBase: bigint): Promise<bigint
     throw new AppError(ErrorCode.VALIDATION, "Asset is not eligible as collateral (no par price)");
   }
   // Ledger holdings are denominated in whole tokens (matching treasuryService.positions:
-  // valueMinor = qty × parMinor); parMinor is the per-token value in the borrow currency.
-  return qtyBase * parMinor;
+  // valueMinor = qty × parMinor); parMinor is the per-token value in USD minor units.
+  const usdValueMinor = qtyBase * parMinor;
+  if (borrowCurrency.toUpperCase() === COLLATERAL_PAR_CURRENCY) return usdValueMinor;
+
+  // Non-USD loan: express the USD collateral value in the borrow currency via the FX seam.
+  // Uses the provider directly (not quote()) so collateral valuation is independent of the
+  // FX kill-switch — it is an internal computation, not a user FX transaction.
+  const from = getCurrency(COLLATERAL_PAR_CURRENCY)!;
+  const to = assertSupported(borrowCurrency);
+  const rate = await getFxProvider().getRate(from.code, to.code);
+  return convertAmountMinor(usdValueMinor, from.decimals, to.decimals, rate.ratePpm);
 }
 
 interface LoanRow {
@@ -80,7 +97,7 @@ export interface Loan {
 
 async function toLoan(r: LoanRow): Promise<Loan> {
   const outstanding = BigInt(r.principal_outstanding_minor) + BigInt(r.accrued_interest_minor);
-  const collateralValue = await valueCollateral(r.collateral_asset_id, BigInt(r.collateral_qty_base));
+  const collateralValue = await valueCollateral(r.collateral_asset_id, BigInt(r.collateral_qty_base), r.borrow_currency);
   // health = (collateralValue × liquidationLTV) / outstanding, as bps. ≤10000 ⇒ liquidatable.
   const healthFactorBps = outstanding > 0n
     ? Number((collateralValue * BigInt(r.liquidation_ltv_bps)) / outstanding)
@@ -103,16 +120,21 @@ async function rowById(loanId: string): Promise<LoanRow> {
 /** Open a loan: pledge collateral and disburse the borrowed USD. Idempotent. */
 export async function openLoan(input: {
   userId: string; collateralAssetId: string; collateralQtyBase: bigint; borrowMinor: bigint; idempotencyKey: string;
+  /** Currency to borrow in. Defaults to USD; any registry-enabled currency is allowed (the
+   *  report's "peso-denominated lend-borrow"). Collateral (USD-par) is FX-valued into it. */
+  borrowCurrency?: string;
 }): Promise<Loan> {
   assertEnabled();
   if (input.collateralQtyBase <= 0n) throw new AppError(ErrorCode.VALIDATION, "collateralQtyBase must be positive");
   if (input.borrowMinor <= 0n) throw new AppError(ErrorCode.VALIDATION, "borrowMinor must be positive");
   if (await isAccountFrozen(input.userId)) throw new AppError(ErrorCode.ACCOUNT_FROZEN, "Account is frozen pending review");
 
+  const borrowCurrency = assertSupported(input.borrowCurrency ?? DEFAULT_BORROW_CURRENCY).code;
+
   const prior = await getDb().queryOne<LoanRow>("SELECT * FROM loans WHERE idempotency_key = ?", [input.idempotencyKey]);
   if (prior) return toLoan(prior);
 
-  const collateralValue = await valueCollateral(input.collateralAssetId, input.collateralQtyBase);
+  const collateralValue = await valueCollateral(input.collateralAssetId, input.collateralQtyBase, borrowCurrency);
   const maxBorrow = (collateralValue * BigInt(config.LENDING_MAX_LTV_BPS)) / 10_000n;
   if (input.borrowMinor > maxBorrow) {
     throw new AppError(ErrorCode.LTV_EXCEEDED, `Borrow exceeds the max LTV (${config.LENDING_MAX_LTV_BPS / 100}% → up to ${maxBorrow} minor units)`);
@@ -124,8 +146,8 @@ export async function openLoan(input: {
     throw new AppError(ErrorCode.INSUFFICIENT_FUNDS, "Insufficient collateral holding");
   }
   const collateralAcct = await getOrCreateSystemAccount("loan_collateral", code);
-  const pool = await getOrCreateSystemAccount("lending_pool", BORROW_CURRENCY);
-  const cash = await getOrCreateUserAccount(input.userId, "user_cash", BORROW_CURRENCY);
+  const pool = await getOrCreateSystemAccount("lending_pool", borrowCurrency);
+  const cash = await getOrCreateUserAccount(input.userId, "user_cash", borrowCurrency);
 
   const journalId = await postJournal(
     [
@@ -133,8 +155,8 @@ export async function openLoan(input: {
       { ledgerAccountId: holding, direction: "debit", amountMinor: input.collateralQtyBase, currency: code },
       { ledgerAccountId: collateralAcct, direction: "credit", amountMinor: input.collateralQtyBase, currency: code },
       // Disburse the loan (cash leg nets to zero).
-      { ledgerAccountId: pool, direction: "debit", amountMinor: input.borrowMinor, currency: BORROW_CURRENCY },
-      { ledgerAccountId: cash, direction: "credit", amountMinor: input.borrowMinor, currency: BORROW_CURRENCY },
+      { ledgerAccountId: pool, direction: "debit", amountMinor: input.borrowMinor, currency: borrowCurrency },
+      { ledgerAccountId: cash, direction: "credit", amountMinor: input.borrowMinor, currency: borrowCurrency },
     ],
     "Loan open",
     { idempotencyKey: `loan:open:${input.idempotencyKey}` }
@@ -145,7 +167,7 @@ export async function openLoan(input: {
   await getDb().execute(
     `INSERT INTO loans (id, user_id, collateral_asset_id, collateral_qty_base, borrow_currency, principal_minor, principal_outstanding_minor, accrued_interest_minor, apr_bps, max_ltv_bps, liquidation_ltv_bps, status, open_journal_id, accrued_through, opened_at, closed_at, idempotency_key)
      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-    [id, input.userId, input.collateralAssetId, input.collateralQtyBase.toString(), BORROW_CURRENCY, input.borrowMinor.toString(), input.borrowMinor.toString(),
+    [id, input.userId, input.collateralAssetId, input.collateralQtyBase.toString(), borrowCurrency, input.borrowMinor.toString(), input.borrowMinor.toString(),
      "0", config.LENDING_APR_BPS, config.LENDING_MAX_LTV_BPS, config.LENDING_LIQUIDATION_LTV_BPS, "active", journalId, now, now, null, input.idempotencyKey]
   );
 
@@ -192,15 +214,16 @@ export async function repay(input: { userId: string; loanId: string; amountMinor
   const interestPaid = pay > accrued ? accrued : pay;
   const principalPaid = pay - interestPaid;
 
-  const cash = await getOrCreateUserAccount(input.userId, "user_cash", BORROW_CURRENCY);
-  if ((await getBalance(cash)) < pay) throw new AppError(ErrorCode.INSUFFICIENT_FUNDS, "Insufficient USD balance to repay");
-  const pool = await getOrCreateSystemAccount("lending_pool", BORROW_CURRENCY);
+  const ccy = row.borrow_currency;
+  const cash = await getOrCreateUserAccount(input.userId, "user_cash", ccy);
+  if ((await getBalance(cash)) < pay) throw new AppError(ErrorCode.INSUFFICIENT_FUNDS, `Insufficient ${ccy} balance to repay`);
+  const pool = await getOrCreateSystemAccount("lending_pool", ccy);
 
-  const entries: LedgerEntryInput[] = [{ ledgerAccountId: cash, direction: "debit", amountMinor: pay, currency: BORROW_CURRENCY }];
-  if (principalPaid > 0n) entries.push({ ledgerAccountId: pool, direction: "credit", amountMinor: principalPaid, currency: BORROW_CURRENCY });
+  const entries: LedgerEntryInput[] = [{ ledgerAccountId: cash, direction: "debit", amountMinor: pay, currency: ccy }];
+  if (principalPaid > 0n) entries.push({ ledgerAccountId: pool, direction: "credit", amountMinor: principalPaid, currency: ccy });
   if (interestPaid > 0n) {
-    const fee = await getOrCreateSystemAccount("fee", BORROW_CURRENCY);
-    entries.push({ ledgerAccountId: fee, direction: "credit", amountMinor: interestPaid, currency: BORROW_CURRENCY });
+    const fee = await getOrCreateSystemAccount("fee", ccy);
+    entries.push({ ledgerAccountId: fee, direction: "credit", amountMinor: interestPaid, currency: ccy });
   }
   await postJournal(entries, "Loan repayment", { idempotencyKey: `loan:repay:${input.idempotencyKey}` });
 
@@ -244,7 +267,8 @@ export async function liquidate(loanId: string): Promise<{ loan: Loan; liquidate
   const accrued = BigInt(row.accrued_interest_minor);
   const principalOut = BigInt(row.principal_outstanding_minor);
   const outstanding = accrued + principalOut;
-  const collateralValue = await valueCollateral(row.collateral_asset_id, BigInt(row.collateral_qty_base));
+  const ccy = row.borrow_currency;
+  const collateralValue = await valueCollateral(row.collateral_asset_id, BigInt(row.collateral_qty_base), ccy);
   const liquidationCeiling = (collateralValue * BigInt(row.liquidation_ltv_bps)) / 10_000n;
   if (outstanding <= liquidationCeiling) {
     return { loan: await toLoan(row), liquidated: false }; // still healthy
@@ -253,10 +277,10 @@ export async function liquidate(loanId: string): Promise<{ loan: Loan; liquidate
   const code = assetLedgerCode(row.collateral_asset_id);
   const collateralAcct = await getOrCreateSystemAccount("loan_collateral", code);
   const liqAssetSink = await getOrCreateSystemAccount("liquidation_sink", code);
-  const liqSettlement = await getOrCreateSystemAccount("liquidation_settlement", BORROW_CURRENCY);
-  const pool = await getOrCreateSystemAccount("lending_pool", BORROW_CURRENCY);
-  const fee = await getOrCreateSystemAccount("fee", BORROW_CURRENCY);
-  const cash = await getOrCreateUserAccount(row.user_id, "user_cash", BORROW_CURRENCY);
+  const liqSettlement = await getOrCreateSystemAccount("liquidation_settlement", ccy);
+  const pool = await getOrCreateSystemAccount("lending_pool", ccy);
+  const fee = await getOrCreateSystemAccount("fee", ccy);
+  const cash = await getOrCreateUserAccount(row.user_id, "user_cash", ccy);
 
   // Sale proceeds = collateral value. Cover interest then principal; any surplus to the user.
   const covered = outstanding > collateralValue ? collateralValue : outstanding;
@@ -275,10 +299,10 @@ export async function liquidate(loanId: string): Promise<{ loan: Loan; liquidate
   );
 
   // 2) Settle the simulated sale proceeds (cash leg nets to zero).
-  const cashEntries: LedgerEntryInput[] = [{ ledgerAccountId: liqSettlement, direction: "debit", amountMinor: collateralValue, currency: BORROW_CURRENCY }];
-  if (principalCovered > 0n) cashEntries.push({ ledgerAccountId: pool, direction: "credit", amountMinor: principalCovered, currency: BORROW_CURRENCY });
-  if (interestCovered > 0n) cashEntries.push({ ledgerAccountId: fee, direction: "credit", amountMinor: interestCovered, currency: BORROW_CURRENCY });
-  if (surplus > 0n) cashEntries.push({ ledgerAccountId: cash, direction: "credit", amountMinor: surplus, currency: BORROW_CURRENCY });
+  const cashEntries: LedgerEntryInput[] = [{ ledgerAccountId: liqSettlement, direction: "debit", amountMinor: collateralValue, currency: ccy }];
+  if (principalCovered > 0n) cashEntries.push({ ledgerAccountId: pool, direction: "credit", amountMinor: principalCovered, currency: ccy });
+  if (interestCovered > 0n) cashEntries.push({ ledgerAccountId: fee, direction: "credit", amountMinor: interestCovered, currency: ccy });
+  if (surplus > 0n) cashEntries.push({ ledgerAccountId: cash, direction: "credit", amountMinor: surplus, currency: ccy });
   await postJournal(cashEntries, "Loan liquidation — settlement", { idempotencyKey: `loan:liq:cash:${row.id}` });
 
   await getDb().execute("UPDATE loans SET principal_outstanding_minor = '0', accrued_interest_minor = '0', status = 'liquidated', closed_at = ? WHERE id = ?", [new Date().toISOString(), row.id]);
@@ -299,9 +323,10 @@ export async function listLoans(userId: string): Promise<Loan[]> {
 }
 
 /** The current max additional borrow for a candidate collateral pledge (a quote). */
-export async function borrowingPower(assetId: string, qtyBase: bigint): Promise<{ collateralValueMinor: string; maxBorrowMinor: string; aprBps: number; maxLtvBps: number }> {
+export async function borrowingPower(assetId: string, qtyBase: bigint, borrowCurrency: string = DEFAULT_BORROW_CURRENCY): Promise<{ collateralValueMinor: string; maxBorrowMinor: string; borrowCurrency: string; aprBps: number; maxLtvBps: number }> {
   assertEnabled();
-  const collateralValue = await valueCollateral(assetId, qtyBase);
+  const ccy = assertSupported(borrowCurrency).code;
+  const collateralValue = await valueCollateral(assetId, qtyBase, ccy);
   const maxBorrow = (collateralValue * BigInt(config.LENDING_MAX_LTV_BPS)) / 10_000n;
-  return { collateralValueMinor: collateralValue.toString(), maxBorrowMinor: maxBorrow.toString(), aprBps: config.LENDING_APR_BPS, maxLtvBps: config.LENDING_MAX_LTV_BPS };
+  return { collateralValueMinor: collateralValue.toString(), maxBorrowMinor: maxBorrow.toString(), borrowCurrency: ccy, aprBps: config.LENDING_APR_BPS, maxLtvBps: config.LENDING_MAX_LTV_BPS };
 }

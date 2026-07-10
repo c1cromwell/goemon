@@ -38,6 +38,11 @@ const REGISTRY: Record<string, CurrencyDef> = {
   USD: { code: "USD", decimals: 2, kind: "fiat", enabled: true, label: "US Dollar" },
   USDC: { code: "USDC", decimals: 6, kind: "stablecoin", enabled: true, label: "USD Coin" },
   USDT: { code: "USDT", decimals: 6, kind: "stablecoin", enabled: true, label: "Tether USD" },
+  // MXNe — first non-USD (local-currency) stablecoin. Enabled at the ledger + FX layer
+  // (the report's "the race is local currency"). NOTE: on-chain settlement and on/off-ramps
+  // remain USD/USDC-pinned by design — MXNe is a ledger/FX-layer prototype, not yet a
+  // settlement rail. See docs/business/STABLECOIN-LATAM-REPORT-IMPLICATIONS.md.
+  MXNE: { code: "MXNE", decimals: 6, kind: "stablecoin", enabled: true, label: "MXNe (Mexican Peso Coin)" },
   EURC: { code: "EURC", decimals: 6, kind: "stablecoin", enabled: false, label: "Euro Coin" },
   // Open USD (OUSD) — the 140-partner consortium stablecoin (Open Standard). DISABLED:
   // readiness only, gated on OUSD being live + its openness/yield-share terms confirmed.

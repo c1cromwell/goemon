@@ -54,11 +54,15 @@ export async function mintScopedToken(
   walletDid: string,
   clientDid: string,
   scope: string[],
-  ttlSecs: number
+  ttlSecs: number,
+  /** Feature A — 'verified_human' | 'unverified': is a KYC-verified human behind this agent. */
+  personhood?: string
 ): Promise<string> {
   const { kid, privateKey } = getActiveKey();
   const now = Math.floor(Date.now() / 1000);
-  return new SignJWT({ act: { sub: clientDid }, scope })
+  const claims: Record<string, unknown> = { act: { sub: clientDid }, scope };
+  if (personhood) claims.personhood = personhood;
+  return new SignJWT(claims)
     .setProtectedHeader({ alg: ALG, kid, typ: "JWT" })
     .setSubject(walletDid)
     .setJti(jti)
