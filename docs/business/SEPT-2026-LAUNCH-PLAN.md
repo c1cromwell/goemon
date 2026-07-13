@@ -55,7 +55,7 @@ copy — do not imply unlicensed money services or promise custodial features yo
 ## 3. The 7.5-week critical path to Sept 1 (what's actually in the way)
 
 ### A. Founder + counsel — the true blockers (start immediately)
-- [ ] **Entity** — form it (`CORPORATE-STRUCTURE.md`: Wyoming LLC now, or **Delaware C-corp** if raising
+- [X] **Entity** — form it (`CORPORATE-STRUCTURE.md`: Wyoming LLC now, or **Delaware C-corp** if raising
   soon — investors expect a C-corp). *(B6)*
 - [ ] **IP assignment** (PIIAs for every founder/contractor), **founder vesting** (4yr / 1yr cliff),
   **83(b) election within 30 days**, clean cap table. These are seed-diligence killers if missing.
