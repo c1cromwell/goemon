@@ -37,8 +37,14 @@ them, you are probably a money transmitter in most states. Phase A is engineered
 - **Form a Wyoming LLC now** (`Goemon Global Finance, LLC`) — the lowest-cost, lowest-admin, most private US entity,
   with pass-through taxation and crypto-friendly statutes. **Convert to a Delaware C-corp later**,
   when you raise institutional capital or stand up the regulated subsidiary (Phase B/C).
-- **Adopt a real operating agreement** even as a single member — it's the document partner banks,
-  vendors, and a future conversion all lean on.
+- **The agreed ownership is two founding members:** **Chad Cromwell — 51%** (Manager + CEO) and
+  **Oran Cromwell — 40%** (father/son), with a **9% incentive pool** reserved for future team/advisors. The
+  LLC is **manager-managed** (Chad) and taxed as a **partnership** (Form 1065; a K-1 to each member). This is
+  the design the executed founding docs in `docs/legal/` (Operating Agreement, Initial Resolutions, Equity
+  Incentive Plan, Articles/BOI) implement — see §4.
+- **Adopt a real operating agreement** — it's the document partner banks, vendors, and a future conversion all
+  lean on, and it's where the 51/40/9 split and Chad-as-manager control are recorded (the public Articles do
+  not state ownership).
 - **Assign the IP** (the code already in this repo) from you personally to the company immediately —
   the single cheapest-now / expensive-later action in this plan.
 - **Do not market the product as a "bank"** or "banking." That word is regulated; using it can draw
@@ -50,30 +56,34 @@ them, you are probably a money transmitter in most states. Phase A is engineered
 
 ### 2.1 What to form now (DO NOW)
 
-A **single-member Wyoming LLC**, `Goemon Global Finance, LLC`, with you as sole member and manager. It is the
-cheapest, fastest, most private US entity, and for a solo bootstrapper it's the right Phase-A home.
-A single-member LLC is **"disregarded" for federal tax** — its income flows straight to your personal
-return, so there's no separate corporate tax to file and no double taxation.
+A **two-member Wyoming LLC**, `Goemon Global Finance, LLC` — **Chad Cromwell (51%, Manager + CEO)** and
+**Oran Cromwell (40%)**, plus a **9% incentive pool** reserved for future team/advisors — **manager-managed**
+by Chad. It is the cheapest, most private US entity for a lean start, and a multi-member LLC keeps a clean
+co-founder structure without the cost and double-taxation of a C-corp. A multi-member LLC is taxed as a
+**partnership for federal tax** (Form 1065; a Schedule K-1 to each member) — still **pass-through** (no
+entity-level corporate tax), just filed at the entity level rather than on a single personal return.
 
 Why the Wyoming LLC for a lean start:
 
 - **Minimal cost & admin.** ~$100–150 to form, ~$60/yr to maintain, no state income tax.
-- **Pass-through taxation.** No double tax; early-stage losses can (subject to rules) offset other
-  income. Simple Schedule-C-style reporting while you're a single member.
-- **Privacy.** Wyoming doesn't publicly list LLC members.
+- **Pass-through taxation.** No double tax; income and (subject to rules) losses flow through to the members'
+  returns via K-1. A partnership return (1065) is more than a solo Schedule C but far lighter than a C-corp.
+- **Privacy.** Wyoming doesn't publicly list LLC members — ownership lives in the operating agreement, not the
+  public Articles.
 - **Crypto-forward law.** Wyoming pioneered digital-asset statutes, the DAO LLC, and the SPDI charter.
-- **Liability shield** for your personal assets — as long as you respect the formalities (separate
+- **Liability shield** for the members' personal assets — as long as you respect the formalities (separate
   bank account, operating agreement, no commingling).
 
 The honest tradeoffs vs. a C-corp — and why they don't bite yet:
 
 - **No QSBS.** The §1202 gain exclusion needs a C-corp. You forgo it *until you convert* — acceptable
   while pre-revenue and pre-raise.
-- **Equity comp is clunkier.** Adding a co-founder or option holder turns a single-member LLC into a
-  partnership, or requires **profits interests** instead of clean stock options. Manageable, but a
-  reason to convert before you build a team or raise.
+- **Equity comp uses profits interests.** As a multi-member LLC you grant team/advisors **profits interests**
+  (a share of *future* upside above a hurdle) from the 9% pool rather than clean ISOs/NSOs — tax-efficient if
+  papered correctly (Rev. Procs. 93-27 / 2001-43), and it converts to a normal option pool at the C-corp step.
 - **Investors require conversion.** Institutional money wants a Delaware C-corp; **LLC → C-corp
-  conversion** later is a real, lawyer-assisted step (often structured tax-neutrally) costing ~$3–8k.
+  conversion** later is a real, lawyer-assisted step (often structured tax-neutrally) costing ~$3–8k, at which
+  point the members' units become founder stock and profits interests become the option pool.
 
 So: the WY LLC is the right lean Phase-A vehicle. Treat the **conversion to a Delaware C-corp** as a
 planned future event tied to your first institutional raise or your first regulated subsidiary —
@@ -152,63 +162,78 @@ Phase-C charter option.
 
 ---
 
-## 4. Sole-founder ownership & equity structure (LLC units)
+## 4. Founding ownership & equity structure (LLC units)
 
-In a single-member LLC your "equity" is **membership units** (or simply a 100% membership interest)
-governed by the **operating agreement** — there is no stock, no authorized-share count, and no
-Delaware franchise tax to engineer. That simplicity is the point of the lean start.
+Membership interests are **membership units** governed by the **operating agreement** — no stock, no
+authorized-share count, no Delaware franchise tax to engineer. The Company authorizes **10,000,000 units**,
+all Class A Voting, split between the two founding members with a reserved incentive pool.
 
-**Recommended starting structure (DO NOW):**
+**Agreed ownership (as implemented in `docs/legal/OPERATING-AGREEMENT.md` + `INITIAL-RESOLUTIONS.md`):**
+
+| Member / reserve | Units | Interest | Class / vote |
+|---|---|---|---|
+| **Chad Cromwell** — Manager + CEO + Partnership Representative | 5,100,000 | **51%** | Class A Voting |
+| **Oran Cromwell** (father/son) | 4,000,000 | **40%** | Class A Voting |
+| **Equity Incentive Plan pool** — *reserved, unissued* | 900,000 | **9%** | per award |
+| **Total authorized** | 10,000,000 | 100% | |
+
+Both founders' units are **fully vested** on the effective date. The 9% pool is reserved (not outstanding, no
+vote, no allocations) until issued as **profits-interest** awards under the Plan. *(Governance percentages are
+computed on issued/outstanding units; see the OA §2.2 and `INITIAL-RESOLUTIONS.md`. The father/son ownership
+is a deliberate design — confirm the estate/gift implications with counsel + CPA. ⚖)*
 
 | Item | Recommendation | Why |
 |---|---|---|
-| Ownership | **100% to you**, the sole member | Single-member = disregarded entity, simplest tax |
-| Units (optional) | Denominate as **10,000,000 units**, all to you | Makes future grants/conversion clean if you ever add members |
-| Capital contribution | Contribute a small amount (e.g., $500–1,000) + the assigned IP | Establishes your basis and the LLC's capital |
-| Tax election | Default disregarded; **revisit S-corp election** only if profits get large | Don't over-optimize taxes pre-revenue |
+| Ownership | **Chad 51% / Oran 40% / 9% pool** | Clean co-founder split; Chad holds majority control + manages |
+| Units | **10,000,000 units** authorized (5.1M / 4.0M issued; 0.9M reserved) | Clean for future grants + the C-corp conversion |
+| Capital contribution | Each member contributes cash (e.g., $500–1,000); **Chad also contributes the assigned IP** | Establishes basis + the LLC's capital (§704(c) on the contributed IP — ⚖ CPA) |
+| Tax election | Default **partnership** (multi-member); **revisit S-corp election** only if profits get large | Don't over-optimize taxes pre-revenue |
 
-**Operating agreement — your most important governance document. DO NOW.** Even with one member,
-adopt a real operating agreement: it defines ownership, management (you as manager), capital, and —
-critically — how new members or **profits interests** get admitted later. Banks and a future
-conversion both rely on it, and it reinforces the liability shield (an LLC without one is easier to
-"pierce").
+**Operating agreement — your most important governance document. DO NOW.** It defines ownership (the 51/40/9
+split), management (**Chad as manager**), capital, unanimous-consent Reserved Matters, transfer restrictions,
+the two-member **deadlock/buy-sell** backstop, and how **profits interests** get admitted from the pool. Banks
+and a future conversion both rely on it, and it reinforces the liability shield (an LLC without one is easier
+to "pierce").
 
 **Incentive equity for future hires/advisors — profits interests.** When you bring people on, an LLC
 grants **profits interests** (a share of *future* upside, not existing value) rather than stock
 options. They're tax-efficient if papered correctly — and the moment they get complex is exactly the
 moment to do the **Delaware C-corp conversion** (§2.2) and switch to a normal option pool.
 
-**The 83(b) nuance for an LLC. ⚖ note.** As a sole member owning your interest outright with no
-vesting, the classic founder-stock 83(b) urgency mostly doesn't apply. But if you ever (a) subject
-your own interest to vesting, or (b) grant **profits interests**, the recipient should file a
-protective **83(b) election within 30 days** of that grant. Keep the 30-day rule on your radar for
-those events — it's still unfixable if missed.
+**The 83(b) nuance for an LLC. ⚖ note.** The founders' units are issued **fully vested and outright**, so the
+classic founder-stock 83(b) urgency doesn't apply to Chad's or Oran's initial units. But 83(b) *does* matter
+for the pool: every **profits-interest** award (and any later unit subject to vesting) should file a protective
+**83(b) election within 30 days** of that grant. Keep the 30-day rule on the radar for every Plan award — it's
+unfixable if missed.
 
 **SAFE-ready / raise posture.** You can technically raise into an LLC, but most investors want a
 Delaware C-corp and a SAFE. So the plan is: stay lean as the LLC; **convert to a DE C-corp the moment
 a real raise is on the table**, then raise on a standard **SAFE** (the YC standard). Don't contort the
 LLC to look like a startup it isn't yet.
 
-**Tooling:** a cap-table tool is overkill for a single-member LLC — a clean operating agreement and a
-folder of signed docs is enough now. Adopt **Carta/Pulley** at conversion, when options and investors
-arrive.
+**Tooling:** a cap-table tool is overkill for a closely-held two-member LLC — the operating agreement's
+Schedule A plus a folder of signed docs is the cap table now. Adopt **Carta/Pulley** at conversion, when
+options and investors arrive.
 
 ---
 
 ## 5. Governance, founding documents & the IP assignment
 
-Even a single-member LLC needs the real paper — skipping it weakens the liability shield and creates
-problems exactly when you can least afford them (a raise, a partner-bank diligence, an acquisition).
+Every LLC needs the real paper — skipping it weakens the liability shield and creates problems exactly when
+you can least afford them (a raise, a partner-bank diligence, an acquisition). With two members it also fixes
+the split, the manager's authority, and the deadlock/buy-sell rules before they're ever tested.
 
 **The document set (DO NOW):**
 
-- **Articles of Organization** (filed with Wyoming) — the LLC's name and registered agent.
-- **Operating Agreement** — ownership, you as **manager**, capital, and the rules for admitting
-  future members / profits interests (§4). The cornerstone document; don't skip it because you're solo.
-- **EIN** from the IRS (free; needed for the bank account — a single-member LLC still gets its own EIN).
-- **Member resolution / consent** (optional but tidy) — authorize the bank account and the IP
-  assignment.
-- **IP / Invention Assignment** — *you* sign one assigning your work to the LLC (see below).
+- **Articles of Organization** (filed with Wyoming) — the LLC's name and registered agent (ownership stays
+  off the public filing).
+- **Operating Agreement** — the 51/40/9 ownership, **Chad as manager**, capital, Reserved Matters, transfer
+  restrictions, and the rules for admitting profits interests from the pool (§4). The cornerstone document.
+- **Initial Member/Manager Resolutions** — issue the founders' units, appoint Chad Manager+CEO, adopt the
+  partnership tax classification, authorize the bank account + the IP contribution (`INITIAL-RESOLUTIONS.md`).
+- **EIN** from the IRS (free; needed for the bank account — a multi-member LLC files Form 1065 under its EIN).
+- **IP / Invention Assignment** — **Chad** signs one assigning his work to the LLC as a capital contribution;
+  every contributor signs one too (see below).
 
 **The IP assignment — do this immediately. ⚖ DO NOW.**
 Right now, *you personally* wrote the code sitting in this repository — which means **you**, not the
@@ -358,7 +383,7 @@ scoring) are already ~70% of a credible AML program's *evidence layer*. What's m
 | 6 | **Terms of Service / Privacy Policy / E-Sign / risk disclosures** | DO NOW | Before any user signs up |
 | 7 | **Data protection: GLBA + state privacy (CCPA/CPRA etc.)** | DO NOW | Fintech data is sensitive; GLBA safeguards apply once you're financial |
 | 8 | **Cyber + tech E&O insurance** | Phase B | Partners will require it; also basic prudence |
-| 9 | **Cap-table tool** (Carta/Pulley) | At conversion | Overkill for a single-member LLC; adopt when options/investors arrive |
+| 9 | **Cap-table tool** (Carta/Pulley) | At conversion | Overkill for a closely-held two-member LLC (Schedule A is the cap table); adopt when options/investors arrive |
 | 10 | **Accounting + R&D tax credits** | Soon | A startup CPA; the federal R&D credit can offset payroll tax — real money for a dev-heavy build |
 | 11 | **Beneficial Ownership (BOI)** reporting | Check status | FinCEN BOI rules have shifted; confirm current applicability ⚖ |
 | 12 | **Business insurance / D&O** | Phase B | Especially before taking on any investor |
@@ -372,10 +397,12 @@ scoring) are already ~70% of a credible AML program's *evidence layer*. What's m
 1. Pick the exact legal name; clear it (Wyoming name check + USPTO knockout search).
 2. File the **Wyoming LLC** (Articles of Organization); appoint a registered agent.
 3. Get the **EIN**.
-4. Adopt the **operating agreement** (you as manager); make your **capital contribution**.
-5. Execute the **IP/Technology Assignment** (repo → `Goemon Global Finance, LLC`) and sign your invention assignment.
-6. *(Only if you grant vesting/profits interests later — file the protective **83(b)** within 30 days
-   of that grant. Not triggered by a sole member owning units outright.)*
+4. Adopt the **operating agreement** (Chad as manager; Chad 51% / Oran 40% / 9% pool) and the **initial
+   resolutions**; each member makes their **capital contribution**.
+5. Execute the **IP/Technology Assignment** (repo → `Goemon Global Finance, LLC`); Chad contributes the IP and
+   every contributor signs an invention assignment.
+6. *(The founders' units are issued fully vested, so no founder 83(b) is triggered. But file a protective
+   **83(b)** within 30 days of any **profits-interest** grant from the 9% pool — unfixable if missed.)*
 
 **Days 15–45 — be operational & bankable**
 7. Open the **Mercury** (or Brex) business account.
@@ -413,9 +440,14 @@ obvious: **spend thousands to launch, defer the hundreds-of-thousands until reve
 
 ---
 
-*Companion document: `GO-LIVE-PLAN.md` — applies this entity ramp to a specific ownership design
-(an anonymous, child-owned Wyoming IP HoldCo + a separate founder-owned management company for
-banking/taxes), with the full legal/equity agreement set and a guerrilla marketing plan layered on.*
+*Operative legal set: `docs/legal/` — `OPERATING-AGREEMENT.md` (cornerstone), `INITIAL-RESOLUTIONS.md`,
+`EQUITY-INCENTIVE-PLAN.md`, and `FORMATION-articles-of-organization.md`. These implement the **two-member
+Chad 51% / Oran 40% / 9% pool** design described above and are the authoritative record of ownership,
+management, and the pool.*
+
+*Superseded alternative: `GO-LIVE-PLAN.md` proposed a different ownership design — an anonymous, child-owned
+Wyoming IP HoldCo plus a separate founder-owned management company. **That design was not adopted** (the
+two-member LLC above was), and `GO-LIVE-PLAN.md` is retained only for its reasoning + guerrilla-marketing plan.*
 
 *Next document: the Production Deployment & Technology Strategy — cloud, the agent/MCP/skills
 automation fabric, the Neo4j Identity Vault, the fraud system on your orchestration engine,

@@ -1,5 +1,19 @@
 # Go-Live Plan — Child-Owned, Founder-Controlled, with a Guerrilla GTM
 
+> ## ⚠️ SUPERSEDED — alternative ownership design, NOT ADOPTED
+> The **child-owned Wyoming IP HoldCo + separate founder-owned management company** design described below was
+> **not adopted.** The agreed and operative structure is the **two-member `Goemon Global Finance, LLC`** —
+> **Chad Cromwell 51% (Manager + CEO) / Oran Cromwell 40% / 9% incentive pool, partnership-taxed** — as
+> implemented in the `docs/legal/` set (`OPERATING-AGREEMENT.md`, `INITIAL-RESOLUTIONS.md`,
+> `EQUITY-INCENTIVE-PLAN.md`, `FORMATION-articles-of-organization.md`) and now reflected in
+> `docs/business/CORPORATE-STRUCTURE.md`.
+>
+> **Do not treat the ownership/entity mechanics in this document (child-owns-100%-anonymously, the gift/Form
+> 709, the separate `Goemon Management LLC` + Management Services Agreement, the 10–15% pool) as operative.**
+> This file is retained only for its **reasoning** and the **guerrilla-marketing plan** (still useful);
+> ownership authority lives in the legal set + `CORPORATE-STRUCTURE.md`. ⚖ revisit only with counsel if the
+> estate-planning HoldCo design is ever reconsidered.
+
 The operator's plan for taking Goemon Global Finance live under a specific ownership design:
 **your adult child owns the company anonymously, you control it and earn through a separate
 management company you own, and you grow it with a low-budget guerrilla marketing engine** — all

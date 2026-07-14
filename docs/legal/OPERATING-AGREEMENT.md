@@ -9,6 +9,22 @@
 > Companion documents: `FORMATION-articles-of-organization.md`, `INITIAL-RESOLUTIONS.md`,
 > `EQUITY-INCENTIVE-PLAN.md`; strategy `docs/business/CORPORATE-STRUCTURE.md`.
 
+> **BEFORE EXECUTION — load-bearing fields to complete (and counsel items to resolve).** This scaffold is not
+> signable until these are set:
+> - **Effective Date** (§ preamble) and the **Articles filing date** (Recitals).
+> - **Registered office / principal office** and each Member's **address** (§1.3, Schedule A).
+> - **Capital contributions** — each Member's **cash amount** and the **agreed value of Chad's contributed IP**
+>   (§3.1, Schedule A). **⚖ CPA on §704(c) / valuation.**
+> - **Tax-distribution assumed rate** `[• %]` (§4.3).
+> - **Debt/lien threshold** `[$•]` triggering a Reserved Matter (§5.4(5)); **drag-along %** (§7.5).
+> - **Notice / cure periods** — meeting notice (§6.3); deadlock steps: negotiation/mediation/shotgun windows
+>   (§6.5); ROFR/permitted-transfer windows (§7.3–7.4); fallback supermajority `[• 75]%` (§6.4).
+> - **Governance-denominator convention** (issued-and-outstanding vs fully-reserved) — keep **Schedule A
+>   authoritative** and confirm with counsel (§2.2). **⚖**
+> - **Dispute forum** — arbitration vs Wyoming courts (§13.2). **⚖**
+> - **Spousal Consent** (Exhibit C) if either Member resides in a community-property state (§13.9). **⚖**
+> - **Schedule B** (tax allocations) — **CPA to complete** (§704(b)/(c), QIO, minimum-gain chargeback).
+
 ---
 
 **OPERATING AGREEMENT OF GOEMON GLOBAL FINANCE, LLC**
@@ -43,6 +59,11 @@ office is `[• address]`.
 and licensing of **non-custodial financial software and tokenization infrastructure**. In
 Phase A the Company does not take custody of customer funds and **is not a bank**; regulated
 activity advances deliberately per `CORPORATE-STRUCTURE.md` §6. **⚖**
+
+**1.4.1 "Bank" naming restriction.** "Bank," "banking," and "deposits" are legally restricted terms. Unless
+and until the Company (or a subsidiary) holds the requisite charter, the Company and its officers shall **not
+represent, market, or hold the Company out as a bank or as offering banking or deposit-taking services**, and
+the Manager shall ensure product and marketing copy conforms (`CORPORATE-STRUCTURE.md` §9(#4), §1). **⚖**
 
 **1.5 Term.** Perpetual, until dissolved under Article XI.
 
@@ -276,12 +297,16 @@ if Members holding `[• ]`% of Percentage Interests (and, while unanimity is in
 Members) approve a sale of the Company, the remaining Members shall participate on the same
 terms. **⚖**
 
-**7.6 Planned Delaware C-corporation conversion.** The Members acknowledge the strategy
-(`CORPORATE-STRUCTURE.md` §2.2) to **convert the Company to a Delaware C-corporation** upon the
-first institutional financing or the standing-up of a regulated subsidiary. Each Member agrees
-to cooperate in good faith with such conversion (a Reserved Matter) and to exchange Units for
-equivalent shares of the successor corporation in proportion to Percentage Interests, with
-outstanding Plan awards converting as provided in the Equity Incentive Plan.
+**7.6 Planned Delaware C-corporation conversion and holdco/opco structure.** The Members acknowledge the
+strategy (`CORPORATE-STRUCTURE.md` §2.2) to **convert the Company to a Delaware C-corporation** upon the
+first institutional financing or the standing-up of a regulated subsidiary. Each Member agrees to cooperate
+in good faith with such conversion (a Reserved Matter) and to exchange Units for equivalent shares of the
+successor corporation in proportion to Percentage Interests, with outstanding Plan awards converting as
+provided in the Equity Incentive Plan. The Members further acknowledge that, at or after conversion, the
+successor may adopt a **holding-company / operating-subsidiary** structure — the parent holding the IP, cap
+table, and brand, with regulated activity (money transmission, RWA issuance, transfer-agent) ring-fenced in
+separate licensed subsidiaries (`CORPORATE-STRUCTURE.md` §2.2) — so that a license never contaminates the
+Company's core software IP. **⚖ counsel to structure the conversion and any subsidiary.**
 
 ---
 
