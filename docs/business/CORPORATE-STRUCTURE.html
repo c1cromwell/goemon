@@ -164,7 +164,7 @@ tbody tr:nth-child(even) td { background: var(--line-2); }
   <div class="disclaimer">Strategic guidance only — not legal, financial, tax, or investment advice. Securities, money-transmission, and corporate-formation decisions must be reviewed by licensed counsel and a CPA before you act. Sections flagged “⚖ see counsel” are where this matters most.</div>
 </section>
 <div class="wrap">
-  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-executive-summary-the-core-legal-thesis">1. Executive summary &amp; the core legal thesis</a></li><li class="lvl-2"><a href="#2-entity-structure-start-as-a-lean-wyoming-llc-convert-into-a-holdco">2. Entity structure — start as a lean Wyoming LLC, convert into a holdco</a></li><li class="lvl-3"><a href="#21-what-to-form-now-do-now">2.1 What to form now (DO NOW)</a></li><li class="lvl-3"><a href="#22-where-this-is-going-defer-phase-bc-convert-then-split-into-a-holdco">2.2 Where this is going (DEFER → Phase B/C): convert, then split into a holdco</a></li><li class="lvl-3"><a href="#23-the-alternative-if-youd-rather-optimize-for-fundability-now">2.3 The alternative (if you&#39;d rather optimize for fundability now)</a></li><li class="lvl-2"><a href="#3-where-to-incorporate">3. Where to incorporate</a></li><li class="lvl-2"><a href="#4-sole-founder-ownership-equity-structure-llc-units">4. Sole-founder ownership &amp; equity structure (LLC units)</a></li><li class="lvl-2"><a href="#5-governance-founding-documents-the-ip-assignment">5. Governance, founding documents &amp; the IP assignment</a></li><li class="lvl-2"><a href="#6-the-phased-compliance-roadmap-the-heart-of-this-document">6. The phased compliance roadmap (the heart of this document)</a></li><li class="lvl-3"><a href="#phase-a-launch-as-non-custodial-software-do-now">Phase A — Launch as non-custodial software (DO NOW)</a></li><li class="lvl-3"><a href="#phase-b-partnered-defer-when-you-need-fiat-or-pooled-custody">Phase B — Partnered (DEFER → when you need fiat or pooled custody)</a></li><li class="lvl-3"><a href="#phase-c-licensed-defer-when-scale-justifies-owning-the-rails">Phase C — Licensed (DEFER → when scale justifies owning the rails)</a></li><li class="lvl-2"><a href="#7-corporate-bank-account-money-movement">7. Corporate bank account &amp; money movement</a></li><li class="lvl-2"><a href="#8-kycaml-bsa-program-even-before-youre-licensed">8. KYC/AML &amp; BSA program (even before you&#39;re licensed)</a></li><li class="lvl-2"><a href="#9-what-youre-missing-the-founder-checklist">9. What you&#39;re missing — the founder checklist</a></li><li class="lvl-2"><a href="#10-90-day-action-checklist-ordered">10. 90-day action checklist (ordered)</a></li><li class="lvl-3"><a href="#appendix-rough-first-year-cost-envelope-bootstrap">Appendix — rough first-year cost envelope (bootstrap)</a></li></ol></nav>
+  <nav class="toc"><h2>Contents</h2><ol><li class="lvl-2"><a href="#1-executive-summary-the-core-legal-thesis">1. Executive summary &amp; the core legal thesis</a></li><li class="lvl-2"><a href="#2-entity-structure-start-as-a-lean-wyoming-llc-convert-into-a-holdco">2. Entity structure — start as a lean Wyoming LLC, convert into a holdco</a></li><li class="lvl-2"><a href="#3-where-to-incorporate">3. Where to incorporate</a></li><li class="lvl-2"><a href="#4-founding-ownership-equity-structure-llc-units">4. Founding ownership &amp; equity structure (LLC units)</a></li><li class="lvl-2"><a href="#5-governance-founding-documents-the-ip-assignment">5. Governance, founding documents &amp; the IP assignment</a></li><li class="lvl-2"><a href="#6-the-phased-compliance-roadmap-the-heart-of-this-document">6. The phased compliance roadmap *(the heart of this document)*</a></li><li class="lvl-2"><a href="#7-corporate-bank-account-money-movement">7. Corporate bank account &amp; money movement</a></li><li class="lvl-2"><a href="#8-kycaml-bsa-program-even-before-youre-licensed">8. KYC/AML &amp; BSA program (even before you're licensed)</a></li><li class="lvl-2"><a href="#9-what-youre-missing-the-founder-checklist">9. What you're missing — the founder checklist</a></li><li class="lvl-2"><a href="#10-90-day-action-checklist-ordered">10. 90-day action checklist (ordered)</a></li></ol></nav>
   <main class="content">
 <h1 id="corporate-structure-compliance-strategy">Corporate Structure &amp; Compliance Strategy</h1>
 <p>A lean-now, licensed-later blueprint for incorporating Goemon Global Finance as a US tokenization-first
@@ -178,8 +178,8 @@ and a CPA before you file or launch.</p>
 </blockquote>
 <hr>
 <h2 id="1-executive-summary-the-core-legal-thesis">1. Executive summary &amp; the core legal thesis</h2>
-<p><strong>The thesis:</strong> the cheapest legal way into fintech is to <em>not be a money business yet</em>. Goemon Global Finance&#39;s
-locked architecture already supports this — keys live in the user&#39;s Secure Enclave, the server never
+<p><strong>The thesis:</strong> the cheapest legal way into fintech is to <em>not be a money business yet</em>. Goemon Global Finance's
+locked architecture already supports this — keys live in the user's Secure Enclave, the server never
 holds a private key, and tokenization is delivered as <strong>software</strong>. If you never take custody of
 customer funds and never act as the intermediary that moves value, you stay outside the two most
 expensive US regimes (money-transmitter licensing and broker-dealer registration) for as long as
@@ -195,7 +195,8 @@ to absorb each phase without re-papering the company:</p>
 <th>Trigger to advance</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><strong>A — Launch</strong></td>
 <td>Software + non-custodial wallet + tokenization infrastructure</td>
 <td>Minimal: entity, AML <em>policy</em>, terms, IP. <strong>No MTL.</strong></td>
@@ -213,7 +214,8 @@ to absorb each phase without re-papering the company:</p>
 <td>State MTLs (or bank partnership), transfer-agent registration, possibly broker-dealer/ATS</td>
 <td>Scale, unit economics justify owning the rails</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>The single most important rule:</strong> the moment you touch customer fiat or hold their crypto for
 them, you are probably a money transmitter in most states. Phase A is engineered to never do that.</p>
 <p><strong>Recommendation at a glance:</strong></p>
@@ -221,8 +223,14 @@ them, you are probably a money transmitter in most states. Phase A is engineered
 <li><strong>Form a Wyoming LLC now</strong> (<code>Goemon Global Finance, LLC</code>) — the lowest-cost, lowest-admin, most private US entity,
 with pass-through taxation and crypto-friendly statutes. <strong>Convert to a Delaware C-corp later</strong>,
 when you raise institutional capital or stand up the regulated subsidiary (Phase B/C).</li>
-<li><strong>Adopt a real operating agreement</strong> even as a single member — it&#39;s the document partner banks,
-vendors, and a future conversion all lean on.</li>
+<li><strong>The agreed ownership is two founding members:</strong> <strong>Chad Cromwell — 51%</strong> (Manager + CEO) and
+<strong>Oran Cromwell — 40%</strong> (father/son), with a <strong>9% incentive pool</strong> reserved for future team/advisors. The
+LLC is <strong>manager-managed</strong> (Chad) and taxed as a <strong>partnership</strong> (Form 1065; a K-1 to each member). This is
+the design the executed founding docs in <code>docs/legal/</code> (Operating Agreement, Initial Resolutions, Equity
+Incentive Plan, Articles/BOI) implement — see §4.</li>
+<li><strong>Adopt a real operating agreement</strong> — it's the document partner banks, vendors, and a future conversion all
+lean on, and it's where the 51/40/9 split and Chad-as-manager control are recorded (the public Articles do
+not state ownership).</li>
 <li><strong>Assign the IP</strong> (the code already in this repo) from you personally to the company immediately —
 the single cheapest-now / expensive-later action in this plan.</li>
 <li><strong>Do not market the product as a &quot;bank&quot;</strong> or &quot;banking.&quot; That word is regulated; using it can draw
@@ -231,29 +239,33 @@ a cease-and-desist before you have a single user. (Yes, this affects the product
 <hr>
 <h2 id="2-entity-structure-start-as-a-lean-wyoming-llc-convert-into-a-holdco">2. Entity structure — start as a lean Wyoming LLC, convert into a holdco</h2>
 <h3 id="21-what-to-form-now-do-now">2.1 What to form now (DO NOW)</h3>
-<p>A <strong>single-member Wyoming LLC</strong>, <code>Goemon Global Finance, LLC</code>, with you as sole member and manager. It is the
-cheapest, fastest, most private US entity, and for a solo bootstrapper it&#39;s the right Phase-A home.
-A single-member LLC is <strong>&quot;disregarded&quot; for federal tax</strong> — its income flows straight to your personal
-return, so there&#39;s no separate corporate tax to file and no double taxation.</p>
+<p>A <strong>two-member Wyoming LLC</strong>, <code>Goemon Global Finance, LLC</code> — <strong>Chad Cromwell (51%, Manager + CEO)</strong> and
+<strong>Oran Cromwell (40%)</strong>, plus a <strong>9% incentive pool</strong> reserved for future team/advisors — <strong>manager-managed</strong>
+by Chad. It is the cheapest, most private US entity for a lean start, and a multi-member LLC keeps a clean
+co-founder structure without the cost and double-taxation of a C-corp. A multi-member LLC is taxed as a
+<strong>partnership for federal tax</strong> (Form 1065; a Schedule K-1 to each member) — still <strong>pass-through</strong> (no
+entity-level corporate tax), just filed at the entity level rather than on a single personal return.</p>
 <p>Why the Wyoming LLC for a lean start:</p>
 <ul>
 <li><strong>Minimal cost &amp; admin.</strong> ~$100–150 to form, ~$60/yr to maintain, no state income tax.</li>
-<li><strong>Pass-through taxation.</strong> No double tax; early-stage losses can (subject to rules) offset other
-income. Simple Schedule-C-style reporting while you&#39;re a single member.</li>
-<li><strong>Privacy.</strong> Wyoming doesn&#39;t publicly list LLC members.</li>
+<li><strong>Pass-through taxation.</strong> No double tax; income and (subject to rules) losses flow through to the members'
+returns via K-1. A partnership return (1065) is more than a solo Schedule C but far lighter than a C-corp.</li>
+<li><strong>Privacy.</strong> Wyoming doesn't publicly list LLC members — ownership lives in the operating agreement, not the
+public Articles.</li>
 <li><strong>Crypto-forward law.</strong> Wyoming pioneered digital-asset statutes, the DAO LLC, and the SPDI charter.</li>
-<li><strong>Liability shield</strong> for your personal assets — as long as you respect the formalities (separate
+<li><strong>Liability shield</strong> for the members' personal assets — as long as you respect the formalities (separate
 bank account, operating agreement, no commingling).</li>
 </ul>
-<p>The honest tradeoffs vs. a C-corp — and why they don&#39;t bite yet:</p>
+<p>The honest tradeoffs vs. a C-corp — and why they don't bite yet:</p>
 <ul>
 <li><strong>No QSBS.</strong> The §1202 gain exclusion needs a C-corp. You forgo it <em>until you convert</em> — acceptable
 while pre-revenue and pre-raise.</li>
-<li><strong>Equity comp is clunkier.</strong> Adding a co-founder or option holder turns a single-member LLC into a
-partnership, or requires <strong>profits interests</strong> instead of clean stock options. Manageable, but a
-reason to convert before you build a team or raise.</li>
+<li><strong>Equity comp uses profits interests.</strong> As a multi-member LLC you grant team/advisors <strong>profits interests</strong>
+(a share of <em>future</em> upside above a hurdle) from the 9% pool rather than clean ISOs/NSOs — tax-efficient if
+papered correctly (Rev. Procs. 93-27 / 2001-43), and it converts to a normal option pool at the C-corp step.</li>
 <li><strong>Investors require conversion.</strong> Institutional money wants a Delaware C-corp; <strong>LLC → C-corp
-conversion</strong> later is a real, lawyer-assisted step (often structured tax-neutrally) costing ~$3–8k.</li>
+conversion</strong> later is a real, lawyer-assisted step (often structured tax-neutrally) costing ~$3–8k, at which
+point the members' units become founder stock and profits interests become the option pool.</li>
 </ul>
 <p>So: the WY LLC is the right lean Phase-A vehicle. Treat the <strong>conversion to a Delaware C-corp</strong> as a
 planned future event tied to your first institutional raise or your first regulated subsidiary —
@@ -278,12 +290,12 @@ a license never contaminates your software IP:</p>
 into the single LLC. The split appears only at conversion.)</em></p>
 <p>The reason: licenses, bonds, regulatory exams, and money-movement liability sit in the regulated
 subsidiary. If that entity ever has a problem, your core technology and IP — the valuable asset — are
-insulated in a separate box owned by the parent. You <strong>don&#39;t pay for this complexity until the
+insulated in a separate box owned by the parent. You <strong>don't pay for this complexity until the
 revenue or the regulator forces it.</strong> ⚖ see counsel when you spin up the first subsidiary.</p>
-<h3 id="23-the-alternative-if-youd-rather-optimize-for-fundability-now">2.3 The alternative (if you&#39;d rather optimize for fundability now)</h3>
+<h3 id="23-the-alternative-if-youd-rather-optimize-for-fundability-now">2.3 The alternative (if you'd rather optimize for fundability now)</h3>
 <p>If raising institutional money or pursuing licensing <em>soon</em> is likely, you can <strong>skip straight to a
 Delaware C-corp</strong> and avoid a later conversion — at the cost of higher run-rate, double taxation, and
-more admin than a bootstrapper needs in Phase A. For Goemon Global Finance&#39;s lean, pre-revenue start, the <strong>Wyoming
+more admin than a bootstrapper needs in Phase A. For Goemon Global Finance's lean, pre-revenue start, the <strong>Wyoming
 LLC is the recommended default</strong>, converting when the money or the regulator makes the C-corp worth
 it.</p>
 <table>
@@ -295,7 +307,8 @@ it.</p>
 <th>Offshore token entity</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Setup cost</td>
 <td>~$100–500</td>
 <td>~$500–1,500 (DIY–lawyer)</td>
@@ -343,7 +356,8 @@ it.</p>
 <td>Imminent raise/licensing</td>
 <td>Not recommended US-first</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h2 id="3-where-to-incorporate">3. Where to incorporate</h2>
 <p><strong>Wyoming for the LLC now. Delaware when you convert. Wyoming again on the radar for a future charter.</strong></p>
@@ -351,8 +365,8 @@ it.</p>
 <li><strong>Wyoming (now)</strong> — the LLC home: no state income tax, member privacy, low fees, and the most
 crypto-forward statutes in the US (digital-asset law, the <strong>DAO LLC</strong>, and the <strong>Special Purpose
 Depository Institution (SPDI)</strong> charter — a long-term option for a crypto-native, custody-capable
-&quot;bank-like&quot; entity without FDIC deposit-taking). You&#39;ll <strong>foreign-qualify</strong> in your home state
-(where you actually work) and pay that state&#39;s fees too — budget for both. If you live in a
+&quot;bank-like&quot; entity without FDIC deposit-taking). You'll <strong>foreign-qualify</strong> in your home state
+(where you actually work) and pay that state's fees too — budget for both. If you live in a
 high-tax/high-fee state (e.g., CA), confirm whether you must <em>also</em> register the LLC there. ⚖</li>
 <li><strong>Delaware (on conversion)</strong> — when you raise or issue equity, convert to a <strong>Delaware C-corp</strong>:
 predictable corporate law (Court of Chancery), a playbook every investor/bank/lawyer knows, and
@@ -366,11 +380,51 @@ for a protocol token (not the product) is ever on the table. ⚖ see counsel.</l
 C-corp conversion</strong> for your first raise/regulated subsidiary; keep the <strong>Wyoming SPDI</strong> as the deep
 Phase-C charter option.</p>
 <hr>
-<h2 id="4-sole-founder-ownership-equity-structure-llc-units">4. Sole-founder ownership &amp; equity structure (LLC units)</h2>
-<p>In a single-member LLC your &quot;equity&quot; is <strong>membership units</strong> (or simply a 100% membership interest)
-governed by the <strong>operating agreement</strong> — there is no stock, no authorized-share count, and no
-Delaware franchise tax to engineer. That simplicity is the point of the lean start.</p>
-<p><strong>Recommended starting structure (DO NOW):</strong></p>
+<h2 id="4-founding-ownership-equity-structure-llc-units">4. Founding ownership &amp; equity structure (LLC units)</h2>
+<p>Membership interests are <strong>membership units</strong> governed by the <strong>operating agreement</strong> — no stock, no
+authorized-share count, no Delaware franchise tax to engineer. The Company authorizes <strong>10,000,000 units</strong>,
+all Class A Voting, split between the two founding members with a reserved incentive pool.</p>
+<p><strong>Agreed ownership (as implemented in <code>docs/legal/OPERATING-AGREEMENT.md</code> + <code>INITIAL-RESOLUTIONS.md</code>):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Member / reserve</th>
+<th>Units</th>
+<th>Interest</th>
+<th>Class / vote</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chad Cromwell</strong> — Manager + CEO + Partnership Representative</td>
+<td>5,100,000</td>
+<td><strong>51%</strong></td>
+<td>Class A Voting</td>
+</tr>
+<tr>
+<td><strong>Oran Cromwell</strong> (father/son)</td>
+<td>4,000,000</td>
+<td><strong>40%</strong></td>
+<td>Class A Voting</td>
+</tr>
+<tr>
+<td><strong>Equity Incentive Plan pool</strong> — <em>reserved, unissued</em></td>
+<td>900,000</td>
+<td><strong>9%</strong></td>
+<td>per award</td>
+</tr>
+<tr>
+<td><strong>Total authorized</strong></td>
+<td>10,000,000</td>
+<td>100%</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Both founders' units are <strong>fully vested</strong> on the effective date. The 9% pool is reserved (not outstanding, no
+vote, no allocations) until issued as <strong>profits-interest</strong> awards under the Plan. <em>(Governance percentages are
+computed on issued/outstanding units; see the OA §2.2 and <code>INITIAL-RESOLUTIONS.md</code>. The father/son ownership
+is a deliberate design — confirm the estate/gift implications with counsel + CPA. ⚖)</em></p>
 <table>
 <thead>
 <tr>
@@ -379,68 +433,73 @@ Delaware franchise tax to engineer. That simplicity is the point of the lean sta
 <th>Why</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Ownership</td>
-<td><strong>100% to you</strong>, the sole member</td>
-<td>Single-member = disregarded entity, simplest tax</td>
+<td><strong>Chad 51% / Oran 40% / 9% pool</strong></td>
+<td>Clean co-founder split; Chad holds majority control + manages</td>
 </tr>
 <tr>
-<td>Units (optional)</td>
-<td>Denominate as <strong>10,000,000 units</strong>, all to you</td>
-<td>Makes future grants/conversion clean if you ever add members</td>
+<td>Units</td>
+<td><strong>10,000,000 units</strong> authorized (5.1M / 4.0M issued; 0.9M reserved)</td>
+<td>Clean for future grants + the C-corp conversion</td>
 </tr>
 <tr>
 <td>Capital contribution</td>
-<td>Contribute a small amount (e.g., $500–1,000) + the assigned IP</td>
-<td>Establishes your basis and the LLC&#39;s capital</td>
+<td>Each member contributes cash (e.g., $500–1,000); <strong>Chad also contributes the assigned IP</strong></td>
+<td>Establishes basis + the LLC's capital (§704(c) on the contributed IP — ⚖ CPA)</td>
 </tr>
 <tr>
 <td>Tax election</td>
-<td>Default disregarded; <strong>revisit S-corp election</strong> only if profits get large</td>
-<td>Don&#39;t over-optimize taxes pre-revenue</td>
+<td>Default <strong>partnership</strong> (multi-member); <strong>revisit S-corp election</strong> only if profits get large</td>
+<td>Don't over-optimize taxes pre-revenue</td>
 </tr>
-</tbody></table>
-<p><strong>Operating agreement — your most important governance document. DO NOW.</strong> Even with one member,
-adopt a real operating agreement: it defines ownership, management (you as manager), capital, and —
-critically — how new members or <strong>profits interests</strong> get admitted later. Banks and a future
-conversion both rely on it, and it reinforces the liability shield (an LLC without one is easier to
-&quot;pierce&quot;).</p>
+</tbody>
+</table>
+<p><strong>Operating agreement — your most important governance document. DO NOW.</strong> It defines ownership (the 51/40/9
+split), management (<strong>Chad as manager</strong>), capital, unanimous-consent Reserved Matters, transfer restrictions,
+the two-member <strong>deadlock/buy-sell</strong> backstop, and how <strong>profits interests</strong> get admitted from the pool. Banks
+and a future conversion both rely on it, and it reinforces the liability shield (an LLC without one is easier
+to &quot;pierce&quot;).</p>
 <p><strong>Incentive equity for future hires/advisors — profits interests.</strong> When you bring people on, an LLC
 grants <strong>profits interests</strong> (a share of <em>future</em> upside, not existing value) rather than stock
-options. They&#39;re tax-efficient if papered correctly — and the moment they get complex is exactly the
+options. They're tax-efficient if papered correctly — and the moment they get complex is exactly the
 moment to do the <strong>Delaware C-corp conversion</strong> (§2.2) and switch to a normal option pool.</p>
-<p><strong>The 83(b) nuance for an LLC. ⚖ note.</strong> As a sole member owning your interest outright with no
-vesting, the classic founder-stock 83(b) urgency mostly doesn&#39;t apply. But if you ever (a) subject
-your own interest to vesting, or (b) grant <strong>profits interests</strong>, the recipient should file a
-protective <strong>83(b) election within 30 days</strong> of that grant. Keep the 30-day rule on your radar for
-those events — it&#39;s still unfixable if missed.</p>
+<p><strong>The 83(b) nuance for an LLC. ⚖ note.</strong> The founders' units are issued <strong>fully vested and outright</strong>, so the
+classic founder-stock 83(b) urgency doesn't apply to Chad's or Oran's initial units. But 83(b) <em>does</em> matter
+for the pool: every <strong>profits-interest</strong> award (and any later unit subject to vesting) should file a protective
+<strong>83(b) election within 30 days</strong> of that grant. Keep the 30-day rule on the radar for every Plan award — it's
+unfixable if missed.</p>
 <p><strong>SAFE-ready / raise posture.</strong> You can technically raise into an LLC, but most investors want a
 Delaware C-corp and a SAFE. So the plan is: stay lean as the LLC; <strong>convert to a DE C-corp the moment
-a real raise is on the table</strong>, then raise on a standard <strong>SAFE</strong> (the YC standard). Don&#39;t contort the
-LLC to look like a startup it isn&#39;t yet.</p>
-<p><strong>Tooling:</strong> a cap-table tool is overkill for a single-member LLC — a clean operating agreement and a
-folder of signed docs is enough now. Adopt <strong>Carta/Pulley</strong> at conversion, when options and investors
-arrive.</p>
+a real raise is on the table</strong>, then raise on a standard <strong>SAFE</strong> (the YC standard). Don't contort the
+LLC to look like a startup it isn't yet.</p>
+<p><strong>Tooling:</strong> a cap-table tool is overkill for a closely-held two-member LLC — the operating agreement's
+Schedule A plus a folder of signed docs is the cap table now. Adopt <strong>Carta/Pulley</strong> at conversion, when
+options and investors arrive.</p>
 <hr>
 <h2 id="5-governance-founding-documents-the-ip-assignment">5. Governance, founding documents &amp; the IP assignment</h2>
-<p>Even a single-member LLC needs the real paper — skipping it weakens the liability shield and creates
-problems exactly when you can least afford them (a raise, a partner-bank diligence, an acquisition).</p>
+<p>Every LLC needs the real paper — skipping it weakens the liability shield and creates problems exactly when
+you can least afford them (a raise, a partner-bank diligence, an acquisition). With two members it also fixes
+the split, the manager's authority, and the deadlock/buy-sell rules before they're ever tested.</p>
 <p><strong>The document set (DO NOW):</strong></p>
 <ul>
-<li><strong>Articles of Organization</strong> (filed with Wyoming) — the LLC&#39;s name and registered agent.</li>
-<li><strong>Operating Agreement</strong> — ownership, you as <strong>manager</strong>, capital, and the rules for admitting
-future members / profits interests (§4). The cornerstone document; don&#39;t skip it because you&#39;re solo.</li>
-<li><strong>EIN</strong> from the IRS (free; needed for the bank account — a single-member LLC still gets its own EIN).</li>
-<li><strong>Member resolution / consent</strong> (optional but tidy) — authorize the bank account and the IP
-assignment.</li>
-<li><strong>IP / Invention Assignment</strong> — <em>you</em> sign one assigning your work to the LLC (see below).</li>
+<li><strong>Articles of Organization</strong> (filed with Wyoming) — the LLC's name and registered agent (ownership stays
+off the public filing).</li>
+<li><strong>Operating Agreement</strong> — the 51/40/9 ownership, <strong>Chad as manager</strong>, capital, Reserved Matters, transfer
+restrictions, and the rules for admitting profits interests from the pool (§4). The cornerstone document.</li>
+<li><strong>Initial Member/Manager Resolutions</strong> — issue the founders' units, appoint Chad Manager+CEO, adopt the
+partnership tax classification, authorize the bank account + the IP contribution (<code>INITIAL-RESOLUTIONS.md</code>).</li>
+<li><strong>EIN</strong> from the IRS (free; needed for the bank account — a multi-member LLC files Form 1065 under its EIN).</li>
+<li><strong>IP / Invention Assignment</strong> — <strong>Chad</strong> signs one assigning his work to the LLC as a capital contribution;
+every contributor signs one too (see below).</li>
 </ul>
 <p><strong>The IP assignment — do this immediately. ⚖ DO NOW.</strong>
 Right now, <em>you personally</em> wrote the code sitting in this repository — which means <strong>you</strong>, not the
 company, may own it. Before any value accrues, execute a <strong>Technology/IP Assignment Agreement</strong>
 transferring all of it (code, designs, the Goemon Global Finance marks, domains, the architecture docs) to
 <code>Goemon Global Finance, LLC</code>. This is the #1 thing acquirers and investors diligence, it survives the future C-corp
-conversion intact, and it&#39;s trivially cheap to fix today and expensive to fix later. Make sure any
+conversion intact, and it's trivially cheap to fix today and expensive to fix later. Make sure any
 contractor or contributor (now or ever) signs an assignment too — work-for-hire alone is not enough
 for IP.</p>
 <hr>
@@ -449,12 +508,12 @@ for IP.</p>
 <p><strong>Goal: deliver real product value while staying outside money-transmitter and broker-dealer scope.</strong></p>
 <p>What keeps you out of scope:</p>
 <ul>
-<li><strong>Non-custodial by architecture.</strong> Keys are generated and held in the user&#39;s Secure Enclave; the
-server never holds a user&#39;s private key (a <em>locked</em> architecture decision in this repo). You are
-not holding customer funds, so you are generally not a money transmitter under FinCEN&#39;s framework
+<li><strong>Non-custodial by architecture.</strong> Keys are generated and held in the user's Secure Enclave; the
+server never holds a user's private key (a <em>locked</em> architecture decision in this repo). You are
+not holding customer funds, so you are generally not a money transmitter under FinCEN's framework
 for non-custodial wallet software.</li>
 <li><strong>Tokenization framed as software.</strong> You build the rails; you are not the issuer of record taking
-in investor money. The repo&#39;s demo securities are explicitly labeled &quot;not a real offering&quot; — keep
+in investor money. The repo's demo securities are explicitly labeled &quot;not a real offering&quot; — keep
 that posture until an entity is set up to issue properly (Phase B).</li>
 <li><strong>Partner out everything that touches money.</strong> No fiat on/off-ramp run by you. If users need to
 buy crypto, route them to a licensed third party (e.g., an embedded on-ramp like MoonPay/Stripe
@@ -479,7 +538,8 @@ the US requires either registration or an exemption:</p>
 <th>Fit for Goemon Global Finance</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><strong>Reg D 506(c)</strong></td>
 <td>Accredited only (verified)</td>
 <td>Unlimited</td>
@@ -500,14 +560,15 @@ the US requires either registration or an exemption:</p>
 <td>Via funding portal</td>
 <td>Needs a registered portal partner</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>Your repo already models the compliance gating (tier/jurisdiction/holder-cap, the Compliance Module),
 which maps cleanly onto Reg D accreditation + holder caps — but the <em>legal</em> offering wrapper must be
 built with a securities attorney before you sell anything real.</p>
 <p><strong>Phase A compliance you DO still need (cheap, do it now):</strong></p>
 <ul>
-<li>A written <strong>AML/KYC policy</strong> and a named compliance officer (you), even pre-license — it&#39;s table
-stakes for partner diligence and good hygiene. The repo&#39;s identity ladder + VC issuance + append-only
+<li>A written <strong>AML/KYC policy</strong> and a named compliance officer (you), even pre-license — it's table
+stakes for partner diligence and good hygiene. The repo's identity ladder + VC issuance + append-only
 audit log are most of the technical substrate.</li>
 <li><strong>OFAC/sanctions screening</strong> at onboarding (screen every user against SDN lists).</li>
 <li><strong>Terms of Service, Privacy Policy, E-Sign consent, risk disclosures.</strong></li>
@@ -549,8 +610,8 @@ docs:</p>
 <li><strong>Column / regional banks</strong> — relevant later as actual banking <em>partners</em> (Phase B), distinct from
 your operating account.</li>
 </ul>
-<p>What they&#39;ll ask for: EIN, Articles of Organization + operating agreement, your ID,
-beneficial-ownership info, and a description of the business. <strong>Be precise and honest</strong> that you&#39;re building crypto/tokenization
+<p>What they'll ask for: EIN, Articles of Organization + operating agreement, your ID,
+beneficial-ownership info, and a description of the business. <strong>Be precise and honest</strong> that you're building crypto/tokenization
 software — vague or evasive answers get accounts frozen (&quot;de-risked&quot;). A clean &quot;non-custodial
 software, no customer funds in Phase A&quot; story is bankable; &quot;we move customer crypto&quot; without licenses
 is not.</p>
@@ -559,8 +620,8 @@ is not.</p>
 corporate money is how fintechs get shut down and founders get personal liability. In Phase A you
 avoid this entirely by not holding customer funds.</p>
 <hr>
-<h2 id="8-kycaml-bsa-program-even-before-youre-licensed">8. KYC/AML &amp; BSA program (even before you&#39;re licensed)</h2>
-<p>Build the program early — it&#39;s cheap as policy, expensive as a retrofit, and every partner bank will
+<h2 id="8-kycaml-bsa-program-even-before-youre-licensed">8. KYC/AML &amp; BSA program (even before you're licensed)</h2>
+<p>Build the program early — it's cheap as policy, expensive as a retrofit, and every partner bank will
 demand to see it.</p>
 <table>
 <thead>
@@ -570,7 +631,8 @@ demand to see it.</p>
 <th>Repo substrate that maps to it</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><strong>Written AML/BSA policy</strong></td>
 <td>Your documented program</td>
 <td>— (author it; ~$2–5k with counsel or a template)</td>
@@ -605,12 +667,13 @@ demand to see it.</p>
 <td>Retain records 5 yrs</td>
 <td>Append-only ledger + audit logs</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>The point: your existing technical primitives (append-only audit, identity ladder, VC, signal
-scoring) are already ~70% of a credible AML program&#39;s <em>evidence layer</em>. What&#39;s missing is the
+scoring) are already ~70% of a credible AML program's <em>evidence layer</em>. What's missing is the
 <strong>written policy + named officer + screening vendor</strong>, which is mostly paperwork and a tool.</p>
 <hr>
-<h2 id="9-what-youre-missing-the-founder-checklist">9. What you&#39;re missing — the founder checklist</h2>
+<h2 id="9-what-youre-missing-the-founder-checklist">9. What you're missing — the founder checklist</h2>
 <table>
 <thead>
 <tr>
@@ -620,7 +683,8 @@ scoring) are already ~70% of a credible AML program&#39;s <em>evidence layer</em
 <th>Notes</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>1</td>
 <td><strong>EIN</strong></td>
 <td>DO NOW</td>
@@ -660,7 +724,7 @@ scoring) are already ~70% of a credible AML program&#39;s <em>evidence layer</em
 <td>7</td>
 <td><strong>Data protection: GLBA + state privacy (CCPA/CPRA etc.)</strong></td>
 <td>DO NOW</td>
-<td>Fintech data is sensitive; GLBA safeguards apply once you&#39;re financial</td>
+<td>Fintech data is sensitive; GLBA safeguards apply once you're financial</td>
 </tr>
 <tr>
 <td>8</td>
@@ -672,7 +736,7 @@ scoring) are already ~70% of a credible AML program&#39;s <em>evidence layer</em
 <td>9</td>
 <td><strong>Cap-table tool</strong> (Carta/Pulley)</td>
 <td>At conversion</td>
-<td>Overkill for a single-member LLC; adopt when options/investors arrive</td>
+<td>Overkill for a closely-held two-member LLC (Schedule A is the cap table); adopt when options/investors arrive</td>
 </tr>
 <tr>
 <td>10</td>
@@ -698,7 +762,8 @@ scoring) are already ~70% of a credible AML program&#39;s <em>evidence layer</em
 <td>DO NOW</td>
 <td>Especially around tokenized-asset/investment surfaces</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h2 id="10-90-day-action-checklist-ordered">10. 90-day action checklist (ordered)</h2>
 <p><strong>Days 1–14 — exist as a company</strong></p>
@@ -706,24 +771,26 @@ scoring) are already ~70% of a credible AML program&#39;s <em>evidence layer</em
 <li>Pick the exact legal name; clear it (Wyoming name check + USPTO knockout search).</li>
 <li>File the <strong>Wyoming LLC</strong> (Articles of Organization); appoint a registered agent.</li>
 <li>Get the <strong>EIN</strong>.</li>
-<li>Adopt the <strong>operating agreement</strong> (you as manager); make your <strong>capital contribution</strong>.</li>
-<li>Execute the <strong>IP/Technology Assignment</strong> (repo → <code>Goemon Global Finance, LLC</code>) and sign your invention assignment.</li>
-<li><em>(Only if you grant vesting/profits interests later — file the protective <strong>83(b)</strong> within 30 days
-of that grant. Not triggered by a sole member owning units outright.)</em></li>
+<li>Adopt the <strong>operating agreement</strong> (Chad as manager; Chad 51% / Oran 40% / 9% pool) and the <strong>initial
+resolutions</strong>; each member makes their <strong>capital contribution</strong>.</li>
+<li>Execute the <strong>IP/Technology Assignment</strong> (repo → <code>Goemon Global Finance, LLC</code>); Chad contributes the IP and
+every contributor signs an invention assignment.</li>
+<li><em>(The founders' units are issued fully vested, so no founder 83(b) is triggered. But file a protective
+<strong>83(b)</strong> within 30 days of any <strong>profits-interest</strong> grant from the 9% pool — unfixable if missed.)</em></li>
 </ol>
 <p><strong>Days 15–45 — be operational &amp; bankable</strong>
 7. Open the <strong>Mercury</strong> (or Brex) business account.
 8. Foreign-qualify in your home state.
 9. Engage a <strong>startup CPA</strong> and (for the regulated questions) a <strong>fintech/securities attorney</strong> —
-   even a few scoped hours now prevents expensive mistakes.</p>
+even a few scoped hours now prevents expensive mistakes.</p>
 <p><strong>Days 46–90 — compliance &amp; launch posture</strong>
 11. Draft <strong>ToS / Privacy / E-Sign / risk disclosures</strong>; publish before onboarding users.
 12. Write the <strong>AML/KYC policy</strong>; name yourself compliance officer; wire in <strong>OFAC screening</strong>.
 13. Lock the <strong>Phase-A product scope</strong> to non-custodial / no-customer-funds; document <em>why</em> each
-    feature stays in scope (this doc + counsel sign-off is your defense).
+feature stays in scope (this doc + counsel sign-off is your defense).
 14. File the <strong>trademark</strong>; finalize the market-facing brand that avoids the &quot;bank&quot; trap.
 15. Decide the <strong>Phase-B trigger</strong> in writing (what user need forces partners + MSB registration) so
-    you advance deliberately, not by accident.</p>
+you advance deliberately, not by accident.</p>
 <hr>
 <h3 id="appendix-rough-first-year-cost-envelope-bootstrap">Appendix — rough first-year cost envelope (bootstrap)</h3>
 <table>
@@ -733,7 +800,8 @@ of that grant. Not triggered by a sole member owning units outright.)</em></li>
 <th>Estimate</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Wyoming LLC formation (DIY–assisted)</td>
 <td>$100–500</td>
 </tr>
@@ -769,13 +837,18 @@ of that grant. Not triggered by a sole member owning units outright.)</em></li>
 <td><strong>Total realistic Year-1</strong></td>
 <td><strong>~$5–18k</strong> (LLC keeps the floor lower than a C-corp)</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>Compare that to Phase-C licensing ($50–150k+ for MTLs alone) and the logic of the lean ramp is
 obvious: <strong>spend thousands to launch, defer the hundreds-of-thousands until revenue earns it.</strong></p>
 <hr>
-<p><em>Companion document: <code>GO-LIVE-PLAN.md</code> — applies this entity ramp to a specific ownership design
-(an anonymous, child-owned Wyoming IP HoldCo + a separate founder-owned management company for
-banking/taxes), with the full legal/equity agreement set and a guerrilla marketing plan layered on.</em></p>
+<p><em>Operative legal set: <code>docs/legal/</code> — <code>OPERATING-AGREEMENT.md</code> (cornerstone), <code>INITIAL-RESOLUTIONS.md</code>,
+<code>EQUITY-INCENTIVE-PLAN.md</code>, and <code>FORMATION-articles-of-organization.md</code>. These implement the <strong>two-member
+Chad 51% / Oran 40% / 9% pool</strong> design described above and are the authoritative record of ownership,
+management, and the pool.</em></p>
+<p><em>Superseded alternative: <code>GO-LIVE-PLAN.md</code> proposed a different ownership design — an anonymous, child-owned
+Wyoming IP HoldCo plus a separate founder-owned management company. <strong>That design was not adopted</strong> (the
+two-member LLC above was), and <code>GO-LIVE-PLAN.md</code> is retained only for its reasoning + guerrilla-marketing plan.</em></p>
 <p><em>Next document: the Production Deployment &amp; Technology Strategy — cloud, the agent/MCP/skills
 automation fabric, the Neo4j Identity Vault, the fraud system on your orchestration engine,
 Constellation digital evidence, iOS-vs-Android, and GTM.</em></p>
