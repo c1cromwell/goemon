@@ -8,6 +8,11 @@ business.
 > **⚖ see counsel**. Dollar and time figures are planning estimates (2025–2026 US), not quotes.
 > This is strategy, not legal advice — the regulated decisions must be run past a fintech attorney
 > and a CPA before you file or launch.
+>
+> **✓ Structure confirmed (2026-07-14):** a Wyoming-licensed attorney and a CPA have confirmed the core
+> ownership design this doc describes — the two-member LLC (Chad 51% / Oran 40% / 9% pool), the partnership
+> tax election, the IP-as-capital-contribution treatment, and the estate-planning design. Downstream
+> licensing/regulated decisions (Phase B/C) remain **⚖ see counsel** as tagged.
 
 ---
 

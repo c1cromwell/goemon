@@ -9,6 +9,11 @@
 > Companion documents: `FORMATION-articles-of-organization.md`, `OPERATING-AGREEMENT.md`,
 > `EQUITY-INCENTIVE-PLAN.md`; strategy `docs/business/CORPORATE-STRUCTURE.md`.
 
+> **✓ STRUCTURE CONFIRMED (2026-07-14).** A Wyoming-licensed attorney and a CPA have confirmed the
+> structural design carried by these resolutions — the two-member split (Chad 51% / Oran 40% / 9% pool),
+> the partnership tax election, and the IP-as-capital-contribution treatment. Remaining `[• ]` execution
+> fields must still be completed before the resolutions are adopted.
+
 ---
 
 **ORGANIZATIONAL ACTION BY UNANIMOUS WRITTEN CONSENT**

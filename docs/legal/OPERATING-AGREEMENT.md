@@ -9,6 +9,13 @@
 > Companion documents: `FORMATION-articles-of-organization.md`, `INITIAL-RESOLUTIONS.md`,
 > `EQUITY-INCENTIVE-PLAN.md`; strategy `docs/business/CORPORATE-STRUCTURE.md`.
 
+> **✓ STRUCTURE CONFIRMED (2026-07-14).** A Wyoming-licensed attorney and a CPA have reviewed and
+> confirmed the **structural design**: the two-member split (Chad Cromwell 51% / Oran Cromwell 40% /
+> 9% incentive pool), the **partnership** tax election, the **IP-as-capital-contribution** treatment,
+> and the **estate-planning** design. This clears the four load-bearing structural questions — it does
+> **not** by itself make the document signable: the remaining `[• ]` execution fields below (effective
+> date, contribution amounts, addresses, notice/cure periods) must still be completed before execution.
+
 > **BEFORE EXECUTION — load-bearing fields to complete (and counsel items to resolve).** This scaffold is not
 > signable until these are set:
 > - **Effective Date** (§ preamble) and the **Articles filing date** (Recitals).
