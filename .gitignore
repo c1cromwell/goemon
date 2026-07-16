@@ -10,3 +10,8 @@
 
 # Claude Code local machine state (skills are tracked; local settings are not)
 .claude/settings.local.json
+
+# Agent harness run artifacts (keep directory via .gitkeep)
+backend/test/.e2e-artifacts/**
+!backend/test/.e2e-artifacts/
+!backend/test/.e2e-artifacts/.gitkeep

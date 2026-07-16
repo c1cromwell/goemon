@@ -31,7 +31,10 @@
     "demo:checkout-vp": "tsx src/scripts/demo-checkout-vp.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "harness": "tsx test/harness/cli.ts",
+    "harness:j6": "tsx test/harness/cli.ts --journey j6",
+    "harness:all": "tsx test/harness/cli.ts --all"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",

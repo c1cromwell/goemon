@@ -1,6 +1,6 @@
 # Agent Harness — Implementation Plan
 
-**Status:** planned (not built)  
+**Status:** Phase 0 built — Phases 1–7 planned  
 **Goal:** Replace the skill-only Phase 16 MCP/E2E harness with an executable, step-by-step client that walks Goemon product journeys (J5–J7 first), is CI-callable, and later feeds Agentic OS QA.
 
 **Non-goals (this plan):**
@@ -78,15 +78,19 @@
 
 ### Acceptance criteria
 
-- [ ] `npm run harness -- --help` prints journeys and exits 0
-- [ ] With no journeys registered, `--all` writes an empty PASS report and exits 0
-- [ ] Report path printed to stdout; JSON schema stable (`{ runId, startedAt, journeys: [{ id, status, steps[] }] }`)
-- [ ] `npm run typecheck` still green
+- [x] `npm run harness -- --help` prints journeys and exits 0
+- [x] With placeholder journeys (0 steps), `--all` writes a PASS report and exits 0
+- [x] Report path printed to stdout; JSON schema stable (`{ runId, startedAt, journeys: [{ id, status, steps[] }] }`)
+- [x] `npm run typecheck` still green
 
 ### Dependencies
 
 - Backend deps already include `jose`, `uuid` — no new packages expected.
 - Requires a running API only once journeys are added (Phase 1+).
+
+### Phase 0 delivered
+
+`backend/test/harness/{types,client,walletSim,runner,report,registry,cli}.ts`, `README.md`, `npm run harness` / `harness:j6` / `harness:all`, gitignored `.e2e-artifacts/`.
 
 ---
 
