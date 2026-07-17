@@ -1,6 +1,7 @@
 # Agent Harness — Implementation Plan
 
-**Status:** Phases 0–3 built — Phases 4–7 planned  
+**Status:** Phases 0–4 built — Phases 5–7 planned  
+
 **Goal:** Replace the skill-only Phase 16 MCP/E2E harness with an executable, step-by-step client that walks Goemon product journeys (J5–J7 first), is CI-callable, and later feeds Agentic OS QA.
 
 **Non-goals (this plan):**
@@ -237,34 +238,23 @@ npm run harness:j6
 
 **Outcome:** Skills and CI call code; docs stop claiming “skill-only” as the source of truth.
 
-### Files to change
+### Delivered
 
 | Path | Change |
 |---|---|
-| `.claude/skills/goemon-mcp-test-harness/SKILL.md` | Procedure → “run `npm run harness -- --journey …`”; keep assertion table |
-| `.claude/skills/e2e-validator/SKILL.md` | Floor: `typecheck` + `vitest run e2e` → then `npm run harness -- --all` |
-| `scripts/launch-gate.sh` | After backend tests: start/reuse server or document “server required”; run harness; FAIL gate on non-zero |
-| `docs/E2E-VALIDATION.md` | Update §1/§5/§6: AGT = code harness; remove “phases not all built” staleness; document CLI |
-| `docs/LAUNCH.md` / `docs/business/LAUNCH-READINESS.md` | B3 checkbox references `npm run harness` |
-| `CLAUDE.md` | Phase 16 note: hybrid = vitest + `npm run harness` |
-| `backend/package.json` | `harness`, `harness:all` scripts |
-
-### Launch-gate design choice (pick one in implementation)
-
-| Approach | Pros | Cons |
-|---|---|---|
-| **A.** Harness starts API via subprocess | Self-contained CI | Port races; heavier |
-| **B.** Require `HARNESS_BASE_URL` already up | Simple; matches skill today | CI must orchestrate two steps |
-| **C.** Vitest globalSetup boots app (supertest) | No port | Less “real client”; diverges from skill |
-
-**Recommendation:** **B for v1** (document in launch-gate); **A as follow-up** if CI flakes on manual server.
+| `.claude/skills/goemon-mcp-test-harness/SKILL.md` | Procedure → `npm run harness` / j5–j7 / all; assertion table kept |
+| `.claude/skills/e2e-validator/SKILL.md` | Floor: `typecheck` + `vitest run e2e` → then `npm run harness:all` |
+| `scripts/launch-gate.sh` | **Approach B:** curl health at `HARNESS_BASE_URL`; if up → `harness:all` and FAIL on non-zero; if down → SKIP unless `HARNESS_REQUIRED=1` |
+| `docs/E2E-VALIDATION.md` | AGT = code harness CLI; fresh-clone path; §5 map updated |
+| `docs/LAUNCH.md` / `docs/business/LAUNCH-READINESS.md` | B3 = floor + `npm run harness:all` |
+| `CLAUDE.md` | Phase 16: hybrid = vitest + `npm run harness` |
 
 ### Acceptance criteria
 
-- [ ] Fresh clone path documented: `seed:e2e` → `dev` → `harness --all`  
-- [ ] `e2e-validator` skill text matches code entrypoints  
-- [ ] Launch gate fails when harness fails (when server available)  
-- [ ] Artifacts path unchanged: `backend/test/.e2e-artifacts/`
+- [x] Fresh clone path documented: `seed:e2e` → `dev` → `harness --all`  
+- [x] `e2e-validator` skill text matches code entrypoints  
+- [x] Launch gate fails when harness fails (when server available)  
+- [x] Artifacts path unchanged: `backend/test/.e2e-artifacts/`
 
 ---
 

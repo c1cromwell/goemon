@@ -76,7 +76,7 @@ gates require external action.
 |---|---|---|---|---|
 | B1 | **iOS wallet verification** | Eng | Engineering | `scripts/verify-ios-wallet.sh` PASS + device smoke (Secure Enclave, OID4VP, Hedera send) |
 | B2 | **Frontend portal + UI smoke** | Eng | Engineering | Playwright suite green incl. `wallet.spec.ts` |
-| B3 | **E2E validation green** (see §4) | Eng | Engineering | `e2e-validator full` PASS |
+| B3 | **E2E validation green** (see §4) | Eng | Engineering | Deterministic floor + `npm run harness:all` PASS (`e2e-validator full`) |
 | B4 | **Securities counsel sign-off** | Legal | Counsel | Template: `docs/legal/B4-securities-counsel-memo.md` |
 | B5 | **Collectibles legal memo** | Legal | Counsel | Template: `docs/legal/B5-collectibles-legal-memo.md` |
 | B6 | **Entity + Phase-A compliance pack** | Compliance | Founder/Counsel | Template: `docs/legal/B6-phase-a-compliance-pack.md` |
@@ -90,9 +90,9 @@ gates require external action.
 ## 4. E2E validation gate (technical)
 
 - Deterministic floor: `cd backend && npm run typecheck && npm test` — green.
-- Bundled gate: `scripts/launch-gate.sh` — typecheck + tests + iOS verify (+ optional e2e).
+- Bundled gate: `scripts/launch-gate.sh` — typecheck + tests + iOS verify + agent harness when API is up (`HARNESS_REQUIRED=1` fails if down).
 - Browser UI: `cd frontend && npm run test:e2e` — green (includes wallet smoke).
-- Hybrid: `e2e-validator full` — journeys J1–J8 PASS; money invariants zero FAIL.
+- Hybrid B3: `vitest run e2e` + `npm run harness:all` (J5–J7 AGT) — or `e2e-validator full`. Artifacts under `backend/test/.e2e-artifacts/`.
 - iOS: gated on B1 (`scripts/verify-ios-wallet.sh`).
 
 ---
@@ -109,7 +109,7 @@ See `docs/legal/README.md` and `docs/business/CORPORATE-STRUCTURE.md` §5–10.
 |---|---|---|---|
 | iOS wallet verified (B1) | §3 | ☐ | Engineering |
 | Frontend + Playwright green (B2) | §3 | ☐ | Engineering |
-| `e2e-validator full` green (B3) | §4 | ☐ | Engineering |
+| Floor + `npm run harness:all` green (B3) | §4 | ☐ | Engineering |
 | Securities counsel (B4) | `docs/legal/` | ☐ | Legal |
 | Collectibles memo (B5) | `docs/legal/` | ☐ | Legal |
 | Phase-A pack (B6) | `docs/legal/` | ☐ | Compliance |

@@ -30,6 +30,24 @@ else
   skip "frontend e2e (npm install in frontend/)"
 fi
 
+# B3 AGT — approach B: require a live API (HARNESS_BASE_URL / :3001).
+# Set HARNESS_REQUIRED=1 to FAIL when the API is down (CI with a started server).
+echo "-- agent harness J5–J7 (B3 AGT) --"
+HARNESS_BASE="${HARNESS_BASE_URL:-http://localhost:3001}"
+if curl -sf "${HARNESS_BASE%/}/api/health" >/dev/null 2>&1; then
+  if (cd "$ROOT/backend" && npm run harness:all); then
+    pass "agent harness (j5–j7)"
+  else
+    fail "agent harness (j5–j7)"
+  fi
+else
+  if [[ "${HARNESS_REQUIRED:-0}" == "1" ]]; then
+    fail "agent harness (API not reachable at ${HARNESS_BASE} — run seed:e2e && npm run dev)"
+  else
+    skip "agent harness (no API at ${HARNESS_BASE} — seed:e2e && npm run dev, or HARNESS_REQUIRED=1 to fail)"
+  fi
+fi
+
 echo ""
 echo "Legal blockers (manual — docs/legal/):"
 echo "  [ ] B4 securities counsel"

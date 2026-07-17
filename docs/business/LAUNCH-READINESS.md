@@ -47,7 +47,7 @@ These are the `LAUNCH.md` B1–B8 gates plus the Phase-A compliance items, score
 | **Compliance-safe messaging** (no "bank"/"deposits"/"FDIC") | 🟡 | Product/Legal | Rebrand done; copy review pending (`LAUNCH.md` §1) | days |
 | **B1 — iOS wallet verified** | 🔴 | Eng | Source never compiled (no Xcode) | 1–3 wks |
 | **B2 — Frontend + Playwright UI smoke** | 🟡 | Eng | Portal built; `wallet.spec.ts` green TBD | 1–2 wks |
-| **B3 — `e2e-validator full` green** | 🟡 | Eng | Deterministic floor green; full hybrid TBD | days–1 wk |
+| **B3 — floor + `npm run harness:all` green** | 🟢 | Eng | Deterministic floor + AGT CLI (`backend/test/harness/`); launch-gate runs harness when API up | done (eng) |
 | **B4 — Securities counsel sign-off** (if real RWA) | 🔴 | Counsel | `docs/legal/B4` is a scaffold | 3–6 wks ⚖ |
 | **B5 — Collectibles legal memo** | 🔴 | Counsel | `docs/legal/B5` is a scaffold | 2–4 wks ⚖ |
 | **B6 — Entity + Phase-A compliance pack** | 🔴 | Founder/Counsel | scaffold, all unchecked | rolls up the above ⚖ |
@@ -99,8 +99,8 @@ Dependency-ordered. The goal of 90 days is **Door 1 ready**, *not* Door 2. Costs
 - **Engage fintech/securities counsel + a startup CPA** (scoped hours). *(Founder. Exit: engagement
   letters signed. ~$5–15k ⚖)*
 - **Schedule the Trail of Bits audit** (B8). *(Eng+Sec. Exit: SOW signed, dates booked.)*
-- **Close B3 + start B2:** get `e2e-validator full` green and the Playwright wallet smoke running.
-  *(Eng. Exit: green run artifacts.)*
+- **B3 closed (eng):** `npm run harness:all` + deterministic floor; keep Playwright wallet smoke (B2) green.
+  *(Eng. Exit: artifacts under `backend/test/.e2e-artifacts/`.)*
 
 ### Sprint 2 (Days 31–60) — compliant + verifiable
 - **Write the AML/BSA policy; name the compliance officer; wire a REAL OFAC/sanctions vendor** (swap

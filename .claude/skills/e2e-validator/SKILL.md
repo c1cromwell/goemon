@@ -6,10 +6,7 @@ description: Run Goemon Global Finance's end-to-end validation pass across user 
 # Goemon Global Finance E2E Validator
 
 Orchestrates the **hybrid** end-to-end validation defined in `docs/E2E-VALIDATION.md`: a deterministic
-floor first, then agent/MCP-driven journeys, then a single pass/fail report.
-
-This skill is the thing a human (or you) invokes. It depends on the **`goemon-mcp-test-harness`** skill to
-drive the NL/SmartChat and external-agent (OID4VP+MCP) journeys as a real client.
+floor first, then the executable agent harness (`npm run harness`), then a single pass/fail report.
 
 ## Scope
 
@@ -17,26 +14,51 @@ drive the NL/SmartChat and external-agent (OID4VP+MCP) journeys as a real client
 - `full` — the **Phase 16** pass: every journey × every channel in `docs/E2E-VALIDATION.md`, including the
   Phase 15.3 ledger⇄chain reconciliation check when Hedera creds are present.
 
-Default to `through-phase-8` if no scope is given and Phases 9+ are not yet built.
+Default to `full` when Phases 9+ are built (current repo state).
 
 ## Procedure
 
-1. **Preconditions.** Confirm `backend/` deps installed, migrations applied (`npm run migrate`), and demo
-   seeds loaded (Phase 5A users + Phase 8 `seed-marketplace-demo.ts`). If Hedera creds are absent, note
-   that chain legs run simulated and the reconciliation check is skipped.
-2. **Deterministic floor (always first).** Run `cd backend && npm run typecheck && npx vitest run e2e`.
+1. **Preconditions.**
+   ```bash
+   cd backend && npm install
+   npm run seed:e2e          # migrate + demo users + marketplace
+   ```
+   If Hedera creds are absent, note that chain legs run simulated and reconciliation is skipped.
+
+2. **Deterministic floor (always first).**
+   ```bash
+   cd backend && npm run typecheck && npx vitest run e2e
+   ```
    If this fails on any §4 money-critical invariant, stop and report FAIL — the gate is blocked.
-3. **Agent/MCP journeys.** Ensure a dev server is up (`npm run dev` on :3001). Use the
-   `goemon-mcp-test-harness` skill to drive J5 (SmartChat NL → 90s token → transfer, incl. the >$500 MFA
-   gate), J6 (external agent OID4VP → VP-verify → MCP scoped op), and the NL "buy/subscribe" path of J7.
-4. **PENDING handling.** A journey whose phase isn't built yet is **PENDING** (skipped), not FAIL.
+
+3. **Agent/MCP journeys (AGT).** Ensure a dev server is up, then run the code harness:
+   ```bash
+   cd backend && npm run dev          # :3001 — leave running
+   # other terminal:
+   cd backend && npm run harness:all  # J5 + J6 + J7
+   ```
+   Or per journey: `npm run harness:j5` / `harness:j6` / `harness:j7`.
+   The thin skill wrapper is `goemon-mcp-test-harness` — it documents assertions; the CLI is authoritative.
+
+4. **PENDING handling.** A journey whose channel isn't built (e.g. on-device iOS) is **PENDING**
+   (skipped), not FAIL. J5–J7 AGT are implemented in the harness — they must PASS, not PENDING.
+
 5. **Report.** Emit a table mirroring §3 of `docs/E2E-VALIDATION.md` (PASS / FAIL / PENDING per journey)
-   plus §4 invariant results. Write artifacts under `backend/test/.e2e-artifacts/`. Any §4 FAIL blocks the
-   gate regardless of journey-level results.
+   plus §4 invariant results. Point at the latest dir under `backend/test/.e2e-artifacts/`. Any §4 FAIL
+   or harness FAIL blocks the gate.
+
+## Fresh-clone path (B3)
+
+```bash
+cd backend && npm install && npm run seed:e2e && npm run dev
+# other terminal:
+cd backend && npm run typecheck && npx vitest run e2e && npm run harness:all
+```
 
 ## References
 
-- Runbook & journey definitions: `docs/E2E-VALIDATION.md`
-- Plan anchors: `docs/ARGUS-PLAN.md` sub-step 8.12 and Phase 16
+- Runbook: `docs/E2E-VALIDATION.md`
+- Harness plan: `docs/AGENT-HARNESS-IMPLEMENTATION-PLAN.md`
+- Plan anchors: `docs/GOEMON-PLAN.md` sub-step 8.12 and Phase 16
 - Deterministic suite: `backend/test/e2e.test.ts`
-- Per-phase invariants to reuse: `backend/test/phaseN.test.ts`
+- Harness CLI: `backend/test/harness/` (`npm run harness`)

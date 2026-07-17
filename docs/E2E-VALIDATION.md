@@ -5,9 +5,10 @@ per-phase unit invariants (those live in `backend/test/phaseN.test.ts`). Referen
 `docs/GOEMON-PLAN.md` at two anchors: **sub-step 8.12** (gate after Phase 8, `through-phase-8` scope) and
 **Phase 16** (comprehensive pass after the last phase, `full` scope).
 
-> **Status:** Phases 7–16 are not all built yet. The deterministic suite and the skills are authored
-> against the documented contracts; each journey becomes fully exercisable as its phase lands. A journey
-> whose phase isn't built yet is marked **PENDING** by the runner and skipped, not failed.
+> **Status:** Hybrid validation is **executable**. Deterministic floor = `vitest run e2e` (+ phase tests).
+> AGT journeys J5–J7 = `npm run harness` (`backend/test/harness/`). Skills (`e2e-validator`,
+> `goemon-mcp-test-harness`) are thin wrappers over those commands. Channels still PENDING where noted
+> (on-device iOS, live Hedera reconciliation without creds).
 
 ---
 
@@ -15,24 +16,34 @@ per-phase unit invariants (those live in `backend/test/phaseN.test.ts`). Referen
 
 **Preconditions**
 - `cd backend && npm install`
-- Migrations applied: `npm run migrate` (dev auto-runs them).
-- Demo seeds loaded: the Phase 5A demo users and the Phase 8 `seed-marketplace-demo.ts` flows.
-- Optional: Hedera testnet creds (`HEDERA_OPERATOR_ID`, `HEDERA_OPERATOR_KEY`) for the on-chain legs;
-  without them, the chain legs run in simulated mode and the ledger⇄chain reconciliation check is skipped.
+- Demo seeds: `npm run seed:e2e` (migrations + demo users + marketplace).
+- Optional: Hedera testnet creds (`HEDERA_OPERATOR_ID`, `HEDERA_OPERATOR_KEY`) for on-chain legs;
+  without them, chain legs run simulated and ledger⇄chain reconciliation is skipped.
 
 **Run — deterministic floor (always first):**
 ```bash
 cd backend && npm run typecheck && npx vitest run e2e
 ```
 
-**Run — full hybrid pass (deterministic + agent/MCP journeys):** invoke the **`e2e-validator`** skill with
-a scope arg:
-- `e2e-validator through-phase-8` — the 8.12 gate (Phase 0–8 journeys + cross-cutting invariants).
-- `e2e-validator full` — the Phase 16 comprehensive pass (all journeys × all channels).
+**Run — agent/MCP journeys (AGT, requires live API):**
+```bash
+cd backend && npm run seed:e2e && npm run dev   # :3001
+# other terminal:
+cd backend && npm run harness:all               # J5 + J6 + J7
+# or: npm run harness:j5 | harness:j6 | harness:j7
+```
 
-The validator runs the deterministic floor, then drives the NL/agent journeys via the
-**`goemon-mcp-test-harness`** skill against a running dev server (`npm run dev` on :3001), and emits a
-pass/fail report mapped to the journey table in §3.
+**Run — full hybrid pass:** invoke the **`e2e-validator`** skill (or run the two blocks above). Scope args:
+- `e2e-validator through-phase-8` — 8.12 gate (Phase 0–8 journeys + cross-cutting invariants).
+- `e2e-validator full` — Phase 16 comprehensive pass.
+
+Artifacts: `backend/test/.e2e-artifacts/<runId>/` (`report.json`, `summary.md`, `transcript.md`).
+
+Env: `HARNESS_BASE_URL` (default `http://localhost:3001`), `HARNESS_DEMO_EMAIL` / `HARNESS_DEMO_PASSWORD`,
+`HARNESS_RECIPIENT_EMAIL`, `HARNESS_TIER1_EMAIL`.
+
+Launch gate: `scripts/launch-gate.sh` runs the harness when the API is up; set `HARNESS_REQUIRED=1` to
+fail the gate if the API is down (CI).
 
 ---
 
@@ -40,18 +51,18 @@ pass/fail report mapped to the journey table in §3.
 
 | Channel | What it means here | How validated |
 |---|---|---|
-| **Web** (responsive) | Phase 9 React portal | HTTP flow scripts hit the same API the UI uses; UI smoke is manual until a browser-driver is added |
-| **Mobile** | Phase 10 iOS wallet flows (Secure-Enclave signing, OID4VCI/OID4VP, Hedera send) | API-level validation of the build→sign→submit contract; on-device signing is manual |
-| **Agentic CLI / headless** | SmartChat NL + MCP, no GUI | `goemon-mcp-test-harness` acts as the client |
-| **Glasses / minimal-HUD** | text-led rendering of the same IA | validated *as* the CLI/headless text path until a device target exists (per the "one IA, rendered per channel" rule in Phase 9) |
+| **Web** (responsive) | Phase 9 React portal | Playwright `frontend/e2e` + same API the UI uses |
+| **Mobile** | Phase 10 iOS wallet (Secure-Enclave, OID4VCI/OID4VP, Hedera send) | `scripts/verify-ios-wallet.sh` compile; on-device smoke manual |
+| **Agentic CLI / headless** | SmartChat NL + MCP, no GUI | `npm run harness` (`backend/test/harness/`) |
+| **Glasses / minimal-HUD** | text-led rendering of the same IA | validated *as* the CLI/headless text path until a device target exists |
 
 ---
 
 ## 3. Core journeys
 
 Each journey: **preconditions → steps → expected invariants → automation method**. The "Method" column is
-the hybrid split — **DET** = deterministic (vitest+supertest, `backend/test/e2e.test.ts`); **AGT** =
-agent/MCP-driven (`goemon-mcp-test-harness`).
+the hybrid split — **DET** = deterministic (`backend/test/e2e.test.ts` + phase tests); **AGT** =
+`npm run harness` (documented by the `goemon-mcp-test-harness` skill).
 
 | # | Journey | Phase | Key invariants checked | Method |
 |---|---|---|---|---|
@@ -59,9 +70,9 @@ agent/MCP-driven (`goemon-mcp-test-harness`).
 | J2 | Agentic account opening (risk-adaptive onboarding) | 5A | signal scoring → sub-agent selection; RBAC admin console gated | DET + AGT |
 | J3 | DID/VC issuance + revocation | 2 | RS256 VC JWT issued; BitstringStatusList revocation reflected | DET |
 | J4 | Cash + on-chain USDC: receive / send / ledger⇄chain mirroring | 4 / 5 | balances derived from ledger; integer minor units; mirror matches | DET (+ chain leg if creds) |
-| J5 | SmartChat NL → 90s operation token → transfer, **>$500 MFA gate** | 6 | token TTL ≤ 90s; MFA required above $500; transfer idempotent on token id | AGT |
-| J6 | External agent: OID4VP → **VP signature verified** → MCP scoped op | 7 | VP signature verified before access (no exceptions); scope enforced; 90s token | AGT |
-| J7 | Marketplace: subscribe (escrow) → hold → compliance-gated transfer | 8 | atomic settlement; escrow refund on cancel; compliance rejection for unregistered recipient | DET + AGT |
+| J5 | SmartChat NL → 90s operation token → transfer, **>$500 MFA gate** | 6 | token TTL ≤ 90s; MFA required above $500; transfer idempotent on token id | AGT (`harness:j5`) |
+| J6 | External agent: OID4VP → **VP signature verified** → MCP scoped op | 7 | VP signature verified before access (no exceptions); scope enforced; 90s token | AGT (`harness:j6`) |
+| J7 | Marketplace: subscribe (escrow) → hold → compliance-gated transfer | 8 | atomic settlement; fee disclosure; compliance rejection for ineligible holder | DET + AGT (`harness:j7`) |
 | J8 | Marketplace: buy / sell (atomic USDC+asset+fee in one journal) | 8 | one journal balances per currency *and* per asset, or reverts; fee disclosed pre-trade | DET |
 
 ---
@@ -81,15 +92,15 @@ Asserted across journeys, reusing the Phase-14 / per-phase invariants:
 ## 5. Hybrid automation map
 
 ```
-                deterministic floor (DET)            agent / MCP coverage (AGT)
-                backend/test/e2e.test.ts             goemon-mcp-test-harness skill
+                deterministic floor (DET)            agent harness (AGT)
+                backend/test/e2e.test.ts             npm run harness
  J1 onboarding         ████                                  ░
- J2 agentic open       ███                                   ██   (sub-agent narrative)
+ J2 agentic open       ███                                   ██
  J3 DID/VC             ████                                   ░
  J4 cash + USDC        ████ (+ chain if creds)                ░
- J5 SmartChat/MFA       ░                                    ████
- J6 ext agent/MCP       ░                                    ████ (security-critical)
- J7 mkt subscribe      ███                                    ██   (NL "buy ..." path)
+ J5 SmartChat/MFA       ░                                    ████  harness:j5
+ J6 ext agent/MCP       ░                                    ████  harness:j6
+ J7 mkt subscribe      ███                                    ███  harness:j7
  J8 mkt buy/sell       ████                                   ░
 ```
 Plus, when Hedera creds are present: the **Phase 15.3 ledger⇄chain reconciliation** daily-job check runs
@@ -99,8 +110,7 @@ once at the end and must report zero drift.
 
 ## 6. Pass / fail reporting
 
-A green run = every **non-PENDING** journey passes its invariants and the deterministic floor is green.
-The `e2e-validator` skill emits a report table mirroring §3 (PASS / FAIL / PENDING per journey) plus the
-cross-cutting invariant results from §4. Artifacts (HTTP transcripts, the MCP harness log, the vitest
-output) are written under `backend/test/.e2e-artifacts/` for triage. Any FAIL on a money-critical
-invariant (§4) blocks the gate regardless of journey-level results.
+A green run = every **non-PENDING** journey passes its invariants, the deterministic floor is green, and
+`npm run harness:all` exits 0. The `e2e-validator` skill emits a report table mirroring §3 (PASS / FAIL /
+PENDING per journey) plus §4 invariant results. Artifacts under `backend/test/.e2e-artifacts/`. Any FAIL
+on a money-critical invariant (§4) or harness journey blocks the gate.
