@@ -1,10 +1,11 @@
 /**
  * Ephemeral ES256 wallet stand-in (Secure Enclave equivalent for harness).
- * Phase 0: stub that can mint a keypair + did:key.
- * Phase 1: full VP JWT signing (lift from goemon-agent + backend didKey).
+ * Uses backend `publicJwkToDidKey` so DID encoding matches presentationService.
  */
 
-import { generateKeyPair, exportJWK, type KeyLike, type JWK } from "jose";
+import { generateKeyPair, exportJWK, SignJWT, type KeyLike, type JWK } from "jose";
+import { v4 as uuidv4 } from "uuid";
+import { publicJwkToDidKey } from "../../src/utils/didKey";
 
 export interface WalletSim {
   walletDid: string;
@@ -12,24 +13,42 @@ export interface WalletSim {
   publicJwk: JWK;
 }
 
-/**
- * Create an in-memory P-256 wallet. did:key encoding is completed in Phase 1
- * via backend `publicJwkToDidKey`; until then we use a placeholder DID derived
- * from the JWK x coordinate so callers can wire setup without crashing.
- */
+/** Create an in-memory P-256 wallet with a real `did:key:z…`. */
 export async function createWalletSim(): Promise<WalletSim> {
   const { publicKey, privateKey } = await generateKeyPair("ES256", { extractable: true });
   const publicJwk = await exportJWK(publicKey);
-  const x = typeof publicJwk.x === "string" ? publicJwk.x.slice(0, 16) : "pending";
-  // Placeholder until Phase 1 wires real did:key (p256 multicodec).
-  const walletDid = `did:key:harness-pending:${x}`;
+  const walletDid = publicJwkToDidKey(publicJwk);
   return { walletDid, privateKey, publicJwk };
 }
 
-/** Phase 1: sign a VP JWT binding vcJwt to nonce + aud. */
+/**
+ * Sign a VP JWT binding vcJwt to a one-time nonce + audience.
+ * `signKey` overrides the wallet key (used for VP_INVALID / wrong-key cases).
+ */
 export async function signPresentation(
-  _wallet: WalletSim,
-  _opts: { nonce: string; vcJwt: string; aud: string }
+  wallet: WalletSim,
+  opts: {
+    nonce: string;
+    vcJwt: string;
+    aud: string;
+    signKey?: KeyLike;
+    jti?: string;
+  }
 ): Promise<string> {
-  throw new Error("walletSim.signPresentation is implemented in Phase 1 (J6)");
+  return new SignJWT({
+    nonce: opts.nonce,
+    vp: {
+      "@context": ["https://www.w3.org/2018/credentials/v1"],
+      type: ["VerifiablePresentation"],
+      holder: wallet.walletDid,
+      verifiableCredential: [opts.vcJwt],
+    },
+  })
+    .setProtectedHeader({ alg: "ES256", typ: "JWT" })
+    .setIssuer(wallet.walletDid)
+    .setAudience(opts.aud)
+    .setJti(opts.jti ?? uuidv4())
+    .setIssuedAt()
+    .setExpirationTime("5m")
+    .sign(opts.signKey ?? wallet.privateKey);
 }

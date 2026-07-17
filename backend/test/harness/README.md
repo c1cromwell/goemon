@@ -8,8 +8,8 @@ Executable step-by-step client for product journeys (J5–J7). Replaces the skil
 
 | Phase | Journey | Status |
 |---|---|---|
-| 0 | Scaffold (CLI, report, empty placeholders) | **Built** |
-| 1 | J6 OID4VP → MCP | Planned |
+| 0 | Scaffold (CLI, report, placeholders) | **Built** |
+| 1 | J6 OID4VP → MCP | **Built** |
 | 2 | J5 SmartChat + MFA | Planned |
 | 3 | J7 Marketplace | Planned |
 
@@ -18,26 +18,28 @@ Executable step-by-step client for product journeys (J5–J7). Replaces the skil
 ```bash
 cd backend
 npm run harness -- --help
-npm run harness -- --all          # Phase 0: placeholders, 0 steps → PASS
-npm run harness:j6                # same until Phase 1 adds steps
+npm run harness -- --all          # j6 live + j5/j7 placeholders
 ```
 
-Phase 1+ requires a live API:
+### J6 (requires live API)
 
 ```bash
 npm run seed:e2e
 npm run dev                       # :3001
 # other terminal:
-npm run harness -- --journey j6
+npm run harness:j6
 ```
 
 Env overrides: `HARNESS_BASE_URL`, `HARNESS_DEMO_EMAIL`, `HARNESS_DEMO_PASSWORD`.
+
+J6 asserts: scoped token TTL ≤ 90s, MCP `get_balance`, `VP_INVALID`, `REPLAY_DETECTED`, `SCOPE_DENIED`.
 
 ## Artifacts
 
 Written under `backend/test/.e2e-artifacts/<runId>/`:
 
-- `report.json` — stable schema `{ runId, startedAt, finishedAt, baseUrl, status, journeys[] }`
+- `report.json` — `{ runId, startedAt, finishedAt, baseUrl, status, journeys[] }`
 - `summary.md` — human-readable trail
+- `transcript.md` — redacted step trail (no raw VC/VP/tokens)
 
 Artifact dirs are gitignored; regenerate on each run.

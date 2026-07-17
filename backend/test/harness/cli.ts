@@ -1,23 +1,25 @@
 #!/usr/bin/env tsx
 /**
- * Goemon agent harness CLI — Phase 0 scaffold.
+ * Goemon agent harness CLI.
  *
  *   npm run harness -- --help
  *   npm run harness -- --all
- *   npm run harness -- --journey j6
+ *   npm run harness:j6          # requires live API (seed:e2e + npm run dev)
  *
- * Requires a live API only once journeys have steps (Phase 1+).
  * Plan: docs/AGENT-HARNESS-IMPLEMENTATION-PLAN.md
  */
 
-import { registerPhase0Placeholders, resolveJourneyIds, listJourneys } from "./registry";
+import { registerBuiltInJourneys, resolveJourneyIds, listJourneys } from "./registry";
 import { runJourneys } from "./runner";
 import { buildReport, writeReport } from "./report";
+import type { JourneyResult } from "./types";
+import * as fs from "fs";
+import * as path from "path";
 
 function printHelp(): void {
-  registerPhase0Placeholders();
+  registerBuiltInJourneys();
   const registered = listJourneys();
-  console.log(`Goemon agent harness (Phase 0 scaffold)
+  console.log(`Goemon agent harness
 
 Usage:
   npm run harness -- [options]
@@ -32,11 +34,15 @@ Options:
 
 Environment:
   HARNESS_BASE_URL       default http://localhost:3001
-  HARNESS_DEMO_EMAIL     default alex@demo.com (used in Phase 1+)
+  HARNESS_DEMO_EMAIL     default alex@demo.com
   HARNESS_DEMO_PASSWORD  default Demo1234!
 
 Registered journeys:
 ${registered.length === 0 ? "  (none)" : registered.map((j) => `  ${j.id.padEnd(6)} ${j.name}${j.steps.length === 0 ? "  [placeholder — 0 steps]" : `  [${j.steps.length} steps]`}`).join("\n")}
+
+J6 requires a live API:
+  npm run seed:e2e && npm run dev
+  npm run harness:j6
 
 Artifacts: backend/test/.e2e-artifacts/<runId>/report.json
 `);
@@ -75,6 +81,20 @@ function parseArgs(argv: string[]): {
   return { help, all, journey, baseUrl, failFast };
 }
 
+function writeTranscript(dir: string, results: JourneyResult[]): void {
+  // Transcript lines are collected on the runner context; surface step details only
+  // (already redacted). Keep a flat trail for triage.
+  const lines: string[] = ["# Harness HTTP trail (redacted)", ""];
+  for (const j of results) {
+    lines.push(`## ${j.id}`);
+    for (const s of j.steps) {
+      lines.push(`- [${s.status}] ${s.id}: ${s.detail ?? s.label}${s.errorCode ? ` (${s.errorCode})` : ""}`);
+    }
+    lines.push("");
+  }
+  fs.writeFileSync(path.join(dir, "transcript.md"), lines.join("\n"), "utf8");
+}
+
 async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -82,12 +102,9 @@ async function main(): Promise<number> {
     return 0;
   }
 
-  registerPhase0Placeholders();
+  registerBuiltInJourneys();
 
   const spec = args.journey ?? "all";
-  if (!args.journey && !args.all && process.argv.slice(2).length === 0) {
-    // bare `npm run harness` → --all
-  }
 
   let journeys;
   try {
@@ -95,6 +112,21 @@ async function main(): Promise<number> {
   } catch (e) {
     console.error(e instanceof Error ? e.message : e);
     return 2;
+  }
+
+  const needsLive = journeys.some((j) => j.steps.length > 0);
+  if (needsLive) {
+    try {
+      const res = await fetch(`${args.baseUrl.replace(/\/$/, "")}/api/health`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error(
+        `Live API not reachable at ${args.baseUrl} (${msg}).\n` +
+          `Start it with: cd backend && npm run seed:e2e && npm run dev`
+      );
+      return 2;
+    }
   }
 
   const startedAt = new Date();
@@ -106,7 +138,16 @@ async function main(): Promise<number> {
   const results = await runJourneys(journeys, args.baseUrl, { failFast: args.failFast });
   const report = buildReport({ baseUrl: args.baseUrl, journeys: results, startedAt });
   const { dir, jsonPath, summaryPath } = writeReport(report);
+  writeTranscript(dir, results);
 
+  console.log("");
+  for (const j of results) {
+    const mark = j.status === "PASS" ? "PASS" : j.status;
+    console.log(`  ${mark} ${j.id} (${j.steps.filter((s) => s.status === "PASS").length}/${j.steps.length})`);
+    for (const s of j.steps) {
+      if (s.status === "FAIL") console.log(`       FAIL ${s.id}: ${s.detail}`);
+    }
+  }
   console.log("");
   console.log(`Status:  ${report.status}`);
   console.log(`Report:  ${jsonPath}`);

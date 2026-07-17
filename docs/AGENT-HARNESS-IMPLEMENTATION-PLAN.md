@@ -1,6 +1,6 @@
 # Agent Harness — Implementation Plan
 
-**Status:** Phase 0 built — Phases 1–7 planned  
+**Status:** Phases 0–1 built — Phases 2–7 planned  
 **Goal:** Replace the skill-only Phase 16 MCP/E2E harness with an executable, step-by-step client that walks Goemon product journeys (J5–J7 first), is CI-callable, and later feeds Agentic OS QA.
 
 **Non-goals (this plan):**
@@ -133,11 +133,11 @@
 
 ### Acceptance criteria
 
-- [ ] Against `npm run setup` + `npm run dev`: `npm run harness:j6` exits 0  
-- [ ] Failures surface `error.code` in step detail (not opaque HTTP text)  
-- [ ] Artifacts include HTTP transcript snippets (redact tokens/VC/VP per logging conventions)  
-- [ ] No private key material written to artifacts  
-- [ ] Overlaps with `presentation.test.ts` are OK (harness = live HTTP; vitest = in-process)
+- [x] Against `npm run setup` + `npm run dev`: `npm run harness:j6` exits 0  
+- [x] Failures surface `error.code` in step detail (not opaque HTTP text)  
+- [x] Artifacts include HTTP transcript snippets (redact tokens/VC/VP per logging conventions)  
+- [x] No private key material written to artifacts  
+- [x] Overlaps with `presentation.test.ts` are OK (harness = live HTTP; vitest = in-process)
 
 ### Preconditions
 
@@ -146,6 +146,10 @@ cd backend && npm run seed:e2e && npm run dev
 # separate terminal:
 npm run harness:j6
 ```
+
+### Phase 1 delivered
+
+`walletSim.ts` (real `did:key` + VP sign), `setup.ts`, `journeys/j6-oid4vp-mcp.ts` (11 steps), registry/cli wired; `transcript.md` in artifacts.
 
 ---
 
