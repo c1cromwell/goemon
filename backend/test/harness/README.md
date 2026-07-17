@@ -10,7 +10,7 @@ Executable step-by-step client for product journeys (J5–J7). Replaces the skil
 |---|---|---|
 | 0 | Scaffold (CLI, report, placeholders) | **Built** |
 | 1 | J6 OID4VP → MCP | **Built** |
-| 2 | J5 SmartChat + MFA | Planned |
+| 2 | J5 SmartChat + MFA | **Built** |
 | 3 | J7 Marketplace | Planned |
 
 ## Run
@@ -21,18 +21,20 @@ npm run harness -- --help
 npm run harness -- --all          # j6 live + j5/j7 placeholders
 ```
 
-### J6 (requires live API)
+### J5 / J6 (requires live API)
 
 ```bash
 npm run seed:e2e
 npm run dev                       # :3001
 # other terminal:
+npm run harness:j5
 npm run harness:j6
 ```
 
-Env overrides: `HARNESS_BASE_URL`, `HARNESS_DEMO_EMAIL`, `HARNESS_DEMO_PASSWORD`.
+Env overrides: `HARNESS_BASE_URL`, `HARNESS_DEMO_EMAIL`, `HARNESS_DEMO_PASSWORD`, `HARNESS_RECIPIENT_EMAIL` (default `blair@demo.com`).
 
-J6 asserts: scoped token TTL ≤ 90s, MCP `get_balance`, `VP_INVALID`, `REPLAY_DETECTED`, `SCOPE_DENIED`.
+- **J5** asserts: NL `$10` transfer (TTL ≤ 90s, no MFA), ledger debit in integer minor units, idempotent `POST …/tokens/:id/execute`, `$600` MFA gate + confirm.
+- **J6** asserts: scoped token TTL ≤ 90s, MCP `get_balance`, `VP_INVALID`, `REPLAY_DETECTED`, `SCOPE_DENIED`.
 
 ## Artifacts
 

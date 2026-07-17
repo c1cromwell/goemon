@@ -33,6 +33,7 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "harness": "tsx test/harness/cli.ts",
+    "harness:j5": "tsx test/harness/cli.ts --journey j5",
     "harness:j6": "tsx test/harness/cli.ts --journey j6",
     "harness:all": "tsx test/harness/cli.ts --all"
   },

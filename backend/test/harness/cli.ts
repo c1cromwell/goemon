@@ -23,6 +23,7 @@ function printHelp(): void {
 
 Usage:
   npm run harness -- [options]
+  npm run harness:j5
   npm run harness:j6
 
 Options:
@@ -40,8 +41,9 @@ Environment:
 Registered journeys:
 ${registered.length === 0 ? "  (none)" : registered.map((j) => `  ${j.id.padEnd(6)} ${j.name}${j.steps.length === 0 ? "  [placeholder — 0 steps]" : `  [${j.steps.length} steps]`}`).join("\n")}
 
-J6 requires a live API:
+J5/J6 require a live API:
   npm run seed:e2e && npm run dev
+  npm run harness:j5
   npm run harness:j6
 
 Artifacts: backend/test/.e2e-artifacts/<runId>/report.json

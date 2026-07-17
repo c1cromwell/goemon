@@ -1,8 +1,9 @@
 /**
- * Journey registry. Phase 1 registers real j6; j5/j7 remain placeholders until Phase 2–3.
+ * Journey registry. Phases 1–2 register real j6/j5; j7 remains a placeholder until Phase 3.
  */
 
 import type { JourneyDef } from "./types";
+import { j5Journey } from "./journeys/j5-smartchat";
 import { j6Journey } from "./journeys/j6-oid4vp-mcp";
 
 const journeys = new Map<string, JourneyDef>();
@@ -33,13 +34,13 @@ export function resolveJourneyIds(spec: string | "all"): JourneyDef[] {
 
 /** Register built-in journeys (real + placeholders). Idempotent. */
 export function registerBuiltInJourneys(): void {
+  registerJourney(j5Journey);
   registerJourney(j6Journey);
-  for (const id of ["j5", "j7"] as const) {
-    if (journeys.has(id)) continue;
+  if (!journeys.has("j7")) {
     registerJourney({
-      id,
-      name: placeholderName(id),
-      description: `Placeholder — implemented in harness Phase ${id === "j5" ? "2" : "3"}`,
+      id: "j7",
+      name: "Marketplace subscribe / compliance",
+      description: "Placeholder — implemented in harness Phase 3",
       steps: [],
     });
   }
@@ -48,17 +49,4 @@ export function registerBuiltInJourneys(): void {
 /** @deprecated use registerBuiltInJourneys */
 export function registerPhase0Placeholders(): void {
   registerBuiltInJourneys();
-}
-
-function placeholderName(id: string): string {
-  switch (id) {
-    case "j5":
-      return "SmartChat NL → MFA → transfer";
-    case "j6":
-      return "OID4VP → VP verify → MCP";
-    case "j7":
-      return "Marketplace subscribe / compliance";
-    default:
-      return id;
-  }
 }

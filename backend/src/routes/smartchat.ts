@@ -5,11 +5,12 @@
  *
  *   POST   /api/smartchat            — send a message; classify → issue → (execute | await MFA)
  *   POST   /api/smartchat/tokens/:id/mfa — submit an MFA code to confirm + execute a transfer
+ *   POST   /api/smartchat/tokens/:id/execute — re-run / resume execute (idempotent on token id)
  *   GET    /api/smartchat/tokens     — list the user's operation tokens
  *   GET    /api/smartchat/tokens/:id — fetch one operation token
  *
- * The MFA confirmation endpoint moves money, so it carries the idempotency()
- * middleware; the underlying execute is also idempotent via the operation-token id.
+ * Money-mutating token endpoints carry the idempotency() middleware; the underlying
+ * execute is also idempotent via the operation-token id (no double-post).
  */
 
 import { Router } from "express";
@@ -55,6 +56,26 @@ smartchatRouter.post(
         ipAddress: getClientIp(req),
       });
       res.json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+/** Idempotent re-execute / resume — returns the stored result if already executed. */
+smartchatRouter.post(
+  "/tokens/:id/execute",
+  requireAuth,
+  idempotency(),
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      const result = await smartchat.executeOperationToken(
+        req.userId!,
+        req.params.id!,
+        getClientIp(req)
+      );
+      const token = await smartchat.getOperationToken(req.userId!, req.params.id!);
+      res.json({ result, operationToken: token });
     } catch (e) {
       next(e);
     }

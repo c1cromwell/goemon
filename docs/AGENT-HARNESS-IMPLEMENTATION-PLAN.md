@@ -1,6 +1,6 @@
 # Agent Harness — Implementation Plan
 
-**Status:** Phases 0–1 built — Phases 2–7 planned  
+**Status:** Phases 0–2 built — Phases 3–7 planned  
 **Goal:** Replace the skill-only Phase 16 MCP/E2E harness with an executable, step-by-step client that walks Goemon product journeys (J5–J7 first), is CI-callable, and later feeds Agentic OS QA.
 
 **Non-goals (this plan):**
@@ -183,10 +183,14 @@ npm run harness:j6
 
 ### Acceptance criteria
 
-- [ ] `npm run harness -- --journey j5` exits 0 on seeded DB  
-- [ ] Step trail distinguishes MFA-gated vs auto-approve paths  
-- [ ] Replay step fails the journey if a second journal posts  
-- [ ] Deposit / non-money intents optional; out of scope for v1 unless cheap
+- [x] `npm run harness -- --journey j5` exits 0 on seeded DB  
+- [x] Step trail distinguishes MFA-gated vs auto-approve paths  
+- [x] Replay step fails the journey if a second journal posts  
+- [x] Deposit / non-money intents optional; out of scope for v1 unless cheap
+
+### Phase 2 delivered
+
+`journeys/j5-smartchat.ts` (6 steps) + `POST /api/smartchat/tokens/:id/execute` (HTTP idempotent re-execute for the harness and clients). `npm run harness:j5`.
 
 ---
 
