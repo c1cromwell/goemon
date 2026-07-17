@@ -1,10 +1,11 @@
 /**
- * Journey registry. Phases 1–2 register real j6/j5; j7 remains a placeholder until Phase 3.
+ * Journey registry — Phases 1–3: j5, j6, j7 are real executable journeys.
  */
 
 import type { JourneyDef } from "./types";
 import { j5Journey } from "./journeys/j5-smartchat";
 import { j6Journey } from "./journeys/j6-oid4vp-mcp";
+import { j7Journey } from "./journeys/j7-marketplace";
 
 const journeys = new Map<string, JourneyDef>();
 
@@ -32,18 +33,11 @@ export function resolveJourneyIds(spec: string | "all"): JourneyDef[] {
   return out;
 }
 
-/** Register built-in journeys (real + placeholders). Idempotent. */
+/** Register built-in journeys. Idempotent. */
 export function registerBuiltInJourneys(): void {
   registerJourney(j5Journey);
   registerJourney(j6Journey);
-  if (!journeys.has("j7")) {
-    registerJourney({
-      id: "j7",
-      name: "Marketplace subscribe / compliance",
-      description: "Placeholder — implemented in harness Phase 3",
-      steps: [],
-    });
-  }
+  registerJourney(j7Journey);
 }
 
 /** @deprecated use registerBuiltInJourneys */

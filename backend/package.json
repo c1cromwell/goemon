@@ -35,6 +35,7 @@
     "harness": "tsx test/harness/cli.ts",
     "harness:j5": "tsx test/harness/cli.ts --journey j5",
     "harness:j6": "tsx test/harness/cli.ts --journey j6",
+    "harness:j7": "tsx test/harness/cli.ts --journey j7",
     "harness:all": "tsx test/harness/cli.ts --all"
   },
   "dependencies": {

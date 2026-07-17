@@ -25,6 +25,7 @@ Usage:
   npm run harness -- [options]
   npm run harness:j5
   npm run harness:j6
+  npm run harness:j7
 
 Options:
   --help              Show this help and exit 0
@@ -41,10 +42,11 @@ Environment:
 Registered journeys:
 ${registered.length === 0 ? "  (none)" : registered.map((j) => `  ${j.id.padEnd(6)} ${j.name}${j.steps.length === 0 ? "  [placeholder — 0 steps]" : `  [${j.steps.length} steps]`}`).join("\n")}
 
-J5/J6 require a live API:
+J5–J7 require a live API:
   npm run seed:e2e && npm run dev
-  npm run harness:j5
-  npm run harness:j6
+  npm run harness:j5   # SmartChat + MFA
+  npm run harness:j6   # OID4VP → MCP
+  npm run harness:j7   # Marketplace (needs seed:marketplace)
 
 Artifacts: backend/test/.e2e-artifacts/<runId>/report.json
 `);

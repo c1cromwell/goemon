@@ -1,6 +1,6 @@
 # Agent Harness — Implementation Plan
 
-**Status:** Phases 0–2 built — Phases 3–7 planned  
+**Status:** Phases 0–3 built — Phases 4–7 planned  
 **Goal:** Replace the skill-only Phase 16 MCP/E2E harness with an executable, step-by-step client that walks Goemon product journeys (J5–J7 first), is CI-callable, and later feeds Agentic OS QA.
 
 **Non-goals (this plan):**
@@ -223,9 +223,13 @@ npm run harness:j6
 
 ### Acceptance criteria
 
-- [ ] `npm run harness -- --journey j7` exits 0 after `seed:marketplace`  
-- [ ] Fee fields never parsed as float  
-- [ ] DET coverage in `phase8.test.ts` remains; harness adds client-shaped AGT path
+- [x] `npm run harness -- --journey j7` exits 0 after `seed:marketplace`  
+- [x] Fee fields never parsed as float  
+- [x] DET coverage in `phase8.test.ts` remains; harness adds client-shaped AGT path
+
+### Phase 3 delivered
+
+`journeys/j7-marketplace.ts` (6 steps): Tier-2 auth → find invest listing → quote → escrow subscribe → Tier-1 auth → `COMPLIANCE_BLOCKED`. `npm run harness:j7`.
 
 ---
 
