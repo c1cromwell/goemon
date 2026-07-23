@@ -288,6 +288,7 @@ export interface ListingView {
   symbol: string | null;
   kind: string;
   minTier: number;
+  imageUrl?: string | null;
   eligible: boolean;
   eligibilityReason?: string;
 }

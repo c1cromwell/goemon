@@ -246,6 +246,11 @@ h2 {
 .card + .card {
   margin-top: 16px;
 }
+/* Inside a grid, `gap` handles spacing — cancel the vertical-stack margin so
+ * every tile in a row is the same height (the first tile is otherwise taller). */
+.grid .card + .card {
+  margin-top: 0;
+}
 .card.pad-lg {
   padding: 28px;
 }
@@ -278,6 +283,149 @@ h2 {
   background: var(--line);
   border: 0;
   margin: 4px 0;
+}
+
+/* ----------------------------------------------------------------------------
+ * Marketplace — asset covers, image-forward cards, kind tabs, filter row
+ * ------------------------------------------------------------------------- */
+.asset-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+}
+.asset-cover.hero {
+  aspect-ratio: 16 / 7;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.asset-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.asset-cover-art {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  color: #fff;
+  text-align: center;
+}
+.asset-cover-glyph {
+  font-size: 40px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+}
+.asset-cover.hero .asset-cover-glyph {
+  font-size: 56px;
+}
+.asset-cover-mono {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  opacity: 0.92;
+}
+/* Image-forward asset card — cover flush to the edges, content padded below. */
+.asset-card {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.asset-card-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.asset-card-price {
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 600;
+}
+.asset-card-price .micro {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+}
+
+/* Kind tabs */
+.tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--line);
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+.tab {
+  flex-shrink: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  color: var(--text-2);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.tab:hover {
+  background: transparent;
+  color: var(--text);
+}
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.tab-count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+  margin-left: 3px;
+}
+.tab.active .tab-count {
+  color: var(--accent);
+}
+
+/* Filter row */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.filter-search {
+  flex: 1;
+  min-width: 180px;
+}
+.filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.filter-toggle input {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+.filter-sort {
+  width: auto;
+  min-width: 150px;
 }
 
 /* ----------------------------------------------------------------------------
@@ -537,7 +685,10 @@ th {
   position: absolute;
   right: 0;
   bottom: calc(100% + 8px);
-  min-width: 220px;
+  min-width: 244px;
+  max-height: min(70vh, 560px);
+  display: flex;
+  flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
@@ -545,9 +696,34 @@ th {
   padding: 6px;
   z-index: 30;
 }
+/* In the sidebar the "More" button sits at the bottom of the column, so the
+ * popup opens UPWARD and scrolls internally rather than running off-screen. */
 .sidebar .menu-pop {
-  bottom: auto;
-  top: calc(100% + 8px);
+  bottom: calc(100% + 8px);
+  top: auto;
+}
+.menu-head {
+  padding: 6px 11px;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+.menu-scroll {
+  overflow-y: auto;
+  min-height: 0;
+  margin: 2px 0;
+}
+.menu-group + .menu-group {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+.menu-group-title {
+  padding: 6px 11px 3px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
 }
 .menu-item {
   display: block;
