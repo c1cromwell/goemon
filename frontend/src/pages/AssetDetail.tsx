@@ -8,7 +8,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { userApi, type AssetDetail as AssetDetailT } from "../api/client";
 import { formatMoney, formatUnits } from "../lib/money";
+import { imageFromMetadata } from "../lib/assetVisuals";
 import { Loading } from "../components/ui";
+import { AssetCover } from "../components/AssetCover";
 import { TradeSheet } from "../components/TradeSheet";
 import { CollectibleBuySheet } from "../components/CollectibleBuySheet";
 
@@ -58,6 +60,14 @@ export function AssetDetail() {
   return (
     <div className="page stack lg narrow" style={{ maxWidth: 640 }}>
       <button className="link" onClick={() => navigate(-1)}>← Back</button>
+
+      <AssetCover
+        variant="hero"
+        imageUrl={imageFromMetadata(meta)}
+        name={asset.name}
+        symbol={asset.symbol}
+        kind={asset.kind}
+      />
 
       <div className="spread" style={{ alignItems: "flex-start" }}>
         <div>

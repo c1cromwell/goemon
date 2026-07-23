@@ -185,8 +185,24 @@ export interface ListingView extends Listing {
   symbol: string | null;
   kind: string;
   minTier: number;
+  imageUrl: string | null;
   eligible: boolean;
   eligibilityReason?: string;
+}
+
+/** Extract a usable image URL from an asset's free-form metadata JSON, if any. */
+function imageFromMetadata(metadataJson: string | null | undefined): string | null {
+  if (!metadataJson) return null;
+  try {
+    const meta = JSON.parse(metadataJson) as Record<string, unknown>;
+    for (const k of ["imageUrl", "image", "coverUrl", "photoUrl", "thumbnailUrl"]) {
+      const v = meta[k];
+      if (typeof v === "string" && /^https?:\/\//.test(v)) return v;
+    }
+  } catch {
+    /* malformed metadata — no image */
+  }
+  return null;
 }
 
 /**
@@ -196,8 +212,8 @@ export interface ListingView extends Listing {
 export async function listForUser(userId: string, surface?: Surface): Promise<ListingView[]> {
   const db = getDb();
   // Latest version per asset, joined to the asset, restricted to tradeable statuses.
-  const rows = await db.query<ListingRow & { name: string; symbol: string | null; kind: string; min_tier: number; jurisdiction_allow: string }>(
-    `SELECT l.*, a.name AS name, a.symbol AS symbol, a.kind AS kind, a.min_tier AS min_tier, a.jurisdiction_allow AS jurisdiction_allow
+  const rows = await db.query<ListingRow & { name: string; symbol: string | null; kind: string; min_tier: number; jurisdiction_allow: string; metadata: string | null }>(
+    `SELECT l.*, a.name AS name, a.symbol AS symbol, a.kind AS kind, a.min_tier AS min_tier, a.jurisdiction_allow AS jurisdiction_allow, a.metadata AS metadata
        FROM listings l
        JOIN assets a ON a.id = l.asset_id
       WHERE l.version = (SELECT MAX(version) FROM listings WHERE asset_id = l.asset_id)
@@ -228,6 +244,7 @@ export async function listForUser(userId: string, surface?: Surface): Promise<Li
       symbol: r.symbol,
       kind: r.kind,
       minTier: r.min_tier,
+      imageUrl: imageFromMetadata(r.metadata),
       eligible,
       eligibilityReason: reason,
     };

@@ -8,35 +8,13 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { Icon } from "./Icon";
 import { BrandMark } from "./BrandMark";
+import { SECONDARY_GROUPS } from "../lib/nav";
 
 const PRIMARY = [
   { to: "/home", label: "Home", icon: "home" as const, end: true },
   { to: "/invest", label: "Invest", icon: "invest" as const },
   { to: "/collect", label: "Collect", icon: "collect" as const },
   { to: "/agent", label: "Agent", icon: "agent" as const },
-];
-
-const SECONDARY = [
-  { to: "/activity", label: "Activity" },
-  { to: "/portfolio", label: "Portfolio" },
-  { to: "/equity", label: "My equity" },
-  { to: "/issuer", label: "Tokenize" },
-  { to: "/raise", label: "Raise" },
-  { to: "/exchange", label: "Exchange" },
-  { to: "/bank", label: "Bank" },
-  { to: "/cards", label: "Cards" },
-  { to: "/bills", label: "Bills" },
-  { to: "/starter", label: "Starter (guardian)" },
-  { to: "/starter/teen", label: "Starter (teen)" },
-  { to: "/console", label: "Console" },
-  { to: "/trade", label: "Trade" },
-  { to: "/escrow", label: "Escrow" },
-  { to: "/pay", label: "Goemon Pay" },
-  { to: "/onboarding", label: "Verification & tiers" },
-  { to: "/credentials", label: "Credentials" },
-  { to: "/agents", label: "Internal agents" },
-  { to: "/permissions", label: "Connected agents" },
-  { to: "/wallet", label: "On-chain wallet" },
 ];
 
 function useTheme(): [string, () => void] {
@@ -70,15 +48,19 @@ export function Layout() {
 
   const profileMenu = menuOpen ? (
     <div className="menu-pop">
-      <div className="micro" style={{ padding: "6px 11px" }}>
-        {me?.email}
+      <div className="menu-head micro">{me?.email}</div>
+      <div className="menu-scroll">
+        {SECONDARY_GROUPS.map((g) => (
+          <div key={g.title} className="menu-group">
+            <div className="menu-group-title">{g.title}</div>
+            {g.links.map((s) => (
+              <button key={s.to} className="menu-item" onClick={() => go(s.to)}>
+                {s.label}
+              </button>
+            ))}
+          </div>
+        ))}
       </div>
-      <hr className="hr" />
-      {SECONDARY.map((s) => (
-        <button key={s.to} className="menu-item" onClick={() => go(s.to)}>
-          {s.label}
-        </button>
-      ))}
       <hr className="hr" />
       <button className="menu-item" onClick={toggleTheme}>
         Theme: {theme === "dark" ? "Dark" : "Light"}
