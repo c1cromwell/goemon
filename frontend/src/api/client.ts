@@ -95,6 +95,9 @@ function uget<T>(path: string): Promise<T> {
 function upost<T>(path: string, body?: unknown): Promise<T> {
   return http<T>(path, { method: "POST", body, token: getUserToken() });
 }
+function udel<T>(path: string): Promise<T> {
+  return http<T>(path, { method: "DELETE", token: getUserToken() });
+}
 /** Money-mutating POST: requires/forwards an idempotency key. */
 function umoney<T>(path: string, body: unknown, key: string): Promise<T> {
   return http<T>(path, { method: "POST", body, token: getUserToken(), idempotencyKey: key });
@@ -291,6 +294,43 @@ export interface ListingView {
   imageUrl?: string | null;
   eligible: boolean;
   eligibilityReason?: string;
+  metrics?: CompactMetrics | null;
+}
+export interface CompactMetrics {
+  investorCount: number;
+  saverCount: number;
+  priceChangeBps: number | null;
+  yieldApyBps: number | null;
+  isWatched: boolean;
+}
+export interface AssetMetrics {
+  assetId: string;
+  priceMinor: string | null;
+  currency: string;
+  priceSource: string | null;
+  stale: boolean;
+  priceChangeBps: number | null;
+  priceHistory: { priceMinor: string; asOf: string }[];
+  investorCount: number;
+  saverCount: number;
+  viewerCount: number;
+  isWatched: boolean;
+  tradeStats: { buyCount: number; sellCount: number; tradeCount: number; totalVolumeMinor: string; lastTradeAt: string | null };
+  yield: { apyBps: number | null; trailingYieldBps: number | null; lastDistribution: { amountPerUnitMinor: string; currency: string; payDate: string } | null };
+  valuation: { referenceValueMinor: string; premiumDiscountBps: number; label: "premium" | "discount" | "near_reference"; source: string; asOf: string; simulated: boolean } | null;
+  costPerUnitMinor: string | null;
+  decimals: number;
+  position: { heldQtyBase: string; costBasis: { avgCostPerUnitMinor: string | null; costBasisMinor: string | null; unrealizedPnlMinor: string | null; unrealizedPnlBps: number | null } } | null;
+}
+export interface CollectibleIntel {
+  grade: { grader: string; grade: string; certNumber: string | null; verified: boolean } | null;
+  population: { grade: string; atGrade: number; higher: number; total: number } | null;
+  comp: { compPriceMinor: string; askPriceMinor: string | null; premiumDiscountBps: number; source: string } | null;
+  facts: { kind: "card" | "vehicle" | "generic"; fields: { label: string; value: string }[] };
+  provenance: { eventType: string; priceMinor: string | null; currency: string; venue: string | null; occurredAt: string }[];
+  tradeHistory: { timesSold: number; lastSaleMinor: string | null; lastSaleAt: string | null };
+  source: string;
+  simulated: boolean;
 }
 export interface AssetDetail {
   asset: {
@@ -350,6 +390,10 @@ export interface Holding {
   priceMinor: string | null;
   valueMinor: string | null;
   currency: string | null;
+  avgCostPerUnitMinor: string | null;
+  costBasisMinor: string | null;
+  unrealizedPnlMinor: string | null;
+  unrealizedPnlBps: number | null;
 }
 export interface Portfolio {
   cashMinor: string;
@@ -691,6 +735,11 @@ export const userApi = {
     uget<{ listings: ListingView[] }>(`/marketplace/listings${surface ? `?surface=${surface}` : ""}`),
   portfolio: () => uget<Portfolio>("/marketplace/portfolio"),
   asset: (id: string) => uget<AssetDetail>(`/marketplace/assets/${id}`),
+  assetMetrics: (id: string) => uget<AssetMetrics>(`/marketplace/assets/${id}/metrics`),
+  collectibleIntel: (id: string) => uget<CollectibleIntel>(`/marketplace/assets/${id}/collectible-intel`),
+  watchAsset: (id: string) => upost<{ watched: boolean }>(`/marketplace/assets/${id}/watch`),
+  unwatchAsset: (id: string) => udel<{ watched: boolean }>(`/marketplace/assets/${id}/watch`),
+  watchlist: () => uget<{ assetIds: string[]; listings: ListingView[] }>("/marketplace/watchlist"),
   quote: (assetId: string, side: "buy" | "sell" | "subscribe", qtyBase: string) =>
     upost<Quote>("/marketplace/quote", { assetId, side, qtyBase }),
   subscribe: (assetId: string, qtyBase: string, key: string) =>
@@ -1294,6 +1343,10 @@ export interface PortfolioHolding {
   priceMinor: string | null;
   valueMinor: string | null;
   currency: string | null;
+  avgCostPerUnitMinor: string | null;
+  costBasisMinor: string | null;
+  unrealizedPnlMinor: string | null;
+  unrealizedPnlBps: number | null;
 }
 export interface Portfolio {
   cashMinor: string;

@@ -1,7 +1,8 @@
 /** Minimal line icons (type-led design — no emoji). Stroke = currentColor. */
-type Name = "home" | "invest" | "collect" | "agent" | "menu" | "copy" | "check";
+type Name = "home" | "invest" | "collect" | "agent" | "menu" | "copy" | "check" | "bookmark";
 
 const PATHS: Record<Name, JSX.Element> = {
+  bookmark: <path d="M6 4h12v16l-6-4-6 4V4z" />,
   home: (
     <>
       <path d="M3 10.5 12 4l9 6.5" />

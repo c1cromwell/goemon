@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { portfolioApi, type Portfolio, type Distribution, type TaxSummary } from "../api/client";
 import { formatMoney } from "../lib/money";
+import { Change } from "../components/Change";
 import { Loading, Empty } from "../components/ui";
 
 const THIS_YEAR = new Date().getUTCFullYear();
@@ -76,7 +77,14 @@ export function PortfolioPage() {
               </div>
               <div className="right">
                 <div className="amount">{h.valueMinor ? formatMoney(h.valueMinor, h.currency ?? "USD") : "—"}</div>
-                <div className="micro">{h.priceMinor ? `${formatMoney(h.priceMinor, h.currency ?? "USD")} / unit` : "unpriced"}</div>
+                {h.unrealizedPnlMinor ? (
+                  <div className="micro">
+                    {formatMoney(h.unrealizedPnlMinor, h.currency ?? "USD", { signed: true })}{" "}
+                    <Change bps={h.unrealizedPnlBps} showArrow={false} />
+                  </div>
+                ) : (
+                  <div className="micro">{h.priceMinor ? `${formatMoney(h.priceMinor, h.currency ?? "USD")} / unit` : "unpriced"}</div>
+                )}
               </div>
             </div>
           ))
