@@ -32,6 +32,7 @@ import {
 import { requireAsset, type Asset } from "./tokenizationService";
 import { checkTransfer } from "./complianceService";
 import { getCurrentPrice } from "./pricingService";
+import { getCostBasis } from "./costBasisService";
 
 // Disclosed, uniform per asset class (REQ-MK-FEE-001): no hidden/post-trade fees.
 const PRIMARY_FEE_BPS = 100n; // 1.0% spread/markup on primary issuance
@@ -121,6 +122,11 @@ export interface Holding {
   priceMinor: string | null;
   valueMinor: string | null;
   currency: string | null;
+  // Phase 30 — cost basis + unrealized P&L (null when no recorded buys).
+  avgCostPerUnitMinor: string | null;
+  costBasisMinor: string | null;
+  unrealizedPnlMinor: string | null;
+  unrealizedPnlBps: number | null;
 }
 
 export async function getPortfolio(userId: string): Promise<{
@@ -157,6 +163,7 @@ export async function getPortfolio(userId: string): Promise<{
     } catch {
       /* unlisted asset — held but unpriced */
     }
+    const cb = await getCostBasis(userId, assetId, qty, priceMinor);
     holdings.push({
       assetId,
       name: asset.name,
@@ -166,6 +173,10 @@ export async function getPortfolio(userId: string): Promise<{
       priceMinor: priceMinor?.toString() ?? null,
       valueMinor: valueMinor?.toString() ?? null,
       currency,
+      avgCostPerUnitMinor: cb.avgCostPerUnitMinor,
+      costBasisMinor: cb.costBasisMinor,
+      unrealizedPnlMinor: cb.unrealizedPnlMinor,
+      unrealizedPnlBps: cb.unrealizedPnlBps,
     });
   }
 

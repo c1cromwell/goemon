@@ -136,6 +136,13 @@ const schema = z.object({
   // Simulated default; polygon/iex are prod swaps requiring market-data licensing.
   MARKET_DATA_PROVIDER: z.enum(["simulated", "polygon", "iex"]).default("simulated"),
 
+  // Phase 30 — asset-intelligence provider seams. The market-valuation seam produces
+  // the "reference value vs price" signal; the collectible-intel seam produces
+  // population/facts/auction history. Both simulated by default (offline, deterministic)
+  // and prod-fatal while simulated — they surface illustrative numbers, not real data.
+  MARKET_VALUATION_PROVIDER: z.enum(["simulated", "polygon", "iex"]).default("simulated"),
+  COLLECTIBLE_INTEL_PROVIDER: z.enum(["simulated", "pricecharting", "psa", "auctions"]).default("simulated"),
+
   // FX quote seam — currency conversion rates (quote-only; no money movement yet).
   // Off by default; a kill-switch gating the /api/fx quote surface. FX_RATE_PROVIDER
   // selects the rate source (simulated stand-in; circle/oanda are prod swaps). The
@@ -548,6 +555,15 @@ export function productionFatals(c: z.infer<typeof schema>): string[] {
     } else if (c.FRAUD_ENGINE_API_KEY.length < 32) {
       fatal.push("FRAUD_ENGINE_API_KEY must be at least 32 characters in production.");
     }
+  }
+  // Phase 30 — asset-intelligence seams are simulated (illustrative) by default; showing
+  // simulated valuations / collectible intel to real users would mislead. Wire a real
+  // provider before production.
+  if (c.MARKET_VALUATION_PROVIDER === "simulated") {
+    fatal.push("MARKET_VALUATION_PROVIDER=simulated must not run in production — the reference-value signal is illustrative; wire a real market-data provider (polygon|iex).");
+  }
+  if (c.COLLECTIBLE_INTEL_PROVIDER === "simulated") {
+    fatal.push("COLLECTIBLE_INTEL_PROVIDER=simulated must not run in production — population/facts/auction history is synthetic; wire a real feed (pricecharting|psa|auctions).");
   }
   return fatal;
 }

@@ -181,6 +181,27 @@ export const agentEscalationTotal = new client.Counter({
   registers: [registry],
 });
 
+// Phase 30 — asset intelligence (metrics, watchlist, collectible intel).
+export const assetMetricsRequestTotal = new client.Counter({
+  name: "asset_metrics_request_total",
+  help: "Asset metrics composed",
+  registers: [registry],
+});
+
+export const watchlistOpTotal = new client.Counter({
+  name: "watchlist_op_total",
+  help: "Watchlist add/remove operations",
+  labelNames: ["op"],
+  registers: [registry],
+});
+
+export const collectibleIntelRequestTotal = new client.Counter({
+  name: "collectible_intel_request_total",
+  help: "Collectible intel lookups",
+  labelNames: ["provider"],
+  registers: [registry],
+});
+
 // Phase 18.6 — tokenized equities (dividends + on-chain redemption).
 export const equityDividendTotal = new client.Counter({
   name: "equity_dividend_total",

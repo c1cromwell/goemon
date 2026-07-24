@@ -12,6 +12,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { Invest, Collect } from "./pages/Market";
 import { Issuer } from "./pages/Issuer";
 import { PortfolioPage } from "./pages/Portfolio";
+import { Watchlist } from "./pages/Watchlist";
 import { Equity } from "./pages/Equity";
 import { Raise } from "./pages/Raise";
 import { Exchange } from "./pages/Exchange";
@@ -98,6 +99,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="/invest" element={<Invest />} />
               <Route path="/issuer" element={<Issuer />} />
               <Route path="/portfolio" element={<PortfolioPage />} />
+              <Route path="/watchlist" element={<Watchlist />} />
               <Route path="/equity" element={<Equity />} />
               <Route path="/raise" element={<Raise />} />
               <Route path="/exchange" element={<Exchange />} />

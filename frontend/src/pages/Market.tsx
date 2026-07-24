@@ -8,7 +8,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { userApi, type ListingView, type SellerSubmission, type Surface } from "../api/client";
 import { formatMoney } from "../lib/money";
 import { prettyKind } from "../lib/assetVisuals";
+import { pctFromBps, compactCount } from "../lib/metrics";
 import { AssetCover } from "../components/AssetCover";
+import { Change } from "../components/Change";
+import { WatchButton } from "../components/WatchButton";
 import { Empty, Loading } from "../components/ui";
 
 const COPY: Record<Surface, { title: string; sub: string }> = {
@@ -34,7 +37,7 @@ const KIND_ORDER = [
   "gaming",
 ];
 
-type Sort = "recent" | "price-asc" | "price-desc" | "name";
+type Sort = "recent" | "price-asc" | "price-desc" | "name" | "popular" | "yield";
 
 function MarketPage({ surface }: { surface: Surface }) {
   const navigate = useNavigate();
@@ -83,6 +86,8 @@ function MarketPage({ surface }: { surface: Surface }) {
     if (sort === "name") sorted.sort((a, b) => a.name.localeCompare(b.name));
     else if (sort === "price-asc") sorted.sort((a, b) => cmpBig(a.priceMinor, b.priceMinor));
     else if (sort === "price-desc") sorted.sort((a, b) => cmpBig(b.priceMinor, a.priceMinor));
+    else if (sort === "popular") sorted.sort((a, b) => popularity(b) - popularity(a));
+    else if (sort === "yield") sorted.sort((a, b) => (b.metrics?.yieldApyBps ?? -1) - (a.metrics?.yieldApyBps ?? -1));
     return sorted;
   }, [listings, activeKind, query, eligibleOnly, sort]);
 
@@ -186,6 +191,8 @@ function MarketPage({ surface }: { surface: Surface }) {
             </label>
             <select className="filter-sort" value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label="Sort">
               <option value="recent">Newest</option>
+              <option value="popular">Most popular</option>
+              <option value="yield">Highest yield</option>
               <option value="price-asc">Price: low to high</option>
               <option value="price-desc">Price: high to low</option>
               <option value="name">Name A–Z</option>
@@ -202,7 +209,7 @@ function MarketPage({ surface }: { surface: Surface }) {
                   <div className="asset-card-body">
                     <div className="spread" style={{ alignItems: "flex-start", gap: 8 }}>
                       <div className="title">{l.name}</div>
-                      {l.eligible ? null : <span className="badge warn">{l.eligibilityReason ?? "Restricted"}</span>}
+                      <WatchButton assetId={l.assetId} initialWatched={l.metrics?.isWatched ?? false} iconOnly />
                     </div>
                     <div className="micro">
                       {prettyKind(l.kind)}
@@ -211,7 +218,22 @@ function MarketPage({ surface }: { surface: Surface }) {
                     <div className="asset-card-price">
                       <span className="amount">{formatMoney(l.priceMinor, l.currency)}</span>
                       <span className="micro"> / unit</span>
+                      {l.metrics && l.metrics.priceChangeBps != null ? (
+                        <span style={{ fontSize: 12, marginLeft: 8 }}><Change bps={l.metrics.priceChangeBps} /></span>
+                      ) : null}
                     </div>
+                    {l.metrics ? (
+                      <div className="card-metrics">
+                        <span>{compactCount(l.metrics.investorCount)} investors</span>
+                        {l.metrics.yieldApyBps != null ? (
+                          <><span className="dot">·</span><span>{pctFromBps(l.metrics.yieldApyBps)} APY</span></>
+                        ) : null}
+                        {l.metrics.saverCount > 0 ? (
+                          <><span className="dot">·</span><span>{compactCount(l.metrics.saverCount)} saved</span></>
+                        ) : null}
+                      </div>
+                    ) : null}
+                    {l.eligible ? null : <span className="badge warn" style={{ marginTop: 8, alignSelf: "flex-start" }}>{l.eligibilityReason ?? "Restricted"}</span>}
                   </div>
                 </div>
               ))}
@@ -221,6 +243,12 @@ function MarketPage({ surface }: { surface: Surface }) {
       )}
     </div>
   );
+}
+
+function popularity(l: ListingView): number {
+  const m = l.metrics;
+  if (!m) return 0;
+  return m.investorCount * 2 + m.saverCount;
 }
 
 function cmpBig(a: string, b: string): number {

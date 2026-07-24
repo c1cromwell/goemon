@@ -33,6 +33,7 @@ export const SECONDARY_GROUPS: NavGroup[] = [
   {
     title: "Invest & collect",
     links: [
+      { to: "/watchlist", label: "Watchlist" },
       { to: "/trade", label: "Trade" },
       { to: "/drops", label: "Drops" },
       { to: "/issuer", label: "Tokenize" },

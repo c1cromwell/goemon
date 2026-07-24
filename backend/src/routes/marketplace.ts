@@ -31,6 +31,10 @@ import {
   getActivePurchaseForAsset,
   isSellerP2pAsset,
 } from "../services/collectiblePurchaseService";
+import { getMetrics, listMetricsForSurface } from "../services/assetMetricsService";
+import { getIntel } from "../services/collectibleIntelService";
+import * as watchlist from "../services/watchlistService";
+import * as assetViews from "../services/assetViewService";
 
 export const marketplaceRouter = Router();
 
@@ -49,7 +53,67 @@ function qty(v: string | number): bigint {
 marketplaceRouter.get("/listings", requireAuth, async (req: AuthRequest, res, next) => {
   try {
     const surface = z.enum(["invest", "collect"]).optional().parse(req.query.surface);
-    res.json({ listings: await listings.listForUser(req.userId!, surface) });
+    const rows = await listings.listForUser(req.userId!, surface);
+    // Attach compact per-card metrics in one batched pass (investors, saves, change%, yield).
+    const metrics = await listMetricsForSurface(rows.map((r) => r.assetId), req.userId!);
+    res.json({ listings: rows.map((r) => ({ ...r, metrics: metrics[r.assetId] ?? null })) });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// --- Phase 30 asset intelligence ---------------------------------------------
+
+marketplaceRouter.get("/watchlist", requireAuth, async (req: AuthRequest, res, next) => {
+  try {
+    const ids = await watchlist.listAssetIds(req.userId!);
+    // Return them as listing views (with metrics) filtered to the saved set.
+    const rows = (await listings.listForUser(req.userId!)).filter((r) => ids.includes(r.assetId));
+    const metrics = await listMetricsForSurface(rows.map((r) => r.assetId), req.userId!);
+    res.json({ assetIds: ids, listings: rows.map((r) => ({ ...r, metrics: metrics[r.assetId] ?? null })) });
+  } catch (e) {
+    next(e);
+  }
+});
+
+marketplaceRouter.get("/assets/:id/metrics", requireAuth, async (req: AuthRequest, res, next) => {
+  try {
+    // Best-effort view record — never blocks the metrics read.
+    void assetViews.recordView(req.userId!, req.params.id!).catch(() => undefined);
+    const m = await getMetrics(req.params.id!, req.userId!);
+    if (!m) throw new AppError(ErrorCode.NOT_FOUND, "Asset not found");
+    res.json(m);
+  } catch (e) {
+    next(e);
+  }
+});
+
+marketplaceRouter.get("/assets/:id/collectible-intel", requireAuth, async (req: AuthRequest, res, next) => {
+  try {
+    const asset = await getAsset(req.params.id!);
+    if (!asset) throw new AppError(ErrorCode.NOT_FOUND, "Asset not found");
+    if (asset.kind !== "collectible") throw new AppError(ErrorCode.VALIDATION, "Not a collectible");
+    const listing = await getCurrentListing(asset.id);
+    const priceMinor = listing ? BigInt(listing.priceMinor) : null;
+    res.json(await getIntel(asset, priceMinor));
+  } catch (e) {
+    next(e);
+  }
+});
+
+marketplaceRouter.post("/assets/:id/watch", requireAuth, async (req: AuthRequest, res, next) => {
+  try {
+    await watchlist.add(req.userId!, req.params.id!);
+    res.json({ watched: true });
+  } catch (e) {
+    next(e);
+  }
+});
+
+marketplaceRouter.delete("/assets/:id/watch", requireAuth, async (req: AuthRequest, res, next) => {
+  try {
+    await watchlist.remove(req.userId!, req.params.id!);
+    res.json({ watched: false });
   } catch (e) {
     next(e);
   }
